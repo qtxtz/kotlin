@@ -55,8 +55,8 @@ private object CONTINUATION_CLASS : IrDeclarationOriginImpl("CONTINUATION_CLASS"
 
 private class AddContinuationLowering(private val context: JvmBackendContext) : FileLoweringPass {
     override fun lower(irFile: IrFile) {
-        val suspendLambdas = markSuspendLambdas(irFile)
-        val suspendFunctions = markSuspendFunctions(irFile, suspendLambdas.map { it.function }.toSet())
+        val (suspendLambdas, inlineLambdas) = markSuspendLambdas(irFile)
+        val suspendFunctions = markSuspendFunctions(irFile, (suspendLambdas.map { it.function } + inlineLambdas).toSet())
         for (lambda in suspendLambdas) {
             generateContinuationClassForLambda(lambda)
         }
@@ -483,7 +483,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
     }
 
     // TODO: Generate two copies of inline suspend functions
-    private fun markSuspendFunctions(irFile: IrFile, suspendLambdas: Set<IrFunction>): Set<IrFunction> {
+    private fun markSuspendFunctions(irFile: IrFile, suspendAndInlineLambdas: Set<IrFunction>): Set<IrFunction> {
         val result = hashSetOf<IrFunction>()
 
         irFile.acceptChildrenVoid(object : IrElementVisitorVoid {
@@ -493,7 +493,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
 
             override fun visitFunction(declaration: IrFunction) {
                 super.visitFunction(declaration)
-                if (declaration.isSuspend && declaration !in suspendLambdas && !declaration.isInline &&
+                if (declaration.isSuspend && declaration !in suspendAndInlineLambdas && !declaration.isInline &&
                     !declaration.isInvokeOfSuspendCallableReference()
                 ) {
                     result.add(declaration)
@@ -504,7 +504,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
         return result
     }
 
-    private fun markSuspendLambdas(irElement: IrElement): List<SuspendLambdaInfo> {
+    private fun markSuspendLambdas(irElement: IrElement): Pair<List<SuspendLambdaInfo>, List<IrFunction>> {
         val suspendLambdas = arrayListOf<SuspendLambdaInfo>()
         val inlineLambdas = mutableSetOf<IrFunctionReference>()
         irElement.acceptChildrenVoid(object : IrElementVisitorVoid {
@@ -542,7 +542,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
                 }
             }
         })
-        return suspendLambdas
+        return suspendLambdas to inlineLambdas.map { it.symbol.owner }
     }
 
     private fun transformSuspendCalls(irFile: IrFile) {
