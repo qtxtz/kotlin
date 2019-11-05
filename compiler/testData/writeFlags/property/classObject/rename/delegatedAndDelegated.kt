@@ -25,9 +25,9 @@ class Test {
 }
 
 // TESTED_OBJECT_KIND: property
-// TESTED_OBJECTS: Test, prop$delegate$1
+// TESTED_OBJECTS: Test, prop\$delegate\$1
 // FLAGS: ACC_PRIVATE, ACC_FINAL
 
 // TESTED_OBJECT_KIND: property
-// TESTED_OBJECTS: Test, prop$delegate
+// TESTED_OBJECTS: Test, prop\$delegate
 // FLAGS: ACC_STATIC, ACC_PRIVATE, ACC_FINAL

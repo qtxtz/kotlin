@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.codegen.flags;
 
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.backend.common.output.OutputFile;
 import org.jetbrains.kotlin.codegen.CodegenTestCase;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.jetbrains.kotlin.test.InTextDirectivesUtils.findListWithPrefixes;
 import static org.jetbrains.kotlin.test.InTextDirectivesUtils.findStringWithPrefixes;
@@ -211,7 +213,7 @@ public abstract class AbstractWriteFlagsTest extends CodegenTestCase {
 
         @Override
         public MethodVisitor visitMethod(int access, @NotNull String name, @NotNull String desc, String signature, String[] exceptions) {
-            if (name.equals(funName)) {
+            if (Pattern.matches(funName, name)) {
                 if (!allowSynthetic && (access & Opcodes.ACC_SYNTHETIC) != 0) return null;
                 this.access = access;
                 isExists = true;
@@ -235,7 +237,7 @@ public abstract class AbstractWriteFlagsTest extends CodegenTestCase {
 
         @Override
         public FieldVisitor visitField(int access, @NotNull String name, @NotNull String desc, String signature, Object value) {
-            if (name.equals(propertyName)) {
+            if (Pattern.matches(propertyName, name)) {
                 this.access = access;
                 isExists = true;
             }
@@ -258,7 +260,7 @@ public abstract class AbstractWriteFlagsTest extends CodegenTestCase {
 
         @Override
         public void visitInnerClass(@NotNull String innerClassInternalName, String outerClassInternalName, String name, int access) {
-            if (innerClassName.equals(name)) {
+            if (name != null && Pattern.matches(innerClassName, name)) {
                 this.access = access;
                 isExists = true;
             }

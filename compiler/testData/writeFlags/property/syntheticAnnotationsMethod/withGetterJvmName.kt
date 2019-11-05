@@ -10,5 +10,5 @@ class Foo {
 }
 
 // TESTED_OBJECT_KIND: function
-// TESTED_OBJECTS: Foo, jvmName$annotations
+// TESTED_OBJECTS: Foo, jvmName\$annotations
 // FLAGS: ACC_DEPRECATED, ACC_STATIC, ACC_SYNTHETIC, ACC_PUBLIC

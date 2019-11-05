@@ -14,9 +14,9 @@ interface A {
 // FLAGS: ACC_FINAL, ACC_STATIC, ACC_PUBLIC
 
 // TESTED_OBJECT_KIND: function
-// TESTED_OBJECTS: A, foo$default
+// TESTED_OBJECTS: A, foo\$default
 // FLAGS: ACC_PUBLIC, ACC_SYNTHETIC,  ACC_STATIC
 
 // TESTED_OBJECT_KIND: function
-// TESTED_OBJECTS: A$DefaultImpls, foo$default
+// TESTED_OBJECTS: A$DefaultImpls, foo\$default
 // FLAGS: ACC_PUBLIC, ACC_SYNTHETIC, ACC_STATIC

@@ -26,9 +26,9 @@ class Test {
 // ABSENT: TRUE
 
 // TESTED_OBJECT_KIND: property
-// TESTED_OBJECTS: Test$Companion, prop$delegate
+// TESTED_OBJECTS: Test$Companion, prop\$delegate
 // ABSENT: TRUE
 
 // TESTED_OBJECT_KIND: property
-// TESTED_OBJECTS: Test, prop$delegate
+// TESTED_OBJECTS: Test, prop\$delegate
 // FLAGS: ACC_STATIC, ACC_FINAL, ACC_PRIVATE

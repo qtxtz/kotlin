@@ -8,7 +8,7 @@ class Test {
 }
 
 // TESTED_OBJECT_KIND: property
-// TESTED_OBJECTS: Test, prop$1
+// TESTED_OBJECTS: Test, prop\$1
 // FLAGS: ACC_PRIVATE
 
 // TESTED_OBJECT_KIND: property
