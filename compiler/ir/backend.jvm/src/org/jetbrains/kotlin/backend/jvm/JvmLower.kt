@@ -196,7 +196,6 @@ private val jvmFilePhases =
         typeAliasAnnotationMethodsPhase then
         stripTypeAliasDeclarationsPhase then
         provisionalFunctionExpressionPhase then
-        inventNamesForLocalClassesPhase then
         kCallableNamePropertyPhase then
         annotationPhase then
         varargPhase then
@@ -248,6 +247,7 @@ private val jvmFilePhases =
         interfaceDefaultCallsPhase then
 
         addContinuationPhase then
+        inventNamesForLocalClassesPhase then
 
         innerClassesPhase then
         innerClassConstructorCallsPhase then

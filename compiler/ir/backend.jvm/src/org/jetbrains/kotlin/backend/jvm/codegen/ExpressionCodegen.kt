@@ -216,7 +216,8 @@ class ExpressionCodegen(
                 irFunction.origin == JvmLoweredDeclarationOrigin.DEFAULT_IMPLS_BRIDGE ||
                 irFunction.origin == JvmLoweredDeclarationOrigin.JVM_STATIC_WRAPPER ||
                 irFunction.origin == JvmLoweredDeclarationOrigin.MULTIFILE_BRIDGE ||
-                irFunction.parentAsClass.origin == JvmLoweredDeclarationOrigin.CONTINUATION_CLASS
+                irFunction.parentAsClass.origin == JvmLoweredDeclarationOrigin.CONTINUATION_CLASS ||
+                irFunction.parentAsClass.origin == JvmLoweredDeclarationOrigin.SUSPEND_LAMBDA
 
         if (notCallableFromJava)
             return
@@ -364,7 +365,7 @@ class ExpressionCodegen(
             }
             expression.descriptor is ConstructorDescriptor ->
                 throw AssertionError("IrCall with ConstructorDescriptor: ${expression.javaClass.simpleName}")
-            callee.isSuspend && !irFunction.shouldNotContainSuspendMarkers(classCodegen.context) ->
+            callee.isSuspend && !irFunction.shouldNotContainSuspendMarkers() ->
                 addInlineMarker(mv, isStartNotEnd = true)
         }
 
@@ -390,13 +391,13 @@ class ExpressionCodegen(
         expression.markLineNumber(true)
 
         // Do not generate redundant markers in continuation class.
-        if (callee.isSuspend && !irFunction.shouldNotContainSuspendMarkers(classCodegen.context)) {
+        if (callee.isSuspend && !irFunction.shouldNotContainSuspendMarkers()) {
             addSuspendMarker(mv, isStartNotEnd = true)
         }
 
         callGenerator.genCall(callable, this, expression)
 
-        if (callee.isSuspend && !irFunction.shouldNotContainSuspendMarkers(classCodegen.context)) {
+        if (callee.isSuspend && !irFunction.shouldNotContainSuspendMarkers()) {
             addSuspendMarker(mv, isStartNotEnd = false)
             addInlineMarker(mv, isStartNotEnd = false)
         }
