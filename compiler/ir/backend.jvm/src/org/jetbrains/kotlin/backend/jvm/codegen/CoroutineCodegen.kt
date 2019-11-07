@@ -185,6 +185,7 @@ private fun IrFunction.suspendFunctionView(context: JvmBackendContext): IrFuncti
                 return super.visitCall(expression.createSuspendFunctionCallViewIfNeeded(context, it, callerIsInlineLambda = false))
             }
         })
+        it.copyAttributes(this)
     }
 }
 

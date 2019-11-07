@@ -155,7 +155,7 @@ open class ClassCodegen protected constructor(
         generateKotlinMetadataAnnotation()
 
         if (irClass.origin == JvmLoweredDeclarationOrigin.CONTINUATION_CLASS) {
-            context.continuationClassBuilders[irClass.attributeOwnerId as IrClass] = visitor
+            context.continuationClassBuilders[irClass.attributeOwnerId as IrSimpleFunction] = visitor
         } else {
             done()
         }

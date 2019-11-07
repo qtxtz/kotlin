@@ -1,6 +1,6 @@
 /*
- * Copyright 2010-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license
- * that can be found in the license/LICENSE.txt file.
+ * Copyright 2010-2019 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.backend.jvm.lower
@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
-import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.isAnonymousObject
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitor
 import org.jetbrains.kotlin.name.Name
@@ -159,6 +158,12 @@ class InventNamesForLocalClasses(private val context: JvmBackendContext) : FileL
                 // Skip adding property accessors to the name stack because the name of the property (which is a parent) is already there.
                 declaration.acceptChildren(this, data.makeLocal())
                 return
+            }
+            if (declaration.isSuspend && declaration.body != null && declaration.origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+                // Suspend functions have a continuation, which is essentially a local class
+                val newData = data.withName(inventName(declaration.name, data))
+                val internalName = inventName(null, newData)
+                context.putLocalClassInfo(declaration, JvmBackendContext.LocalClassInfo(internalName))
             }
 
             super.visitSimpleFunction(declaration, data)

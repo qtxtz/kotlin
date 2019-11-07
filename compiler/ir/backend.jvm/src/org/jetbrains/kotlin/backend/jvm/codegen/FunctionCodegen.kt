@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.resolve.jvm.jvmSignature.JvmMethodGenericSignature
 import org.jetbrains.kotlin.resolve.jvm.jvmSignature.JvmMethodParameterKind
 import org.jetbrains.kotlin.resolve.jvm.jvmSignature.JvmMethodSignature
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
+import org.jetbrains.kotlin.utils.sure
 import org.jetbrains.org.objectweb.asm.MethodVisitor
 import org.jetbrains.org.objectweb.asm.Opcodes
 import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter
@@ -110,7 +111,9 @@ open class FunctionCodegen(
             ExpressionCodegen(functionView, signature, frameMap, InstructionAdapter(methodVisitor), classCodegen, inlinedInto).generate()
             methodVisitor.visitMaxs(-1, -1)
             if (irFunction.hasContinuation()) {
-                context.continuationClassBuilders[continuationClass().attributeOwnerId]!!.done()
+                context.continuationClassBuilders[continuationClass().attributeOwnerId].sure {
+                    "Could not find continuation class builder for ${continuationClass().render()}"
+                }.done()
             }
         }
         methodVisitor.visitEnd()

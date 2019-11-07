@@ -338,7 +338,11 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
     private fun IrFunction.continuationType(): IrType =
         context.ir.symbols.continuationClass.typeWith(returnType).makeNullable()
 
-    private fun generateContinuationClassForNamedFunction(irFunction: IrFunction, dispatchReceiverParameter: IrValueParameter?): IrClass {
+    private fun generateContinuationClassForNamedFunction(
+        irFunction: IrFunction,
+        dispatchReceiverParameter: IrValueParameter?,
+        attributeContainer: IrAttributeContainer
+    ): IrClass {
         return context.ir.symbols.continuationImplClass.owner
             .createContinuationClassFor(JvmLoweredDeclarationOrigin.CONTINUATION_CLASS, irFunction)
             .apply {
@@ -357,6 +361,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
                     capturedThisField,
                     irFunction.origin == JvmLoweredDeclarationOrigin.SUSPEND_IMPL_STATIC_FUNCTION
                 )
+                copyAttributes(attributeContainer)
             }
     }
 
@@ -392,7 +397,8 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
         capturedThisField: IrField?,
         isStaticSuspendImpl: Boolean
     ) {
-        val invokeSuspend = context.ir.symbols.continuationImplClass.owner.functions.single { it.name == Name.identifier(INVOKE_SUSPEND_METHOD_NAME) }
+        val invokeSuspend = context.ir.symbols.continuationImplClass.owner.functions
+            .single { it.name == Name.identifier(INVOKE_SUSPEND_METHOD_NAME) }
         addFunctionOverride(invokeSuspend).also { function ->
             function.body = context.createIrBuilder(function.symbol).irBlockBody {
                 +irSetField(irGet(function.dispatchReceiverParameter!!), resultField, irGet(function.valueParameters[0]))
@@ -494,7 +500,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
                 }
 
                 function.body = context.createIrBuilder(function.symbol).irBlockBody {
-                    +generateContinuationClassForNamedFunction(function, dispatchReceiverParameter)
+                    +generateContinuationClassForNamedFunction(function, dispatchReceiverParameter, declaration as IrAttributeContainer)
                     for (statement in function.body!!.statements) {
                         +statement
                     }
