@@ -256,7 +256,7 @@ class GradleScriptDefinitionsContributor(private val project: Project) : ScriptD
 
     private class ErrorScriptDependenciesResolver(private val message: String? = null) : DependenciesResolver {
         override fun resolve(scriptContents: ScriptContents, environment: Environment): ResolveResult {
-            val failureMessage = if (ReloadGradleTemplatesOnSync.gradleState.isSyncInProgress) {
+            val failureMessage = if (GradleTemplatesReloader.gradleState.isSyncInProgress) {
                 "Highlighting is impossible during Gradle Import"
             } else {
                 message ?: "Failed to load script definitions by ${GradleScriptDefinitionsContributor::class.java.name}"

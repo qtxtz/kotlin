@@ -11,7 +11,7 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType
 import org.jetbrains.kotlin.idea.core.script.ScriptDefinitionContributor
 import org.jetbrains.kotlin.idea.framework.GRADLE_SYSTEM_ID
 
-class ReloadGradleTemplatesOnSync : ExternalSystemTaskNotificationListenerAdapter() {
+class GradleTemplatesReloader : ExternalSystemTaskNotificationListenerAdapter() {
     companion object {
         internal val gradleState = GradleSyncState()
     }
