@@ -35,3 +35,7 @@ class GradleTemplatesReloader : ExternalSystemTaskNotificationListenerAdapter() 
         }
     }
 }
+
+internal class GradleSyncState {
+    var isSyncInProgress: Boolean = false
+}
