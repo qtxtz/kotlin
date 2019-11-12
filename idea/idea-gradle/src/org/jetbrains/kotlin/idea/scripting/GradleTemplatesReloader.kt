@@ -31,7 +31,7 @@ class GradleTemplatesReloader : ExternalSystemTaskNotificationListenerAdapter() 
                 ScriptDefinitionContributor.find<GradleScriptDefinitionsContributor>(
                     project
                 )
-            gradleDefinitionsContributor?.reloadIfNeccessary()
+            gradleDefinitionsContributor?.reloadIfNecessary()
         }
     }
 }
