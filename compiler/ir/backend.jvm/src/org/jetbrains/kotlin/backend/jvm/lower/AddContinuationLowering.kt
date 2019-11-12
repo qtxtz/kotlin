@@ -5,9 +5,9 @@
 
 package org.jetbrains.kotlin.backend.jvm.lower
 
-import org.jetbrains.kotlin.backend.common.FileLoweringPass
-import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.backend.common.*
 import org.jetbrains.kotlin.backend.common.ir.*
+import org.jetbrains.kotlin.backend.common.lower.LocalDeclarationsLowering
 import org.jetbrains.kotlin.backend.common.lower.createIrBuilder
 import org.jetbrains.kotlin.backend.common.phaser.makeIrFilePhase
 import org.jetbrains.kotlin.backend.jvm.JvmBackendContext
@@ -48,13 +48,15 @@ internal val addContinuationPhase = makeIrFilePhase(
 )
 
 private class AddContinuationLowering(private val context: JvmBackendContext) : FileLoweringPass {
-    private val overridableSuspendFunctions = mutableMapOf<IrFunction, IrClass>()
+    private val functionsToAdd = mutableMapOf<IrClass, MutableSet<IrFunction>>()
 
     override fun lower(irFile: IrFile) {
         val (suspendLambdas, inlineLambdas) = markSuspendLambdas(irFile)
         transformSuspendFunctions(irFile, (suspendLambdas.map { it.function } + inlineLambdas).toSet())
-        for ((function, parent) in overridableSuspendFunctions) {
-            parent.declarations.add(function)
+        for ((clazz, functions) in functionsToAdd) {
+            for (function in functions) {
+                clazz.declarations.add(function)
+            }
         }
         transformReferencesToSuspendLambdas(irFile, suspendLambdas)
     }
@@ -151,7 +153,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
             it.owner.name.asString() == INVOKE_SUSPEND_METHOD_NAME && it.owner.valueParameters.size == 1 &&
                     it.owner.valueParameters[0].type.isKotlinResult()
         }.owner
-        return addFunctionOverride(superMethod).also { it.copyContentFrom(irFunction, receiverField, fields) }
+        return addFunctionOverride(superMethod).also { it.copySuspendLambdaBodyFrom(irFunction, receiverField, fields) }
     }
 
     private fun IrClass.addInvokeSuspendForInlineForLambda(
@@ -160,12 +162,17 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
         fields: List<IrField>,
         receiverField: IrField?
     ): IrFunction {
-        return addFunction(INVOKE_SUSPEND_METHOD_NAME + FOR_INLINE_SUFFIX, context.irBuiltIns.anyNType, Modality.FINAL).apply {
+        return addFunction(
+            INVOKE_SUSPEND_METHOD_NAME + FOR_INLINE_SUFFIX,
+            context.irBuiltIns.anyNType,
+            Modality.FINAL,
+            origin = JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE
+        ).apply {
             invokeSuspend.valueParameters.mapTo(valueParameters) { it.copyTo(this) }
-        }.also { it.copyContentFrom(irFunction, receiverField, fields) }
+        }.also { it.copySuspendLambdaBodyFrom(irFunction, receiverField, fields) }
     }
 
-    private fun IrSimpleFunction.copyContentFrom(
+    private fun IrSimpleFunction.copySuspendLambdaBodyFrom(
         irFunction: IrFunction,
         receiverField: IrField?,
         fields: List<IrField>
@@ -206,6 +213,13 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
                 return IrReturnImpl(ret.startOffset, ret.endOffset, ret.type, symbol, ret.value)
             }
         })
+    }
+
+    private fun IrFunction.copyBodyFrom(oldFunction: IrFunction) {
+        val mapping: Map<IrValueParameter, IrValueParameter> =
+            (listOfNotNull(oldFunction.dispatchReceiverParameter, oldFunction.extensionReceiverParameter) + oldFunction.valueParameters)
+                .zip(listOfNotNull(dispatchReceiverParameter, extensionReceiverParameter) + valueParameters).toMap()
+        copyBodyWithParametersMapping(this, oldFunction, mapping)
     }
 
     private fun IrDeclarationContainer.addFunctionOverride(
@@ -487,25 +501,66 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
     // TODO: Generate two copies of inline suspend functions
     private fun transformSuspendFunctions(irFile: IrFile, suspendAndInlineLambdas: Set<IrFunction>) {
         irFile.transformChildrenVoid(object : IrElementTransformerVoid() {
+            private val functionsStack = arrayListOf<IrFunction>()
+            private val suspendFunctionsCapturingCrossinline = mutableSetOf<IrFunction>()
+
             override fun visitFunction(declaration: IrFunction): IrStatement {
-                var function = super.visitFunction(declaration) as IrFunction
+                functionsStack.push(declaration)
+                val function = super.visitFunction(declaration) as IrFunction
+                functionsStack.pop()
                 if (!function.isSuspend || function in suspendAndInlineLambdas || function.isInline || function.body == null) return function
 
-                val dispatchReceiverParameter = function.dispatchReceiverParameter
-                if (function is IrSimpleFunction && function.isOverridable) {
-                    // Create static method for the suspend state machine method so that reentering the method
-                    // does not lead to virtual dispatch to the wrong method.
-                    overridableSuspendFunctions[function] = function.parentAsClass
-                    function = createStaticSuspendImpl(function)
+                function as IrSimpleFunction
+                if (function in suspendFunctionsCapturingCrossinline) {
+                    val newFunction = buildFun {
+                        name = Name.identifier(function.name.asString() + FOR_INLINE_SUFFIX)
+                        returnType = function.returnType
+                        modality = function.modality
+                        isSuspend = function.isSuspend
+                        origin = JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE
+                    }.apply {
+                        dispatchReceiverParameter = function.dispatchReceiverParameter?.copyTo(this)
+                        extensionReceiverParameter = function.extensionReceiverParameter?.copyTo(this)
+                        function.valueParameters.mapTo(valueParameters) { it.copyTo(this) }
+                        copyBodyFrom(function)
+                        copyAttributes(function)
+                    }
+                    functionsToAdd[function.parentAsClass] = mutableSetOf(newFunction)
                 }
 
-                function.body = context.createIrBuilder(function.symbol).irBlockBody {
-                    +generateContinuationClassForNamedFunction(function, dispatchReceiverParameter, declaration as IrAttributeContainer)
-                    for (statement in function.body!!.statements) {
+                val newFunction = if (function.isOverridable) {
+                    // Create static method for the suspend state machine method so that reentering the method
+                    // does not lead to virtual dispatch to the wrong method.
+                    if (functionsToAdd[function.parentAsClass] == null) {
+                        functionsToAdd[function.parentAsClass] = mutableSetOf(function)
+                    } else {
+                        functionsToAdd[function.parentAsClass]!! += function
+                    }
+                    createStaticSuspendImpl(function)
+                } else function
+
+                newFunction.body = context.createIrBuilder(newFunction.symbol).irBlockBody {
+                    +generateContinuationClassForNamedFunction(
+                        newFunction,
+                        function.dispatchReceiverParameter,
+                        declaration as IrAttributeContainer
+                    )
+                    for (statement in newFunction.body!!.statements) {
                         +statement
                     }
                 }
-                return function
+                return newFunction
+            }
+
+            override fun visitFieldAccess(expression: IrFieldAccessExpression): IrExpression {
+                val result = super.visitFieldAccess(expression)
+                val function = functionsStack.peek() ?: return result
+                if (function.isSuspend &&
+                    expression.symbol.owner.origin == LocalDeclarationsLowering.DECLARATION_ORIGIN_FIELD_FOR_CROSSINLINE_CAPTURED_VALUE
+                ) {
+                    suspendFunctionsCapturingCrossinline += function
+                }
+                return result
             }
         })
     }

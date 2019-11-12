@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2018 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2019 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -80,6 +80,9 @@ class LocalDeclarationsLowering(
 
     object DECLARATION_ORIGIN_FIELD_FOR_CAPTURED_VALUE :
         IrDeclarationOriginImpl("FIELD_FOR_CAPTURED_VALUE", isSynthetic = true)
+
+    object DECLARATION_ORIGIN_FIELD_FOR_CROSSINLINE_CAPTURED_VALUE :
+        IrDeclarationOriginImpl("FIELD_FOR_CROSSINLINE_CAPTURED_VALUE", isSynthetic = true)
 
     private object STATEMENT_ORIGIN_INITIALIZER_OF_FIELD_FOR_CAPTURED_VALUE :
         IrStatementOriginImpl("INITIALIZER_OF_FIELD_FOR_CAPTURED_VALUE")
@@ -648,14 +651,15 @@ class LocalDeclarationsLowering(
             name: Name,
             visibility: Visibility,
             parent: IrClass,
-            fieldType: IrType
+            fieldType: IrType,
+            isCrossinline: Boolean
         ): IrField {
             val descriptor = WrappedFieldDescriptor()
             val symbol = IrFieldSymbolImpl(descriptor)
             return IrFieldImpl(
                 startOffset,
                 endOffset,
-                DECLARATION_ORIGIN_FIELD_FOR_CAPTURED_VALUE,
+                if (isCrossinline) DECLARATION_ORIGIN_FIELD_FOR_CROSSINLINE_CAPTURED_VALUE else DECLARATION_ORIGIN_FIELD_FOR_CAPTURED_VALUE,
                 symbol,
                 name,
                 fieldType,
@@ -675,16 +679,18 @@ class LocalDeclarationsLowering(
             val generatedNames = mutableSetOf<Name>()
             localClassContext.closure.capturedValues.forEach { capturedValue ->
 
+                val owner = capturedValue.owner
                 val irField = createFieldForCapturedValue(
                     classDeclaration.startOffset,
                     classDeclaration.endOffset,
-                    suggestNameForCapturedValue(capturedValue.owner, generatedNames),
+                    suggestNameForCapturedValue(owner, generatedNames),
                     Visibilities.PRIVATE,
                     classDeclaration,
-                    capturedValue.owner.type
+                    owner.type,
+                    owner is IrValueParameter && owner.isCrossinline
                 )
 
-                localClassContext.capturedValueToField[capturedValue.owner] = irField
+                localClassContext.capturedValueToField[owner] = irField
             }
         }
 

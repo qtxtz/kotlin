@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.codegen.coroutines.CoroutineTransformerMethodVisitor
 import org.jetbrains.kotlin.codegen.coroutines.INVOKE_SUSPEND_METHOD_NAME
 import org.jetbrains.kotlin.codegen.coroutines.SUSPEND_FUNCTION_COMPLETION_PARAMETER_NAME
 import org.jetbrains.kotlin.codegen.coroutines.reportSuspensionPointInsideMonitor
-import org.jetbrains.kotlin.codegen.inline.coroutines.FOR_INLINE_SUFFIX
+import org.jetbrains.kotlin.codegen.inline.addFakeContinuationConstructorCallMarker
 import org.jetbrains.kotlin.config.isReleaseCoroutines
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
@@ -39,10 +39,13 @@ import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.resolve.jvm.AsmTypes
 import org.jetbrains.kotlin.resolve.jvm.jvmSignature.JvmMethodGenericSignature
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DescriptorWithContainerSource
 import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.org.objectweb.asm.MethodVisitor
+import org.jetbrains.org.objectweb.asm.Type
+import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter
 
 internal fun generateStateMachineForNamedFunction(
     irFunction: IrFunction,
@@ -101,7 +104,8 @@ internal fun IrFunction.isInvokeSuspendOfLambda(): Boolean =
     name.asString() == INVOKE_SUSPEND_METHOD_NAME && parentAsClass.origin == JvmLoweredDeclarationOrigin.SUSPEND_LAMBDA
 
 internal fun IrFunction.isInvokeSuspendForInlineOfLambda(): Boolean =
-    name.asString() == INVOKE_SUSPEND_METHOD_NAME + FOR_INLINE_SUFFIX && parentAsClass.origin == JvmLoweredDeclarationOrigin.SUSPEND_LAMBDA
+    origin == JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE
+            && parentAsClass.origin == JvmLoweredDeclarationOrigin.SUSPEND_LAMBDA
 
 internal fun IrFunction.isInvokeSuspendOfContinuation(): Boolean =
     name.asString() == INVOKE_SUSPEND_METHOD_NAME && parentAsClass.origin == JvmLoweredDeclarationOrigin.CONTINUATION_CLASS
@@ -127,7 +131,9 @@ internal fun IrFunction.shouldNotContainSuspendMarkers(): Boolean =
 // Transform `suspend fun foo(params): RetType` into `fun foo(params, $completion: Continuation<RetType>): Any?`
 // the result is called 'view', just to be consistent with old backend.
 internal fun IrFunction.getOrCreateSuspendFunctionViewIfNeeded(context: JvmBackendContext): IrFunction {
-    if (!isSuspend || origin == JvmLoweredDeclarationOrigin.SUSPEND_FUNCTION_VIEW) return this
+    if (!isSuspend || origin == JvmLoweredDeclarationOrigin.SUSPEND_FUNCTION_VIEW ||
+        origin == JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE_VIEW
+    ) return this
     return if (isSuspend) context.suspendFunctionViews.getOrElse(this) { suspendFunctionView(context) } else this
 }
 
@@ -146,7 +152,12 @@ private fun IrFunction.suspendFunctionView(context: JvmBackendContext): IrFuncti
         else
             WrappedSimpleFunctionDescriptor(sourceElement = originalDescriptor.source)
     return IrFunctionImpl(
-        startOffset, endOffset, JvmLoweredDeclarationOrigin.SUSPEND_FUNCTION_VIEW, IrSimpleFunctionSymbolImpl(descriptor),
+        startOffset, endOffset,
+        if (origin == JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE)
+            JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE_VIEW
+        else
+            JvmLoweredDeclarationOrigin.SUSPEND_FUNCTION_VIEW,
+        IrSimpleFunctionSymbolImpl(descriptor),
         name, visibility, modality, context.irBuiltIns.anyNType,
         isInline = isInline, isExternal = isExternal, isTailrec = isTailrec, isSuspend = isSuspend, isExpect = isExpect,
         isFakeOverride = false
@@ -222,3 +233,31 @@ internal fun createFakeContinuation(context: JvmBackendContext): IrExpression = 
     context.ir.symbols.continuationClass.createType(true, listOf(makeTypeProjection(context.irBuiltIns.anyNType, Variance.INVARIANT))),
     "FAKE_CONTINUATION"
 )
+
+internal fun generateFakeContinuationConstructorCall(
+    v: InstructionAdapter,
+    containingClassBuilder: ClassBuilder,
+    classBuilder: ClassBuilder,
+    irFunction: IrFunction
+) {
+    val continuationType = Type.getObjectType(classBuilder.thisName)
+    // TODO: This is different in case of DefaultImpls
+    val thisNameType = Type.getObjectType(containingClassBuilder.thisName.replace(".", "/"))
+    val continuationIndex = listOfNotNull(irFunction.dispatchReceiverParameter, irFunction.extensionReceiverParameter).size +
+            irFunction.valueParameters.size - 1
+    with(v) {
+        addFakeContinuationConstructorCallMarker(this, true)
+        anew(continuationType)
+        dup()
+        if (irFunction.dispatchReceiverParameter != null) {
+            load(0, AsmTypes.OBJECT_TYPE)
+            load(continuationIndex, Type.getObjectType("kotlin/coroutines/Continuation"))
+            invokespecial(continuationType.internalName, "<init>", "(${thisNameType}Lkotlin/coroutines/Continuation;)V", false)
+        } else {
+            load(continuationIndex, Type.getObjectType("kotlin/coroutines/Continuation"))
+            invokespecial(continuationType.internalName, "<init>", "(Lkotlin/coroutines/Continuation;)V", false)
+        }
+        pop()
+        addFakeContinuationConstructorCallMarker(this, false)
+    }
+}

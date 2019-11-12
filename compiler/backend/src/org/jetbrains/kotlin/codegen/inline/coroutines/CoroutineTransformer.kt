@@ -146,7 +146,8 @@ class CoroutineTransformer(
                     containingClassInternalName = classBuilder.thisName,
                     isForNamedFunction = true,
                     needDispatchReceiver = true,
-                    internalNameForDispatchReceiver = classBuilder.thisName
+                    internalNameForDispatchReceiver = classBuilder.thisName,
+                    putContinuationParameterToLvt = !state.isIrBackend
                 )
             )
 
@@ -217,7 +218,7 @@ class CoroutineTransformer(
 
     fun oldContinuationFrom(method: MethodNode): String? =
         methods.find { it.name == method.name + FOR_INLINE_SUFFIX && it.desc == method.desc }
-                ?.let { findFakeContinuationConstructorClassName(it) }
+            ?.let { findFakeContinuationConstructorClassName(it) }
 
     companion object {
         fun findFakeContinuationConstructorClassName(node: MethodNode): String? {

@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.codegen.inline.*
 import org.jetbrains.kotlin.codegen.inline.ReifiedTypeInliner.Companion.putNeedClassReificationMarker
 import org.jetbrains.kotlin.codegen.inline.ReifiedTypeInliner.OperationKind.AS
 import org.jetbrains.kotlin.codegen.inline.ReifiedTypeInliner.OperationKind.SAFE_AS
+import org.jetbrains.kotlin.codegen.inline.coroutines.FOR_INLINE_SUFFIX
 import org.jetbrains.kotlin.codegen.intrinsics.TypeIntrinsics
 import org.jetbrains.kotlin.codegen.pseudoInsns.fakeAlwaysFalseIfeq
 import org.jetbrains.kotlin.codegen.pseudoInsns.fixStackAndJump
@@ -47,9 +48,11 @@ import org.jetbrains.kotlin.resolve.jvm.jvmSignature.JvmMethodSignature
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.TypeSystemCommonBackendContext
 import org.jetbrains.kotlin.types.model.TypeParameterMarker
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import org.jetbrains.kotlin.utils.keysToMap
+import org.jetbrains.kotlin.utils.sure
 import org.jetbrains.org.objectweb.asm.Label
 import org.jetbrains.org.objectweb.asm.Type
 import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter
@@ -179,6 +182,7 @@ class ExpressionCodegen(
         val info = BlockInfo()
         val body = irFunction.body!!
         generateNonNullAssertions()
+        generateFakeContinuationConstructorIfNeeded()
         val result = body.accept(this, info)
         // If this function has an expression body, return the result of that expression.
         // Otherwise, if it does not end in a return statement, it must be void-returning,
@@ -197,6 +201,19 @@ class ExpressionCodegen(
         val endLabel = markNewLabel()
         writeLocalVariablesInTable(info, endLabel)
         writeParameterInLocalVariableTable(startLabel, endLabel)
+    }
+
+    private fun generateFakeContinuationConstructorIfNeeded() {
+        if (irFunction.origin != JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE_VIEW) return
+        val continuationClass = classCodegen.irClass.functions.find {
+            it.name.asString() == irFunction.name.asString().removeSuffix(FOR_INLINE_SUFFIX)
+        }?.body?.statements?.get(0) ?: error("could not find continuation for ${irFunction.render()}")
+        generateFakeContinuationConstructorCall(
+            mv,
+            classCodegen.visitor,
+            context.continuationClassBuilders[(continuationClass as IrClass).attributeOwnerId]!!,
+            irFunction
+        )
     }
 
     private fun generateNonNullAssertions() {
@@ -224,7 +241,8 @@ class ExpressionCodegen(
 
         // Do not generate non-null checks for suspend function views. When resumed the arguments
         // will be null and the actual values are taken from the continuation.
-        val isSuspendFunctionView = irFunction.origin == JvmLoweredDeclarationOrigin.SUSPEND_FUNCTION_VIEW
+        val isSuspendFunctionView = irFunction.origin == JvmLoweredDeclarationOrigin.SUSPEND_FUNCTION_VIEW ||
+                irFunction.origin == JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE_VIEW
 
         if (isSuspendFunctionView)
             return

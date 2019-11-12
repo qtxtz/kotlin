@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.backend.jvm.codegen
 
 import org.jetbrains.kotlin.backend.jvm.JvmBackendContext
+import org.jetbrains.kotlin.backend.jvm.JvmLoweredDeclarationOrigin
 import org.jetbrains.kotlin.codegen.AsmUtil
 import org.jetbrains.kotlin.codegen.ClassBuilderMode
 import org.jetbrains.kotlin.codegen.coroutines.SUSPEND_IMPL_NAME_SUFFIX
@@ -56,6 +57,8 @@ open class FunctionCodegen(
                 !isInline &&
                 // This is suspend lambda parameter of inline function
                 origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA &&
+                // This is just a template for inliner
+                origin != JvmLoweredDeclarationOrigin.FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE &&
                 // Continuations are generated for suspendImpls
                 parentAsClass.declarations.filterIsInstance<IrFunction>().find { it.name.asString() == name.asString() + SUSPEND_IMPL_NAME_SUFFIX } == null
 

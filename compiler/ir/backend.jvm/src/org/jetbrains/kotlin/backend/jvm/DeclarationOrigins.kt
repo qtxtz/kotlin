@@ -37,4 +37,7 @@ interface JvmLoweredDeclarationOrigin : IrDeclarationOrigin {
     object SUSPEND_IMPL_STATIC_FUNCTION :  IrDeclarationOriginImpl("SUSPEND_IMPL_STATIC_FUNCTION", isSynthetic = true)
     object CONTINUATION_CLASS : IrDeclarationOriginImpl("CONTINUATION_CLASS")
     object SUSPEND_LAMBDA : IrDeclarationOriginImpl("SUSPEND_LAMBDA")
+    object FOR_INLINE_STATE_MACHINE_TEMPLATE : IrDeclarationOriginImpl("FOR_INLINE_TEMPLATE")
+    object FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE : IrDeclarationOriginImpl("FOR_INLINE_TEMPLATE_CROSSINLINE")
+    object FOR_INLINE_STATE_MACHINE_TEMPLATE_CAPTURES_CROSSINLINE_VIEW : IrDeclarationOriginImpl("FOR_INLINE_TEMPLATE_CROSSINLINE_VIEW")
 }
