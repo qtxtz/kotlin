@@ -628,7 +628,7 @@ class HtmlFirDump internal constructor(private var linkResolver: FirLinkResolver
         +")"
     }
 
-    private fun FlowContent.generate(type: ConeClassType) {
+    private fun FlowContent.generate(type: ConeClassLikeType) {
         resolved {
             symbolRef(type.lookupTag.toSymbol(session)) {
                 fqn(type.lookupTag.classId.relativeClassName)
@@ -714,7 +714,7 @@ class HtmlFirDump internal constructor(private var linkResolver: FirLinkResolver
     private fun FlowContent.generate(type: ConeKotlinType) {
         when (type) {
             is ConeClassErrorType -> error { +type.reason }
-            is ConeClassType -> generate(type)
+            is ConeClassLikeType -> generate(type)
             is ConeAbbreviatedType -> resolved {
                 symbolRef(type.abbreviationLookupTag.toSymbol(session)) {
                     simpleName(type.abbreviationLookupTag.name)
