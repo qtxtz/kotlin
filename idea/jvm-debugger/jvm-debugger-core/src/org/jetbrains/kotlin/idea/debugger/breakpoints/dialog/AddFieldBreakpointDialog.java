@@ -80,19 +80,17 @@ public abstract class AddFieldBreakpointDialog extends DialogWrapper {
 
         myFieldChooser.addActionListener(e -> {
             PsiClass selectedClass = getSelectedClass();
-            if (selectedClass == null) {
-                return;
-            }
-
-            DescriptorMemberChooserObject[] properties = FieldBreakpointDialogUtilKt.collectProperties(selectedClass);
-            MemberChooser<DescriptorMemberChooserObject> chooser = new MemberChooser<>(properties, false, false, myProject);
-            chooser.setTitle(DebuggerBundle.message("add.field.breakpoint.dialog.field.chooser.title", properties.length));
-            chooser.setCopyJavadocVisible(false);
-            TransactionGuard.getInstance().submitTransactionAndWait(chooser::show);
-            List<DescriptorMemberChooserObject> selectedElements = chooser.getSelectedElements();
-            if (selectedElements != null && selectedElements.size() == 1) {
-                KtProperty field = (KtProperty) selectedElements.get(0).getElement();
-                myFieldChooser.setText(field.getName());
+            if (selectedClass != null) {
+                DescriptorMemberChooserObject[] properties = FieldBreakpointDialogUtilKt.collectProperties(selectedClass);
+                MemberChooser<DescriptorMemberChooserObject> chooser = new MemberChooser<>(properties, false, false, myProject);
+                chooser.setTitle(DebuggerBundle.message("add.field.breakpoint.dialog.field.chooser.title", properties.length));
+                chooser.setCopyJavadocVisible(false);
+                TransactionGuard.getInstance().submitTransactionAndWait(chooser::show);
+                List<DescriptorMemberChooserObject> selectedElements = chooser.getSelectedElements();
+                if (selectedElements != null && selectedElements.size() == 1) {
+                    KtProperty field = (KtProperty) selectedElements.get(0).getElement();
+                    myFieldChooser.setText(field.getName());
+                }
             }
         });
         myFieldChooser.setEnabled(false);
