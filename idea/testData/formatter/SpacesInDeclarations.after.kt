@@ -64,7 +64,6 @@ val
 
 //-----------------------
 annotation class A1
-
 annotation class A2
 
 private @[A1 A2 A1]

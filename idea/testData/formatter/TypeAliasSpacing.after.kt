@@ -2,7 +2,6 @@ typealias A = Int
 typealias B = Int
 //
 typealias C = Int
-
 typealias D =
         Int
 

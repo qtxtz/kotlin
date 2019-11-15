@@ -12,6 +12,7 @@ import com.intellij.formatting.SpacingBuilder
 import com.intellij.formatting.SpacingBuilder.RuleBuilder
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.codeStyle.CodeStyleSettings
@@ -21,11 +22,13 @@ import com.intellij.util.text.TextRangeUtil
 import org.jetbrains.kotlin.KtNodeTypes.*
 import org.jetbrains.kotlin.idea.formatter.KotlinSpacingBuilder.CustomSpacingBuilder
 import org.jetbrains.kotlin.idea.util.requireNode
+import org.jetbrains.kotlin.kdoc.psi.api.KDoc
 import org.jetbrains.kotlin.lexer.KtTokens.*
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.isObjectLiteral
 import org.jetbrains.kotlin.psi.psiUtil.siblings
 import org.jetbrains.kotlin.psi.psiUtil.textRangeWithoutComments
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 val MODIFIERS_LIST_ENTRIES = TokenSet.orSet(TokenSet.create(ANNOTATION_ENTRY, ANNOTATION), MODIFIER_KEYWORDS)
 
@@ -87,8 +90,15 @@ fun createSpacingBuilder(settings: CodeStyleSettings, builderUtil: KotlinSpacing
                     null
                 }
             }
+
             inPosition(right = BLOCK_COMMENT).spacing(commentSpacing(0))
             inPosition(right = EOL_COMMENT).spacing(commentSpacing(1))
+            inPosition(leftSet = DECLARATIONS, rightSet = DECLARATIONS).customRule { _, _, right ->
+                if (right.node?.firstChildNode is KDoc) {
+                    createSpacing(0, minLineFeeds = 2)
+                } else
+                    null
+            }
 
             inPosition(left = CLASS, right = CLASS).emptyLinesIfLineBreakInLeft(1)
             inPosition(left = CLASS, right = OBJECT_DECLARATION).emptyLinesIfLineBreakInLeft(1)
