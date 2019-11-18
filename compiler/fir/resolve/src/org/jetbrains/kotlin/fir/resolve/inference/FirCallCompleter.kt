@@ -54,7 +54,7 @@ class FirCallCompleter(
             if (call is FirExpression) {
                 call.resultType = typeRef
             }
-            return call
+            return call.transformChildren(transformer, ResolutionMode.WithExpectedType(typeRef.resolvedTypeFromPrototype(session.builtinTypes.nullableAnyType.type))) as T
         }
         val candidate = call.candidate() ?: return call
         val initialSubstitutor = candidate.substitutor
