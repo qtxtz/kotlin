@@ -96,7 +96,6 @@ class JavaSymbolProvider(
             val superTypeEnhancementScopes =
                 lookupSuperTypes(regularClass, lookupInterfaces = true, deep = false, useSiteSession = useSiteSession)
                     .mapNotNull { useSiteSuperType ->
-                        if (useSiteSuperType is ConeClassErrorType) return@mapNotNull null
                         val symbol = useSiteSuperType.lookupTag.toSymbol(useSiteSession)
                         if (symbol is FirRegularClassSymbol && visitedSymbols.add(symbol)) {
                             // We need JavaClassEnhancementScope here to have already enhanced signatures from supertypes

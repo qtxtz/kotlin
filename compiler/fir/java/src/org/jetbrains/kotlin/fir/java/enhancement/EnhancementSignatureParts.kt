@@ -57,12 +57,9 @@ internal class EnhancementSignatureParts(
         }
 
         val containsFunctionN = current.toNotNullConeKotlinType(session, javaTypeParameterStack).contains {
-            if (it is ConeClassErrorType) false
-            else {
-                val classId = it.lookupTag.classId
-                classId.shortClassName == JavaToKotlinClassMap.FUNCTION_N_FQ_NAME.shortName() &&
-                        classId.asSingleFqName() == JavaToKotlinClassMap.FUNCTION_N_FQ_NAME
-            }
+            val classId = it.lookupTag.classId
+            classId.shortClassName == JavaToKotlinClassMap.FUNCTION_N_FQ_NAME.shortName() &&
+                    classId.asSingleFqName() == JavaToKotlinClassMap.FUNCTION_N_FQ_NAME
         }
 
         val enhancedCurrent = current.enhance(session, javaTypeParameterStack, qualifiersWithPredefined ?: qualifiers)

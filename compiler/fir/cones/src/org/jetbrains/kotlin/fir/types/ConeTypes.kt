@@ -90,7 +90,7 @@ typealias ConeKotlinErrorType = ConeClassErrorType
 
 class ConeClassLikeErrorLookupTag(override val classId: ClassId) : ConeClassLikeLookupTag()
 
-class ConeClassErrorType(val reason: String) : ConeClassLikeType() {
+class ConeClassErrorType(val reason: String) : ConeLookupTagBasedType() {
     override val lookupTag: ConeClassLikeLookupTag
         get() = ConeClassLikeErrorLookupTag(ClassId.fromString("<error>"))
 
@@ -109,14 +109,8 @@ abstract class ConeLookupTagBasedType : ConeKotlinType(), SimpleTypeMarker {
     abstract val lookupTag: ConeClassifierLookupTag
 }
 
-sealed class ConeClassLikeType : ConeLookupTagBasedType() {
+abstract class ConeClassLikeType : ConeLookupTagBasedType() {
     abstract override val lookupTag: ConeClassLikeLookupTag
-}
-
-abstract class ConeClassType : ConeClassLikeType()
-
-abstract class ConeAbbreviatedType : ConeClassLikeType() {
-    abstract val abbreviationLookupTag: ConeClassLikeLookupTag
 }
 
 data class ConeFlexibleType(val lowerBound: ConeKotlinType, val upperBound: ConeKotlinType) : ConeKotlinType(),

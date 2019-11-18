@@ -58,8 +58,7 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
     override fun KotlinTypeMarker.asSimpleType(): SimpleTypeMarker? {
         assert(this is ConeKotlinType)
         return when (this) {
-            is ConeAbbreviatedType -> directExpansionType(session)
-                ?: ConeClassErrorType("no expansion for type-alias: ${this.abbreviationLookupTag.classId}")
+            is ConeClassLikeType -> directExpansionTypeOrSelf(session)
             is ConeCapturedType -> this
             is ConeLookupTagBasedType -> this
             is ConeDefinitelyNotNullType -> this
@@ -129,8 +128,8 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
         val typeConstructor = when (this) {
             is ConeCapturedType -> constructor
             is ConeTypeVariableType -> this.lookupTag as ConeTypeVariableTypeConstructor // TODO: WTF
-            is ConeAbbreviatedType -> this.directExpansionType(session)?.typeConstructor()
-                ?: ErrorTypeConstructor("Failed to expand alias: $this")
+            is ConeClassLikeType -> fullyExpandedType(session).lookupTag.toSymbol(session)
+                ?: ErrorTypeConstructor("Unresolved: ${this.lookupTag}")
             is ConeLookupTagBasedType -> this.lookupTag.toSymbol(session) ?: ErrorTypeConstructor("Unresolved: ${this.lookupTag}")
             is ConeIntersectionType -> this
             is ConeStubType -> variable.typeConstructor
@@ -401,28 +400,9 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
         return ConeTypeIntersector.intersectTypes(this as ConeInferenceContext, types as List<ConeKotlinType>)
     }
 
-    private fun prepareClassLikeType(
-        type: ConeClassLikeType,
-        visited: MutableSet<ConeAbbreviatedType>
-    ): KotlinTypeMarker {
-        return when (type) {
-            is ConeAbbreviatedType -> prepareAbbreviatedType(type, visited)
-            else -> type
-        }
-    }
-
-    private fun prepareAbbreviatedType(
-        type: ConeAbbreviatedType,
-        visited: MutableSet<ConeAbbreviatedType> = mutableSetOf()
-    ): KotlinTypeMarker {
-        if (type in visited) return ConeClassErrorType("Recursive type alias")
-        visited += type
-        return prepareClassLikeType(type.directExpansionType(session) ?: ConeClassErrorType("unresolved"), visited)
-    }
-
     override fun prepareType(type: KotlinTypeMarker): KotlinTypeMarker {
         return when (type) {
-            is ConeAbbreviatedType -> prepareAbbreviatedType(type)
+            is ConeClassLikeType -> type.fullyExpandedType(session)
             else -> type
         }
     }
@@ -528,11 +508,11 @@ class ConeTypeCheckerContext(
         if (type.argumentsCount() == 0) return SupertypesPolicy.LowerIfFlexible
         require(type is ConeKotlinType)
         val declaration = when (type) {
-            is ConeClassType -> type.lookupTag.toSymbol(session)?.firUnsafe<FirRegularClass>()
+            is ConeClassLikeType -> type.lookupTag.toSymbol(session)?.firUnsafe<FirClassLikeDeclaration<*>>()
             else -> null
         }
 
-        val substitutor = if (declaration != null) {
+        val substitutor = if (declaration is FirTypeParametersOwner) {
             val substitution =
                 declaration.typeParameters.zip(type.typeArguments).associate { (parameter, argument) ->
                     parameter.symbol to ((argument as? ConeTypedProjection)?.type
