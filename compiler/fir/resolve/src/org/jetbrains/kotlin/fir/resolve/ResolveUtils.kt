@@ -63,9 +63,27 @@ fun ConeClassLikeLookupTag.toSymbol(useSiteSession: FirSession): FirClassLikeSym
     return firSymbolProvider.getSymbolByLookupTag(this)
 }
 
-tailrec fun ConeClassLikeType.fullyExpandedType(
+fun ConeClassLikeType.fullyExpandedType(
     useSiteSession: FirSession,
     expandedConeType: (FirTypeAlias) -> ConeClassLikeType? = FirTypeAlias::expandedConeType
+): ConeClassLikeType {
+    if (this is ConeClassLikeTypeImpl) {
+        val expandedTypeAndSession = expandedType
+        if (expandedTypeAndSession != null && expandedTypeAndSession.first === useSiteSession) {
+            return expandedTypeAndSession.second
+        }
+
+        val computedExpandedType = fullyExpandedTypeNoCache(useSiteSession, expandedConeType)
+        expandedType = Pair(useSiteSession, computedExpandedType)
+        return computedExpandedType
+    }
+
+    return fullyExpandedTypeNoCache(useSiteSession, expandedConeType)
+}
+
+private fun ConeClassLikeType.fullyExpandedTypeNoCache(
+    useSiteSession: FirSession,
+    expandedConeType: (FirTypeAlias) -> ConeClassLikeType?
 ): ConeClassLikeType {
     val directExpansionType = directExpansionType(useSiteSession, expandedConeType) ?: return this
     return directExpansionType.fullyExpandedType(useSiteSession, expandedConeType)
