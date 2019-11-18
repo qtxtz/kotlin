@@ -58,7 +58,7 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
     override fun KotlinTypeMarker.asSimpleType(): SimpleTypeMarker? {
         assert(this is ConeKotlinType)
         return when (this) {
-            is ConeClassLikeType -> directExpansionTypeOrSelf(session)
+            is ConeClassLikeType -> this
             is ConeCapturedType -> this
             is ConeLookupTagBasedType -> this
             is ConeDefinitelyNotNullType -> this
@@ -128,7 +128,7 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
         val typeConstructor = when (this) {
             is ConeCapturedType -> constructor
             is ConeTypeVariableType -> this.lookupTag as ConeTypeVariableTypeConstructor // TODO: WTF
-            is ConeClassLikeType -> fullyExpandedType(session).lookupTag.toSymbol(session)
+            is ConeClassLikeType -> lookupTag.toSymbol(session)
                 ?: ErrorTypeConstructor("Unresolved: ${this.lookupTag}")
             is ConeLookupTagBasedType -> this.lookupTag.toSymbol(session) ?: ErrorTypeConstructor("Unresolved: ${this.lookupTag}")
             is ConeIntersectionType -> this
@@ -401,10 +401,7 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
     }
 
     override fun prepareType(type: KotlinTypeMarker): KotlinTypeMarker {
-        return when (type) {
-            is ConeClassLikeType -> type.fullyExpandedType(session)
-            else -> type
-        }
+        return type
     }
 
     override fun KotlinTypeMarker.isNullableType(): Boolean {

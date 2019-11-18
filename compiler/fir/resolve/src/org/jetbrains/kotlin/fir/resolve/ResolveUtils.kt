@@ -10,8 +10,8 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.componentArrayAccessor
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.diagnostics.DiagnosticKind
-import org.jetbrains.kotlin.fir.diagnostics.FirStubDiagnostic
 import org.jetbrains.kotlin.fir.diagnostics.FirSimpleDiagnostic
+import org.jetbrains.kotlin.fir.diagnostics.FirStubDiagnostic
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccess
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvable
@@ -62,11 +62,6 @@ fun ConeClassLikeLookupTag.toSymbol(useSiteSession: FirSession): FirClassLikeSym
     val firSymbolProvider = useSiteSession.firSymbolProvider
     return firSymbolProvider.getSymbolByLookupTag(this)
 }
-
-fun ConeClassLikeType.directExpansionTypeOrSelf(
-    useSiteSession: FirSession,
-    expandedConeType: (FirTypeAlias) -> ConeClassLikeType? = FirTypeAlias::expandedConeType
-): ConeClassLikeType = directExpansionType(useSiteSession, expandedConeType) ?: this
 
 tailrec fun ConeClassLikeType.fullyExpandedType(
     useSiteSession: FirSession,
