@@ -1,0 +1,32 @@
+{
+  "1": {
+    "neg": {
+      "2": [
+        {
+          "specVersion": "0.1-100",
+          "casesNumber": 1,
+          "description": "The use of Boolean literals as the identifier (with backtick) in the class.",
+          "unexpectedBehaviour": false
+        }
+      ]
+    },
+    "pos": {
+      "2": [
+        {
+          "specVersion": "0.1-100",
+          "casesNumber": 1,
+          "description": "The use of Boolean literals as the identifier (with backtick) in the class.",
+          "unexpectedBehaviour": false
+        }
+      ],
+      "1": [
+        {
+          "specVersion": "0.1-100",
+          "casesNumber": 1,
+          "description": "The use of Boolean literals as the identifier (with backtick) in the class.",
+          "unexpectedBehaviour": false
+        }
+      ]
+    }
+  }
+}
