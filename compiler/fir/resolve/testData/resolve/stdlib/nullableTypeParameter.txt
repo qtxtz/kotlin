@@ -1,0 +1,7 @@
+FILE: qqq.kt
+    public final fun test(): R|kotlin/Unit| {
+        lval list: R|kotlin/collections/List<kotlin/Int>| = R|kotlin/collections/listOf|<R|kotlin/Int|>(Int(1)).R|kotlin/collections/ifEmpty|<R|kotlin/collections/List<kotlin/Int>|, R|kotlin/collections/List<kotlin/Int>|>(<L> = ifEmpty@fun <anonymous>(): R|kotlin/Unit| <kind=UNKNOWN>  {
+            ^test Unit
+        }
+        )
+    }
