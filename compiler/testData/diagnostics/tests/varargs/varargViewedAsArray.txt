@@ -1,0 +1,5 @@
+package
+
+public fun foo(/*0*/ x: kotlin.Int, /*1*/ vararg y: kotlin.String /*kotlin.Array<out kotlin.String>*/): kotlin.String
+public fun test(): kotlin.String
+public fun useArray(/*0*/ f: (kotlin.Int, kotlin.Array<kotlin.String>) -> kotlin.String): kotlin.String
