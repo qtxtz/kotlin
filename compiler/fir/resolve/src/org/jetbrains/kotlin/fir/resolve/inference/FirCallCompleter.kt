@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.fir.resolve.inference
 
+import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.copy
 import org.jetbrains.kotlin.fir.declarations.FirAnonymousFunction
 import org.jetbrains.kotlin.fir.declarations.impl.FirValueParameterImpl
@@ -91,7 +92,7 @@ class FirCallCompleter(
             analyzer.analyze(candidate.system.asPostponedArgumentsAnalyzerContext(), it)
         }
 
-        call.transformChildren(MapArguments, replacements.toMap())
+        call.transformChildren(MapArguments, replacements as Map<FirElement, FirElement>)
 
         if (completionMode == KotlinConstraintSystemCompleter.ConstraintSystemCompletionMode.FULL) {
             val finalSubstitutor =
