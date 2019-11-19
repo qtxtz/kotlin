@@ -57,10 +57,10 @@ class JavaSymbolProvider(
     override fun getTopLevelCallableSymbols(packageFqName: FqName, name: Name): List<FirCallableSymbol<*>> =
         emptyList()
 
+    // NB: looks like it's better not to use this function at all...
     override fun getClassDeclaredMemberScope(classId: ClassId): FirScope? {
         val classSymbol = getClassLikeSymbolByFqName(classId) ?: return null
-        val klass = classSymbol.fir
-        return declaredMemberScope(klass, useLazyNestedClassifierScope = klass is FirJavaClass)
+        return declaredMemberScope(classSymbol.fir)
     }
 
     override fun getClassUseSiteMemberScope(
