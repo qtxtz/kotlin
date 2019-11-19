@@ -244,6 +244,9 @@ class CopyKotlinDeclarationsHandler : CopyHandlerDelegateBase() {
     }
 
     private fun trackedCopyFiles(sourceFiles: Array<out PsiElement>, initialTargetDirectory: PsiDirectory?): Set<VirtualFile> {
+
+        if (!copyFilesHandler.canCopy(sourceFiles)) return emptySet()
+
         val mapper = object : VirtualFileListener {
             val filesCopied = mutableSetOf<VirtualFile>()
 
@@ -271,7 +274,7 @@ class CopyKotlinDeclarationsHandler : CopyHandlerDelegateBase() {
 
         if (filesToCopy.isEmpty()) return
 
-        val project = filesToCopy.first().project
+        val project = filesToCopy[0].project
         val psiManager = PsiManager.getInstance(project)
 
         project.executeCommand(commandName) {
@@ -298,7 +301,8 @@ class CopyKotlinDeclarationsHandler : CopyHandlerDelegateBase() {
         if (elements.isEmpty()) return
 
         if (!canCopyDeclarations(elements)) {
-            return doCopyFiles(elements, defaultTargetDirectory)
+            val filesElement = Array(elements.size) { elements[it].containingFile }
+            return doCopyFiles(filesElement, defaultTargetDirectory)
         }
 
         val elementsToCopy = elements.mapNotNull { it.getCopyableElement() }
