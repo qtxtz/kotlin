@@ -211,6 +211,10 @@ private val jvmFilePhases =
         typeAliasAnnotationMethodsPhase then
         stripTypeAliasDeclarationsPhase then
         provisionalFunctionExpressionPhase then
+
+        jvmOverloadsAnnotationPhase then
+        mainMethodGenerationPhase then
+
         inventNamesForLocalClassesPhase then
         kCallableNamePropertyPhase then
         annotationPhase then
@@ -246,7 +250,6 @@ private val jvmFilePhases =
         localDeclarationsPhase then
         jvmLocalClassExtractionPhase then
 
-        jvmOverloadsAnnotationPhase then
         jvmDefaultConstructorPhase then
 
         forLoopsPhase then
@@ -288,8 +291,6 @@ private val jvmFilePhases =
         replaceKFunctionInvokeWithFunctionInvokePhase then
 
         checkLocalNamesWithOldBackendPhase then
-
-        mainMethodGenerationPhase then
 
         makePatchParentsPhase(3)
 

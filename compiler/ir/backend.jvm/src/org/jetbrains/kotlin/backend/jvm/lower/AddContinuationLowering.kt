@@ -11,8 +11,6 @@ import org.jetbrains.kotlin.backend.common.ir.*
 import org.jetbrains.kotlin.backend.common.lower.createIrBuilder
 import org.jetbrains.kotlin.backend.common.lower.parents
 import org.jetbrains.kotlin.backend.common.phaser.makeIrFilePhase
-import org.jetbrains.kotlin.backend.common.pop
-import org.jetbrains.kotlin.backend.common.push
 import org.jetbrains.kotlin.backend.jvm.JvmBackendContext
 import org.jetbrains.kotlin.backend.jvm.JvmLoweredDeclarationOrigin
 import org.jetbrains.kotlin.backend.jvm.codegen.isInlineIrBlock
@@ -61,7 +59,6 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
             generateContinuationClassForLambda(lambda)
         }
         transformReferencesToSuspendLambdas(irFile, suspendLambdas)
-        transformSuspendCalls(irFile)
         for (suspendFunction in suspendFunctions) {
             generateContinuationClassForNamedFunction(suspendFunction)
         }
@@ -543,23 +540,6 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
             }
         })
         return suspendLambdas
-    }
-
-    private fun transformSuspendCalls(irFile: IrFile) {
-        irFile.transformChildrenVoid(object : IrElementTransformerVoid() {
-            private val functionStack = mutableListOf<IrFunction>()
-            override fun visitElement(element: IrElement): IrElement {
-                element.transformChildrenVoid(this)
-                return element
-            }
-
-            override fun visitFunction(declaration: IrFunction): IrStatement {
-                functionStack.push(declaration)
-                val res = super.visitFunction(declaration)
-                functionStack.pop()
-                return res
-            }
-        })
     }
 
     private class SuspendLambdaInfo(val function: IrFunction, val arity: Int, val reference: IrFunctionReference) {

@@ -90,7 +90,8 @@ class IrIntrinsicMethods(val irBuiltIns: IrBuiltIns, val symbols: JvmSymbols) {
                 irBuiltIns.ororSymbol.toKey()!! to OrOr,
                 symbols.unsafeCoerceIntrinsic.toKey()!! to UnsafeCoerce,
                 symbols.signatureStringIntrinsic.toKey()!! to SignatureString,
-                symbols.reassignParameterIntrinsic.toKey()!! to ReassignParameter
+                symbols.reassignParameterIntrinsic.toKey()!! to ReassignParameter,
+                symbols.runSuspendFunction.toKey()!! to RunSuspend
             ) +
                     numberConversionMethods() +
                     unaryFunForPrimitives("plus", UnaryPlus) +
