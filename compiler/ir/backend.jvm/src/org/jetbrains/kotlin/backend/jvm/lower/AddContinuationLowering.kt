@@ -508,7 +508,7 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
                 functionsStack.push(declaration)
                 val function = super.visitFunction(declaration) as IrFunction
                 functionsStack.pop()
-                if (!function.isSuspend || function in suspendAndInlineLambdas || function.isInline || function.body == null) return function
+                if (skip(function)) return function
 
                 function as IrSimpleFunction
                 if (function in suspendFunctionsCapturingCrossinline) {
@@ -551,6 +551,12 @@ private class AddContinuationLowering(private val context: JvmBackendContext) : 
                 }
                 return newFunction
             }
+
+            private fun skip(function: IrFunction) =
+                !function.isSuspend || function in suspendAndInlineLambdas || function.isInline || function.body == null ||
+                        function.origin == JvmLoweredDeclarationOrigin.DEFAULT_IMPLS_BRIDGE ||
+                        function.origin == IrDeclarationOrigin.FUNCTION_FOR_DEFAULT_PARAMETER ||
+                        function.parentAsClass.origin == JvmLoweredDeclarationOrigin.FUNCTION_REFERENCE_IMPL
 
             override fun visitFieldAccess(expression: IrFieldAccessExpression): IrExpression {
                 val result = super.visitFieldAccess(expression)

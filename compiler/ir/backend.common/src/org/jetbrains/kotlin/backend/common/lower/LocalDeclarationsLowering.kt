@@ -540,6 +540,7 @@ class LocalDeclarationsLowering(
                     newParameterToOld.putAbsentOrSame(it, this)
                 }
             }
+            newDeclaration.copyAttributes(oldDeclaration)
 
             newDeclaration.valueParameters += createTransformedValueParameters(capturedValues, oldDeclaration, newDeclaration)
             newDeclaration.recordTransformedValueParameters(localFunctionContext)

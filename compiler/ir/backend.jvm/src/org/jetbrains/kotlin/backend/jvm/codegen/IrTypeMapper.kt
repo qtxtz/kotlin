@@ -64,9 +64,6 @@ class IrTypeMapper(private val context: JvmBackendContext) : KotlinTypeMapperBas
             is IrClass -> {
                 classInternalName(parent) + "$" + className
             }
-            is IrSimpleFunction -> {
-                classInternalName(parent.parentAsClass) + "$" + parent.name + "$" + className
-            }
             else -> error(
                 "Local class should have its name computed in InventNamesForLocalClasses: ${irClass.fqNameWhenAvailable}\n" +
                         "Ensure that any lowering that transforms elements with local class info (classes, function references) " +
