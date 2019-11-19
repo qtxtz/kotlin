@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.scripting.definitions
 
 import com.intellij.ide.highlighter.JavaFileType
 import org.jetbrains.kotlin.idea.KotlinFileType
-import java.io.File
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -45,10 +44,10 @@ abstract class LazyScriptDefinitionProvider : ScriptDefinitionProvider {
         fileName.endsWith(it, ignoreCase = true)
     }
 
-    override fun findDefinition(file: File): ScriptDefinition? =
-        if (nonScriptFileName(file.name)) null
+    override fun findDefinition(scriptId: String): ScriptDefinition? =
+        if (nonScriptFileName(scriptId)) null
         else lock.read {
-            cachedDefinitions.firstOrNull { it.isScript(file) }
+            cachedDefinitions.firstOrNull { it.isScript(scriptId) }
         }
 
     override fun findScriptDefinition(fileName: String): KotlinScriptDefinition? =
@@ -57,7 +56,7 @@ abstract class LazyScriptDefinitionProvider : ScriptDefinitionProvider {
             cachedDefinitions.map { it.legacyDefinition }.firstOrNull { it.isScript(fileName) }
         }
 
-    override fun isScript(file: File) = findDefinition(file) != null
+    override fun isScript(scriptId: String): Boolean = findDefinition(scriptId) != null
 
     override fun getKnownFilenameExtensions(): Sequence<String> = lock.read {
         cachedDefinitions.map { it.fileExtension }

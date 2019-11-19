@@ -16,7 +16,6 @@ import com.intellij.psi.PsiManager
 import org.jetbrains.kotlin.idea.KotlinFileType
 import org.jetbrains.kotlin.parsing.KotlinParserDefinition
 import org.jetbrains.kotlin.psi.KtFile
-import java.io.File
 
 inline fun <T> runReadAction(crossinline runnable: () -> T): T {
     return ApplicationManager.getApplication().runReadAction(Computable { runnable() })
@@ -29,7 +28,7 @@ fun PsiFile.findScriptDefinition(): ScriptDefinition? {
     val virtualFile = this.virtualFile ?: this.originalFile.virtualFile ?: return null
     if (virtualFile.isNonScript()) return null
 
-    return findScriptDefinitionByFilePath(project, File(virtualFile.path))
+    return findScriptDefinitionById(project, virtualFilePath)
 }
 
 @Deprecated("Use PsiFile.findScriptDefinition() instead")
@@ -41,14 +40,14 @@ fun VirtualFile.findScriptDefinition(project: Project): ScriptDefinition? {
     // TODO: measure performance effect and if necessary consider detecting indexing here or using separate logic for non-IDE operations to speed up filtering
     if (runReadAction { PsiManager.getInstance(project).findFile(this) as? KtFile }/*?.script*/ == null) return null
 
-    return findScriptDefinitionByFilePath(project, File(path))
+    return findScriptDefinitionById(project, path)
 }
 
-private fun findScriptDefinitionByFilePath(project: Project, file: File): ScriptDefinition {
+fun findScriptDefinitionById(project: Project, scriptId: String): ScriptDefinition? {
     val scriptDefinitionProvider = ScriptDefinitionProvider.getInstance(project) ?: return null
         ?: throw IllegalStateException("Unable to get script definition: ScriptDefinitionProvider is not configured.")
 
-    return scriptDefinitionProvider.findDefinition(file) ?: scriptDefinitionProvider.getDefaultDefinition()
+    return scriptDefinitionProvider.findDefinition(scriptId) ?: scriptDefinitionProvider.getDefaultDefinition()
 }
 
 fun VirtualFile.isNonScript(): Boolean =
@@ -64,3 +63,6 @@ private fun VirtualFile.isKotlinFileType(): Boolean {
     return typeRegistry.getFileTypeByFile(this) == KotlinFileType.INSTANCE ||
             typeRegistry.getFileTypeByFileName(name) == KotlinFileType.INSTANCE
 }
+
+private val VirtualFile.scriptId : String
+    get() = path

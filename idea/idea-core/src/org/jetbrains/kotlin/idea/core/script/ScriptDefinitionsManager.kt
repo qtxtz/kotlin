@@ -69,32 +69,32 @@ class ScriptDefinitionsManager(private val project: Project) : LazyScriptDefinit
     private val failedContributorsHashes = HashSet<Int>()
 
     private val scriptDefinitionsCacheLock = ReentrantLock()
-    private val scriptDefinitionsCache = SLRUMap<File, ScriptDefinition>(10, 10)
+    private val scriptDefinitionsCache = SLRUMap<String, ScriptDefinition>(10, 10)
 
-    override fun findDefinition(file: File): ScriptDefinition? {
-        if (nonScriptFileName(file.name)) return null
+    override fun findDefinition(scriptId: String): ScriptDefinition? {
+        if (nonScriptFileName(scriptId)) return null
         if (!isReady()) return null
 
-        val cached = scriptDefinitionsCacheLock.withLock { scriptDefinitionsCache.get(file) }
+        val cached = scriptDefinitionsCacheLock.withLock { scriptDefinitionsCache.get(scriptId) }
         if (cached != null) return cached
 
-        val virtualFile = VfsUtil.findFileByIoFile(file, true)
+        val virtualFile = VfsUtil.findFileByIoFile(File(scriptId), true)
         val definition =
             if (virtualFile != null && ScratchFileService.getInstance().getRootType(virtualFile) is ScratchRootType) {
                 // Scratch should always have default script definition
                 getDefaultDefinition()
             } else {
-                super.findDefinition(file) ?: return null
+                super.findDefinition(scriptId) ?: return null
             }
 
         scriptDefinitionsCacheLock.withLock {
-            scriptDefinitionsCache.put(file, definition)
+            scriptDefinitionsCache.put(scriptId, definition)
         }
 
         return definition
     }
 
-    override fun findScriptDefinition(fileName: String): KotlinScriptDefinition? = findDefinition(File(fileName))?.legacyDefinition
+    override fun findScriptDefinition(fileName: String): KotlinScriptDefinition? = findDefinition(fileName)?.legacyDefinition
 
     fun reloadDefinitionsBy(source: ScriptDefinitionsSource) = lock.write {
         if (definitions == null) return // not loaded yet
