@@ -63,7 +63,7 @@ internal sealed class CheckReceivers : ResolutionStage() {
         }
 
         override fun ExplicitReceiverKind.shouldBeCheckedAgainstExplicit(): Boolean {
-            return this == BOTH_RECEIVERS // DISPATCH_RECEIVER should not be checked at all (?)
+            return this == DISPATCH_RECEIVER || this == BOTH_RECEIVERS
         }
 
         override fun Candidate.getReceiverType(): ConeKotlinType? {
@@ -107,6 +107,7 @@ internal sealed class CheckReceivers : ResolutionStage() {
                     expectedTypeRef = explicitReceiverExpression.typeRef,
                     sink = sink,
                     isReceiver = true,
+                    isDispatch = this is Dispatch,
                     isSafeCall = callInfo.isSafeCall,
                     typeProvider = callInfo.typeProvider
                 )
@@ -120,6 +121,7 @@ internal sealed class CheckReceivers : ResolutionStage() {
                         expectedType = candidate.substitutor.substituteOrSelf(expectedReceiverType.type),
                         sink = sink,
                         isReceiver = true,
+                        isDispatch = this is Dispatch,
                         isSafeCall = callInfo.isSafeCall
                     )
                     sink.yield()
