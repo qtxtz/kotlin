@@ -78,7 +78,17 @@ abstract class AbstractScriptEvaluationExtension : ScriptEvaluationExtension {
 
         if (messageCollector.hasErrors()) return ExitCode.COMPILATION_ERROR
 
-        val definition = scriptDefinitionProvider.findDefinition(script.name!!) ?: scriptDefinitionProvider.getDefaultDefinition()
+        val definition =
+            if (arguments.forceScriptDefinition != null) {
+                scriptDefinitionProvider.getDefinition(arguments.forceScriptDefinition!!)?.also {
+                    scriptDefinitionProvider.setDefinition(script.name!!, it)
+                } ?: run {
+                    messageCollector.report(CompilerMessageSeverity.ERROR, "Unable to find script definition ${arguments.forceScriptDefinition}, make sure it is configured and spelled properly")
+                    return ExitCode.COMPILATION_ERROR
+                }
+            } else {
+                scriptDefinitionProvider.findDefinition(script.name!!) ?: scriptDefinitionProvider.getDefaultDefinition()
+            }
 
         val scriptCompilationConfiguration = definition.compilationConfiguration
 

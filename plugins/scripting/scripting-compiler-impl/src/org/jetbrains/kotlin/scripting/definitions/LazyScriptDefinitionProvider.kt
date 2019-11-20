@@ -24,6 +24,8 @@ abstract class LazyScriptDefinitionProvider : ScriptDefinitionProvider {
     override fun getDefaultDefinition(): ScriptDefinition =
         ScriptDefinition.getDefault(getScriptingHostConfiguration())
 
+    protected val fixedDefinitions = HashMap<String, ScriptDefinition>()
+
     private var _cachedDefinitions: Sequence<ScriptDefinition>? = null
     private val cachedDefinitions: Sequence<ScriptDefinition>
         get() {
@@ -47,8 +49,15 @@ abstract class LazyScriptDefinitionProvider : ScriptDefinitionProvider {
     override fun findDefinition(scriptId: String): ScriptDefinition? =
         if (nonScriptFileName(scriptId)) null
         else lock.read {
-            cachedDefinitions.firstOrNull { it.isScript(scriptId) }
+            fixedDefinitions[scriptId] ?:
+                cachedDefinitions.firstOrNull { it.isScript(scriptId) }
         }
+
+    override fun setDefinition(scriptId: String, definition: ScriptDefinition) {
+        lock.write {
+            fixedDefinitions[scriptId] = definition
+        }
+    }
 
     override fun findScriptDefinition(fileName: String): KotlinScriptDefinition? =
         if (nonScriptFileName(fileName)) null
@@ -60,6 +69,12 @@ abstract class LazyScriptDefinitionProvider : ScriptDefinitionProvider {
 
     override fun getKnownFilenameExtensions(): Sequence<String> = lock.read {
         cachedDefinitions.map { it.fileExtension }
+    }
+
+    override fun getDefinition(name: String): ScriptDefinition? = lock.read {
+        cachedDefinitions.firstOrNull { definition ->
+            sequenceOf(definition.name, definition.definitionId, definition.fileExtension).any { it.equals(name, ignoreCase = true) }
+        }
     }
 
     override fun getDefaultScriptDefinition(): KotlinScriptDefinition = getDefaultDefinition().legacyDefinition
