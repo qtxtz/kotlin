@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.types.checker.captureFromExpression
 import org.jetbrains.kotlin.types.expressions.CoercionStrategy
 import org.jetbrains.kotlin.types.typeUtil.immediateSupertypes
+import org.jetbrains.kotlin.types.typeUtil.isArrayOfNothing
 import org.jetbrains.kotlin.types.typeUtil.isUnit
 import org.jetbrains.kotlin.types.typeUtil.supertypes
 import org.jetbrains.kotlin.utils.SmartList
@@ -254,10 +255,7 @@ class CallableReferencesCandidateFactory(
                 val substitutedParameter = descriptor.valueParameters.getOrNull(valueParameter.index) ?: continue
 
                 mappedArguments[index] = if (substitutedParameter.isVararg) {
-                    val elementType = substitutedParameter.varargElementType
-                        ?: error("Vararg parameter $substitutedParameter does not have vararg type")
-                    builtins.getPrimitiveArrayKotlinTypeByPrimitiveKotlinType(elementType)
-                        ?: builtins.getArrayType(Variance.INVARIANT, elementType)
+                    varargParameterTypeByExpectedParameter(inputOutputTypes.inputTypes[index], substitutedParameter, builtins)
                 } else {
                     substitutedParameter.type
                 }
@@ -273,6 +271,22 @@ class CallableReferencesCandidateFactory(
 
         @Suppress("UNCHECKED_CAST")
         return Triple(mappedArguments as Array<KotlinType>, coercion, defaults)
+    }
+
+    private fun varargParameterTypeByExpectedParameter(
+        expectedParameterType: KotlinType,
+        substitutedParameter: ValueParameterDescriptor,
+        builtins: KotlinBuiltIns
+    ): KotlinType {
+        val elementType = substitutedParameter.varargElementType
+            ?: error("Vararg parameter $substitutedParameter does not have vararg type")
+
+        return if (KotlinBuiltIns.isArray(expectedParameterType)) {
+            builtins.getPrimitiveArrayKotlinTypeByPrimitiveKotlinType(elementType)
+                ?: builtins.getArrayType(Variance.INVARIANT, elementType)
+        } else {
+            elementType
+        }
     }
 
     private fun buildReflectionType(
