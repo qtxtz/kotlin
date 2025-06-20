@@ -235,7 +235,7 @@ internal class KaFirCompilerFacility(
             )
         }
 
-        val actualizer = LLKindBasedPlatformActualizer(ImplementationPlatformKind.JVM)
+        val actualizer = createPlatformActualizer(configuration, target)
         val compilationPeerData = CompilationPeerCollector.process(
             buildList {
                 add(mainFirFile)
@@ -1416,6 +1416,30 @@ internal class KaFirCompilerFacility(
             ideCodegenSettings = ideCodegenSettings,
         )
     }
+}
+
+private fun createPlatformActualizer(configuration: CompilerConfiguration, target: KaCompilerTarget): LLPlatformActualizer {
+    val customActualizer = configuration[MODULE_ACTUALIZER]
+
+    val platformKind = when (target) {
+        is KaCompilerTarget.Jvm -> ImplementationPlatformKind.JVM
+    }
+
+    if (customActualizer != null) {
+        return LLPlatformActualizer { module ->
+            val actualModule = customActualizer.actualize(module, target)
+            if (actualModule != null) {
+                val actualPlatform = actualModule.targetPlatform
+                val actualPlatformKind = ImplementationPlatformKind.fromTargetPlatform(actualPlatform)
+                check(actualPlatformKind == platformKind) {
+                    "Expected platform kind $platformKind, got $actualPlatformKind from the platform $actualPlatform"
+                }
+            }
+            actualModule
+        }
+    }
+
+    return LLKindBasedPlatformActualizer(platformKind)
 }
 
 private class KaFirDependencyCompiledCodeProvider(val cache: Map<String, ByteArray>) : CompiledCodeProvider {
