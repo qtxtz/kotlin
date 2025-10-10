@@ -98,6 +98,9 @@ private fun getOperationMaps(): Pair<ArrayList<Operation>, ArrayList<Operation>>
         )
     )
 
+    unaryOperationsMap.add(Operation(className = null, packageName = "kotlin.text", name = "lowercase", parameterTypes = listOf("String")))
+    unaryOperationsMap.add(Operation(className = null, packageName = "kotlin.text", name = "uppercase", parameterTypes = listOf("String")))
+
     for (name in listOf("trim", "trimEnd", "trimIndent", "trimMargin", "trimStart")) {
         unaryOperationsMap.add(Operation(className = null, packageName = "kotlin.text", name = name, parameterTypes = listOf("String")))
     }
