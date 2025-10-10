@@ -288,6 +288,7 @@ class BackendWasmSymbols(
 
         val jsCode = CallableIds.js.functionSymbol()
 
+        val jsAnyClass = ClassIds.JsAny.classSymbol()
         val jsReferenceClass = ClassIds.JsReference.classSymbol()
 
         val jsAnyType: IrType by ClassIds.JsAny.defaultType()

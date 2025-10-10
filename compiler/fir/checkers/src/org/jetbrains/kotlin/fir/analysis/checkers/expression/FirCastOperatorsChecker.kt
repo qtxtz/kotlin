@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors
 import org.jetbrains.kotlin.fir.analysis.diagnostics.createOn
 import org.jetbrains.kotlin.fir.expressions.*
-import org.jetbrains.kotlin.fir.firPlatformSpecificCastChecker
+import org.jetbrains.kotlin.fir.analysis.checkers.firPlatformSpecificCastChecker
 import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.types.*
@@ -30,37 +30,42 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
         val r = expression.conversionTypeRef.coneType
             .fullyExpandedType()
             .finalApproximationOrSelf()
-            .toTypeInfo(context.session)
 
-        if (expression.operation in FirOperation.TYPES && r.directType is ConeDynamicType) {
+        if (expression.operation in FirOperation.TYPES && r is ConeDynamicType) {
             reporter.reportOn(expression.conversionTypeRef.source, FirErrors.DYNAMIC_NOT_ALLOWED)
-        }
-
-        val checkApplicability: (TypeInfo) -> Applicability = when (expression.operation) {
-            FirOperation.IS, FirOperation.NOT_IS -> { typeInfo -> checkIsApplicability(typeInfo, r, expression) }
-            FirOperation.AS, FirOperation.SAFE_AS -> { typeInfo -> checkAsApplicability(typeInfo, r, expression) }
-            else -> error("Invalid operator of FirTypeOperatorCall")
         }
 
         val rUserType = expression.conversionTypeRef.coneType.finalApproximationOrSelf()
 
-        when (val it = checkApplicability(l.originalTypeInfo)) {
+        when (val it = context.session.firPlatformSpecificCastChecker.runApplicabilityCheck(expression, l.originalType, r, this)) {
             Applicability.APPLICABLE -> {}
             // CAST_ERASED may not be the case if we factor in the smartcast data.
             Applicability.CAST_ERASED if l.argument is FirSmartCastExpression -> {}
             // An upcast may be useful for "canceling" a smartcast.
             Applicability.USELESS_CAST if l.argument is FirSmartCastExpression -> {}
-            else -> return reporter.reportInapplicabilityDiagnostic(expression, it, l, r.type, rUserType)
+            else -> return reporter.reportInapplicabilityDiagnostic(expression, it, l, r, rUserType)
         }
 
         if (l.argument !is FirSmartCastExpression) {
             return
         }
 
-        when (val it = checkApplicability(l.smartCastTypeInfo)) {
-            Applicability.APPLICABLE -> {}
-            else -> return reporter.reportInapplicabilityDiagnostic(expression, it, l, r.type, rUserType, forceWarning = true)
+        context.session.firPlatformSpecificCastChecker.runApplicabilityCheck(
+            expression,
+            l.smartCastType,
+            r,
+            this
+        ).ifInapplicable {
+            return reporter.reportInapplicabilityDiagnostic(expression, it, l, r, rUserType, forceWarning = true)
         }
+    }
+
+    // checks applicability with no platform-specific rules
+    context(context: CheckerContext)
+    fun checkGeneralApplicability(expression: FirTypeOperatorCall, l: TypeInfo, r: TypeInfo) : Applicability = when (expression.operation) {
+        FirOperation.IS, FirOperation.NOT_IS -> checkIsApplicability(l, r, expression)
+        FirOperation.AS, FirOperation.SAFE_AS -> checkAsApplicability(l, r, expression)
+        else -> error("Invalid operator of FirTypeOperatorCall")
     }
 
     context(context: CheckerContext)
@@ -127,13 +132,20 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
      * the proper version will be picked later
      * when reporting the diagnostic.
      */
-    private enum class Applicability {
+    enum class Applicability {
         APPLICABLE,
         IMPOSSIBLE_CAST,
         IMPOSSIBLE_IS_CHECK,
         USELESS_CAST,
         USELESS_IS_CHECK,
         CAST_ERASED,
+    }
+
+    inline fun Applicability.ifInapplicable(block: (Applicability) -> Unit) {
+        when (this) {
+            Applicability.APPLICABLE -> {}
+            else -> block(this)
+        }
     }
 
     private inline fun Applicability.orIfApplicable(other: () -> Applicability): Applicability {
@@ -156,7 +168,7 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
         val areBothTypesNullable = l.smartCastType.canBeNull(context.session) && r.canBeNull(context.session)
 
         when (applicability) {
-            Applicability.IMPOSSIBLE_CAST -> getImpossibilityDiagnostic(l.originalTypeInfo, r, areBothTypesNullable, expression)?.let {
+            Applicability.IMPOSSIBLE_CAST -> getImpossibilityDiagnostic(areBothTypesNullable, expression)?.let {
                 reportOn(expression.source, it)
             }
             Applicability.USELESS_CAST -> getUselessCastDiagnostic()?.let {
@@ -201,13 +213,10 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
 
     context(context: CheckerContext)
     private fun getImpossibilityDiagnostic(
-        l: TypeInfo,
-        rType: ConeKotlinType,
         areBothTypesNullable: Boolean,
         expression: FirTypeOperatorCall,
     ) = when {
         !LanguageFeature.EnableDfaWarningsInK2.isEnabled() -> null
-        context.session.firPlatformSpecificCastChecker.shouldSuppressImpossibleCast(context.session, l.type, rType) -> null
         areBothTypesNullable -> when (expression.operation) {
             FirOperation.SAFE_AS -> FirErrors.SAFE_CAST_RELYING_ON_NULL
             else -> FirErrors.UNSAFE_CAST_RELYING_ON_NULL

@@ -99,8 +99,8 @@ fun FirSessionConfigurator.registerWasmJsCheckers() {
 
     useCheckers(WasmJsDeclarationCheckers)
     useCheckers(WasmJsExpressionCheckers)
-
 }
+
 fun FirSessionConfigurator.registerWasmWasiCheckers() {
     useCheckers(WasmBaseDeclarationCheckers)
     useCheckers(WasmBaseExpressionCheckers)
