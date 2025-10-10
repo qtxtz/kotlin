@@ -484,7 +484,7 @@ private class FirConstCheckVisitor(
 
             val callableId = symbol?.callableId ?: return false
 
-            val inBuiltinMap = receiverType != null && canEvalOp(
+            val inBuiltinMap = canEvalOp(
                 callableId = callableId,
                 typeA = receiverType,
                 typeB = firstArgType

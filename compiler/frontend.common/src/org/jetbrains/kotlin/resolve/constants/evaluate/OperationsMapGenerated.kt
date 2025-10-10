@@ -100,6 +100,7 @@ fun evalUnaryOp(name: String, type: CompileTimeType, value: Any): Any? {
             "toString" -> return (value as Int).toString()
             "unaryMinus" -> return (value as Int).unaryMinus()
             "unaryPlus" -> return (value as Int).unaryPlus()
+            "Char" -> return Char(value as Int)
             "toULong" -> return (value as Int).toULong()
             "toUInt" -> return (value as Int).toUInt()
             "toUShort" -> return (value as Int).toUShort()
@@ -1085,6 +1086,7 @@ private val knownOps = setOf(
     "kotlin/Short.unaryPlus(SHORT)",
     "kotlin/String.length(STRING)",
     "kotlin/String.toString(STRING)",
+    "kotlin/Char(INT)",
     "kotlin/Char.code(CHAR)",
     "kotlin/experimental/inv(SHORT)",
     "kotlin/experimental/inv(BYTE)",
@@ -1611,7 +1613,12 @@ private val knownOps = setOf(
     "kotlin/UShort.times(USHORT, ULONG)",
     "kotlin/UShort.xor(USHORT, USHORT)",
 )
-fun canEvalOp(callableId: CallableId, typeA: CompileTimeType, typeB: CompileTimeType?): Boolean {
-    val types = if (typeB != null) "$typeA, $typeB" else typeA.toString()
+fun canEvalOp(callableId: CallableId, typeA: CompileTimeType?, typeB: CompileTimeType?): Boolean {
+    val types = when {
+        typeA != null && typeB != null -> "$typeA, $typeB"
+        typeA != null -> typeA.toString()
+        typeB != null -> typeB.toString()
+        else -> return false
+    }
     return knownOps.contains("${callableId}($types)")
 }

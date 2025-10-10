@@ -91,6 +91,15 @@ private fun getOperationMaps(): Pair<ArrayList<Operation>, ArrayList<Operation>>
 
     unaryOperationsMap.add(
         Operation(
+            className = null,
+            name = "Char",
+            parameterTypes = listOf("Int"),
+            isFunction = true,
+            customExpression = "Char(value as Int)"
+        )
+    )
+    unaryOperationsMap.add(
+        Operation(
             className = "Char",
             name = "code",
             parameterTypes = listOf("Char"),
@@ -255,9 +264,16 @@ private fun generateCanEvalOpFunction(p: Printer, operations: List<Operation>) {
     p.popIndent()
     p.println(")")
 
-    p.println("fun canEvalOp(callableId: CallableId, typeA: CompileTimeType, typeB: CompileTimeType?): Boolean {")
+    p.println("fun canEvalOp(callableId: CallableId, typeA: CompileTimeType?, typeB: CompileTimeType?): Boolean {")
     p.pushIndent()
-    p.println("val types = if (typeB != null) \"\$typeA, \$typeB\" else typeA.toString()")
+    p.println("val types = when {")
+    p.pushIndent()
+    p.println("typeA != null && typeB != null -> \"\$typeA, \$typeB\"")
+    p.println("typeA != null -> typeA.toString()")
+    p.println("typeB != null -> typeB.toString()")
+    p.println("else -> return false")
+    p.popIndent()
+    p.println("}")
     p.println("return knownOps.contains(\"\${callableId}(\$types)\")")
     p.popIndent()
     p.println("}")
