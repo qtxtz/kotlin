@@ -126,8 +126,11 @@ fun evalUnaryOp(name: String, type: CompileTimeType, value: Any): Any? {
         STRING -> when (name) {
             "length" -> return (value as String).length
             "toString" -> return (value as String).toString()
+            "trim" -> return (value as String).trim()
+            "trimEnd" -> return (value as String).trimEnd()
             "trimIndent" -> return (value as String).trimIndent()
             "trimMargin" -> return (value as String).trimMargin()
+            "trimStart" -> return (value as String).trimStart()
         }
         UINT -> when (name) {
             "inv" -> return (value as UInt).inv()
@@ -1027,8 +1030,11 @@ private val knownOps = setOf(
     "kotlin/String.length(STRING)",
     "kotlin/String.toString(STRING)",
     "kotlin/Char.code(CHAR)",
-    "kotlin/text/String.trimIndent(STRING)",
-    "kotlin/text/String.trimMargin(STRING)",
+    "kotlin/text/trim(STRING)",
+    "kotlin/text/trimEnd(STRING)",
+    "kotlin/text/trimIndent(STRING)",
+    "kotlin/text/trimMargin(STRING)",
+    "kotlin/text/trimStart(STRING)",
     "kotlin/UInt.inv(UINT)",
     "kotlin/UInt.toByte(UINT)",
     "kotlin/UInt.toDouble(UINT)",
@@ -1345,7 +1351,7 @@ private val knownOps = setOf(
     "kotlin/String.equals(STRING, ANY)",
     "kotlin/String.get(STRING, INT)",
     "kotlin/String.plus(STRING, ANY)",
-    "kotlin/text/String.trimMargin(STRING, STRING)",
+    "kotlin/text/trimMargin(STRING, STRING)",
     "kotlin/mod(BYTE, BYTE)",
     "kotlin/floorDiv(BYTE, BYTE)",
     "kotlin/mod(BYTE, INT)",

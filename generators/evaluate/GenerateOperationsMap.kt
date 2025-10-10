@@ -98,10 +98,10 @@ private fun getOperationMaps(): Pair<ArrayList<Operation>, ArrayList<Operation>>
         )
     )
 
-    for (name in listOf("trimIndent", "trimMargin")) {
-        unaryOperationsMap.add(Operation(className = "String", packageName = "kotlin.text", name = name, parameterTypes = listOf("String")))
+    for (name in listOf("trim", "trimEnd", "trimIndent", "trimMargin", "trimStart")) {
+        unaryOperationsMap.add(Operation(className = null, packageName = "kotlin.text", name = name, parameterTypes = listOf("String")))
     }
-    binaryOperationsMap.add(Operation(className = "String", packageName = "kotlin.text", name = "trimMargin", parameterTypes = listOf("String", "String")))
+    binaryOperationsMap.add(Operation(className = null, packageName = "kotlin.text", name = "trimMargin", parameterTypes = listOf("String", "String")))
 
     for (type in integerTypes) {
         for (otherType in integerTypes) {
