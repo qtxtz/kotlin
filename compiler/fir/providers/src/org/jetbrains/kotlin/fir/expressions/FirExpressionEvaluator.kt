@@ -495,7 +495,7 @@ object FirExpressionEvaluator {
     }
 }
 
-private fun ConstantValueKind.toCompileTimeType(): CompileTimeType {
+fun ConstantValueKind.toCompileTimeType(): CompileTimeType {
     return when (this) {
         ConstantValueKind.Byte -> CompileTimeType.BYTE
         ConstantValueKind.Short -> CompileTimeType.SHORT
@@ -608,7 +608,7 @@ private fun ConeKotlinType.toConstantValueKind(): ConstantValueKind? =
         is ConeStubType, is ConeIntegerLiteralType, is ConeTypeVariableType -> null
     }
 
-private fun ClassId.toConstantValueKind(): ConstantValueKind? =
+fun ClassId.toConstantValueKind(): ConstantValueKind? =
     when (this) {
         StandardClassIds.Byte -> ConstantValueKind.Byte
         StandardClassIds.Double -> ConstantValueKind.Double

@@ -15,8 +15,6 @@ import org.jetbrains.kotlin.fir.declarations.utils.evaluatedInitializer
 import org.jetbrains.kotlin.fir.declarations.utils.isConst
 import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.declarations.utils.modality
-import org.jetbrains.kotlin.fir.references.FirErrorNamedReference
-import org.jetbrains.kotlin.fir.references.FirResolvedErrorReference
 import org.jetbrains.kotlin.fir.references.FirResolvedNamedReference
 import org.jetbrains.kotlin.fir.references.toResolvedCallableSymbol
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
@@ -27,6 +25,8 @@ import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.visitors.FirVisitor
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.resolve.constants.evaluate.CompileTimeType
+import org.jetbrains.kotlin.resolve.constants.evaluate.canEvalOp
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 fun ConeKotlinType.canBeUsedForConstVal(): Boolean = with(lowerBoundIfFlexible()) { isPrimitive || isString || isUnsignedType }
@@ -446,6 +446,12 @@ private class FirConstCheckVisitor(
         return intrinsicConstEvaluation && this.hasAnnotation(StandardClassIds.Annotations.IntrinsicConstEvaluation, session)
     }
 
+
+    private fun ConeKotlinType.toCompileTimeType(): CompileTimeType? {
+        if (this.classId == StandardClassIds.Any) return CompileTimeType.ANY
+        return this.classId?.toConstantValueKind()?.toCompileTimeType()
+    }
+
     private fun FirExpression.hasAllowedCompileTimeType(): Boolean {
         // See visitErrorExpression for details. Here we count the type as valid and take a decision later.
         if (this is FirErrorExpression) return true
@@ -467,14 +473,29 @@ private class FirConstCheckVisitor(
 
         val receiverClassId = this.dispatchReceiver?.getExpandedType()?.classId
 
-        if (!intrinsicConstEvaluation && receiverClassId in StandardClassIds.unsignedTypes) return false
+        if (intrinsicConstEvaluation) {
+            val receiverType = this.dispatchReceiver?.getExpandedType()?.toCompileTimeType()
+                ?: this.extensionReceiver?.getExpandedType()?.toCompileTimeType()
+
+            val firstArgType = this.arguments.firstOrNull()?.getExpandedType()?.toCompileTimeType()
+
+            val callableId = symbol?.callableId ?: return false
+
+            val inBuiltinMap = receiverType != null && canEvalOp(
+                callableId = callableId,
+                typeA = receiverType,
+                typeB = firstArgType
+            )
+            return inBuiltinMap
+        }
+
+        if (receiverClassId in StandardClassIds.unsignedTypes) return false
 
         if (
             name in compileTimeFunctions ||
             name in compileTimeExtensionFunctions ||
             name == OperatorNameConventions.TO_STRING ||
-            name in OperatorNameConventions.NUMBER_CONVERSIONS ||
-            (intrinsicConstEvaluation && name in OperatorNameConventions.UNSIGNED_CONVERSIONS)
+            name in OperatorNameConventions.NUMBER_CONVERSIONS
         ) return true
 
         if (calleeReference.name == OperatorNameConventions.GET && receiverClassId == StandardClassIds.String) return true
