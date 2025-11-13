@@ -695,7 +695,6 @@ org.jetbrains.kotlin.psi.KtNamedDeclarationStub:constructor(ASTNode)
 org.jetbrains.kotlin.psi.KtNamedDeclarationStub:constructor(T, IStubElementType)
 org.jetbrains.kotlin.psi.KtNamedDeclarationUtil
 org.jetbrains.kotlin.psi.KtNamedDeclarationUtil:getParentFqName(KtNamedDeclaration)
-org.jetbrains.kotlin.psi.KtNamedDeclarationUtil:getUnsafeFQName(KtNamedDeclaration)
 org.jetbrains.kotlin.psi.KtNamedFunction.funKeyword
 org.jetbrains.kotlin.psi.KtNamedFunction.hasTypeParameterListBeforeFunctionName()
 org.jetbrains.kotlin.psi.KtNamedFunction.isAnonymous
