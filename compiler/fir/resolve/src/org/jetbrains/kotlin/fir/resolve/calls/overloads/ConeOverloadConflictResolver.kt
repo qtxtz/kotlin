@@ -92,20 +92,42 @@ class ConeOverloadConflictResolver(
                 candidates
 
         // The same logic as at
-        val candidatesWithoutOverrides = filterOverrides(fixedCandidates)
+        var current = filterOverrides(fixedCandidates)
+        // noCompatibilityMode == true in K2 by default
         val noCompatibilityMode = with(transformerComponents) { disableCompatibilityModeForNewInference() }
-        return chooseMaximallySpecificCandidates(
-            candidatesWithoutOverrides,
-            DiscriminationFlags(
-                // (in compatibility mode the next two are already filtered on tower resolver level)
-                lowPrioritySAMs = noCompatibilityMode,
-                adaptationsInPostponedAtoms = noCompatibilityMode,
-                generics = discriminateGenerics,
-                SAMs = true,
-                suspendConversions = true,
-                byUnwrappedSmartCastOrigin = true,
-            )
+        val discriminationFlags = DiscriminationFlags(
+            // (in compatibility mode the next two are already filtered on tower resolver level)
+            lowPrioritySAMs = noCompatibilityMode,
+            adaptationsInPostponedAtoms = noCompatibilityMode,
+            generics = discriminateGenerics,
+
+            SAMs = true,
+            suspendConversions = true,
+            byUnwrappedSmartCastOrigin = true,
         )
+
+        if (LanguageFeature.EagerLambdaAnalysis.isDisabled()) {
+            return chooseMaximallySpecificCandidates(
+                current,
+                discriminationFlags
+            )
+        }
+
+        while (true) {
+            val reduced =
+                runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(current, components = transformerComponents) ?: current
+
+            // Fast-path
+            if (reduced.size == 1) return reduced
+
+            val next = chooseMaximallySpecificCandidates(
+                reduced,
+                discriminationFlags
+            )
+
+            if (next.size <= 1 || current.size == next.size) return next
+            current = next
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.fir.resolve.calls
 
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.config.AnalysisFlags
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.*
 import org.jetbrains.kotlin.fir.declarations.*
@@ -65,6 +66,8 @@ class FirCallResolver(
     private val towerResolver: FirTowerResolver = FirTowerResolver(components, components.resolutionStageRunner)
 ) : SessionHolder {
     override val session: FirSession = components.session
+
+    @OnlyForDefaultLanguageFeatureDisabled(LanguageFeature.EagerLambdaAnalysis)
     private val overloadByLambdaReturnTypeResolver = FirOverloadByLambdaReturnTypeResolver(components)
 
     private lateinit var transformer: FirExpressionsResolveTransformer
@@ -319,7 +322,11 @@ class FirCallResolver(
         }
 
         var (reducedCandidates, applicability) = reduceCandidates(resultCollector, resolutionContext)
-        reducedCandidates = overloadByLambdaReturnTypeResolver.reduceCandidates(qualifiedAccess, reducedCandidates, reducedCandidates)
+
+        if (LanguageFeature.EagerLambdaAnalysis.isDisabled()) {
+            @OptIn(OnlyForDefaultLanguageFeatureDisabled::class)
+            reducedCandidates = overloadByLambdaReturnTypeResolver.reduceCandidates(qualifiedAccess, reducedCandidates, reducedCandidates)
+        }
 
         return ResolutionResult(
             info,
@@ -344,8 +351,9 @@ class FirCallResolver(
 
         val candidates = collector.bestCandidates()
 
+        val currentApplicability = collector.currentApplicability
         if (collector.isSuccess) {
-            return chooseMostSpecific(candidates) to collector.currentApplicability
+            return chooseMostSpecific(candidates) to currentApplicability
         }
 
         if (candidates.isNotEmpty()) {
@@ -361,7 +369,7 @@ class FirCallResolver(
             }
         }
 
-        return candidates.toSet() to collector.currentApplicability
+        return candidates.toSet() to currentApplicability
     }
 
     fun resolveVariableAccessAndSelectCandidate(
