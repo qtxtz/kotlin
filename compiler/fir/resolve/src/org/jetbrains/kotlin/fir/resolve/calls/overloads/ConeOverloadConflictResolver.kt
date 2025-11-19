@@ -104,6 +104,7 @@ class ConeOverloadConflictResolver(
             SAMs = true,
             suspendConversions = true,
             byUnwrappedSmartCastOrigin = true,
+            unitCoercionInLambdas = LanguageFeature.EagerLambdaAnalysis.isEnabled(),
         )
 
         if (LanguageFeature.EagerLambdaAnalysis.isDisabled()) {
@@ -200,6 +201,7 @@ class ConeOverloadConflictResolver(
         val SAMs: Boolean,
         val suspendConversions: Boolean,
         val byUnwrappedSmartCastOrigin: Boolean,
+        val unitCoercionInLambdas: Boolean,
     )
 
     private fun chooseMaximallySpecificCandidates(
@@ -219,6 +221,14 @@ class ConeOverloadConflictResolver(
                 candidates,
                 { !it.hasPostponedAtomWithAdaptation() },
                 { discriminationFlags.copy(adaptationsInPostponedAtoms = false) },
+            )?.let { return it }
+        }
+
+        if (discriminationFlags.unitCoercionInLambdas) {
+            filterCandidatesByDiscriminationFlag(
+                candidates,
+                { !it.usesCoercionToUnitInLambda },
+                { discriminationFlags.copy(unitCoercionInLambdas = false) },
             )?.let { return it }
         }
 

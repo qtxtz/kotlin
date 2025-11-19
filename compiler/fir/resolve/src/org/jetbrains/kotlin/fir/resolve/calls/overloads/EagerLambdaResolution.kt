@@ -139,6 +139,7 @@ private fun runEagerLambdaAnalysisForLambdaAtomGroup(
                     else it.makeFreshCopy()
                 }
             ),
+            forEagerLambdaAnalysis = true,
         ) { substitutor.substituteOrSelf(it) }
     }
 
