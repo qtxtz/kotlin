@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.fir.resolve.calls.overloads
 
 import org.jetbrains.kotlin.fir.declarations.FirAnonymousFunction
+import org.jetbrains.kotlin.fir.declarations.FirContractDescriptionOwner
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlin.fir.resolve.BodyResolveComponents
 import org.jetbrains.kotlin.fir.resolve.calls.ConeLambdaWithTypeVariableAsExpectedTypeAtom
@@ -33,7 +34,7 @@ context(components: BodyResolveComponents)
 private fun runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(
     candidates: Set<Candidate>,
 ): Set<Candidate>? {
-    if (candidates.any { !it.isSuccessful }) return null
+    if (candidates.any { !it.isSuccessful || it.hasNonTrivialContracts() }) return null
     val call = candidates.first().callInfo.callSite as? FirFunctionCall ?: return null
 
     // Currently, we only support a single lambda case.
@@ -183,3 +184,5 @@ private fun Collection<Candidate>.lambdaAtomGroups(): Collection<Collection<Lamb
 
     return lambdaAtomsGroupedByAnonymousFunction.values
 }
+
+private fun Candidate.hasNonTrivialContracts(): Boolean = (symbol.fir as? FirContractDescriptionOwner)?.contractDescription != null
