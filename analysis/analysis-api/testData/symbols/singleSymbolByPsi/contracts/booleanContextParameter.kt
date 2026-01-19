@@ -1,3 +1,5 @@
+// WITH_STDLIB
+
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
