@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.analysis.api.platform.modification.publishGlobalModu
 import org.jetbrains.kotlin.analysis.api.standalone.base.projectStructure.AnalysisApiServiceRegistrar
 import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtTestModule
 import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtTestModuleStructure
+import org.jetbrains.kotlin.analysis.test.framework.services.MultiplatformTestOutputPrefixProvider
 import org.jetbrains.kotlin.platform.TargetPlatform
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
@@ -26,7 +27,8 @@ abstract class AnalysisApiTestConfigurator {
      * @see org.jetbrains.kotlin.analysis.test.framework.base.AbstractAnalysisApiBasedTest.assertEqualsToTestOutputFile
      * @see org.jetbrains.kotlin.analysis.test.data.manager.ManagedTest.variantChain
      */
-    open val testPrefixes: List<String> get() = emptyList()
+    open val testPrefixes: List<String>
+        get() = MultiplatformTestOutputPrefixProvider.getPrefixes(defaultTargetPlatform)
 
     abstract val analysisApiMode: AnalysisApiMode
 

@@ -73,6 +73,7 @@ import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.session.*
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.symbols.*
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.types.*
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.types.typeCreation.AbstractTypeCreatorDslTest
+import org.jetbrains.kotlin.analysis.test.framework.services.TargetPlatformEnum
 import org.jetbrains.kotlin.analysis.test.framework.test.configurators.*
 import org.jetbrains.kotlin.generators.dsl.TestGroup
 import org.jetbrains.kotlin.generators.tests.analysis.api.dsl.*
@@ -203,7 +204,10 @@ private fun AnalysisApiTestGroup.generateAnalysisApiNonComponentsTests() {
     group(filter = testModuleKindIs(TestModuleKind.Source, TestModuleKind.ScriptSource)) {
         group("symbols", filter = analysisSessionModeIs(AnalysisSessionMode.Normal)) {
             fun TestGroup.TestClass.symbolsModel(data: AnalysisApiTestConfiguratorFactoryData, path: String) {
-                if (data.analysisApiMode == AnalysisApiMode.Standalone || data.frontend == FrontendKind.Fe10) {
+                if (data.analysisApiMode == AnalysisApiMode.Standalone
+                    || data.frontend == FrontendKind.Fe10
+                    || data.targetPlatform != TargetPlatformEnum.JVM
+                ) {
                     model(data, path, excludeDirsRecursively = listOf("withTestCompilerPluginEnabled"))
                 } else {
                     model(data, path)
@@ -218,7 +222,15 @@ private fun AnalysisApiTestGroup.generateAnalysisApiNonComponentsTests() {
                 symbolsModel(it, "symbolByJavaPsi")
             }
 
-            test<AbstractSingleSymbolByPsiTest> {
+            test<AbstractSingleSymbolByPsiTest>(
+                targetPlatforms = listOf(
+                    TargetPlatformEnum.JVM,
+                    TargetPlatformEnum.JS,
+                    TargetPlatformEnum.Wasm,
+                    TargetPlatformEnum.WasmWasi,
+                    TargetPlatformEnum.Common
+                )
+            ) {
                 symbolsModel(it, "singleSymbolByPsi")
             }
 
