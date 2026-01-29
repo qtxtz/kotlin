@@ -147,6 +147,7 @@ private class ClassClsStubBuilder(
                     isTopLevel = isTopLevel,
                     isLocal = false,
                     isObjectLiteral = false,
+                    kdocText = null,
                 )
             }
 
@@ -163,6 +164,7 @@ private class ClassClsStubBuilder(
                     isClsStubCompiledToJvmDefaultImplementation = JvmProtoBufUtil.isNewPlaceForBodyGeneration(classProto),
                     isLocal = false,
                     isTopLevel = isTopLevel,
+                    kdocText = null,
                     valueClassRepresentation = valueClassRepresentation(),
                 )
             }
