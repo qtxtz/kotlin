@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.backend.common.serialization.metadata.FileVisitor
 import org.jetbrains.kotlin.backend.common.serialization.metadata.KlibSingleFileMetadataSerializer
 import org.jetbrains.kotlin.backend.common.serialization.toIoFileOrNull
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.config.languageVersionSettings
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.backend.utils.extractFirDeclarations
@@ -35,6 +36,18 @@ class Fir2KlibMetadataSerializer(
     private val exportKDoc: Boolean,
     private val produceHeaderKlib: Boolean,
 ) : KlibSingleFileMetadataSerializer<FirFile> {
+    constructor(
+        compilerConfiguration: CompilerConfiguration,
+        firOutputs: List<SingleModuleFrontendOutput>,
+        fir2IrActualizedResult: Fir2IrActualizedResult?,
+        produceHeaderKlib: Boolean,
+    ) : this(
+        compilerConfiguration,
+        firOutputs,
+        fir2IrActualizedResult,
+        exportKDoc = compilerConfiguration.languageVersionSettings.supportsFeature(LanguageFeature.ExportKDocDocumentationToKlib),
+        produceHeaderKlib,
+    )
 
     private val firFilesAndSessions: Map<FirFile, Pair<FirSession, ScopeSession>> =
         buildMap {
