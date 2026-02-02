@@ -50,6 +50,7 @@ class FirDeserializationContext(
     val typeDeserializer: FirTypeDeserializer,
     val annotationDeserializer: AnnotationDeserializer,
     val constDeserializer: FirConstDeserializer,
+    val kdocDeserializer: FirKDocDeserializer,
     val containerSource: DeserializedContainerSource?,
     val outerClassSymbol: FirRegularClassSymbol?,
     val outerTypeParameters: List<FirTypeParameterSymbol>
@@ -82,6 +83,7 @@ class FirDeserializationContext(
         ),
         annotationDeserializer,
         constDeserializer,
+        kdocDeserializer,
         containerSource,
         outerClassSymbol,
         if (capturesTypeParameters) allTypeParameters else emptyList()
@@ -100,6 +102,7 @@ class FirDeserializationContext(
             annotationDeserializer: AnnotationDeserializer,
             flexibleTypeFactory: FirTypeDeserializer.FlexibleTypeFactory,
             constDeserializer: FirConstDeserializer,
+            kdocDeserializer: FirKDocDeserializer,
             containerSource: DeserializedContainerSource?
         ): FirDeserializationContext = createRootContext(
             nameResolver,
@@ -109,6 +112,7 @@ class FirDeserializationContext(
             annotationDeserializer,
             flexibleTypeFactory,
             constDeserializer,
+            kdocDeserializer,
             fqName,
             relativeClassName = null,
             typeParameterProtos = emptyList(),
@@ -126,6 +130,7 @@ class FirDeserializationContext(
             annotationDeserializer: AnnotationDeserializer,
             flexibleTypeFactory: FirTypeDeserializer.FlexibleTypeFactory,
             constDeserializer: FirConstDeserializer,
+            kdocDeserializer: FirKDocDeserializer,
             containerSource: DeserializedContainerSource?,
             outerClassSymbol: FirRegularClassSymbol,
             outerClassEffectiveVisibility: EffectiveVisibility,
@@ -137,6 +142,7 @@ class FirDeserializationContext(
             annotationDeserializer,
             flexibleTypeFactory,
             constDeserializer,
+            kdocDeserializer,
             classId.packageFqName,
             classId.relativeClassName,
             classProto.typeParameterList,
@@ -154,6 +160,7 @@ class FirDeserializationContext(
             annotationDeserializer: AnnotationDeserializer,
             flexibleTypeFactory: FirTypeDeserializer.FlexibleTypeFactory,
             constDeserializer: FirConstDeserializer,
+            kdocDeserializer: FirKDocDeserializer,
             packageFqName: FqName,
             relativeClassName: FqName?,
             typeParameterProtos: List<ProtoBuf.TypeParameter>,
@@ -180,6 +187,7 @@ class FirDeserializationContext(
                 ),
                 annotationDeserializer,
                 constDeserializer,
+                kdocDeserializer,
                 containerSource,
                 outerClassSymbol,
                 emptyList()
@@ -520,6 +528,8 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 deserializationOrigin = FirDeclarationOrigin.Library,
                 destination = contextParameters,
             )
+
+            applyKDoc(c.kdocDeserializer.loadPropertyKDoc(proto))
         }.apply {
             when (val initializer = initializer) {
                 /**
@@ -719,6 +729,8 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 deserializationOrigin,
                 destination = contextParameters,
             )
+
+            applyKDoc(c.kdocDeserializer.loadFunctionKDoc(proto))
         }.apply {
             this.versionRequirements = versionRequirements
             setLazyPublishedVisibility(c.session)
@@ -808,6 +820,8 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
             deprecationsProvider = annotations.getDeprecationsProviderFromAnnotations(c.session, fromJava = false)
 
             classProto.contextReceiverTypes(c.typeTable).mapTo(contextParameters) { loadLegacyContextReceiver(it, FirDeclarationOrigin.Library, symbol) }
+
+            applyKDoc(c.kdocDeserializer.loadConstructorKDoc(proto))
         }.build().apply {
             containingClassForStaticMemberAttr = c.dispatchReceiver!!.lookupTag
             this.versionRequirements = VersionRequirement.create(proto, c)
