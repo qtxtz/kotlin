@@ -812,7 +812,7 @@ abstract class CInteropProcess @Inject internal constructor(params: Params) :
         }
 
     @get:Input
-    val moduleName: String = project.klibModuleName(baseKlibName)
+    val moduleName: String = project.moduleName(baseKlibName)
 
     @get:Internal
     internal var isGeneratedCinterop: Boolean = false

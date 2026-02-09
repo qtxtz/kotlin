@@ -313,13 +313,14 @@ class KaptAndroidIT : KaptBaseIT() {
             buildJdk = jdkVersion.location
         ) {
             build(":app:compileDebugAndroidTestKotlin") {
+                val expectedPrefix = "android_dagger__app_"
                 val stubsFile = subProject("app")
                     .projectPath
                     .resolve("build/tmp/kapt3/stubs/debugAndroidTest/com/example/dagger/kotlin/TestClass.java")
                 assertFileExists(stubsFile)
                 assertFileContains(
                     stubsFile,
-                    "public final void bar${'$'}app_debugAndroidTest() {"
+                    "public final void bar${'$'}${expectedPrefix}debugAndroidTest() {"
                 )
 
                 val compiledClassFile = subProject("app")
@@ -328,7 +329,7 @@ class KaptAndroidIT : KaptBaseIT() {
                 assertFileExists(compiledClassFile)
                 checkBytecodeContains(
                     compiledClassFile.toFile(),
-                    "public final bar${'$'}app_debugAndroidTest()V"
+                    "public final bar${'$'}${expectedPrefix}debugAndroidTest()V"
                 )
             }
         }

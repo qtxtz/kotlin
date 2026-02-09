@@ -65,13 +65,14 @@ class BrokenLazyConfigurationIT : KGPBaseTest() {
     @DisplayName("works in MPP") // aka KT-56131
     fun testBrokenTcaInMpp(gradleVersion: GradleVersion) {
         project("new-mpp-lib-with-tests", gradleVersion) {
-            assert("apply plugin: 'kotlin-multiplatform'" in buildGradle.readText())
+            assert("id(\"org.jetbrains.kotlin.multiplatform\")" in buildGradle.readText())
+            assert(("group = 'com.example'") in buildGradle.readText())
             buildGradle.modify {
                 it.replace(
-                    "apply plugin: 'kotlin-multiplatform'",
+                    "group = 'com.example'",
                     """
                         tasks.whenTaskAdded {} // break lazy initialization of all tasks
-                        apply plugin: 'kotlin-multiplatform'
+                        group = 'com.example'
                     """.trimIndent()
                 )
             }
