@@ -6,12 +6,15 @@
 package org.jetbrains.kotlin.analysis.api.fir.projectStructure
 
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.util.ModificationTracker
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.source.tree.ASTStructure
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.stubs.StubElement
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
 import com.intellij.util.ThreeState
 import com.intellij.util.containers.addIfNotNull
 import com.intellij.util.diff.DiffTree
@@ -52,6 +55,13 @@ import org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes
 internal class KaFirDanglingFileResolutionModeProvider : KaDanglingFileResolutionModeProvider {
     @OptIn(KtImplementationDetail::class)
     override fun calculateMode(file: KtFile): KaDanglingFileResolutionMode {
+        return file.getOrComputeMode {
+            computeModeNonCached(file)
+        }
+    }
+
+    @OptIn(KtImplementationDetail::class)
+    private fun computeModeNonCached(file: KtFile): KaDanglingFileResolutionMode {
         val originalFile = file.copyOrigin as? KtFile ?: return KaDanglingFileResolutionMode.PREFER_SELF
         val originalFileStub = originalFile.calcStubTree().root as? KotlinFileStub ?: return KaDanglingFileResolutionMode.PREFER_SELF
         val copyFileStub = file.calcStubTree().root as? KotlinFileStub ?: return KaDanglingFileResolutionMode.PREFER_SELF
@@ -290,3 +300,22 @@ internal class KaFirDanglingFileResolutionModeProvider : KaDanglingFileResolutio
 }
 
 private fun PsiElement.isWhitespaceOrComment(): Boolean = this is PsiWhiteSpace || this is PsiComment
+
+
+/**
+ * Retrieves [KaDanglingFileResolutionMode] calculated by [KaDanglingFileResolutionModeProvider] from the file cache
+ * or computes it using [computeMode].
+ *
+ * The cached value is stored in user data properties of [this] and depends
+ * on the modification stamps of [this] and its [copyOrigin].
+ * If the sum of these modification stamps is incremented, the previously cached value is recalculated.
+ */
+private fun KtFile.getOrComputeMode(
+    computeMode: () -> KaDanglingFileResolutionMode
+): KaDanglingFileResolutionMode {
+    return CachedValuesManager.getCachedValue(this) {
+        CachedValueProvider.Result.createSingleDependency(
+            computeMode(),
+            ModificationTracker { modificationStamp + (copyOrigin?.modificationStamp ?: 0) })
+    }
+}
