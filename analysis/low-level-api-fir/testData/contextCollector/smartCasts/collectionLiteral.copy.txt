@@ -20,6 +20,7 @@ Tower Data Context:
         Scope: FirLocalScope
 Smart Casts:
     FirValueParameterSymbol y: R|kotlin/Any|
+    Stability: STABLE_VALUE
     Types:
         kotlin.String
         kotlin.Any
