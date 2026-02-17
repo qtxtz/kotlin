@@ -40,6 +40,5 @@ object NativeFir2IrExtensions : Fir2IrExtensions {
 
     override fun specialBackingFieldVisibility(firProperty: FirProperty, session: FirSession): Visibility? = null
 
-    override fun initializeIrBuiltInsAndSymbolTable(irBuiltIns: IrBuiltIns, symbolTable: SymbolTable) {}
     override fun shouldGenerateDelegatedMember(delegateMemberFromBaseType: IrOverridableDeclaration<*>): Boolean = true
 }

@@ -227,8 +227,6 @@ private class Fir2IrPipeline(
         val irBuiltIns = IrBuiltInsOverFir(componentsStorage, syntheticIrBuiltinsSymbolsContainer)
         val symbolTable = SymbolTable(signaturer = null, IrFactoryImpl, lock = componentsStorage.lock)
 
-        fir2IrExtensions.initializeIrBuiltInsAndSymbolTable(irBuiltIns, symbolTable)
-
         return irBuiltIns to symbolTable
     }
 

@@ -43,8 +43,6 @@ interface Fir2IrExtensions {
 
     fun specialBackingFieldVisibility(firProperty: FirProperty, session: FirSession): Visibility?
 
-    fun initializeIrBuiltInsAndSymbolTable(irBuiltIns: IrBuiltIns, symbolTable: SymbolTable)
-
     fun shouldGenerateDelegatedMember(delegateMemberFromBaseType: IrOverridableDeclaration<*>): Boolean
 
     /**
@@ -62,7 +60,6 @@ interface Fir2IrExtensions {
         override fun findInjectedValue(calleeReference: FirReference, conversionScope: Fir2IrConversionScope): Nothing? = null
         override fun findInjectedInlineLambdaArgument(parameter: FirValueParameterSymbol): FirExpression? = null
         override fun hasBackingField(property: FirProperty, session: FirSession): Boolean = property.hasBackingField
-        override fun initializeIrBuiltInsAndSymbolTable(irBuiltIns: IrBuiltIns, symbolTable: SymbolTable) {}
         override fun shouldGenerateDelegatedMember(delegateMemberFromBaseType: IrOverridableDeclaration<*>): Boolean = true
         override fun specialBackingFieldVisibility(firProperty: FirProperty, session: FirSession): Visibility? = null
     }

@@ -43,9 +43,6 @@ import org.jetbrains.kotlin.utils.addToStdlib.runIf
 class JvmFir2IrExtensions(
     configuration: CompilerConfiguration,
 ) : Fir2IrExtensions, JvmGeneratorExtensions {
-    private var irBuiltIns: IrBuiltIns? = null
-    private var symbolTable: SymbolTable? = null
-
     override val parametersAreAssignable: Boolean get() = true
     override val externalOverridabilityConditions: List<IrExternalOverridabilityCondition>
         get() = listOf(IrJavaIncompatibilityRulesOverridabilityCondition())
@@ -103,13 +100,6 @@ class JvmFir2IrExtensions(
         return runIf(firProperty.hasJvmFieldAnnotation(session)) {
             firProperty.status.visibility
         }
-    }
-
-    override fun initializeIrBuiltInsAndSymbolTable(irBuiltIns: IrBuiltIns, symbolTable: SymbolTable) {
-        require(this.irBuiltIns == null) { "BuiltIns are already initialized" }
-        this.irBuiltIns = irBuiltIns
-        require(this.symbolTable == null) { "SymboTable is already initialized" }
-        this.symbolTable = symbolTable
     }
 
     // See FirJvmDelegatedMembersFilter for reference
