@@ -177,6 +177,8 @@ abstract class IrBuiltInsOverSymbolFinder(override val symbolFinder: SymbolFinde
         ulongArray?.let { array -> put(array, ulongType) }
     }
 
+    override val booleanNotSymbol: IrSimpleFunctionSymbol = CallableId(StandardClassIds.Boolean, OperatorNameConventions.NOT).functionSymbol()
+
     override val enumClass: IrClassSymbol = StandardClassIds.Enum.classSymbol()
 
     override val intPlusSymbol: IrSimpleFunctionSymbol by CallableId(StandardClassIds.Int, OperatorNameConventions.PLUS)

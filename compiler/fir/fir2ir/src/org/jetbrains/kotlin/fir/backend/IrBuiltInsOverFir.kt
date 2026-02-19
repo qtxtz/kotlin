@@ -66,10 +66,6 @@ class IrBuiltInsOverFir(
     override val operatorsPackageFragment: IrExternalPackageFragment
         get() = kotlinInternalIrPackageFragment
 
-    // ------------------------------------- normal classes and functions -------------------------------------
-
-    override val booleanNotSymbol: IrSimpleFunctionSymbol get() = fir2irBuiltins.booleanNotSymbol
-
     // ------------------------------------- function types -------------------------------------
 
     private val functionNMap: MutableMap<Int, IrClass> = mutableMapOf()
