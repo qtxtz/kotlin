@@ -62,9 +62,7 @@ class IrBuiltInsOverFir(
     private val fir2irBuiltins = c.builtins
 
     override val kotlinInternalPackageFragment: IrExternalPackageFragment = createPackage(StandardClassIds.BASE_INTERNAL_PACKAGE)
-    private val kotlinInternalIrPackageFragment: IrExternalPackageFragment = createPackage(StandardClassIds.BASE_INTERNAL_IR_PACKAGE)
-    override val operatorsPackageFragment: IrExternalPackageFragment
-        get() = kotlinInternalIrPackageFragment
+    override val operatorsPackageFragment: IrExternalPackageFragment = createPackage(StandardClassIds.BASE_INTERNAL_IR_PACKAGE)
 
     // ------------------------------------- function types -------------------------------------
 
@@ -329,10 +327,10 @@ class IrBuiltInsOverFir(
             if (isIntrinsicConst) {
                 fn.annotations += intrinsicConstAnnotation
             }
-            fn.parent = kotlinInternalIrPackageFragment
-            // `kotlinInternalIrPackageFragment` definitely is not a lazy class
+            fn.parent = operatorsPackageFragment
+            // `operatorsPackageFragment` definitely is not a lazy class
             @OptIn(UnsafeDuringIrConstructionAPI::class)
-            kotlinInternalIrPackageFragment.declarations.add(fn)
+            operatorsPackageFragment.declarations.add(fn)
         }.symbol
     }
 
