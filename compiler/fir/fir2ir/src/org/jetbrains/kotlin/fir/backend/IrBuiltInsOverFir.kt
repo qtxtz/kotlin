@@ -141,86 +141,95 @@ class IrBuiltInsOverFir(
         syntheticSymbolsContainer.primitiveFloatingPointTypes.associate { primitiveType ->
             val fpType = primitiveTypeToIrType.getValue(primitiveType)
             val primitiveClass = fpType.classifierOrFail
-            val operator = addBuiltinOperatorSymbol(
-                BuiltInOperatorNames.IEEE754_EQUALS,
+            val operator = createFunction(
+                name = BuiltInOperatorNames.IEEE754_EQUALS,
                 symbol = syntheticSymbolsContainer.ieee754equalsFunByOperandType.getValue(primitiveType),
-                booleanType,
-                "arg0" to fpType.makeNullable(),
-                "arg1" to fpType.makeNullable(),
+                returnType = booleanType,
+                valueParameterTypes = arrayOf("arg0" to fpType.makeNullable(), "arg1" to fpType.makeNullable()),
                 isIntrinsicConst = true
             )
             primitiveClass to operator
         }
 
-    override val eqeqeqSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.EQEQEQ,
+    override val eqeqeqSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.EQEQEQ,
         symbol = syntheticSymbolsContainer.eqeqeqSymbol,
-        booleanType,
-        "" to anyNType, "" to anyNType
+        returnType = booleanType,
+        valueParameterTypes = arrayOf("" to anyNType, "" to anyNType),
+        isIntrinsicConst = false
     )
 
-    override val eqeqSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.EQEQ,
+    override val eqeqSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.EQEQ,
         symbol = syntheticSymbolsContainer.eqeqSymbol,
-        booleanType, "" to anyNType, "" to anyNType, isIntrinsicConst = true
-    )
-
-    override val throwCceSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.THROW_CCE,
-        symbol = null,
-        nothingType
-    )
-
-    override val throwIseSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.THROW_ISE,
-        symbol = null,
-        nothingType
-    )
-
-    override val andandSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.ANDAND,
-        symbol = null,
-        booleanType,
-        "" to booleanType,
-        "" to booleanType,
+        returnType = booleanType,
+        valueParameterTypes = arrayOf("" to anyNType, "" to anyNType),
         isIntrinsicConst = true
     )
 
-    override val ororSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.OROR,
+    override val throwCceSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.THROW_CCE,
         symbol = null,
-        booleanType,
-        "" to booleanType,
-        "" to booleanType,
+        returnType = nothingType,
+        valueParameterTypes = arrayOf<Pair<String, IrType>>(),
+        isIntrinsicConst = false
+    )
+
+    override val throwIseSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.THROW_ISE,
+        symbol = null,
+        returnType = nothingType,
+        valueParameterTypes = arrayOf<Pair<String, IrType>>(),
+        isIntrinsicConst = false
+    )
+
+    override val andandSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.ANDAND,
+        symbol = null,
+        returnType = booleanType,
+        valueParameterTypes = arrayOf("" to booleanType, "" to booleanType),
         isIntrinsicConst = true
     )
 
-    override val noWhenBranchMatchedExceptionSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION,
+    override val ororSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.OROR,
+        symbol = null,
+        returnType = booleanType,
+        valueParameterTypes = arrayOf("" to booleanType, "" to booleanType),
+        isIntrinsicConst = true
+    )
+
+    override val noWhenBranchMatchedExceptionSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION,
         symbol = syntheticSymbolsContainer.noWhenBranchMatchedExceptionSymbol,
-        nothingType
+        returnType = nothingType,
+        valueParameterTypes = arrayOf<Pair<String, IrType>>(),
+        isIntrinsicConst = false
     )
 
-    override val illegalArgumentExceptionSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION,
+    override val illegalArgumentExceptionSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION,
         symbol = null,
-        nothingType,
-        "" to stringType
+        returnType = nothingType,
+        valueParameterTypes = arrayOf("" to stringType),
+        isIntrinsicConst = false
     )
 
-    override val dataClassArrayMemberHashCodeSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        "dataClassArrayMemberHashCode",
+    override val dataClassArrayMemberHashCodeSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = "dataClassArrayMemberHashCode",
         symbol = null,
-        intType,
-        "" to anyType
+        returnType = intType,
+        valueParameterTypes = arrayOf("" to anyType),
+        isIntrinsicConst = false
     )
 
 
-    override val dataClassArrayMemberToStringSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        "dataClassArrayMemberToString",
+    override val dataClassArrayMemberToStringSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = "dataClassArrayMemberToString",
         symbol = null,
-        stringType,
-        "" to anyNType
+        returnType = stringType,
+        valueParameterTypes = arrayOf("" to anyNType),
+        isIntrinsicConst = false
     )
 
     override val checkNotNullSymbol: IrSimpleFunctionSymbol = run {
@@ -248,11 +257,12 @@ class IrBuiltInsOverFir(
         )
     }
 
-    override val linkageErrorSymbol: IrSimpleFunctionSymbol = addBuiltinOperatorSymbol(
-        "linkageErrorSymbol",
+    override val linkageErrorSymbol: IrSimpleFunctionSymbol = createFunction(
+        name = "linkageErrorSymbol",
         symbol = null,
-        nothingType,
-        "" to anyNType
+        returnType = nothingType,
+        valueParameterTypes = arrayOf("" to anyNType),
+        isIntrinsicConst = false
     )
 
     override val lessFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> =
@@ -288,8 +298,8 @@ class IrBuiltInsOverFir(
         symbol: IrSimpleFunctionSymbol?,
         returnType: IrType,
         valueParameterTypes: Array<out Pair<String, IrType>>,
-        typeParameters: List<IrTypeParameter>,
-        origin: IrDeclarationOrigin,
+        typeParameters: List<IrTypeParameter> = emptyList(),
+        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
         isIntrinsicConst: Boolean,
     ): IrSimpleFunctionSymbol {
         return irFactory.createSimpleFunction(
@@ -326,36 +336,17 @@ class IrBuiltInsOverFir(
         }.symbol
     }
 
-    private fun addBuiltinOperatorSymbol(
-        name: String,
-        symbol: IrSimpleFunctionSymbol?,
-        returnType: IrType,
-        vararg valueParameterTypes: Pair<String, IrType>,
-        isIntrinsicConst: Boolean = false,
-    ): IrSimpleFunctionSymbol {
-        return createFunction(
-            name = name,
-            symbol = symbol,
-            returnType = returnType,
-            valueParameterTypes = valueParameterTypes,
-            typeParameters = emptyList(),
-            origin = BUILTIN_OPERATOR,
-            isIntrinsicConst = isIntrinsicConst
-        )
-    }
-
     private fun List<PrimitiveType>.defineComparisonOperatorForEachIrType(
         name: String,
         symbols: Map<PrimitiveType, IrSimpleFunctionSymbol>
     ): Map<IrClassifierSymbol, IrSimpleFunctionSymbol> {
         return associate { primitiveType ->
             val irType = primitiveTypeToIrType.getValue(primitiveType)
-            irType.classifierOrFail to addBuiltinOperatorSymbol(
-                name,
+            irType.classifierOrFail to createFunction(
+                name = name,
                 symbol = symbols.getValue(primitiveType),
-                booleanType,
-                "" to irType,
-                "" to irType,
+                returnType = booleanType,
+                valueParameterTypes = arrayOf("" to irType, "" to irType),
                 isIntrinsicConst = true
             )
         }
