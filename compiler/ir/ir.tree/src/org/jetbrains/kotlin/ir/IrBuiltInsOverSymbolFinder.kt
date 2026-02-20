@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.ir
 
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.builtins.UnsignedType
+import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
@@ -195,6 +196,33 @@ abstract class IrBuiltInsOverSymbolFinder(override val symbolFinder: SymbolFinde
 
     override val deprecatedSymbol: IrClassSymbol = StandardClassIds.Annotations.Deprecated.classSymbol()
     override val deprecationLevelSymbol: IrClassSymbol = StandardClassIds.DeprecationLevel.classSymbol()
+
+    // ------------------------------------- function types -------------------------------------
+
+    private val functionNMap: MutableMap<Int, IrClass> = mutableMapOf()
+    private val kFunctionNMap: MutableMap<Int, IrClass> = mutableMapOf()
+    private val suspendFunctionNMap: MutableMap<Int, IrClass> = mutableMapOf()
+    private val kSuspendFunctionNMap: MutableMap<Int, IrClass> = mutableMapOf()
+
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    override fun functionN(arity: Int): IrClass = functionNMap.getOrPut(arity) {
+        StandardClassIds.FunctionN(arity).classSymbol().owner
+    }
+
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    override fun kFunctionN(arity: Int): IrClass = kFunctionNMap.getOrPut(arity) {
+        StandardClassIds.KFunctionN(arity).classSymbol().owner
+    }
+
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    override fun suspendFunctionN(arity: Int): IrClass = suspendFunctionNMap.getOrPut(arity) {
+        StandardClassIds.SuspendFunctionN(arity).classSymbol().owner
+    }
+
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    override fun kSuspendFunctionN(arity: Int): IrClass = kSuspendFunctionNMap.getOrPut(arity) {
+        StandardClassIds.KSuspendFunctionN(arity).classSymbol().owner
+    }
 
     override fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol = when (n) {
         0 -> if (mutable) kMutableProperty0Class else kProperty0Class

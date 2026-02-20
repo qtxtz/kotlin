@@ -64,33 +64,6 @@ class IrBuiltInsOverFir(
     override val kotlinInternalPackageFragment: IrExternalPackageFragment = createPackage(StandardClassIds.BASE_INTERNAL_PACKAGE)
     override val operatorsPackageFragment: IrExternalPackageFragment = createPackage(StandardClassIds.BASE_INTERNAL_IR_PACKAGE)
 
-    // ------------------------------------- function types -------------------------------------
-
-    private val functionNMap: MutableMap<Int, IrClass> = mutableMapOf()
-    private val kFunctionNMap: MutableMap<Int, IrClass> = mutableMapOf()
-    private val suspendFunctionNMap: MutableMap<Int, IrClass> = mutableMapOf()
-    private val kSuspendFunctionNMap: MutableMap<Int, IrClass> = mutableMapOf()
-
-    @OptIn(UnsafeDuringIrConstructionAPI::class)
-    override fun functionN(arity: Int): IrClass = functionNMap.getOrPut(arity) {
-        fir2irBuiltins.loadClass(StandardClassIds.FunctionN(arity)).owner
-    }
-
-    @OptIn(UnsafeDuringIrConstructionAPI::class)
-    override fun kFunctionN(arity: Int): IrClass = kFunctionNMap.getOrPut(arity) {
-        fir2irBuiltins.loadClass(StandardClassIds.KFunctionN(arity)).owner
-    }
-
-    @OptIn(UnsafeDuringIrConstructionAPI::class)
-    override fun suspendFunctionN(arity: Int): IrClass = suspendFunctionNMap.getOrPut(arity) {
-        fir2irBuiltins.loadClass(StandardClassIds.SuspendFunctionN(arity)).owner
-    }
-
-    @OptIn(UnsafeDuringIrConstructionAPI::class)
-    override fun kSuspendFunctionN(arity: Int): IrClass = kSuspendFunctionNMap.getOrPut(arity) {
-        fir2irBuiltins.loadClass(StandardClassIds.KSuspendFunctionN(arity)).owner
-    }
-
     // ------------------------------------- intrinsic const evaluation -------------------------------------
 
     private val intrinsicConstAnnotation: IrAnnotation by lazy {
