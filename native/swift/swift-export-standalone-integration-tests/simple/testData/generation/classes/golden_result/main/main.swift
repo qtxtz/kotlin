@@ -61,10 +61,10 @@ public enum ENUM: KotlinRuntimeSupport._KotlinBridgeable, Swift.CaseIterable, Sw
         __externalRCRefUnsafe: Swift.UnsafeMutableRawPointer!,
         options: KotlinRuntime.KotlinBaseConstructionOptions
     ) {
-        switch __externalRCRefUnsafe {
-        case ENUM_A(): self = .A
-        case ENUM_B(): self = .B
-        case ENUM_C(): self = .C
+        switch __root___ENUM_ordinal(__externalRCRefUnsafe) {
+        case 0: self = .A
+        case 1: self = .B
+        case 2: self = .C
         default: fatalError()
         }
     }

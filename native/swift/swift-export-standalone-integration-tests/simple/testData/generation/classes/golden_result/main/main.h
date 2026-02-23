@@ -165,6 +165,8 @@ void * __root___DATA_CLASS_init_allocate();
 
 _Bool __root___DATA_CLASS_init_initialize__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(void * __kt, int32_t a);
 
+int32_t __root___ENUM_ordinal(void * self);
+
 void * __root___Foo_init_allocate();
 
 _Bool __root___Foo_init_initialize__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(void * __kt, int32_t a);

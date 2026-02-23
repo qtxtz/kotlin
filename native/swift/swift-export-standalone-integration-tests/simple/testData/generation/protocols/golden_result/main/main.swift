@@ -497,7 +497,7 @@ extension ExportedKotlinPackages.packagewithprotocols {
             __externalRCRefUnsafe: Swift.UnsafeMutableRawPointer!,
             options: KotlinRuntime.KotlinBaseConstructionOptions
         ) {
-            switch __externalRCRefUnsafe {
+            switch packagewithprotocols_ENUM_WITH_INTERFACE_INHERITANCE_ordinal(__externalRCRefUnsafe) {
             default: fatalError()
             }
         }

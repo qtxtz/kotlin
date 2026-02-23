@@ -23,4 +23,6 @@ void * a_b_c_E_B();
 
 void * a_b_c_E_C();
 
+int32_t a_b_c_E_ordinal(void * self);
+
 NS_ASSUME_NONNULL_END

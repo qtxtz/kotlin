@@ -613,6 +613,13 @@ public fun __root___DATA_CLASS_init_initialize__TypesOfArguments__Swift_UnsafeMu
     return run { _result; true }
 }
 
+@ExportedBridge("__root___ENUM_ordinal")
+public fun __root___ENUM_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as ENUM
+    val _result = run { __self.ordinal }
+    return _result
+}
+
 @ExportedBridge("__root___Foo_init_allocate")
 public fun __root___Foo_init_allocate(): kotlin.native.internal.NativePtr {
     val _result = run { kotlin.native.internal.createUninitializedInstance<Foo>() }

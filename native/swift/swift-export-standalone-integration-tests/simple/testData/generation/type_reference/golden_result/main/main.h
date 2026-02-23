@@ -171,6 +171,8 @@ _Bool __root___var_object_wp_set__TypesOfArguments__ExportedKotlinPackages_names
 
 void * ignored_ENUM_A();
 
+int32_t ignored_ENUM_ordinal(void * self);
+
 int32_t ignored_VALUE_CLASS_a_get(void * self);
 
 _Bool ignored_VALUE_CLASS_equals__TypesOfArguments__Swift_Optional_anyU20KotlinRuntimeSupport__KotlinBridgeable___(void * self, void * _Nullable other);

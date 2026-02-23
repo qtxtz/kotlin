@@ -1601,6 +1601,8 @@ void * kotlin_time_DurationUnit_NANOSECONDS();
 
 void * kotlin_time_DurationUnit_SECONDS();
 
+int32_t kotlin_time_DurationUnit_ordinal(void * self);
+
 void * kotlin_time_Duration_Companion_INFINITE_get(void * self);
 
 void * kotlin_time_Duration_Companion_ZERO_get(void * self);

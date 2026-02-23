@@ -51,6 +51,13 @@ public fun __root___EnumWithFactory__TypesOfArguments__Swift_Int32__(x: Int): ko
     return kotlin.native.internal.ref.createRetainedExternalRCRef(_result)
 }
 
+@ExportedBridge("__root___EnumWithFactory_ordinal")
+public fun __root___EnumWithFactory_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as EnumWithFactory
+    val _result = run { __self.ordinal }
+    return _result
+}
+
 @ExportedBridge("__root___FlattenedPackageClass__TypesOfArguments__Swift_Float__")
 public fun __root___FlattenedPackageClass__TypesOfArguments__Swift_Float__(f: Float): kotlin.native.internal.NativePtr {
     val __f = f

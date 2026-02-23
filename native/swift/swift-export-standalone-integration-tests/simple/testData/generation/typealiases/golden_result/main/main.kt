@@ -318,6 +318,13 @@ public fun __root___DATA_OBJECT_WITH_PACKAGE_get(): kotlin.native.internal.Nativ
     return kotlin.native.internal.ref.createRetainedExternalRCRef(_result)
 }
 
+@ExportedBridge("__root___ENUM_ordinal")
+public fun __root___ENUM_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as ENUM
+    val _result = run { __self.ordinal }
+    return _result
+}
+
 @ExportedBridge("__root___GENERIC_CLASS_init_allocate")
 public fun __root___GENERIC_CLASS_init_allocate(): kotlin.native.internal.NativePtr {
     val _result = run { kotlin.native.internal.createUninitializedInstance<GENERIC_CLASS<kotlin.Any?>>() }

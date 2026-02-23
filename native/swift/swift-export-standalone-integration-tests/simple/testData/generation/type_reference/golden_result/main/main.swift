@@ -660,8 +660,8 @@ extension ExportedKotlinPackages.ignored {
             __externalRCRefUnsafe: Swift.UnsafeMutableRawPointer!,
             options: KotlinRuntime.KotlinBaseConstructionOptions
         ) {
-            switch __externalRCRefUnsafe {
-            case ignored_ENUM_A(): self = .A
+            switch ignored_ENUM_ordinal(__externalRCRefUnsafe) {
+            case 0: self = .A
             default: fatalError()
             }
         }

@@ -103,10 +103,10 @@ extension ExportedKotlinPackages.a.b.c {
             __externalRCRefUnsafe: Swift.UnsafeMutableRawPointer!,
             options: KotlinRuntime.KotlinBaseConstructionOptions
         ) {
-            switch __externalRCRefUnsafe {
-            case a_b_c_E_A(): self = .A
-            case a_b_c_E_B(): self = .B
-            case a_b_c_E_C(): self = .C
+            switch a_b_c_E_ordinal(__externalRCRefUnsafe) {
+            case 0: self = .A
+            case 1: self = .B
+            case 2: self = .C
             default: fatalError()
             }
         }

@@ -6813,14 +6813,14 @@ extension ExportedKotlinPackages.kotlin.time {
             __externalRCRefUnsafe: Swift.UnsafeMutableRawPointer!,
             options: KotlinRuntime.KotlinBaseConstructionOptions
         ) {
-            switch __externalRCRefUnsafe {
-            case kotlin_time_DurationUnit_NANOSECONDS(): self = .NANOSECONDS
-            case kotlin_time_DurationUnit_MICROSECONDS(): self = .MICROSECONDS
-            case kotlin_time_DurationUnit_MILLISECONDS(): self = .MILLISECONDS
-            case kotlin_time_DurationUnit_SECONDS(): self = .SECONDS
-            case kotlin_time_DurationUnit_MINUTES(): self = .MINUTES
-            case kotlin_time_DurationUnit_HOURS(): self = .HOURS
-            case kotlin_time_DurationUnit_DAYS(): self = .DAYS
+            switch kotlin_time_DurationUnit_ordinal(__externalRCRefUnsafe) {
+            case 0: self = .NANOSECONDS
+            case 1: self = .MICROSECONDS
+            case 2: self = .MILLISECONDS
+            case 3: self = .SECONDS
+            case 4: self = .MINUTES
+            case 5: self = .HOURS
+            case 6: self = .DAYS
             default: fatalError()
             }
         }

@@ -15,6 +15,8 @@ _Bool __root___ClassWithFactoryWithoutParameters_init_initialize__TypesOfArgumen
 
 void * __root___EnumWithFactory__TypesOfArguments__Swift_Int32__(int32_t x);
 
+int32_t __root___EnumWithFactory_ordinal(void * self);
+
 void * __root___FlattenedPackageClass__TypesOfArguments__Swift_Float__(float f);
 
 void * __root___InterfaceWithFactory();

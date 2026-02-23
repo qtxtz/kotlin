@@ -128,6 +128,34 @@ public fun Enum_print(self: kotlin.native.internal.NativePtr): kotlin.native.int
     return _result.objcPtr()
 }
 
+@ExportedBridge("__root___EnumSimple_ordinal")
+public fun __root___EnumSimple_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as EnumSimple
+    val _result = run { __self.ordinal }
+    return _result
+}
+
+@ExportedBridge("__root___EnumWithAbstractMembers_ordinal")
+public fun __root___EnumWithAbstractMembers_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as EnumWithAbstractMembers
+    val _result = run { __self.ordinal }
+    return _result
+}
+
+@ExportedBridge("__root___EnumWithMembers_ordinal")
+public fun __root___EnumWithMembers_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as EnumWithMembers
+    val _result = run { __self.ordinal }
+    return _result
+}
+
+@ExportedBridge("__root___Enum_ordinal")
+public fun __root___Enum_ordinal(self: kotlin.native.internal.NativePtr): Int {
+    val __self = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as Enum
+    val _result = run { __self.ordinal }
+    return _result
+}
+
 @ExportedBridge("__root___enumId__TypesOfArguments__ExportedKotlinPackages_kotlin_Enum__")
 public fun __root___enumId__TypesOfArguments__ExportedKotlinPackages_kotlin_Enum__(e: kotlin.native.internal.NativePtr): kotlin.native.internal.NativePtr {
     val __e = kotlin.native.internal.ref.dereferenceExternalRCRef(e) as kotlin.Enum<*>

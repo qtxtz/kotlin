@@ -85,6 +85,8 @@ void * packagewithprotocols_ContainerProtocol_NestedProtocol_NestedClass_init_al
 
 _Bool packagewithprotocols_ContainerProtocol_NestedProtocol_NestedClass_init_initialize__TypesOfArguments__Swift_UnsafeMutableRawPointer__(void * __kt);
 
+int32_t packagewithprotocols_ENUM_WITH_INTERFACE_INHERITANCE_ordinal(void * self);
+
 void * packagewithprotocols_INHERITANCE_COUPLE_init_allocate();
 
 _Bool packagewithprotocols_INHERITANCE_COUPLE_init_initialize__TypesOfArguments__Swift_UnsafeMutableRawPointer__(void * __kt);
