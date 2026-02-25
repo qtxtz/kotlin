@@ -60,7 +60,11 @@ internal abstract class JvmValueClassAbstractLowering(
                         function
                     }
                     constructorWithPotentialMarker.transformChildrenVoid()
-                    return listOfNotNull(constructorWithPotentialMarker, createExposedConstructor(constructorWithPotentialMarker))
+                    return listOfNotNull(
+                        constructorWithPotentialMarker,
+                        createExposedConstructor(constructorWithPotentialMarker),
+                        createExposedNoArgConstructor(constructorWithPotentialMarker),
+                    )
                 }
             }
             function.transformChildrenVoid()
@@ -109,6 +113,8 @@ internal abstract class JvmValueClassAbstractLowering(
     abstract fun IrConstructor.withAddedMarkerParameterToNonExposedConstructor(): IrConstructor?
 
     abstract fun createExposedConstructor(constructor: IrConstructor): IrConstructor?
+
+    abstract fun createExposedNoArgConstructor(constructor: IrConstructor): IrConstructor?
 
     private fun transformFlattenedConstructor(function: IrConstructor, replacement: IrConstructor): List<IrDeclaration> {
         replacement.parameters.forEach {
