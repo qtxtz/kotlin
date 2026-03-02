@@ -387,23 +387,6 @@ interface KotlinDependencyHandler : HasProject {
         project.dependencies.platform(notation, configureAction)
 
     /**
-     * @suppress
-     */
-    @Deprecated(
-        "Dukat integration is being reevaluated. It currently does not work. See KT-54395. Scheduled for removal in Kotlin 2.3.",
-        level = DeprecationLevel.ERROR
-    )
-    fun npm(
-        name: String,
-        version: String,
-        generateExternals: Boolean,
-    ): Dependency {
-        @Suppress("deprecation_error")
-        (warnNpmGenerateExternals(project.logger))
-        return npm(name, version)
-    }
-
-    /**
      * Creates a dependency on the [NPM](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#dependencies) module.
      *
      * Note: The created dependency should be manually added to this entity using other methods from this DSL:
@@ -422,23 +405,6 @@ interface KotlinDependencyHandler : HasProject {
         name: String,
         version: String,
     ): Dependency
-
-    /**
-     * @suppress
-     */
-    @Deprecated(
-        "Dukat integration is being reevaluated. It currently does not work. See KT-54395. Scheduled for removal in Kotlin 2.3.",
-        level = DeprecationLevel.ERROR
-    )
-    fun npm(
-        name: String,
-        directory: File,
-        generateExternals: Boolean,
-    ): Dependency {
-        @Suppress("deprecation_error")
-        (warnNpmGenerateExternals(project.logger))
-        return npm(name, directory)
-    }
 
     /**
      * Creates a dependency on the [NPM](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#dependencies) module.
@@ -460,22 +426,6 @@ interface KotlinDependencyHandler : HasProject {
         name: String,
         directory: File,
     ): Dependency
-
-    /**
-     * @suppress
-     */
-    @Deprecated(
-        "Dukat integration is being reevaluated. It currently does not work. See KT-54395. Scheduled for removal in Kotlin 2.3.",
-        level = DeprecationLevel.ERROR
-    )
-    fun npm(
-        directory: File,
-        generateExternals: Boolean,
-    ): Dependency {
-        @Suppress("deprecation_error")
-        (warnNpmGenerateExternals(project.logger))
-        return npm(directory)
-    }
 
     /**
      * Creates a dependency on the [NPM](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#dependencies) module.
@@ -562,23 +512,6 @@ interface KotlinDependencyHandler : HasProject {
     ): Dependency
 
     /**
-     * @suppress
-     */
-    @Deprecated(
-        "Dukat integration is being reevaluated. It currently does not work. See KT-54395. Scheduled for removal in Kotlin 2.3.",
-        level = DeprecationLevel.ERROR
-    )
-    fun optionalNpm(
-        name: String,
-        version: String,
-        generateExternals: Boolean,
-    ): Dependency {
-        @Suppress("deprecation_error")
-        (warnNpmGenerateExternals(project.logger))
-        return optionalNpm(name, version)
-    }
-
-    /**
      * Creates a dependency to a NPM module that is added
      * to [optionalDependencies](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#optionaldependencies).
      *
@@ -598,23 +531,6 @@ interface KotlinDependencyHandler : HasProject {
         name: String,
         version: String,
     ): Dependency
-
-    /**
-     * @suppress
-     */
-    @Deprecated(
-        "Dukat integration is being reevaluated. It currently does not work. See KT-54395. Scheduled for removal in Kotlin 2.3.",
-        level = DeprecationLevel.ERROR
-    )
-    fun optionalNpm(
-        name: String,
-        directory: File,
-        generateExternals: Boolean,
-    ): Dependency {
-        @Suppress("deprecation_error")
-        (warnNpmGenerateExternals(project.logger))
-        return optionalNpm(name, directory)
-    }
 
     /**
      * Creates a dependency to a NPM module that is added
@@ -637,22 +553,6 @@ interface KotlinDependencyHandler : HasProject {
         name: String,
         directory: File,
     ): Dependency
-
-    /**
-     * @suppress
-     */
-    @Deprecated(
-        "Dukat integration is being reevaluated. It currently does not work. See KT-54395. Scheduled for removal in Kotlin 2.3.",
-        level = DeprecationLevel.ERROR
-    )
-    fun optionalNpm(
-        directory: File,
-        generateExternals: Boolean,
-    ): Dependency {
-        @Suppress("deprecation_error")
-        (warnNpmGenerateExternals(project.logger))
-        return optionalNpm(directory)
-    }
 
     /**
      * Creates a dependency to a NPM module that is added
