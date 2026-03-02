@@ -163,8 +163,9 @@ constructor(
         }
 
         @Deprecated(
-            "Use create(KotlinJsIrCompilation, name, configuration). Scheduled for removal in Kotlin 2.4.",
+            "Use create(KotlinJsIrCompilation, name, configuration). Scheduled for removal in Kotlin 2.5.",
             replaceWith = ReplaceWith("create(compilation, name, configuration)"),
+            // KT-85179 Used by kotlinx-benchmark https://github.com/Kotlin/kotlinx-benchmark/issues/355
             level = DeprecationLevel.HIDDEN
         )
         fun create(
@@ -179,9 +180,10 @@ constructor(
             )
 
         @Deprecated(
-            "Use register instead. Scheduled for removal in Kotlin 2.4.",
+            "Use register instead. Scheduled for removal in Kotlin 2.5.",
             ReplaceWith("register(compilation, name, configuration)"),
-            level = DeprecationLevel.ERROR
+            level = DeprecationLevel.HIDDEN
+            // KT-85179 Used by kotlinx-benchmark https://github.com/Kotlin/kotlinx-benchmark/issues/355
         )
         fun create(
             compilation: KotlinJsIrCompilation,
