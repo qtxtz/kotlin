@@ -660,10 +660,15 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
             }
         }
 
-        if (klass.shouldContainImplementationOfMagicProperty(superTypes)) {
-            members.addMagicPropertyForInterfaceImplementation(klass, superTypes, typeParameterScope, config)
-        } else if (klass.shouldNotBeImplemented) {
-            members.addMagicInterfaceProperty(klass, config)
+        val classHasNonExportedAbstractMember = klass.hasNonExportedAbstractMembers()
+
+        if (klass.shouldContainImplementableSymbolProperty(classHasNonExportedAbstractMember)) {
+            members.addOwnJsSymbolDeclaration()
+            members.addImplementableSymbolProperty(klass, config)
+        }
+
+        if (!klass.isExternal) {
+            members.addSuperTypesSpecialProperties(klass, superTypes, typeParameterScope, config, classHasNonExportedAbstractMember)
         }
 
         return ExportedClassDeclarationsInfo(members, nestedClasses)
@@ -780,4 +785,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
         val members: List<ExportedDeclaration>,
         val nestedClasses: List<ExportedClass>,
     )
+
+    private fun KaNamedClassSymbol.shouldContainImplementableSymbolProperty(hasNotExportedAbstractMember: Boolean): Boolean =
+        !hasNotExportedAbstractMember && config.implementableInterfaces && classKind == KaClassKind.INTERFACE && !isExternal && !isJsImplicitExport() && !isJsNoRuntime()
 }

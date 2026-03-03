@@ -31,7 +31,7 @@ declare namespace JS_TESTS {
         }
         class ChildTestInterfaceImpl extends foo.TestInterfaceImpl.$metadata$.constructor implements foo.AnotherExportedInterface {
             constructor();
-            readonly __doNotUseOrImplementIt: foo.TestInterfaceImpl["__doNotUseOrImplementIt"] & foo.AnotherExportedInterface["__doNotUseOrImplementIt"];
+            readonly __doNotUseOrImplementIt: foo.AnotherExportedInterface["__doNotUseOrImplementIt"] & foo.TestInterface["__doNotUseOrImplementIt"];
         }
         namespace ChildTestInterfaceImpl {
             /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
@@ -159,27 +159,19 @@ declare namespace JS_TESTS {
         }
         interface NoRuntimeSimpleInterface {
             readonly x: string;
-            readonly __doNotUseOrImplementIt: {
-                readonly "foo.NoRuntimeSimpleInterface": unique symbol;
-            };
         }
         interface NRBase {
             readonly b: string;
-            readonly __doNotUseOrImplementIt: {
-                readonly "foo.NRBase": unique symbol;
-            };
         }
         interface MidClassic extends foo.NRBase {
             mid(): void;
             readonly __doNotUseOrImplementIt: {
                 readonly "foo.MidClassic": unique symbol;
-            } & foo.NRBase["__doNotUseOrImplementIt"];
+            };
         }
         interface NRLeaf extends foo.MidClassic {
             leaf(): void;
-            readonly __doNotUseOrImplementIt: {
-                readonly "foo.NRLeaf": unique symbol;
-            } & foo.MidClassic["__doNotUseOrImplementIt"];
+            readonly __doNotUseOrImplementIt: foo.MidClassic["__doNotUseOrImplementIt"];
         }
         interface WithDefaultSuspend {
             regularWithDefault(): string;
