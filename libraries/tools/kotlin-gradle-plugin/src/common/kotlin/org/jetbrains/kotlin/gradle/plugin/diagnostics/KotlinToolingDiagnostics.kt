@@ -1972,6 +1972,30 @@ internal object KotlinToolingDiagnostics {
         }
     }
 
+    object AbiValidationNoPublishPlugin : ToolingDiagnosticFactory(ERROR, DiagnosticGroup.Kgp.Experimental) {
+        operator fun invoke(): ToolingDiagnostic = build {
+            title("ABI Validation: no Maven publishing plugin")
+                .description {
+                    "Source of binaries is set to Maven publications, but maven publishing plugin is not applied."
+                }
+                .solution {
+                    "Apply `maven-publish` plugin and create Maven publication, or specify `kotlin.abiValidation { binariesSource = MAIN_COMPILATION }` to use output of the main compilation tasks"
+                }
+        }
+    }
+
+    object AbiValidationAndroidPublicationNotSupported : ToolingDiagnosticFactory(ERROR, DiagnosticGroup.Kgp.Experimental) {
+        operator fun invoke(): ToolingDiagnostic = build {
+            title("ABI Validation: Android target unsupported with Maven binary sources mode")
+                .description {
+                    "Android targets are not supported by ABI validation when Maven binary sources mode is enabled"
+                }
+                .solution {
+                    "Specify `kotlin.abiValidation { binariesSource = MAIN_COMPILATION }` to use output of the main compilation tasks"
+                }
+        }
+    }
+
     object PublishAllAndroidLibraryVariantsDeprecated : ToolingDiagnosticFactory(WARNING, DiagnosticGroup.Kgp.Deprecation) {
         operator fun invoke() = build {
             title("publishAllLibraryVariants() is deprecated")

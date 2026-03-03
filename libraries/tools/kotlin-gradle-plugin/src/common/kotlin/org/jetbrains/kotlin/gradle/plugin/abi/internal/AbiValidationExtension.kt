@@ -18,10 +18,12 @@ import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.compilerRunner.btapi.BuildSessionService
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiFiltersSpec
 import org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationExtension
+import org.jetbrains.kotlin.gradle.dsl.abi.BinariesSource
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.abi.KotlinAbiCheckTaskImpl
 import org.jetbrains.kotlin.gradle.tasks.abi.KotlinAbiUpdateTask
 import org.jetbrains.kotlin.gradle.utils.property
+import org.jetbrains.kotlin.gradle.utils.propertyWithConvention
 import javax.inject.Inject
 
 @ExperimentalAbiValidation
@@ -55,6 +57,8 @@ internal abstract class AbiValidationExtensionImpl @Inject constructor(
     override val referenceDumpDir: DirectoryProperty = objects.directoryProperty()
 
     override val keepLocallyUnsupportedTargets: Property<Boolean> = objects.property<Boolean>()
+
+    override val binariesSource: Property<BinariesSource> = objects.propertyWithConvention<BinariesSource>(BinariesSource.MAIN_COMPILATION)
 
     @Suppress("DEPRECATION_ERROR")
     @Deprecated(
