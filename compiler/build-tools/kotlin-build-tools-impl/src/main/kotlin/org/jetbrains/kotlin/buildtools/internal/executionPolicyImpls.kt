@@ -6,6 +6,9 @@
 package org.jetbrains.kotlin.buildtools.internal
 
 import org.jetbrains.kotlin.buildtools.api.ExecutionPolicy
+import org.jetbrains.kotlin.daemon.common.DEFAULT_LOG_FILE_COUNT_LIMIT
+import org.jetbrains.kotlin.daemon.common.DEFAULT_LOG_FILE_DIRECTORY
+import org.jetbrains.kotlin.daemon.common.DEFAULT_LOG_FILE_SIZE_LIMIT
 import org.jetbrains.kotlin.daemon.common.DaemonOptions
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -65,5 +68,43 @@ internal class DaemonExecutionPolicyImpl private constructor(private val options
          * so that the invoker can make sure that a specific daemon is spun up for a test and no stale daemons are used.
          */
         val DAEMON_RUN_DIR_PATH: Option<Path> = Option("DAEMON_RUN_DIR_PATH", Path(DaemonOptions().runFilesPath))
+
+        /**
+         * The path to a directory where the daemon logs files should be stored.
+         *
+         * Kotlin daemon logs are usually prefixed with `kotlin-daemon` and have the extension `.log`.
+         *
+         * @since 2.4.0
+         */
+        val LOGS_PATH: Option<Path> = Option("LOGS_PATH", Path(DEFAULT_LOG_FILE_DIRECTORY))
+
+        /**
+         * The limit for the maximum size of log files, expressed in bytes.
+         *
+         * This option can be used to control the storage size allocated for log files.
+         * If the size of the log files exceeds this limit, appropriate actions such as
+         * truncation or log rotation may be applied.
+         *
+         * The value for this option must be a positive [Long] representing the maximum size of a log file.
+         *
+         * If unset (`null`), no size limit is applied. By default, a non-null limit is used.
+         *
+         * @since 2.4.0
+         */
+        val LOGS_FILE_SIZE_LIMIT: Option<Long?> = Option("LOGS_FILE_SIZE_LIMIT", DEFAULT_LOG_FILE_SIZE_LIMIT)
+
+        /**
+         * Specifies the maximum number of log files that can be retained when [[LOGS_FILE_SIZE_LIMIT]] is set.
+         *
+         * This option is primarily used to limit the
+         * number of historical log files maintained on the filesystem to avoid excessive storage consumption.
+         *
+         * The value for this option must be a positive [Int] representing the maximum number of log files.
+         *
+         * If unset (`null`), no size limit is applied. By default, a non-null limit is used.
+         *
+         * @since 2.4.0
+         */
+        val LOGS_FILE_COUNT_LIMIT: Option<Int?> = Option("LOGS_FILE_COUNT_LIMIT", DEFAULT_LOG_FILE_COUNT_LIMIT)
     }
 }
