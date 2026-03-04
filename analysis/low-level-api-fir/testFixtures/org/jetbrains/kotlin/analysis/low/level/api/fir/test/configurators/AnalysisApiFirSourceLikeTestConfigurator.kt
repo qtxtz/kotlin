@@ -27,7 +27,9 @@ import org.jetbrains.kotlin.test.services.TestModuleStructure
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.configuration.ExternalAnnotationsEnvironmentConfigurator
 
-abstract class AnalysisApiFirSourceLikeTestConfigurator(override val analyseInDependentSession: Boolean) : AnalysisApiTestConfigurator() {
+abstract class AnalysisApiFirSourceLikeTestConfigurator(
+    override val analyseInDependentSession: Boolean,
+) : AnalysisApiTestConfigurator() {
     override val analysisApiMode: AnalysisApiMode get() = AnalysisApiMode.Ide
     override val frontendKind: FrontendKind get() = FrontendKind.Fir
 
