@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemBuilder
 import org.jetbrains.kotlin.resolve.calls.inference.addSubtypeConstraintIfCompatible
 import org.jetbrains.kotlin.resolve.calls.inference.model.ConstraintStorage
 import org.jetbrains.kotlin.resolve.calls.inference.model.UnstableSystemMergeMode
-import org.jetbrains.kotlin.types.model.freshTypeConstructor
 import org.jetbrains.kotlin.types.model.isTypeVariable
 import org.jetbrains.kotlin.types.model.safeSubstitute
 import org.jetbrains.kotlin.types.model.typeConstructor
@@ -272,6 +271,8 @@ class PostponedArgumentsAnalyzer(
         val lambdaReturnType = lambda.returnType
 
         val expectedTypeForReturnArguments = when {
+            // Do not use the expected type from the first candidate in the case of ELA
+            forOverloadByLambdaReturnType && LanguageFeature.EagerLambdaAnalysis.isEnabled() -> null
             c.canBeProper(lambdaReturnType) -> substitute(lambdaReturnType)
 
             // For Unit-coercion

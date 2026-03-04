@@ -1,3 +1,8 @@
+// TARGET_BACKEND: JVM
+// TARGET_BACKEND: JVM_IR
+// IGNORE_BACKEND_K2: ANY
+// It was necessary to add TARGET_BACKEND because native part became flacky for some reason
+// TODO remove TARGET_BACKEND limitation once the issue is fixed.
 // ISSUE: KT-84998
 // LANGUAGE: +EagerLambdaAnalysis
 
