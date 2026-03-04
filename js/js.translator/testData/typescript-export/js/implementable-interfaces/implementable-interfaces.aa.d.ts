@@ -57,8 +57,11 @@ declare namespace JS_TESTS {
             genericWithDefaultImplementation<T_0>(x: T_0): string;
             delegatingToSuperDefaultImplementation(): string;
             anotherDefaultImplementation(): string;
+            getT(): T;
             readonly fooProperty: string;
             readonly propertyWithDefaultGetter: string;
+            setTWithDefaultImpl(value: T): void;
+            getTWithDefaultImpl(): T;
             readonly [foo.IFoo.Symbol]: true;
         }
         namespace IFoo {
@@ -73,6 +76,7 @@ declare namespace JS_TESTS {
             asyncFoo(): Promise<string>;
             parentAsyncMethod(): Promise<string>;
             delegatingToSuperDefaultImplementation(): string;
+            getT(): string;
             get fooProperty(): string;
             get parentPropertyToImplement(): string;
             set parentPropertyToImplement(value: string);
