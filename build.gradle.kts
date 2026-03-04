@@ -908,6 +908,7 @@ tasks {
     // These are unit tests of Native compiler
     register("nativeCompilerUnitTest") {
         dependsOn(":native:kotlin-native-utils:check")
+        dependsOn(":native:unsafe-mem:check")
         if (kotlinBuildProperties.isKotlinNativeEnabled.get()) {
             dependsOn(":kotlin-native:Interop:Indexer:check")
             dependsOn(":kotlin-native:Interop:StubGenerator:check")
