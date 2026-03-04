@@ -11,8 +11,10 @@ package org.jetbrains.kotlin.utils
  * The trick is that only one implementation is class-loaded. So, the calls are monomorphic,
  * and the JVM JIT (even C1) can skip the interface call dispatch and even inline the methods.
  *
- * Currently, there is only one implementation - [UnsafeBasedMemoryAccess]. It uses `sun.misc.Unsafe`.
- * The intention is to add one more, using FFM API. See KT-83647 and KT-83648.
+ * There are two implementations:
+ * - [UnsafeBasedMemoryAccess] — uses [sun.misc.Unsafe]. Default.
+ * - `MemorySegmentMemoryAccess` — uses the FFM API (`java.lang.foreign.MemorySegment`). Used when run on JDK 25+.
+ * See [unsafeMemoryAccess] for details.
  */
 interface UnsafeMemoryAccess {
     fun allocateMemory(size: Long): Long
@@ -44,4 +46,4 @@ interface UnsafeMemoryAccess {
     fun copyFromCharArray(src: CharArray, destAddress: Long, lengthInChars: Int)
 }
 
-val unsafeMemoryAccess: UnsafeMemoryAccess = UnsafeBasedMemoryAccess
+val unsafeMemoryAccess: UnsafeMemoryAccess = UnsafeMemoryAccessProvider.getImplementation()

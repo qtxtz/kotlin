@@ -399,6 +399,7 @@ fun Project.configureTests() {
             ":native:swift:swift-export-standalone-integration-tests:coroutines",
             ":native:swift:swift-export-standalone-integration-tests:external",
             ":native:swift:swift-export-standalone-integration-tests:simple",
+            ":native:unsafe-mem", // KTI-3068.
             ":plugins:compose-compiler-plugin:compiler-hosted",
             ":plugins:compose-compiler-plugin:compiler-hosted:integration-tests",
             ":plugins:jvm-abi-gen",

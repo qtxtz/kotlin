@@ -53,3 +53,16 @@ internal object UnsafeBasedMemoryAccess : UnsafeMemoryAccess {
     override fun copyFromCharArray(src: CharArray, destAddress: Long, lengthInChars: Int): Unit =
         unsafe.copyMemory(src, charArrayBaseOffset, null, destAddress, lengthInChars.toLong() * Char.SIZE_BYTES)
 }
+
+/**
+ * Provides an implementation of [UnsafeMemoryAccess] suitable for the JDK this code runs on.
+ *
+ * To achieve that, there is another version of this class in `MemorySegmentMemoryAccess.kt`,
+ * that is selected at runtime based on the JDK version using the multi-release JAR files feature.
+ * So, when running on JDK 25+, this class is shadowed by the alternative implementation.
+ *
+ * It is important to keep both classes in sync.
+ */
+internal object UnsafeMemoryAccessProvider {
+    fun getImplementation(): UnsafeMemoryAccess = UnsafeBasedMemoryAccess
+}
