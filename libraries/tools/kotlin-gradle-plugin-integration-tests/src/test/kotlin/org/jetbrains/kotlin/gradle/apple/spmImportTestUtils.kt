@@ -26,6 +26,8 @@ import org.jetbrains.kotlin.gradle.uklibs.PublishedProject
 import org.jetbrains.kotlin.gradle.uklibs.Variant
 import org.jetbrains.kotlin.gradle.uklibs.VariantFile
 import org.jetbrains.kotlin.gradle.uklibs.applyMultiplatform
+import org.jetbrains.kotlin.gradle.testbase.build
+import org.jetbrains.kotlin.gradle.uklibs.dumpKlibMetadataSignatures
 import org.jetbrains.kotlin.gradle.util.runProcess
 import java.io.Closeable
 import java.io.File
@@ -35,13 +37,24 @@ import kotlin.concurrent.thread
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
 import kotlin.io.path.readText
+import kotlin.io.path.isDirectory
+import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.writeText
 import kotlin.io.readText
 import kotlin.test.assertEquals
 
 @Suppress("INVISIBLE_REFERENCE")
-const val SYNTHETIC_IMPORT_TARGET_MAGIC_NAME =
-    GenerateSyntheticLinkageImportProject.Companion.SYNTHETIC_IMPORT_TARGET_MAGIC_NAME
+const val SYNTHETIC_IMPORT_TARGET_MAGIC_NAME = GenerateSyntheticLinkageImportProject.Companion.SYNTHETIC_IMPORT_TARGET_MAGIC_NAME
+
+// region Local Swift Package Creation Utilities
+
+enum class SwiftPackageSourceLanguage {
+    SWIFT_WITH_OBJC,
+    OBJC,
+    CXX_WITH_C_HEADER,
+    CXX,
+    SWIFT,
+}
 
 @Suppress("INVISIBLE_REFERENCE")
 const val SYNTHETIC_IMPORT_DYLIB =
@@ -50,53 +63,223 @@ const val SYNTHETIC_IMPORT_DYLIB =
 fun createLocalSwiftPackage(
     localPackageDir: Path,
     packageName: String = "LocalSwiftPackage",
-    productName: String = packageName,
-    targetName: String = productName,
+    sourceLanguage: SwiftPackageSourceLanguage = SwiftPackageSourceLanguage.SWIFT_WITH_OBJC,
 ) {
-    localPackageDir.resolve("Sources/$targetName").createDirectories()
-    createPackageManifestFile(localPackageDir, packageName, productName, targetName)
-
-    createSwiftFile(localPackageDir, targetName, packageName)
+    localPackageDir.createDirectories()
+    val sourcesDir = localPackageDir.resolve("Sources/$packageName")
+    writePackageManifest(localPackageDir, packageName, ".target(name: \"$packageName\")")
+    writeLocalPackageSources(sourcesDir, packageName, sourceLanguage)
 }
 
-private fun createSwiftFile(packageDir: Path, targetName: String, packageName: String) {
-    packageDir.resolve("Sources/$targetName/$targetName.swift").writeText(
-        """
-                import Foundation
+fun createLocalSwiftPackageWithResources(
+    localPackageDir: Path,
+    packageName: String = "LocalSwiftPackage",
+    resourceFileName: String = "greeting.txt",
+    resourceContent: String = "Hello from SPM resource",
+) {
+    localPackageDir.createDirectories()
+    val sourcesDir = localPackageDir.resolve("Sources/$packageName")
+    sourcesDir.createDirectories()
 
-                @objc public class LocalHelper: NSObject {
-                    @objc public static func greeting() -> String {
-                        return "Hello from $packageName"
+    // Create the resource file
+    sourcesDir.resolve(resourceFileName).writeText(resourceContent)
+
+    // Write Package.swift with resource processing
+    writePackageManifest(
+        localPackageDir, packageName,
+        """
+            .target(
+                name: "$packageName",
+                resources: [
+                    .process("$resourceFileName"),
+                ]
+            ),
+        """.trimIndent()
+    )
+
+    // Write Swift source that exposes a resource accessor
+    sourcesDir.resolve("$packageName.swift").writeText(
+        """
+            import Foundation
+
+            @objc public class ResourceAccessor: NSObject {
+                @objc public static func resourceContent() -> String {
+                    guard let url = Bundle.module.url(forResource: "${resourceFileName.substringBeforeLast(".")}", withExtension: "${resourceFileName.substringAfterLast(".")}") else {
+                        return "RESOURCE_NOT_FOUND"
                     }
+                    return (try? String(contentsOf: url)) ?? "RESOURCE_READ_ERROR"
                 }
-            """.trimIndent()
+
+                @objc public static func resourceBundle() -> Bundle {
+                    return Bundle.module
+                }
+            }
+        """.trimIndent()
     )
 }
 
-private fun createPackageManifestFile(
+internal fun writePackageManifest(
     localPackageDir: Path,
     packageName: String,
-    productName: String,
-    targetName: String,
+    targetDefinition: String,
 ) {
     localPackageDir.resolve("Package.swift").writeText(
         """
-                // swift-tools-version: 5.9
-                import PackageDescription
+            // swift-tools-version: 5.9
+            import PackageDescription
 
-                let package = Package(
-                    name: "$packageName",
-                    platforms: [.iOS(.v15)],
-                    products: [
-                        .library(name: "$productName", targets: ["$targetName"]),
-                    ],
-                    targets: [
-                        .target(name: "$targetName"),
-                    ]
-                )
-            """.trimIndent()
+            let package = Package(
+                name: "$packageName",
+                platforms: [.iOS(.v15)],
+                products: [
+                    .library(name: "$packageName", targets: ["$packageName"]),
+                ],
+                targets: [
+                    ${targetDefinition.prependIndent("            ")}
+                ]
+            )
+        """.trimIndent()
     )
 }
+
+internal fun writeLocalPackageSources(
+    sourcesDir: Path,
+    packageName: String,
+    sourceLanguage: SwiftPackageSourceLanguage,
+) {
+    sourcesDir.createDirectories()
+    when (sourceLanguage) {
+        SwiftPackageSourceLanguage.CXX_WITH_C_HEADER -> {
+            val includeDir = sourcesDir.resolve("include").createDirectories()
+            includeDir.resolve("$packageName.h").writeText(
+                """
+                    #ifndef ${packageName}_h
+                    #define ${packageName}_h
+
+                    #ifdef __cplusplus
+                    extern "C" {
+                    #endif
+
+                    const char* cxx_greeting(void);
+
+                    #ifdef __cplusplus
+                    }
+                    #endif
+
+                    #endif /* ${packageName}_h */
+                """.trimIndent()
+            )
+            sourcesDir.resolve("$packageName.cpp").writeText(
+                """
+                    #include "include/$packageName.h"
+                    #include <string>
+
+                    const char* cxx_greeting(void) {
+                        std::string msg = "Hello from C++";
+                        return msg.c_str();
+                    }
+                """.trimIndent()
+            )
+        }
+        SwiftPackageSourceLanguage.CXX -> {
+            val includeDir = sourcesDir.resolve("include").createDirectories()
+            includeDir.resolve("$packageName.h").writeText(
+                """
+                    #ifndef ${packageName}_h
+                    #define ${packageName}_h
+
+                    #include <string>
+
+                    std::string cxx_greeting();
+
+                    #endif /* ${packageName}_h */
+                """.trimIndent()
+            )
+            sourcesDir.resolve("$packageName.cpp").writeText(
+                """
+                    #include "include/$packageName.h"
+
+                    std::string cxx_greeting() {
+                        return "Hello from C++";
+                    }
+                """.trimIndent()
+            )
+        }
+        SwiftPackageSourceLanguage.OBJC -> {
+            val includeDir = sourcesDir.resolve("include").createDirectories()
+            includeDir.resolve("$packageName.h").writeText(
+                """
+                    #import <Foundation/Foundation.h>
+
+                    @interface LocalHelper : NSObject
+                    + (NSString *)greeting;
+                    @end
+                """.trimIndent()
+            )
+            sourcesDir.resolve("$packageName.m").writeText(
+                """
+                    #import "$packageName.h"
+
+                    @implementation LocalHelper
+                    + (NSString *)greeting {
+                        return @"Hello from LocalHelper";
+                    }
+                    @end
+                """.trimIndent()
+            )
+        }
+        SwiftPackageSourceLanguage.SWIFT_WITH_OBJC -> {
+            sourcesDir.resolve("$packageName.swift").writeText(swiftSourceContent())
+        }
+        SwiftPackageSourceLanguage.SWIFT -> {
+            sourcesDir.resolve("$packageName.swift").writeText(
+                """
+                    import Foundation
+                
+                    public class PureSwiftHelper {
+                        public static func greeting() -> String {
+                            return "Hello from PureSwiftHelper"
+                        }
+                    }
+                """.trimIndent()
+            )
+        }
+    }
+}
+
+internal fun swiftSourceContent(): String = """
+    import Foundation
+
+    @objc public class LocalHelper: NSObject {
+        @objc public static func greeting() -> String {
+            return "Hello from LocalHelper"
+        }
+        
+        public static func invisible() -> String {
+            return "This function is not visible in cinterop"
+        }
+    }
+""".trimIndent()
+
+fun createLocalSwiftPackageWithBinaryTarget(
+    localPackageDir: Path,
+    packageName: String,
+    xcframeworkPath: Path
+) {
+    localPackageDir.createDirectories()
+    writePackageManifest(
+        localPackageDir = localPackageDir,
+        packageName = packageName,
+        targetDefinition = """
+            .binaryTarget(
+                name: "$packageName",
+                path: "${xcframeworkPath.fileName}"
+            ),
+        """.trimIndent(),
+    )
+}
+
+// endregion
 
 
 /**
@@ -121,7 +304,7 @@ internal fun createSwiftPmGitRepoWithTags(
 
     if (!commandResult.isSuccessful) throw IllegalStateException("Failed to create git-daemon-export-ok file: ${commandResult.output}")
 
-    createPackageManifestFile(repoDir, packageName, packageName, packageName)
+    writePackageManifest(repoDir, packageName, ".target(name: \"$packageName\")")
 
     // Seed sources dir
     repoDir.resolve("Sources/$packageName").createDirectories()
@@ -733,7 +916,6 @@ fun dumpXcodebuildPIF(appPath: Path): List<XcodebuildPIFEntry> {
     return runAppleToolCommand(appPath, listOf("xcodebuild", "-dumpPIF", outputFile.absolutePath), outputFile)
 }
 
-
 data class ApplicationRun(
     val stdout: File,
     val stderr: File,
@@ -814,3 +996,48 @@ fun PublishedProject.assertSwiftPMMetadataVariantExistsInRootComponent() {
         gradleMetadata.variants.single { it.name == "swiftPMDependenciesMetadataElements" }.prettyPrinted
     )
 }
+
+fun TestProject.commonizeAndDumpCinteropSignatures(
+    commonizerBasePath: Path = projectPath,
+    commonizeTask: String = "commonizeCInterop",
+): String {
+    build(commonizeTask)
+
+    val commonizerResult = commonizerBasePath.resolve("build/classes/kotlin/commonizer/swiftPMImport")
+        .listDirectoryEntries()
+        .single { it.isDirectory() }
+        .listDirectoryEntries()
+        .single { it.isDirectory() }
+        .listDirectoryEntries()
+        .single { it.isDirectory() }
+
+    return dumpKlibMetadataSignatures(commonizerResult.toFile())
+}
+
+private val CINTEROP_NOISE_SIGNATURE_LINES = setOf(
+    "swiftPMImport.emptyxcode/SWIFT_TYPEDEFS.<get-SWIFT_TYPEDEFS>|<get-SWIFT_TYPEDEFS>(){}[0]",
+    "swiftPMImport.emptyxcode/SWIFT_TYPEDEFS|{}SWIFT_TYPEDEFS[0]",
+    "swiftPMImport.emptyxcode/char16_tVar|null[0]",
+    "swiftPMImport.emptyxcode/char16_t|null[0]",
+    "swiftPMImport.emptyxcode/char32_tVar|null[0]",
+    "swiftPMImport.emptyxcode/char32_t|null[0]",
+    "swiftPMImport.emptyxcode/char8_tVar|null[0]",
+    "swiftPMImport.emptyxcode/char8_t|null[0]",
+    "swiftPMImport.emptyxcode/swift_double2Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_double2|null[0]",
+    "swiftPMImport.emptyxcode/swift_float3Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_float3|null[0]",
+    "swiftPMImport.emptyxcode/swift_float4Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_float4|null[0]",
+    "swiftPMImport.emptyxcode/swift_int3Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_int3|null[0]",
+    "swiftPMImport.emptyxcode/swift_int4Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_int4|null[0]",
+    "swiftPMImport.emptyxcode/swift_uint3Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_uint3|null[0]",
+    "swiftPMImport.emptyxcode/swift_uint4Var|null[0]",
+    "swiftPMImport.emptyxcode/swift_uint4|null[0]",
+)
+
+fun String.filterOutNoiseSignatures() =
+    lines().filter { it !in CINTEROP_NOISE_SIGNATURE_LINES }.joinToString("\n").trim()
