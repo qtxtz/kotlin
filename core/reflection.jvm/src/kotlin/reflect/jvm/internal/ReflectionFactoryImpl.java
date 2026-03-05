@@ -77,11 +77,10 @@ public class ReflectionFactoryImpl extends ReflectionFactory {
         String name = f.getName();
         String signature = f.getSignature();
         if (!SystemPropertiesKt.getUseK1Implementation()) {
-            // Qualified name check is needed to rule out Kotlin built-in classes mapped to Java classes at runtime.
             boolean isJava =
                     container instanceof KClassImpl &&
                     container.getJClass().getAnnotation(Metadata.class) == null &&
-                    Intrinsics.areEqual(((KClassImpl<?>) container).getQualifiedName(), container.getJClass().getCanonicalName());
+                    !ConvertFromJavaKt.isMappedBuiltin((KClass<?>) container);
             if (name.equals("<init>")) {
                 if (isJava) {
                     Constructor<?> constructor = container.findJavaConstructor(signature);
