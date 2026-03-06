@@ -76,19 +76,12 @@ internal object nativeMemUtils {
         unsafeMemoryAccess.copyFromByteArray(source, dest.address, length)
     }
 
-    fun getCharArray(source: NativePointed, dest: CharArray, length: Int) {
-        unsafeMemoryAccess.copyToCharArray(source.address, dest, lengthInChars = length)
-    }
-
     fun putCharArray(source: CharArray, dest: NativePointed, length: Int) {
         unsafeMemoryAccess.copyFromCharArray(source, dest.address, lengthInChars = length)
     }
 
     fun zeroMemory(dest: NativePointed, length: Int): Unit =
-            unsafeMemoryAccess.setMemory(dest.address, length.toLong(), 0)
-
-    fun copyMemory(dest: NativePointed, length: Int, src: NativePointed) =
-            unsafeMemoryAccess.copyMemory(src.address, dest.address, length.toLong())
+            unsafeMemoryAccess.zeroMemory(dest.address, length.toLong())
 
     internal fun allocRaw(size: Long, align: Int): NativePtr {
         val address = unsafeMemoryAccess.allocateMemory(size)

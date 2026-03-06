@@ -16,7 +16,11 @@ internal object UnsafeBasedMemoryAccess : UnsafeMemoryAccess {
     private val byteArrayBaseOffset = unsafe.arrayBaseOffset(ByteArray::class.java).toLong()
     private val charArrayBaseOffset = unsafe.arrayBaseOffset(CharArray::class.java).toLong()
 
-    override fun allocateMemory(size: Long): Long = unsafe.allocateMemory(size)
+    override fun allocateMemory(size: Long): Long {
+        require(size > 0) { "allocateMemory size must be positive, but was $size" }
+        return unsafe.allocateMemory(size)
+    }
+
     override fun freeMemory(address: Long): Unit = unsafe.freeMemory(address)
 
     override fun getByte(address: Long): Byte = unsafe.getByte(address)
@@ -37,11 +41,8 @@ internal object UnsafeBasedMemoryAccess : UnsafeMemoryAccess {
     override fun getDouble(address: Long): Double = unsafe.getDouble(address)
     override fun putDouble(address: Long, value: Double): Unit = unsafe.putDouble(address, value)
 
-    override fun copyMemory(srcAddress: Long, destAddress: Long, length: Long): Unit =
-        unsafe.copyMemory(srcAddress, destAddress, length)
-
-    override fun setMemory(address: Long, length: Long, value: Byte): Unit =
-        unsafe.setMemory(address, length, value)
+    override fun zeroMemory(address: Long, length: Long): Unit =
+        unsafe.setMemory(address, length, 0)
 
     override fun copyFromByteArray(src: ByteArray, destAddress: Long, length: Int): Unit =
         unsafe.copyMemory(src, byteArrayBaseOffset, null, destAddress, length.toLong())
@@ -51,7 +52,4 @@ internal object UnsafeBasedMemoryAccess : UnsafeMemoryAccess {
 
     override fun copyFromCharArray(src: CharArray, destAddress: Long, lengthInChars: Int): Unit =
         unsafe.copyMemory(src, charArrayBaseOffset, null, destAddress, lengthInChars.toLong() * Char.SIZE_BYTES)
-
-    override fun copyToCharArray(srcAddress: Long, dest: CharArray, lengthInChars: Int): Unit =
-        unsafe.copyMemory(null, srcAddress, dest, charArrayBaseOffset, lengthInChars.toLong() * Char.SIZE_BYTES)
 }

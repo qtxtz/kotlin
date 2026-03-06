@@ -36,14 +36,12 @@ interface UnsafeMemoryAccess {
     fun getDouble(address: Long): Double
     fun putDouble(address: Long, value: Double)
 
-    fun copyMemory(srcAddress: Long, destAddress: Long, length: Long)
-    fun setMemory(address: Long, length: Long, value: Byte)
+    fun zeroMemory(address: Long, length: Long)
 
     fun copyFromByteArray(src: ByteArray, destAddress: Long, length: Int)
     fun copyToByteArray(srcAddress: Long, dest: ByteArray, length: Int)
 
     fun copyFromCharArray(src: CharArray, destAddress: Long, lengthInChars: Int)
-    fun copyToCharArray(srcAddress: Long, dest: CharArray, lengthInChars: Int)
 }
 
 val unsafeMemoryAccess: UnsafeMemoryAccess = UnsafeBasedMemoryAccess
