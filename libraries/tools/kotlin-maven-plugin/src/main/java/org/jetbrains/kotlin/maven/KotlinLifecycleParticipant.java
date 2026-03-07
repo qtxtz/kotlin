@@ -24,6 +24,8 @@ public class KotlinLifecycleParticipant extends AbstractMavenLifecycleParticipan
     private static final String KOTLIN_MAVEN_PLUGIN_ARTIFACT_ID = "kotlin-maven-plugin";
     private static final String KOTLIN_STDLIB_ARTIFACT_ID = "kotlin-stdlib";
     private static final String SMART_DEFAULTS_ENABLED_PROPERTY = "kotlin.smart.defaults.enabled";
+    private static final String COMPILE_GOAL = "compile";
+    private static final String TEST_COMPILE_GOAL = "test-compile";
 
     private static final String MAVEN_COMPILER_PLUGIN_GROUP_ID = "org.apache.maven.plugins";
     private static final String MAVEN_COMPILER_PLUGIN_ARTIFACT_ID = "maven-compiler-plugin";
@@ -278,25 +280,38 @@ public class KotlinLifecycleParticipant extends AbstractMavenLifecycleParticipan
     // -------------------------------------------------------------------------
 
     private void addSourceRoots(MavenProject project, Plugin kotlinMavenPlugin) {
-        if (hasUserDefinedSourceDirs(kotlinMavenPlugin)) {
-            return;
-        }
-
         File baseDir = project.getBasedir();
 
-        File mainKotlinSource = new File(baseDir, "src/main/kotlin");
-        if (mainKotlinSource.exists()) {
-            project.addCompileSourceRoot(mainKotlinSource.getAbsolutePath());
+        if (!hasUserDefinedSourceDirs(kotlinMavenPlugin, COMPILE_GOAL)) {
+            File mainKotlinSource = new File(baseDir, "src/main/kotlin");
+            if (mainKotlinSource.exists()) {
+                project.addCompileSourceRoot(mainKotlinSource.getAbsolutePath());
+            }
         }
 
-        File testKotlinSource = new File(baseDir, "src/test/kotlin");
-        if (testKotlinSource.exists()) {
-            project.addTestCompileSourceRoot(testKotlinSource.getAbsolutePath());
+        if (!hasUserDefinedSourceDirs(kotlinMavenPlugin, TEST_COMPILE_GOAL)) {
+            File testKotlinSource = new File(baseDir, "src/test/kotlin");
+            if (testKotlinSource.exists()) {
+                project.addTestCompileSourceRoot(testKotlinSource.getAbsolutePath());
+            }
         }
     }
 
-    private boolean hasUserDefinedSourceDirs(Plugin plugin) {
-        Object configuration = plugin.getConfiguration();
+    private boolean hasUserDefinedSourceDirs(Plugin plugin, String goal) {
+        if (hasNonEmptySourceDirs(plugin.getConfiguration())) {
+            return true;
+        }
+
+        for (PluginExecution execution : plugin.getExecutions()) {
+            if (execution.getGoals() != null && execution.getGoals().contains(goal) && hasNonEmptySourceDirs(execution.getConfiguration())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean hasNonEmptySourceDirs(Object configuration) {
         if (configuration instanceof Xpp3Dom) {
             Xpp3Dom configDom = (Xpp3Dom) configuration;
             Xpp3Dom sourceDirs = configDom.getChild("sourceDirs");
