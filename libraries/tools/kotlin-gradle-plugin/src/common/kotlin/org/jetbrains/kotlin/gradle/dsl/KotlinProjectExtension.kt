@@ -274,7 +274,7 @@ abstract class KotlinJsProjectExtension(project: Project) :
 
     @Suppress("DEPRECATION")
     @Deprecated(
-        "Kotlin/JS IR is the only supported compiler type. Use js(body) instead.",
+        "Kotlin/JS IR is the only supported compiler type. Use js(body) instead. Scheduled for removal in Kotlin 2.6.",
         replaceWith = ReplaceWith("js(body)"),
         level = DeprecationLevel.WARNING,
     )
@@ -286,7 +286,7 @@ abstract class KotlinJsProjectExtension(project: Project) :
 
     @Suppress("DEPRECATION")
     @Deprecated(
-        "Kotlin/JS IR is the only supported compiler type. Use js(body) instead.",
+        "Kotlin/JS IR is the only supported compiler type. Use js(body) instead. Scheduled for removal in Kotlin 2.6.",
         replaceWith = ReplaceWith("js(body)"),
         level = DeprecationLevel.WARNING,
     )
@@ -306,7 +306,7 @@ abstract class KotlinJsProjectExtension(project: Project) :
 
     @Suppress("DEPRECATION")
     @Deprecated(
-        "Kotlin/JS IR is the only supported compiler type. Use js(configure) instead.",
+        "Kotlin/JS IR is the only supported compiler type. Use js(configure) instead. Scheduled for removal in Kotlin 2.6.",
         replaceWith = ReplaceWith("js(configure)"),
         level = DeprecationLevel.WARNING,
     )
@@ -317,7 +317,7 @@ abstract class KotlinJsProjectExtension(project: Project) :
 
     @Suppress("DEPRECATION")
     @Deprecated(
-        "Kotlin/JS IR is the only supported compiler type. Use js(configure) instead.",
+        "Kotlin/JS IR is the only supported compiler type. Use js(configure) instead. Scheduled for removal in Kotlin 2.6.",
         replaceWith = ReplaceWith("js(configure)"),
         level = DeprecationLevel.WARNING,
     )
