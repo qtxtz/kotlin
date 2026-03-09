@@ -29,6 +29,7 @@ public interface KaSubstitutorProvider : KaSessionComponent {
      * @see KaSubstitutor
      */
     @KaExperimentalApi
+    @KaK1Unsupported
     public fun createSubstitutor(mappings: Map<KaTypeParameterSymbol, KaType>): KaSubstitutor
 
     /**
@@ -48,11 +49,12 @@ public interface KaSubstitutorProvider : KaSessionComponent {
      * class C<X, Y>
      * ```
      *
-     * - `createInheritanceTypeSubstitutor(A, B)` returns `KtSubstitutor { T -> String }`
-     * - `createInheritanceTypeSubstitutor(B, C)` returns `KtSubstitutor { X -> T, Y -> Int }`
-     * - `createInheritanceTypeSubstitutor(A, C)` returns `KtSubstitutor { X -> T, Y -> Int } andThen KtSubstitutor { T -> String }`
+     * - `createInheritanceTypeSubstitutor(A, B)` returns `KaSubstitutor { T -> String }`
+     * - `createInheritanceTypeSubstitutor(B, C)` returns `KaSubstitutor { X -> T, Y -> Int }`
+     * - `createInheritanceTypeSubstitutor(A, C)` returns `KaSubstitutor { X -> T, Y -> Int } and then KaSubstitutor { T -> String }`
      */
     @KaExperimentalApi
+    @KaK1Unsupported
     public fun createInheritanceTypeSubstitutor(subClass: KaClassSymbol, superClass: KaClassSymbol): KaSubstitutor?
 }
 
@@ -129,6 +131,7 @@ public class KaSubstitutorBuilder
  */
 // Auto-generated bridge. DO NOT EDIT MANUALLY!
 @KaExperimentalApi
+@KaK1Unsupported
 @KaContextParameterApi
 context(session: KaSession)
 public fun createSubstitutor(mappings: Map<KaTypeParameterSymbol, KaType>): KaSubstitutor {
@@ -156,12 +159,13 @@ public fun createSubstitutor(mappings: Map<KaTypeParameterSymbol, KaType>): KaSu
  * class C<X, Y>
  * ```
  *
- * - `createInheritanceTypeSubstitutor(A, B)` returns `KtSubstitutor { T -> String }`
- * - `createInheritanceTypeSubstitutor(B, C)` returns `KtSubstitutor { X -> T, Y -> Int }`
- * - `createInheritanceTypeSubstitutor(A, C)` returns `KtSubstitutor { X -> T, Y -> Int } andThen KtSubstitutor { T -> String }`
+ * - `createInheritanceTypeSubstitutor(A, B)` returns `KaSubstitutor { T -> String }`
+ * - `createInheritanceTypeSubstitutor(B, C)` returns `KaSubstitutor { X -> T, Y -> Int }`
+ * - `createInheritanceTypeSubstitutor(A, C)` returns `KaSubstitutor { X -> T, Y -> Int } and then KaSubstitutor { T -> String }`
  */
 // Auto-generated bridge. DO NOT EDIT MANUALLY!
 @KaExperimentalApi
+@KaK1Unsupported
 @KaContextParameterApi
 context(session: KaSession)
 public fun createInheritanceTypeSubstitutor(subClass: KaClassSymbol, superClass: KaClassSymbol): KaSubstitutor? {
