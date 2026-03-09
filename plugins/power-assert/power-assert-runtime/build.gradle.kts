@@ -1,8 +1,15 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.konan.target.HostManager
+import plugins.configureDefaultPublishing
+import plugins.configureKotlinPomAttributes
 
 plugins {
     kotlin("multiplatform")
+    `maven-publish`
+    signing
+    id("nodejs-cache-redirector-configuration")
+    id("binaryen-configuration")
 }
 
 description = "Kotlin Power-Assert Runtime"
@@ -14,7 +21,28 @@ kotlin {
         freeCompilerArgs.addAll(
             "-Xreturn-value-checker=full",
             "-Xallow-kotlin-package",
+            // TODO(KT-50876) Required for reproducible builds.
+            "-Xklib-relative-path-base=${layout.buildDirectory.get().asFile},${layout.projectDirectory.asFile},$rootDir",
         )
+    }
+
+    targets.all {
+        configureSbomForTarget()
+        mavenPublication {
+            configureKotlinPomAttributes(
+                project = project,
+                explicitDescription = provider { project.description },
+                explicitName = provider { project.description },
+                // SBOMs are added without a classifier. This means Gradle tries to set packaging to "pom" because there are 2 published
+                // artifacts without classifiers. So we need to be explicit about what packaging is used on each platform.
+                packaging = when (platformType) {
+                    KotlinPlatformType.common, KotlinPlatformType.jvm -> "jar"
+                    KotlinPlatformType.js, KotlinPlatformType.native, KotlinPlatformType.wasm -> "klib"
+                    // An Android JVM target is redundant and not expected.
+                    KotlinPlatformType.androidJvm -> error("unexpected platform type; was a JVM android target added accidentally?")
+                },
+            )
+        }
     }
 
     metadata() // For common sources in IDE
@@ -82,6 +110,22 @@ kotlin {
         }
         jvmTest.dependencies {
             api(kotlinTest("junit"))
+        }
+    }
+}
+
+configureDefaultPublishing()
+
+// TODO(KT-85034): mavenPublication doesn't work for metadata
+publishing {
+    publications.configureEach {
+        if (this is MavenPublication && name == "kotlinMultiplatform") {
+            project.configureSbomForTarget(kotlin.targets["metadata"], this)
+            configureKotlinPomAttributes(
+                project = project,
+                explicitDescription = provider { project.description },
+                explicitName = provider { project.description },
+            )
         }
     }
 }
