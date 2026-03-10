@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.analysis.api.descriptors.components
 
 import org.jetbrains.kotlin.analysis.api.KaSession
 import org.jetbrains.kotlin.analysis.api.components.KaSubstitutorProvider
+import org.jetbrains.kotlin.analysis.api.components.KaUnificationSubstitutorPolicy
 import org.jetbrains.kotlin.analysis.api.impl.base.components.KaBaseSessionComponent
 import org.jetbrains.kotlin.analysis.api.lifetime.withValidityAssertion
 import org.jetbrains.kotlin.analysis.api.symbols.KaClassSymbol
@@ -21,6 +22,21 @@ internal class KaFe10SubstitutorProvider(
         withValidityAssertion {
             throw UnsupportedOperationException("This operation is not supported in the K1 version of the Analysis API.")
         }
+    }
+
+    override fun createUnificationSubstitutor(
+        candidateType: KaType,
+        targetType: KaType,
+        constructionPolicy: KaUnificationSubstitutorPolicy,
+    ): KaSubstitutor = withValidityAssertion {
+        throw UnsupportedOperationException("This operation is not supported in the K1 version of the Analysis API.")
+    }
+
+    override fun createUnificationSubstitutor(
+        candidateTypesToTargetTypes: List<Pair<KaType, KaType>>,
+        constructionPolicy: KaUnificationSubstitutorPolicy
+    ): KaSubstitutor = withValidityAssertion {
+        throw UnsupportedOperationException("This operation is not supported in the K1 version of the Analysis API.")
     }
 
     override fun createSubstitutor(mappings: Map<KaTypeParameterSymbol, KaType>): KaSubstitutor = withValidityAssertion {
