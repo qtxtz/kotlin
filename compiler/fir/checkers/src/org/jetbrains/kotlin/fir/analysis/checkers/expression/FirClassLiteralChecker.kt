@@ -124,11 +124,11 @@ object FirClassLiteralChecker : FirGetClassCallChecker(MppCheckerKind.Common) {
         }
 
     /**
-     * Type arguments are only allowed in `Array` / typealiases to `Array` on JVM.
+     * Type arguments are only allowed in `Array` (not typealiases to `Array`!) on JVM.
      *
      * Without [LanguageFeature.ForbidUselessTypeArgumentsIn25], the following cases must produce deprecation warnings:
      *  1. typealiases to non-generic classes with arbitrary non-zero number of type arguments;
-     *  2. typealiases to `Array` with incorrect non-zero number of type arguments on JVM;
+     *  2. typealiases to `Array` on JVM (with arbitrary non-zero number of type arguments);
      *  3. reified type parameters with non-zero number of type arguments.
      *
      * Cases like `Array<Int, Int>::class` do not require deprecation since they produced internal error in backend.
