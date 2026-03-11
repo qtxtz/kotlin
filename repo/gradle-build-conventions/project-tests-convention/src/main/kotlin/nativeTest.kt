@@ -7,6 +7,7 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.*
@@ -14,6 +15,7 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.environment
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.newInstance
 import org.gradle.kotlin.dsl.project
 import org.gradle.process.CommandLineArgumentProvider
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -283,6 +285,24 @@ private open class NativeArgsProvider @Inject constructor(
     }
 }
 
+private abstract class JdkVersionDependentFlagsProvider : CommandLineArgumentProvider {
+    @get:Input
+    abstract val jdkVersion: Property<JdkMajorVersion>
+
+    override fun asArguments() = buildList {
+        val version = jdkVersion.get().majorVersion
+        if (version >= 24) {
+            // Allow JNI native access on JDK 24+ to suppress warnings (https://openjdk.org/jeps/472).
+            // The same flag is needed for restricted FFM API (https://openjdk.org/jeps/454).
+            add("--enable-native-access=ALL-UNNAMED")
+
+            // Allow `sun.misc.Unsafe` on JDK 24+ to suppress warnings (https://openjdk.org/jeps/498).
+            // This is to be changed in the scope of KT-83133.
+            add("--sun-misc-unsafe-memory-access=allow")
+        }
+    }
+}
+
 private fun ProviderFactory.testProperty(property: TestProperty) =
     gradleProperty(property.fullName).orElse(gradleProperty(property.shortName))
 
@@ -343,6 +363,10 @@ fun ProjectTestsExtension.nativeTestTask(
             .orElse(defaultJdkVersion)
 
         javaLauncher.set(nativeTestJdkVersion.flatMap { project.getToolchainLauncherFor(it) })
+
+        jvmArgumentProviders.add(project.objects.newInstance<JdkVersionDependentFlagsProvider>().apply {
+            this.jdkVersion.set(nativeTestJdkVersion)
+        })
 
         // Using JDK 11 instead of JDK 8 (project default) makes some tests take 15-25% more time.
         // This seems to be caused by the fact that JDK 11 uses G1 GC by default, while JDK 8 uses Parallel GC.
