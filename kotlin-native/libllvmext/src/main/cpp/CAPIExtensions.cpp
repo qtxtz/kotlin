@@ -6,6 +6,8 @@
 #include <llvm/IR/Module.h>
 #include <llvm/Passes/PassBuilder.h>
 #include <llvm/Passes/StandardInstrumentations.h>
+#include <llvm/Support/CommandLine.h>
+#include <llvm/Support/Error.h>
 #include <llvm/Transforms/Utils/Cloning.h>
 
 #include "PassesProfileHandler.h"
@@ -42,16 +44,89 @@ int LLVMInlineCall(LLVMValueRef call) {
   return InlineFunction(*unwrap<CallBase>(call), IFI).isSuccess();
 }
 
+namespace {
+
+class KotlinRunPassesCommandLineHolder {
+public:
+    KotlinRunPassesCommandLineHolder() {
+        auto& Opts = cl::getRegisteredOptions();
+        PrintAfter = Opts["print-after"];
+        IrDumpDirectory = Opts["ir-dump-directory"];
+    }
+
+    // NOTE: Avoid adding new CLI arguments overrides as much as possible, as this makes
+    //       `LLVMKotlinRunPasses` thread unsafe.
+    //       When adding new ones, update `LLVMKotlinRunPasses` doc comment as well.
+    Error Parse(
+        const char *SaveIRAfterPasses,
+        const char *SaveIRDirectory
+    ) {
+        unsigned OptPos = 0;
+        if (SaveIRAfterPasses != nullptr) {
+            if (auto Err = SetOption(OptPos++, PrintAfter, SaveIRAfterPasses)) {
+                return Err;
+            }
+        }
+        if (SaveIRDirectory != nullptr) {
+            if (auto Err = SetOption(OptPos++, IrDumpDirectory, SaveIRDirectory)) {
+                return Err;
+            }
+        }
+        return Error::success();
+    }
+
+    ~KotlinRunPassesCommandLineHolder() {
+        for (auto* Opt : ModifiedOptions) {
+            Opt->setDefault();
+        }
+    }
+
+private:
+    Error SetOption(unsigned OptPos, cl::Option* Opt, StringRef Val) {
+        ModifiedOptions.push_back(Opt);
+        if (Opt->getMiscFlags() & cl::MiscFlags::CommaSeparated) {
+            StringRef::size_type Pos = Val.find(',');
+            while (Pos != StringRef::npos) {
+                auto SingleVal = Val.substr(0, Pos);
+                if (Opt->addOccurrence(OptPos, Opt->ArgStr, SingleVal)) {
+                    return createStringError(Twine("Failed to parse value of ") + Opt->ArgStr + " :" + SingleVal);
+                }
+                // Erase the portion before the comma, AND the comma.
+                Val = Val.substr(Pos + 1);
+                // Check for another comma.
+                Pos = Val.find(',');
+            }
+        }
+        if (Opt->addOccurrence(OptPos, Opt->ArgStr, Val)) {
+            return createStringError(Twine("Failed to parse value of ") + Opt->ArgStr + " :" + Val);
+        }
+        return Error::success();
+    }
+
+    cl::Option* PrintAfter;
+    cl::Option* IrDumpDirectory;
+    SmallVector<cl::Option*> ModifiedOptions;
+};
+
+}
+
 extern "C" LLVMErrorRef LLVMKotlinRunPasses(
         LLVMModuleRef M,
         const char *Passes,
         LLVMTargetMachineRef TM,
         int InlinerThreshold,
-        LLVMKotlinPassesProfileRef* Profile
+        LLVMKotlinPassesProfileRef* Profile,
+        const char *SaveIRAfterPasses,
+        const char *SaveIRDirectory
 ) {
     // Implementation is taken from https://github.com/Kotlin/llvm-project/blob/0fa53d5183ec3c0654631d719dd6dfa7a270ca98/llvm/lib/Passes/PassBuilderBindings.cpp#L47
     TargetMachine *Machine = unwrap(TM);
     Module *Mod = unwrap(M);
+
+    KotlinRunPassesCommandLineHolder CommandLineHolder;
+    if (auto Err = CommandLineHolder.Parse(SaveIRAfterPasses, SaveIRDirectory)) {
+        return wrap(std::move(Err));
+    }
 
     PipelineTuningOptions PTO;
     PTO.InlinerThreshold = InlinerThreshold;

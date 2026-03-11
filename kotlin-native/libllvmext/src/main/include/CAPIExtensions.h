@@ -24,12 +24,17 @@ int LLVMInlineCall(LLVMValueRef call);
 
 /// Run `Passes` on module `M`.
 /// When `Profile` is not `NULL` also collect profiling data and store the result in it.
+/// NOTE: This function is not thread-safe, when any of the following options are non-null:
+///       - SaveIRAfterPasses
+///       - SaveIRDirectory
 LLVMErrorRef LLVMKotlinRunPasses(
         LLVMModuleRef M,
         const char *Passes,
         LLVMTargetMachineRef TM,
         int InlinerThreshold,
-        LLVMKotlinPassesProfileRef* Profile
+        LLVMKotlinPassesProfileRef* Profile,
+        const char *SaveIRAfterPasses,
+        const char *SaveIRDirectory
 );
 
 # ifdef __cplusplus
