@@ -48,26 +48,29 @@ fun main() {
 
     <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo2, [/foo2, /foo2]")!><!OVERLOAD_RESOLUTION_AMBIGUITY!>foo2<!>(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>foo2(listOf(1L))<!>
+
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>foo3(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>foo3(listOf(1L))<!>
     
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo4, [/foo4, /foo4]")!><!OVERLOAD_RESOLUTION_AMBIGUITY!>foo4<!>(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>foo4(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>foo4(listOf(1L))<!>
     
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo5, [/foo5, /foo5]")!><!OVERLOAD_RESOLUTION_AMBIGUITY!>foo5<!>(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>foo5(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>foo5(listOf(1L))<!>
 
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo6, [/JavaClass.foo6, /JavaClass.foo6]")!>JavaClass.<!OVERLOAD_RESOLUTION_AMBIGUITY!>foo6<!>(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>JavaClass.foo6(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>JavaClass.foo6(listOf(1L))<!>
 
     <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo7, [/JavaClass.foo7, /JavaClass.foo7]")!>JavaClass.<!OVERLOAD_RESOLUTION_AMBIGUITY!>foo7<!>(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>JavaClass.foo7(listOf(1L))<!>
 
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo8, [/JavaClass.foo8, /JavaClass.foo8]")!>JavaClass.<!OVERLOAD_RESOLUTION_AMBIGUITY!>foo8<!>(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>JavaClass.foo8(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>JavaClass.foo8(listOf(1L))<!>
 
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo9, [/JavaClass.foo9, /JavaClass.foo9]")!>JavaClass.<!OVERLOAD_RESOLUTION_AMBIGUITY!>foo9<!>(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>JavaClass.foo9(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>JavaClass.foo9(listOf(1L))<!>
 
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: foo10, [/JavaClass.foo10, /JavaClass.foo10]")!>JavaClass.<!OVERLOAD_RESOLUTION_AMBIGUITY!>foo10<!>(listOf(1))<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>JavaClass.foo10(listOf(1))<!>
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Long")!>JavaClass.foo10(listOf(1L))<!>
 }
 

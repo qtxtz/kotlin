@@ -633,7 +633,44 @@ class ConeOverloadConflictResolver(
     }
 
     private fun createEmptyConstraintSystem(): SimpleConstraintSystem {
-        return ConeSimpleConstraintSystemImpl(inferenceComponents.createConstraintSystem(), inferenceComponents.session)
+        return ConeSimpleConstraintSystemImpl(
+            inferenceComponents.createConstraintSystem(
+                when {
+                    LanguageFeature.EagerLambdaAnalysis.isEnabled() -> ::customSubtypingForNumerics
+                    else -> null
+                }
+            ),
+            inferenceComponents.session
+        )
+    }
+
+    private fun customSubtypingForNumerics(subtype: KotlinTypeMarker, supertype: KotlinTypeMarker): Boolean? {
+        requireOrDescribe(subtype is ConeKotlinType, subtype)
+        requireOrDescribe(supertype is ConeKotlinType, supertype)
+
+        val subtypeClassId = subtype.classId ?: return null
+        val supertypeClassId = supertype.classId ?: return null
+
+        // Do not assume flexible/nullable Int to be more precise than Long
+        // Int? !<: Long
+        // Int! !<: Long
+        // But for all other cases, it seems right to prefer the Int version
+        // Int <: Long
+        // Int <: Long?
+        // Int <: Long!
+        // Int! <: Long!
+        // Int? <: Long!
+        // Int? <: Long?
+        // Int? <: Long!
+        if (subtype.upperBoundIfFlexible().isMarkedNullable && !supertype.upperBoundIfFlexible().isMarkedNullable) return null
+
+        // Int <: Long
+        if (subtypeClassId == Int && supertypeClassId == Long) return true
+
+        // UInt <: ULong
+        if (subtypeClassId == UInt && supertypeClassId == ULong) return true
+
+        return null
     }
 }
 
