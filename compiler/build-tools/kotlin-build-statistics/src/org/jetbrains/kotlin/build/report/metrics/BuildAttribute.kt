@@ -26,7 +26,7 @@ enum class BuildAttribute(val kind: BuildAttributeKind, val readableString: Stri
     IC_FAILED_TO_COMPUTE_FILES_TO_RECOMPILE(BuildAttributeKind.REBUILD_REASON, "Failed to compute files to recompile"),
     IC_FAILED_TO_COMPILE_INCREMENTALLY(BuildAttributeKind.REBUILD_REASON, "Failed to compile incrementally"),
     IC_FAILED_TO_CLOSE_CACHES(BuildAttributeKind.REBUILD_REASON, "Failed to close caches"),
-    UNKNOWN_CHANGES_IN_GRADLE_INPUTS(BuildAttributeKind.REBUILD_REASON, "Unknown Gradle changes"),
+    UNKNOWN_CHANGES_IN_GRADLE_INPUTS(BuildAttributeKind.REBUILD_REASON, "Unknown inputs changes"),
     JAVA_CHANGE_UNTRACKED_FILE_IS_REMOVED(BuildAttributeKind.REBUILD_REASON, "Untracked Java file is removed"),
     JAVA_CHANGE_UNEXPECTED_PSI(BuildAttributeKind.REBUILD_REASON, "Java PSI file is expected"),
     JAVA_CHANGE_UNKNOWN_QUALIFIER(BuildAttributeKind.REBUILD_REASON, "Unknown Java qualifier name"),
@@ -37,7 +37,10 @@ enum class BuildAttribute(val kind: BuildAttributeKind, val readableString: Stri
     DEP_CHANGE_NON_INCREMENTAL_BUILD_IN_DEP(BuildAttributeKind.REBUILD_REASON, "Non incremental build in history"),
     IN_PROCESS_EXECUTION(BuildAttributeKind.REBUILD_REASON, "In-process execution"),
     IC_IS_NOT_ENABLED(BuildAttributeKind.REBUILD_REASON, "Incremental compilation is not enabled"),
-    UNSAFE_INCREMENTAL_CHANGE_KT_62686(BuildAttributeKind.REBUILD_REASON, "Incremental compilation might be incorrect (KT-62686)");
+    UNSAFE_INCREMENTAL_CHANGE_KT_62686(BuildAttributeKind.REBUILD_REASON, "Incremental compilation might be incorrect (KT-62686)"),
+    COMPILER_ARGS_CHANGED(BuildAttributeKind.REBUILD_REASON, "Compiler arguments changed"),
+    INCREMENTAL_COMPILATION_CONFIGURATION_CHANGED(BuildAttributeKind.REBUILD_REASON, "Incremental compilation configuration changed"),
+    ;
 
     companion object {
         const val serialVersionUID = 1L
