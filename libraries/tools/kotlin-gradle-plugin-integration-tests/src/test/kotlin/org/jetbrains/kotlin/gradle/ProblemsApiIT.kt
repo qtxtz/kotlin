@@ -5,14 +5,10 @@
 
 package org.jetbrains.kotlin.gradle
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
 import org.jetbrains.kotlin.gradle.testbase.*
 import org.junit.jupiter.api.DisplayName
-import java.io.File
-import java.net.URI
 import kotlin.io.path.pathString
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -48,8 +44,8 @@ class ProblemsApiIT : KGPBaseTest() {
 
                 val expectedProblems = buildList {
                     add(
-                        Diagnostic(
-                            locations = listOf(Location("org.jetbrains.kotlin.jvm")),
+                        ProblemsApiDiagnostic(
+                            locations = listOf(ProblemsApiLocation("org.jetbrains.kotlin.jvm")),
                             problem = listOf(TextWrapper("Deprecated Gradle Property 'kotlin.internal.single.build.metrics.file' Used")),
                             severity = "ERROR",
                             problemDetails = listOf(TextWrapper("The `kotlin.internal.single.build.metrics.file` deprecated property is used in your build.")),
@@ -67,8 +63,8 @@ class ProblemsApiIT : KGPBaseTest() {
                     )
 
                     add(
-                        Diagnostic(
-                            locations = listOf(Location("org.jetbrains.kotlin.jvm")),
+                        ProblemsApiDiagnostic(
+                            locations = listOf(ProblemsApiLocation("org.jetbrains.kotlin.jvm")),
                             problem = listOf(TextWrapper("Deprecated Gradle Property 'kotlin.build.report.dir' Used")),
                             severity = "ERROR",
                             problemDetails = listOf(TextWrapper("The `kotlin.build.report.dir` deprecated property is used in your build.")),
@@ -86,8 +82,8 @@ class ProblemsApiIT : KGPBaseTest() {
                     )
 
                     add(
-                        Diagnostic(
-                            locations = listOf(Location("org.jetbrains.kotlin.jvm")),
+                        ProblemsApiDiagnostic(
+                            locations = listOf(ProblemsApiLocation("org.jetbrains.kotlin.jvm")),
                             problem = listOf(TextWrapper("Usage of Internal Kotlin Gradle Plugin Properties Detected")),
                             severity = "ERROR",
                             problemDetails = listOf(TextWrapper("ATTENTION! This build uses the following Kotlin Gradle Plugin properties:\n\nkotlin.internal.compiler.arguments.log.level\nkotlin.internal.diagnostics.showStacktrace\nkotlin.internal.diagnostics.useParsableFormatting\n\nInternal properties are not recommended for production use.\nStability and future compatibility of the build is not guaranteed.")),
@@ -119,73 +115,3 @@ class ProblemsApiIT : KGPBaseTest() {
         }
     }
 }
-
-private object ProblemsApiTestUtils {
-    fun extractProblemReportUrl(output: String): String? {
-        val urlRegex = """file:///[^\s]+problems-report\.html""".toRegex()
-        return urlRegex.find(output)?.value
-    }
-
-    fun readProblemReportContent(urlString: String): String {
-        val uri = URI(urlString)
-        val file = File(uri)
-
-        return if (file.exists()) {
-            file.readText()
-        } else {
-            "File not found: $urlString"
-        }
-    }
-
-    fun parseProblemReportFromScript(scriptContent: String): ProblemReport {
-        val jsonRegex = """// begin-report-data\s*(\{.*\})\s*// end-report-data""".toRegex(RegexOption.DOT_MATCHES_ALL)
-        val matchResult = jsonRegex.find(scriptContent)
-            ?: throw IllegalArgumentException("Could not extract JSON from script")
-
-        val json = Json {
-            isLenient = true
-            ignoreUnknownKeys = true
-        }
-
-        return json.decodeFromString(matchResult.groupValues[1])
-    }
-}
-
-@Serializable
-private data class ProblemReport(
-    val diagnostics: List<Diagnostic>,
-    val problemsReport: ProblemsReportSummary,
-)
-
-@Serializable
-private data class Diagnostic(
-    val locations: List<Location>,
-    val problem: List<TextWrapper>,
-    val severity: String,
-    val problemDetails: List<TextWrapper>,
-    val contextualLabel: String,
-    val problemId: List<ProblemIdentifier>,
-    val solutions: List<List<TextWrapper>>,
-)
-
-@Serializable
-private data class TextWrapper(val text: String)
-
-@Serializable
-private data class Location(val pluginId: String)
-
-@Serializable
-private data class ProblemIdentifier(
-    val name: String,
-    val displayName: String,
-)
-
-@Serializable
-private data class ProblemsReportSummary(
-    val totalProblemCount: Int,
-    val buildName: String,
-    val requestedTasks: String,
-    val documentationLink: String,
-    val documentationLinkCaption: String,
-    val summaries: List<String> = emptyList(),
-)
