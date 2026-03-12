@@ -7,6 +7,8 @@
 
 package org.jetbrains.kotlin.wasm.ir.convertors
 
+import org.jetbrains.kotlin.utils.readSignedLeb128
+import org.jetbrains.kotlin.utils.readUnsignedLeb128
 import org.jetbrains.kotlin.wasm.ir.*
 import java.io.BufferedInputStream
 import java.nio.ByteBuffer
@@ -706,70 +708,27 @@ abstract class ByteReader {
     }
 
 
-    fun readVarInt7() = readSignedLeb128().let {
+    fun readVarInt7() = readSignedLeb128(::readByte).let {
         if (it < Byte.MIN_VALUE.toLong() || it > Byte.MAX_VALUE.toLong()) error("InvalidLeb128Number")
         it.toByte()
     }
 
-    fun readVarInt32() = readSignedLeb128().let {
+    fun readVarInt32() = readSignedLeb128(::readByte).let {
         if (it < Int.MIN_VALUE.toLong() || it > Int.MAX_VALUE.toLong()) error("InvalidLeb128Number")
         it.toInt()
     }
 
-    fun readVarInt64() = readSignedLeb128(9)
+    fun readVarInt64() = readSignedLeb128(::readByte, 9)
 
-    fun readVarUInt1() = readUnsignedLeb128().let {
+    fun readVarUInt1() = readUnsignedLeb128(::readByte).let {
         if (it != 1u && it != 0u) error("InvalidLeb128Number")
         it == 1u
     }
 
-    fun readVarUInt7() = readUnsignedLeb128().let {
+    fun readVarUInt7() = readUnsignedLeb128(::readByte).let {
         if (it > 255u) error("InvalidLeb128Number")
         it.toShort()
     }
 
-    fun readVarUInt32() = readUnsignedLeb128()
-
-    protected fun readUnsignedLeb128(maxCount: Int = 4): UInt {
-        // Taken from Android source, Apache licensed
-        var result = 0u
-        var cur: UInt
-        var count = 0
-        do {
-            cur = readUByte().toUInt() and 0xffu
-            result = result or ((cur and 0x7fu) shl (count * 7))
-            count++
-        } while (cur and 0x80u == 0x80u && count <= maxCount)
-        if (cur and 0x80u == 0x80u) error("InvalidLeb128Number")
-        return result
-    }
-
-    private fun readSignedLeb128(maxCount: Int = 4): Long {
-        // Taken from Android source, Apache licensed
-        var result = 0L
-        var cur: Int
-        var count = 0
-        var signBits = -1L
-        do {
-            cur = readByte().toInt() and 0xff
-            result = result or ((cur and 0x7f).toLong() shl (count * 7))
-            signBits = signBits shl 7
-            count++
-        } while (cur and 0x80 == 0x80 && count <= maxCount)
-        if (cur and 0x80 == 0x80) error("InvalidLeb128Number")
-
-        // Check for 64 bit invalid, taken from Apache/MIT licensed:
-        //  https://github.com/paritytech/parity-wasm/blob/2650fc14c458c6a252c9dc43dd8e0b14b6d264ff/src/elements/primitives.rs#L351
-        // TODO: probably need 32 bit checks too, but meh, not in the suite
-        if (count > maxCount && maxCount == 9) {
-            if (cur and 0b0100_0000 == 0b0100_0000) {
-                if ((cur or 0b1000_0000).toByte() != (-1).toByte()) error("InvalidLeb128Number")
-            } else if (cur != 0) {
-                error("InvalidLeb128Number")
-            }
-        }
-
-        if ((signBits shr 1) and result != 0L) result = result or signBits
-        return result
-    }
+    fun readVarUInt32() = readUnsignedLeb128(::readByte)
 }

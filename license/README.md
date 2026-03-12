@@ -259,6 +259,10 @@ any distributions of the compiler, libraries or plugin:
       - License: Apache 2 ([license/third_party/aosp_license.txt][aosp])
       - Origin: Copyright (C) 2024 The Android Open Source Project
 
+ - Path: compiler/util-io/src/org/jetbrains/kotlin/util/Leb128.kt
+      - License: Apache 2 ([license/third_party/aosp_license.txt][aosp])
+      - Origin: Copyright (C) 2008 The Android Open Source Project
+
 ## Kotlin Tools and Libraries Tests
 
 The following source code is used for testing the Kotlin tools and/or libraries and is not incorporated into

@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.library.impl
 import org.jetbrains.kotlin.konan.file.File
 import org.jetbrains.kotlin.library.KlibComponentLayout
 import org.jetbrains.kotlin.library.KlibLayoutReader
+import org.jetbrains.kotlin.utils.readUnsignedLeb128
 import java.nio.ByteBuffer
 
 /******************************************************************************/
@@ -134,7 +135,7 @@ private fun ReadBuffer.readIndexToOffset(position: Int): IndexToOffset {
     }
 
     val elementSizes = IntArray(count) {
-        if (usesVarInt) this.readVarInt().toInt() else this.int
+        if (usesVarInt) readUnsignedLeb128(this::byte).toInt() else this.int
     }
 
     val indexToOffset = IndexToOffset(count + 1)
@@ -210,19 +211,5 @@ private fun ReadBuffer.readTableItemBytes(offset: Int, size: Int): ByteArray {
     this.position = offset
     this.get(result, 0, size)
 
-    return result
-}
-
-private fun ReadBuffer.readVarInt(maxCount: Int = 4): UInt {
-    // Taken from Android source, Apache licensed
-    var result = 0u
-    var cur: UInt
-    var count = 0
-    do {
-        cur = this.byte.toUInt() and 0xffu
-        result = result or ((cur and 0x7fu) shl (count * 7))
-        count++
-    } while (cur and 0x80u == 0x80u && count <= maxCount)
-    if (cur and 0x80u == 0x80u) error("Invalid Leb128Number")
     return result
 }

@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.library.impl
 
 import org.jetbrains.kotlin.library.SerializedDeclaration
 import org.jetbrains.kotlin.library.encodings.WobblyTF8
+import org.jetbrains.kotlin.utils.writeUnsignedLeb128
 import java.io.ByteArrayOutputStream
 import java.io.DataOutput
 import java.io.DataOutputStream
@@ -39,7 +40,7 @@ class IrArrayWriter(private val data: List<ByteArray>, private val useVarInt: Bo
 
         data.forEach {
             if (useVarInt) {
-                dataOutput.writeVarInt(it.size.toUInt())
+                writeUnsignedLeb128(it.size.toUInt()) { dataOutput.write(it.toInt()) }
             } else {
                 dataOutput.writeInt(it.size)
             }
@@ -61,7 +62,7 @@ class IrStringWriter(private val data: List<String>, private val useVarInt: Bool
 
         transformedData.forEach {
             if (useVarInt) {
-                dataOutput.writeVarInt(it.size.toUInt())
+                writeUnsignedLeb128(it.size.toUInt()) { dataOutput.write(it.toInt()) }
             } else {
                 dataOutput.writeInt(it.size)
             }
@@ -92,18 +93,4 @@ class IrDeclarationWriter(private val declarations: List<SerializedDeclaration>)
         private const val SINGLE_INDEX_RECORD_SIZE = 3 * Int.SIZE_BYTES
         private const val INDEX_HEADER_SIZE = Int.SIZE_BYTES
     }
-}
-
-private fun DataOutput.writeVarInt(value: UInt) {
-    // Taken from Android source, Apache licensed
-    var v = value
-    var remaining = v shr 7
-    while (remaining != 0u) {
-        val byte = (v and 0x7fu) or 0x80u
-        writeByte(byte.toInt())
-        v = remaining
-        remaining = remaining shr 7
-    }
-    val byte = v and 0x7fu
-    writeByte(byte.toInt())
 }

@@ -36,6 +36,7 @@ val testSuite by configurations.creating {
 
 dependencies {
     compileOnly(project(":core:util.runtime"))
+    implementation(project(":kotlin-util-io"))
 
     implementation(kotlinStdlib())
     implementation(kotlinxCollectionsImmutable())
