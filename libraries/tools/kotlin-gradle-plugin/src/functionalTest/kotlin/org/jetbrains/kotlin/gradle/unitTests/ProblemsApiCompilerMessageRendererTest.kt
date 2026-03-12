@@ -36,8 +36,7 @@ class ProblemsApiCompilerMessageRendererTest {
 
     @Test
     fun `render with location returns URI with line and column`() {
-        val reporter = RecordingCompilerDiagnosticsProblemsReporter()
-        val renderer = ProblemsApiCompilerMessageRenderer(reporter)
+        val renderer = ProblemsApiCompilerMessageRenderer()
 
         val path = "/tmp/src/Main.kt"
         val location = SourceLocation(path, 10, 5, -1, -1, null)
@@ -51,8 +50,7 @@ class ProblemsApiCompilerMessageRendererTest {
 
     @Test
     fun `render with null location returns message only`() {
-        val reporter = RecordingCompilerDiagnosticsProblemsReporter()
-        val renderer = ProblemsApiCompilerMessageRenderer(reporter)
+        val renderer = ProblemsApiCompilerMessageRenderer()
 
         val result = renderer.render(Severity.INFO, "Compilation completed", null)
 
@@ -61,8 +59,7 @@ class ProblemsApiCompilerMessageRendererTest {
 
     @Test
     fun `render with zero line and column omits position`() {
-        val reporter = RecordingCompilerDiagnosticsProblemsReporter()
-        val renderer = ProblemsApiCompilerMessageRenderer(reporter)
+        val renderer = ProblemsApiCompilerMessageRenderer()
 
         val path = "/tmp/src/Main.kt"
         val location = SourceLocation(path, 0, 0, -1, -1, null)
@@ -76,12 +73,39 @@ class ProblemsApiCompilerMessageRendererTest {
     }
 
     @Test
-    fun `render delegates to problems reporter with correct arguments`() {
+    fun `render with line and zero column omits position`() {
+        val renderer = ProblemsApiCompilerMessageRenderer()
+
+        val path = "/tmp/src/Main.kt"
+        val location = SourceLocation(path, 10, 0, -1, -1, null)
+        val result = renderer.render(Severity.WARNING, "Something", location)
+
+        val expectedUri = File(path).toPath().toUri().toString()
+        assertNotNull(result)
+        assertTrue(result.contains(expectedUri), "Expected file URI, got: $result")
+        assertFalse(result.contains(":10:0"), "Should not contain :10:0, got: $result")
+        assertTrue(result.endsWith("Something"), "Expected message at end, got: $result")
+    }
+
+    @Test
+    fun `render does not delegate to problems reporter immediately`() {
         val reporter = RecordingCompilerDiagnosticsProblemsReporter()
-        val renderer = ProblemsApiCompilerMessageRenderer(reporter)
+        val renderer = ProblemsApiCompilerMessageRenderer()
 
         val location = SourceLocation("/tmp/src/Main.kt", 10, 5, -1, -1, null)
         renderer.render(Severity.ERROR, "Unresolved reference", location)
+
+        assertTrue(reporter.calls.isEmpty())
+    }
+
+    @Test
+    fun `replay delegates buffered diagnostics to problems reporter with correct arguments`() {
+        val reporter = RecordingCompilerDiagnosticsProblemsReporter()
+        val renderer = ProblemsApiCompilerMessageRenderer()
+
+        val location = SourceLocation("/tmp/src/Main.kt", 10, 5, -1, -1, null)
+        renderer.render(Severity.ERROR, "Unresolved reference", location)
+        renderer.replayTo(reporter)
 
         assertEquals(1, reporter.calls.size)
         val call = reporter.calls.first()
@@ -91,19 +115,33 @@ class ProblemsApiCompilerMessageRendererTest {
     }
 
     @Test
-    fun `render delegates for each severity`() {
+    fun `replay delegates buffered diagnostics for each severity`() {
         val reporter = RecordingCompilerDiagnosticsProblemsReporter()
-        val renderer = ProblemsApiCompilerMessageRenderer(reporter)
+        val renderer = ProblemsApiCompilerMessageRenderer()
 
         val severities = Severity.entries
         severities.forEach { severity ->
             renderer.render(severity, "message for $severity", null)
         }
+        renderer.replayTo(reporter)
 
         assertEquals(severities.size, reporter.calls.size)
         severities.forEachIndexed { index, severity ->
             assertEquals(severity, reporter.calls[index].severity)
             assertEquals("message for $severity", reporter.calls[index].message)
         }
+    }
+
+    @Test
+    fun `replay should drain buffered diagnostics`() {
+        val reporter = RecordingCompilerDiagnosticsProblemsReporter()
+        val renderer = ProblemsApiCompilerMessageRenderer()
+
+        renderer.render(Severity.ERROR, "first", null)
+        renderer.replayTo(reporter)
+        renderer.replayTo(reporter)
+
+        assertEquals(1, reporter.calls.size)
+        assertEquals("first", reporter.calls.single().message)
     }
 }

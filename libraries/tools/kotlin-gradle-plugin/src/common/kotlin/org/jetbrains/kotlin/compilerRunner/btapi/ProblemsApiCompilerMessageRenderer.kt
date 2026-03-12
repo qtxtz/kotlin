@@ -8,16 +8,35 @@ package org.jetbrains.kotlin.compilerRunner.btapi
 import org.jetbrains.kotlin.buildtools.api.CompilerMessageRenderer
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.CompilerDiagnosticsProblemsReporter
 import java.io.File
+import java.util.concurrent.ConcurrentLinkedQueue
 
-internal class ProblemsApiCompilerMessageRenderer(
-    private val problemsReporter: CompilerDiagnosticsProblemsReporter,
-) : CompilerMessageRenderer {
+private data class BufferedDiagnostic(
+    val severity: CompilerMessageRenderer.Severity,
+    val message: String,
+    val location: CompilerMessageRenderer.SourceLocation?,
+)
+
+/**
+ * Collects compiler diagnostics emitted by the Build Tools API and replays them to the Gradle Problems API later.
+ *
+ * This indirection is required because `CompilerMessageRenderer.render` is not invoked on the Gradle worker thread.
+ * Build Tools API executes in-process compilations on its own thread pool (see KT-81414), and daemon compilations
+ * deliver messages on RMI dispatch threads. Gradle's `DefaultProblemReporter.report(Problem)` resolves the current
+ * operation from `CurrentBuildOperationRef` (thread-local) and silently skips reporting when the thread has no
+ * operation context (see https://github.com/gradle/gradle/issues/31274).
+ *
+ * To preserve reporting, diagnostics are buffered here and replayed on the Gradle worker thread after the
+ * compilation operation completes.
+ */
+internal class ProblemsApiCompilerMessageRenderer : CompilerMessageRenderer {
+    private val bufferedDiagnostics = ConcurrentLinkedQueue<BufferedDiagnostic>()
+
     override fun render(
         severity: CompilerMessageRenderer.Severity,
         message: String,
         location: CompilerMessageRenderer.SourceLocation?,
     ): String {
-        problemsReporter.reportCompilerMessage(severity, message, location)
+        bufferedDiagnostics.add(BufferedDiagnostic(severity, message, location))
 
         return buildString {
             location?.apply {
@@ -29,6 +48,13 @@ internal class ProblemsApiCompilerMessageRenderer(
                 append(' ')
             }
             append(message)
+        }
+    }
+
+    fun replayTo(problemsReporter: CompilerDiagnosticsProblemsReporter) {
+        while (true) {
+            val diagnostic = bufferedDiagnostics.poll() ?: break
+            problemsReporter.reportCompilerMessage(diagnostic.severity, diagnostic.message, diagnostic.location)
         }
     }
 }

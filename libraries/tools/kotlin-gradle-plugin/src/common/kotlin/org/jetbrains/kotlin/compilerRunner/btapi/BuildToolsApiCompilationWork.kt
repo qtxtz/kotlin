@@ -95,7 +95,11 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
     }
 
     @OptIn(ExperimentalCompilerArgument::class)
-    private fun performCompilation(executionStrategy: KotlinCompilerExecutionStrategy, log: KotlinLogger): CompilationResult {
+    private fun performCompilation(
+        executionStrategy: KotlinCompilerExecutionStrategy,
+        log: KotlinLogger,
+        compilerMessageRenderer: ProblemsApiCompilerMessageRenderer,
+    ): CompilationResult {
         try {
             val buildSession = parameters.buildSessionService.get().getOrCreateBuildSession(
                 parameters.classLoadersCachingService.get(),
@@ -118,8 +122,7 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
                 compilationOperationBuilder[KOTLINSCRIPT_EXTENSIONS] = workArguments.kotlinScriptExtensions
                 compilationOperationBuilder[COMPILER_ARGUMENTS_LOG_LEVEL] =
                     workArguments.compilerArgumentsLogLevel.toBtaCompilerArgumentsLogLevel()
-                compilationOperationBuilder[COMPILER_MESSAGE_RENDERER] =
-                    ProblemsApiCompilerMessageRenderer(compilerDiagnosticsProblemsReporter)
+                compilationOperationBuilder[COMPILER_MESSAGE_RENDERER] = compilerMessageRenderer
                 if (metrics is BuildMetricsReporterImpl) {
                     @Suppress("DEPRECATION_ERROR")
                     compilationOperationBuilder[BuildOperation.createCustomOption("XX_KGP_METRICS_COLLECTOR")] = true
@@ -218,6 +221,7 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
     private fun compileInDaemon(
         log: KotlinLogger,
         tryFallback: Boolean,
+        compilerMessageRenderer: ProblemsApiCompilerMessageRenderer,
     ): Pair<CompilationResult, KotlinCompilerExecutionStrategy> {
         val fallback: (Throwable?) -> Pair<CompilationResult, KotlinCompilerExecutionStrategy> = { t ->
             if (t != null) {
@@ -245,10 +249,18 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
                     |$recommendation
                     """.trimMargin()
             )
-            performCompilation(KotlinCompilerExecutionStrategy.IN_PROCESS, log) to KotlinCompilerExecutionStrategy.IN_PROCESS
+            performCompilation(
+                KotlinCompilerExecutionStrategy.IN_PROCESS,
+                log,
+                compilerMessageRenderer,
+            ) to KotlinCompilerExecutionStrategy.IN_PROCESS
         }
         return try {
-            val daemonCompilationResult = performCompilation(KotlinCompilerExecutionStrategy.DAEMON, log)
+            val daemonCompilationResult = performCompilation(
+                KotlinCompilerExecutionStrategy.DAEMON,
+                log,
+                compilerMessageRenderer,
+            )
             if (daemonCompilationResult != CompilationResult.COMPILER_INTERNAL_ERROR) {
                 daemonCompilationResult to KotlinCompilerExecutionStrategy.DAEMON
             } else {
@@ -274,6 +286,7 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
                 exceptionReportingKotlinLogger,
             )
         )
+        val compilerMessageRenderer = ProblemsApiCompilerMessageRenderer()
         val backup = initializeBackup(log)
         try {
             with(log) {
@@ -289,11 +302,12 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
             val (compilationResult, effectiveExecutionStrategy) = when (executionStrategy) {
                 KotlinCompilerExecutionStrategy.DAEMON -> {
                     val tryFallback = workArguments.compilerExecutionSettings.useDaemonFallbackStrategy
-                    compileInDaemon(log, tryFallback)
+                    compileInDaemon(log, tryFallback, compilerMessageRenderer)
                 }
                 KotlinCompilerExecutionStrategy.IN_PROCESS -> performCompilation(
                     KotlinCompilerExecutionStrategy.IN_PROCESS,
-                    log
+                    log,
+                    compilerMessageRenderer,
                 ) to KotlinCompilerExecutionStrategy.IN_PROCESS
                 else -> error("The \"$executionStrategy\" execution strategy is not supported by the Build Tools API")
             }
@@ -309,6 +323,9 @@ internal abstract class BuildToolsApiCompilationWork @Inject constructor(
             }
             throw e
         } finally {
+            // Replay buffered compiler diagnostics on the worker thread (see ProblemsApiCompilerMessageRenderer).
+            compilerMessageRenderer.replayTo(compilerDiagnosticsProblemsReporter)
+
             val taskInfo = TaskExecutionInfo(
                 kotlinLanguageVersion = workArguments.kotlinLanguageVersion,
                 changedFiles = workArguments.incrementalCompilationEnvironment?.changedFiles,
