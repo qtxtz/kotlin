@@ -1291,6 +1291,13 @@ class FirCallCompletionResultsWriterTransformer(
         return transformSyntheticCall(elvisExpression, data)
     }
 
+    override fun transformEqualityOperatorCall(
+        equalityOperatorCall: FirEqualityOperatorCall,
+        data: ExpectedArgumentType?,
+    ): FirStatement {
+        return transformSyntheticCall(equalityOperatorCall, data)
+    }
+
     private inline fun <reified D> transformSyntheticCall(
         syntheticCall: D,
         data: ExpectedArgumentType?,
