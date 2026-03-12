@@ -59,6 +59,7 @@ import org.jetbrains.kotlin.fir.visitors.FirTransformer
 import org.jetbrains.kotlin.fir.visitors.TransformData
 import org.jetbrains.kotlin.fir.visitors.transformSingle
 import org.jetbrains.kotlin.resolve.calls.NewCommonSuperTypeCalculator
+import org.jetbrains.kotlin.resolve.calls.inference.components.ConstraintSystemCompletionMode
 import org.jetbrains.kotlin.resolve.calls.inference.model.InferredEmptyIntersection
 import org.jetbrains.kotlin.resolve.calls.tower.ApplicabilityDetail
 import org.jetbrains.kotlin.resolve.calls.tower.isSuccess
@@ -109,7 +110,35 @@ class FirCallCompletionResultsWriterTransformer(
     private var enableArrayOfCallTransformation = false
 
     enum class Mode {
-        Normal, DelegatedPropertyCompletion
+        Normal,
+        DelegatedPropertyCompletion,
+
+        /**
+         * This mode solves the following problem:
+         *
+         * To resolve top-level collection literals and lambdas (ones that are not arguments of a call), we create a synthetic
+         * outer call which accepts their expected type (or `Any` if there is no expected type). See [FirSyntheticCallGenerator]
+         * for details. These calls are resolved in [org.jetbrains.kotlin.fir.resolve.ResolutionMode.ContextIndependent] resolution mode,
+         * hence normally completed in [ConstraintSystemCompletionMode.FULL] completion mode.
+         *
+         * However, in the case of PCLA, we might complete them in [ConstraintSystemCompletionMode.PCLA_POSTPONED_CALL] mode instead.
+         * That means we can't really run the whole pipeline of [FirCallCompletionResultsWriterTransformer] immediately, because
+         * that would prevent us from running [FirCallCompletionResultsWriterTransformer] of the outer call of PCLA lambda afterward
+         * (among other things, [FirCallCompletionResultsWriterTransformer] removes the candidate from `calleeReference`).
+         *
+         * (We **need** to run [FirCallCompletionResultsWriterTransformer] of outer call for PCLA because it replaces type variables in types
+         * which we may not know after resolving [ConstraintSystemCompletionMode.PCLA_POSTPONED_CALL] call.)
+         *
+         * On the other hand, some of the work done by [FirCallCompletionResultsWriterTransformer] must be done immediately.
+         * In particular, we must convert CLs to function calls and set type for lambda expressions (which sometimes might be used, e.g.,
+         * in assignment).
+         *
+         * This mode performs only these tasks that are necessary immediately.
+         *
+         * TODO: Apply this mode not only to CLs, but also to lambdas.
+         *  That should solve some problems like KT-84926.
+         */
+        TopLevelSyntheticCallInPclaCompletion,
     }
 
     private inline fun <T> withCollectionLiteralInAnnotationResolution(block: () -> T): T {
@@ -401,7 +430,8 @@ class FirCallCompletionResultsWriterTransformer(
         }
 
         data?.argumentReplacements?.get(collectionLiteral)?.let { replacement ->
-            return replacement.transform(this, data)
+            return if (mode == Mode.TopLevelSyntheticCallInPclaCompletion) replacement
+            else replacement.transform(this, data)
         }
 
         return collectionLiteral
@@ -410,9 +440,14 @@ class FirCallCompletionResultsWriterTransformer(
     override fun transformFunctionCall(functionCall: FirFunctionCall, data: ExpectedArgumentType?): FirStatement {
         val calleeReference = functionCall.calleeReference as? FirNamedReferenceWithCandidate
             ?: return functionCall
+        val subCandidate = calleeReference.candidate
+
+        if (mode == Mode.TopLevelSyntheticCallInPclaCompletion) {
+            functionCall.transformArgumentList(subCandidate.createArgumentsMapping(calleeReference.isError))
+            return functionCall
+        }
         val result = prepareQualifiedTransform(functionCall, calleeReference)
         val originalArgumentList = result.argumentList
-        val subCandidate = calleeReference.candidate
         val resultType = result.resolvedType.substituteType(
             subCandidate,
             substitutor = subCandidate.prepareCustomReturnTypeSubstitutorForFunctionCall() ?: finalSubstitutor

@@ -11,8 +11,9 @@ class MyChildList : MyList() {
 }
 
 fun test() {
-    val x: MyList = when {
+    val x = when {
         true -> MyChildList()
+        true -> MyList()
         else -> <expr>[1, 2, 3]</expr>
     }
 }

@@ -132,36 +132,51 @@ class FirCallCompleter(
 
                 inferenceSession.processPartiallyResolvedCall(call, resolutionMode, completionMode)
 
-                if (candidate.isSyntheticCallForTopLevelLambda() || candidate.isSyntheticCallForTopLevelCL()) {
-                    // This piece is only relevant for top-level lambdas inside PCLA.
-                    // For a non-PCLA case, their synthetic call would be complete in the FULL mode.
-                    // See FirSyntheticCallGenerator.resolveAnonymousFunctionExpressionWithSyntheticOuterCall
-                    //
-                    // Here we preliminarily run the completion writer on the call
-                    // to make it write the resulting type to the lambda, so it can be used further.
-                    // Otherwise, the type of the lambda would be left implicit.
-                    //
-                    // On the other hand, we can't complete such a call FULLy because it still contains
-                    // not-fixed outer type variables.
-                    //
-                    // Frankly speaking, this is some sort of hack, which currently I don't know how to resolve properly.
-                    //
-                    // Similarly, we need to replace top-level collection literals with function calls.
-                    val storage = candidate.system.currentStorage()
-                    val finalSubstitutor = storage
-                        .buildCurrentSubstitutor(session.typeContext, emptyMap()).asCone()
-                    call.transformSingle(
-                        createCompletionResultsWriter(finalSubstitutor),
-                        null
-                    )
-                } else {
-                    call
-                }
+                call.runningCompletionResultsWriterInNonFullModeIfNeeded(candidate, completionMode)
             }
 
             @OptIn(ExclusiveForOverloadResolutionByLambdaReturnType::class)
             ConstraintSystemCompletionMode.UNTIL_FIRST_LAMBDA
                 -> throw IllegalStateException()
+        }
+    }
+
+    /**
+     * Sometimes we need to run [FirCallCompletionResultsWriterTransformer] for [completionMode] != [ConstraintSystemCompletionMode.FULL].
+     * Currently, only applies for synthetic calls created for lambda or collection literals and only in
+     * [ConstraintSystemCompletionMode.PCLA_POSTPONED_CALL] mode.
+     *
+     * See also [FirCallCompletionResultsWriterTransformer.Mode.TopLevelSyntheticCallInPclaCompletion].
+     */
+    private fun <T> T.runningCompletionResultsWriterInNonFullModeIfNeeded(
+        candidate: Candidate,
+        completionMode: ConstraintSystemCompletionMode,
+    ): T where T : FirResolvable, T : FirExpression {
+        return when {
+            !candidate.isSyntheticCallForTopLevelLambda() && !candidate.isSyntheticCallForTopLevelCL() -> {
+                this
+            }
+            else -> {
+                // Note that this is true even with `forceFullCompletion == false` because synthetic call has the proper return type `Unit`,
+                // hence PARTIAL mode is not possible even in this case.
+                assert(completionMode == ConstraintSystemCompletionMode.PCLA_POSTPONED_CALL) {
+                    "Synthetic call for lambda / collection literal must not have $completionMode completion mode."
+                }
+                val storage = candidate.system.currentStorage()
+                val finalSubstitutor = storage.buildCurrentSubstitutor(session.typeContext, emptyMap()).asCone()
+
+                transformSingle(
+                    createCompletionResultsWriter(
+                        finalSubstitutor,
+                        mode = if (candidate.isSyntheticCallForTopLevelCL()) {
+                            FirCallCompletionResultsWriterTransformer.Mode.TopLevelSyntheticCallInPclaCompletion
+                        } else {
+                            FirCallCompletionResultsWriterTransformer.Mode.Normal
+                        }
+                    ),
+                    null
+                )
+            }
         }
     }
 

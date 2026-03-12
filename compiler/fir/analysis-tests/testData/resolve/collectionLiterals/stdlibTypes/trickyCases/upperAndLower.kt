@@ -101,14 +101,14 @@ fun testWhen() {
     val _: Collection<Int> = when {
         cond() -> setOf()
         cond() -> listOf()
-        else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[42]<!>
+        else -> [42]
     }
 
     // ambiguity
     val _: Collection<Int> = when {
         cond() -> setOf()
         cond() -> mutableSetOf()
-        else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[42]<!>
+        else -> [42]
     }
     val _: Collection<*> =
         when {
@@ -134,7 +134,7 @@ fun testWhen() {
                 cond() -> mutableSetOf<Int>()
                 else -> mutableSetOf<String>()
             }
-            else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[]<!>
+            else -> []
         }
 
     // ambiguity (?)
@@ -142,7 +142,7 @@ fun testWhen() {
         when {
             cond() -> setOf()
             cond() -> mutableSetOf()
-            else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[42]<!>
+            else -> [42]
         }
 
     // ambiguity (?)
@@ -152,7 +152,7 @@ fun testWhen() {
                 cond() -> setOf()
                 else -> mutableSetOf()
             }
-            else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[42]<!>
+            else -> [42]
         }
 
     val _: Set<Int> =
@@ -183,9 +183,9 @@ fun testWhen() {
                 cond() -> hashSetOf()
                 else -> mutableSetOf()
             }
-            else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[42]<!>
+            else -> [42]
         }
-    val _: MutableCollection<Any> =
+    val _: MutableCollection<Any> <!INITIALIZER_TYPE_MISMATCH!>=<!>
         when {
             cond() -> mutableSetOf()
             else -> [42]

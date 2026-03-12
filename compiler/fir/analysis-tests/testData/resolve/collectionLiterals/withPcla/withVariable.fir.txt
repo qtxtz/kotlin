@@ -66,7 +66,7 @@ FILE: withVariable.kt
         }
         )
         R|/buildBox<CS errors: /buildBox>#|<<ERROR TYPE REF: Cannot infer argument for type parameter Z>>(<L> = buildBox@fun R|Box<ERROR CLASS: Cannot infer argument for type parameter Z>|.<anonymous>(): R|kotlin/Unit| <inline=NoInline>  {
-            this@R|special/anonymous|.R|SubstitutionOverride</Box.x: <ERROR TYPE REF: Cannot infer argument for type parameter Z>>| = Q|kotlin/collections|.R|kotlin/collections/listOf|<<ERROR TYPE REF: Cannot infer argument for type parameter T>>(this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|TypeVariable(Z)|>|)
+            this@R|special/anonymous|.R|SubstitutionOverride</Box.x: <ERROR TYPE REF: Cannot infer argument for type parameter Z>>| = Q|kotlin/collections|.R|kotlin/collections/listOf|<<ERROR TYPE REF: Cannot infer argument for type parameter T>>(this@R|special/anonymous|.R|SubstitutionOverride</Box.x: <ERROR TYPE REF: Cannot infer argument for type parameter Z>>|)
         }
         )
     }
@@ -119,7 +119,7 @@ FILE: withVariable.kt
         }
         )
         R|/buildBox|<R|kotlin/Int|>(<L> = buildBox@fun R|Box<kotlin/Int>|.<anonymous>(): R|kotlin/Unit| <inline=NoInline>  {
-            Q|kotlin/collections|.R|kotlin/collections/listOf|<R|kotlin/Int|>(this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|TypeVariable(Z)|>|)
+            Q|kotlin/collections|.R|kotlin/collections/listOf|<R|kotlin/Int|>(this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|kotlin/Int|>|)
             this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|kotlin/Int|>| = Int(42)
         }
         )
@@ -128,7 +128,7 @@ FILE: withVariable.kt
         }
         )
         R|/buildBox<CS errors: /buildBox>#|<<ERROR TYPE REF: Cannot infer argument for type parameter Z>>(<L> = buildBox@fun R|Box<ERROR CLASS: Cannot infer argument for type parameter Z>|.<anonymous>(): R|kotlin/Unit| <inline=NoInline>  {
-            Q|kotlin/collections|.R|kotlin/collections/listOf|<<ERROR TYPE REF: Cannot infer argument for type parameter T>>(this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|TypeVariable(Z)|>|)
+            Q|kotlin/collections|.R|kotlin/collections/listOf|<<ERROR TYPE REF: Cannot infer argument for type parameter T>>(this@R|special/anonymous|.R|SubstitutionOverride</Box.x: <ERROR TYPE REF: Cannot infer argument for type parameter Z>>|)
         }
         )
     }
@@ -185,10 +185,10 @@ FILE: withVariable.kt
             this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|kotlin/collections/Collection<kotlin/Int>|>| = R|kotlin/collections/setOf|<R|kotlin/Int|>(Int(42))
         }
         )
-        R|/buildBox|<R|kotlin/collections/Set<kotlin/Int>|>(<L> = buildBox@fun R|Box<kotlin/collections/Set<kotlin/Int>>|.<anonymous>(): R|kotlin/Unit| <inline=NoInline>  {
-            this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|kotlin/collections/Set<kotlin/Int>|>| = when () {
+        R|/buildBox|<R|kotlin/collections/Collection<kotlin/Int>|>(<L> = buildBox@fun R|Box<kotlin/collections/Collection<kotlin/Int>>|.<anonymous>(): R|kotlin/Unit| <inline=NoInline>  {
+            this@R|special/anonymous|.R|SubstitutionOverride</Box.x: R|kotlin/collections/Collection<kotlin/Int>|>| = when () {
                 Boolean(true) ->  {
-                    Q|kotlin/collections|.R|kotlin/collections/setOf|<R|kotlin/Int|>()
+                    Q|kotlin/collections|.R|kotlin/collections/listOf|<R|kotlin/Int|>()
                 }
                 else ->  {
                     R|kotlin/collections/setOf|<R|kotlin/Int|>(Int(42))
