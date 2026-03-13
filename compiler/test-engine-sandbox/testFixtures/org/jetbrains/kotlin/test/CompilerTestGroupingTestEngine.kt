@@ -32,7 +32,7 @@ class CompilerTestGroupingTestEngine : TestEngine {
         val baseContext = JupiterEngineExecutionContext(request.engineExecutionListener, getJupiterConfiguration(request))
         request.rootTestDescriptor.traverseClasses(baseContext) { context, classDescriptor ->
             val methods = classDescriptor.children.filterIsInstance<TestMethodTestDescriptor>()
-            val testInfos = methods.map { method ->
+            val testInfos = methods.mapNotNull { method ->
                 val methodContext = method.prepare(context)
                 methodContext.executionListener.executionStarted(method)
                 methodContext.throwableCollector.execute { method.execute(methodContext, DynamicTestExecutorStub) }
@@ -40,7 +40,19 @@ class CompilerTestGroupingTestEngine : TestEngine {
                     .requiredTestInstances
                     .findInstance(AbstractTwoStageKotlinCompilerTest::class.java)
                     .get()
+
+                // If there is no `@TestMetadata` annotation, then this is some utility test (like `testAllFilesPresentIn`)
+                // and so it should be excluded in grouping processing.
+                if (method.testMethod.annotations.none { it is TestMetadata }) {
+                    methodContext.executionListener.executionFinished(
+                        method,
+                        methodContext.throwableCollector.toTestExecutionResult()
+                    )
+                    return@mapNotNull null
+                }
+
                 TestMethodInfo(method, methodContext, testInstance)
+
             }
 
             testInfos.forEach { it.runNonGroupingPhase() }
