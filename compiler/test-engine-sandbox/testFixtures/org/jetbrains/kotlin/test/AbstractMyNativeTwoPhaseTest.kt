@@ -9,8 +9,8 @@ import org.jetbrains.kotlin.konan.test.KlibSerializerNativeCliFacade
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.computeBlackBoxTestInstances
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.createTestRunSettings
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.getOrCreateTestRunProvider
-import org.jetbrains.kotlin.konan.test.blackbox.support.TestDirectives
-import org.jetbrains.kotlin.konan.test.configuration.commonConfigurationForNativeFirstStageUpToSerialization
+import org.jetbrains.kotlin.konan.test.configuration.commonConfigurationForNativeCodegenTest
+import org.jetbrains.kotlin.konan.test.configuration.setupStepsForNativeFirstStageUpToSerialization
 import org.jetbrains.kotlin.konan.test.handlers.NativeBoxRunnerGroupingPhase
 import org.jetbrains.kotlin.konan.test.klib.NativeCompilerSecondStageFacade
 import org.jetbrains.kotlin.konan.test.klib.currentCustomNativeCompilerSettings
@@ -19,18 +19,11 @@ import org.jetbrains.kotlin.konan.test.services.DisabledNativeTestSkipper
 import org.jetbrains.kotlin.konan.test.services.FileCheckTestSkipper
 import org.jetbrains.kotlin.konan.test.services.sourceProviders.NativeLauncherAdditionalSourceProvider
 import org.jetbrains.kotlin.konan.test.suppressors.NativeTestsSuppressor
-import org.jetbrains.kotlin.platform.konan.NativePlatforms
 import org.jetbrains.kotlin.test.builders.TwoPhaseTestConfigurationBuilder
 import org.jetbrains.kotlin.test.builders.klibArtifactsHandlersStep
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
-import org.jetbrains.kotlin.test.directives.NativeEnvironmentConfigurationDirectives
-import org.jetbrains.kotlin.test.directives.configureFirParser
 import org.jetbrains.kotlin.test.frontend.fir.FirMetaInfoDiffSuppressor
 import org.jetbrains.kotlin.test.model.ArtifactKinds
-import org.jetbrains.kotlin.test.model.DependencyKind
-import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.services.CompilationStage
-import org.jetbrains.kotlin.test.services.LibraryProvider
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.NativeFirstStageEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.NativeSecondStageEnvironmentConfigurator
@@ -49,22 +42,15 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
 
     override fun configure(builder: TwoPhaseTestConfigurationBuilder): Unit = with(builder) {
         commonConfiguration {
-            globalDefaults {
-                frontend = FrontendKinds.FIR
-                targetBackend = TargetBackend.NATIVE
-                targetPlatform = NativePlatforms.unspecifiedNativePlatform
-                dependencyKind = DependencyKind.Binary
-            }
+            commonConfigurationForNativeCodegenTest()
 
-            configureFirParser(FirParser.LightTree)
-            useAdditionalService(::LibraryProvider)
-            useDirectives(NativeEnvironmentConfigurationDirectives, TestDirectives, LanguageSettingsDirectives)
             useMetaTestConfigurators(::DisabledNativeTestSkipper, ::CInteropTestSkipper, ::FileCheckTestSkipper)
             useAfterAnalysisCheckers(
                 ::FirMetaInfoDiffSuppressor,
                 ::NativeTestsSuppressor,
             )
 
+            // TODO(KT-84712): should be moved into `AbstractTwoStageKotlinCompilerTest`
             useSourcePreprocessor(::BatchingPackageInserter)
 
             useAdditionalService { // Register TestRunSettings into TestServices
@@ -81,15 +67,14 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                 ::NativeFirstStageEnvironmentConfigurator,
             )
 
-            commonConfigurationForNativeFirstStageUpToSerialization()
-
-            // 1st stage (sources -> klibs)
-            useAdditionalSourceProviders(
-                ::NativeLauncherAdditionalSourceProvider,
-            )
+            setupStepsForNativeFirstStageUpToSerialization()
 
             facadeStep(::KlibSerializerNativeCliFacade)
             klibArtifactsHandlersStep()
+
+            useAdditionalSourceProviders(
+                ::NativeLauncherAdditionalSourceProvider,
+            )
 
             enableMetaInfoHandler()
         }

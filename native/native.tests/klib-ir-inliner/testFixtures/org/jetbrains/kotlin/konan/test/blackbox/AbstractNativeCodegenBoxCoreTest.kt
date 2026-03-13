@@ -46,7 +46,6 @@ abstract class AbstractNativeCodegenBoxCoreTest : AbstractNativeCoreTest() {
 
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         super.configure(builder)
-        configureFirParser(FirParser.LightTree)
         useAdditionalService(::LibraryProvider)
         useConfigurators(
             ::CommonEnvironmentConfigurator,

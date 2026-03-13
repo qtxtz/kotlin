@@ -9,14 +9,17 @@ import org.jetbrains.kotlin.konan.test.Fir2IrCliNativeFacade
 import org.jetbrains.kotlin.konan.test.FirCliNativeFacade
 import org.jetbrains.kotlin.konan.test.NativePreSerializationLoweringCliFacade
 import org.jetbrains.kotlin.platform.konan.NativePlatforms
+import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.backend.BlackBoxCodegenSuppressor
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
+import org.jetbrains.kotlin.test.builders.TestConfigurationBuilderBase
 import org.jetbrains.kotlin.test.builders.firHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonCodegenConfiguration
 import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives
 import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives
+import org.jetbrains.kotlin.test.directives.configureFirParser
 import org.jetbrains.kotlin.test.directives.model.ValueDirective
 import org.jetbrains.kotlin.test.frontend.fir.handlers.*
 import org.jetbrains.kotlin.test.model.DependencyKind
@@ -26,11 +29,20 @@ import org.jetbrains.kotlin.test.services.sourceProviders.AdditionalDiagnosticsS
 import org.jetbrains.kotlin.test.services.sourceProviders.CoroutineHelpersSourceFilesProvider
 import org.jetbrains.kotlin.utils.bind
 
-/**
- * Sets up all first-stage steps from frontend till pre-serialization lowerings (included).
- * Also, sets up corresponding handlers steps for each facade step.
- */
+
 fun TestConfigurationBuilder.commonConfigurationForNativeFirstStageUpToSerialization(
+    customIgnoreDirective: ValueDirective<TargetBackend>? = null,
+) {
+    commonConfigurationForNativeCodegenTest(customIgnoreDirective = customIgnoreDirective)
+    setupStepsForNativeFirstStageUpToSerialization()
+}
+
+/**
+ * Sets up directives and services which are applicable for both stages of
+ * any native codegen test.
+ */
+fun TestConfigurationBuilderBase<*, *>.commonConfigurationForNativeCodegenTest(
+    firParser: FirParser = FirParser.LightTree,
     customIgnoreDirective: ValueDirective<TargetBackend>? = null,
 ) {
     commonCodegenConfiguration()
@@ -38,6 +50,7 @@ fun TestConfigurationBuilder.commonConfigurationForNativeFirstStageUpToSerializa
     globalDefaults {
         frontend = FrontendKinds.FIR
         targetPlatform = NativePlatforms.unspecifiedNativePlatform
+        targetBackend = TargetBackend.NATIVE
         dependencyKind = DependencyKind.Binary
     }
 
@@ -45,6 +58,7 @@ fun TestConfigurationBuilder.commonConfigurationForNativeFirstStageUpToSerializa
         +DiagnosticsDirectives.REPORT_ONLY_EXPLICITLY_DEFINED_DEBUG_INFO
         +ConfigurationDirectives.WITH_STDLIB
     }
+    configureFirParser(firParser)
 
     useAdditionalService(::LibraryProvider)
     useAdditionalSourceProviders(
@@ -54,7 +68,13 @@ fun TestConfigurationBuilder.commonConfigurationForNativeFirstStageUpToSerializa
     useAfterAnalysisCheckers(
         ::BlackBoxCodegenSuppressor.bind(customIgnoreDirective, null),
     )
+}
 
+/**
+ * Sets up all first-stage steps from frontend till pre-serialization lowerings (included).
+ * Also, sets up corresponding handlers steps for each facade step.
+ */
+fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization() {
     facadeStep(::FirCliNativeFacade)
     firHandlersStep {
         commonFirHandlersForCodegenTest()
