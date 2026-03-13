@@ -11,8 +11,10 @@ import kotlin.Boolean
 import kotlin.OptIn
 import kotlin.String
 import kotlin.Suppress
+import kotlin.collections.Map
 import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
+import kotlin.collections.buildMap
 import kotlin.collections.mutableMapOf
 import kotlin.collections.mutableSetOf
 import org.jetbrains.kotlin.buildtools.`internal`.UseFromImplModuleRestricted
@@ -90,6 +92,12 @@ internal abstract class CommonToolArgumentsImpl(
     try { this[VERBOSE] = arguments.verbose } catch (_: NoSuchMethodError) {  }
     try { this[VERSION] = arguments.version } catch (_: NoSuchMethodError) {  }
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
+  }
+
+  @Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
+  public open fun toCompilationInputs(): Map<String, String> = buildMap {
+    if (WERROR in this@CommonToolArgumentsImpl) put(WERROR.id, this@CommonToolArgumentsImpl[WERROR].toString())
+    if (WEXTRA in this@CommonToolArgumentsImpl) put(WEXTRA.id, this@CommonToolArgumentsImpl[WEXTRA].toString())
   }
 
   public class CommonToolArgument<V>(

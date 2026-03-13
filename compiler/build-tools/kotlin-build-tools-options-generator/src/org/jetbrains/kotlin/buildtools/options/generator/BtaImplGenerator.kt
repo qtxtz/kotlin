@@ -131,6 +131,7 @@ internal class BtaImplGenerator(
 
                 maybeAddApplyArgumentStringsFun(level, parentClass)
                 maybeAddToArgumentsStringFun(level, parentClass)
+                generateToCompilationInputsFun(level, implClassName, parentClass)
             }
         }.build()
         mainFile.writeTo(mainFileAppendable)
@@ -471,6 +472,71 @@ internal class BtaImplGenerator(
             else -> add("")
         }
     }.build()
+
+    private fun TypeSpec.Builder.generateToCompilationInputsFun(
+        level: KotlinCompilerArgumentsLevel,
+        implClassName: String,
+        parentClass: ClassName?,
+    ) {
+        function("toCompilationInputs") {
+            if (parentClass == null) {
+                addModifiers(KModifier.OPEN)
+            } else {
+                addModifiers(KModifier.OVERRIDE)
+            }
+            annotation<Suppress> {
+                addMember("%S", "REDUNDANT_CALL_OF_CONVERSION_METHOD")
+            }
+            returns(ClassName("kotlin.collections", "Map").parameterizedBy(STRING, STRING))
+
+            val body = CodeBlock.builder()
+            if (parentClass != null) {
+                body.add("return super.toCompilationInputs() + ")
+            } else {
+                body.add("return ")
+            }
+            body.beginControlFlow("%M", MemberName("kotlin.collections", "buildMap"))
+
+            level.transformImplArguments().forEach { argument ->
+                val name = argument.extractName()
+                if (skipXX && name.startsWith("XX_")) return@forEach
+                if (!argument.affectsCompilationOutcome) return@forEach
+                if (argument.introducedSinceVersion > kotlinVersion) return@forEach
+
+                val wasRemoved = argument.removedSinceVersion?.let { removedVersion ->
+                    if (removedVersion <= getOldestSupportedVersion(kotlinVersion)) {
+                        return@forEach
+                    }
+                    true
+                } ?: false
+
+                val wasIntroducedRecently = argument.introducedSinceVersion > getOldestSupportedVersion(kotlinVersion)
+
+                val member = MemberName(ClassName(targetPackage, implClassName, "Companion"), name)
+
+                val valueCode = when {
+                    argument is BtaCompilerArgument.SSoTCompilerArgument && argument.valueType.origin is StringArrayType ->
+                        CodeBlock.of("this@%L[%M]?.contentToString() ?: %S", implClassName, member, "null")
+                    else ->
+                        CodeBlock.of("this@%L[%M].toString()", implClassName, member)
+                }
+
+                val putStatement = CodeBlock.of(
+                    "if (%M in this@%L) put(%M.id, %L)",
+                    member, implClassName, member, valueCode
+                )
+
+                if (wasRemoved || wasIntroducedRecently) {
+                    body.addStatement("try { %L } catch (_: NoSuchMethodError) {  }", putStatement)
+                } else {
+                    body.addStatement("%L", putStatement)
+                }
+            }
+
+            body.endControlFlow()
+            addCode(body.build())
+        }
+    }
 
     fun TypeSpec.Builder.generateGetPutFunctions(parameter: ClassName, implParameter: ClassName) {
         val mapProperty = property(

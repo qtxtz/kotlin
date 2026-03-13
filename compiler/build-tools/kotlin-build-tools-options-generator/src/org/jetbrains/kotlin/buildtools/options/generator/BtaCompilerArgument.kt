@@ -29,6 +29,7 @@ sealed class BtaCompilerArgument<T : BtaCompilerArgumentValueType>(
     val introducedSinceVersion: KotlinReleaseVersion,
     val deprecatedSinceVersion: KotlinReleaseVersion?,
     val removedSinceVersion: KotlinReleaseVersion?,
+    val affectsCompilationOutcome: Boolean = true,
 ) {
 
     @OptIn(ExperimentalArgumentApi::class)
@@ -41,7 +42,8 @@ sealed class BtaCompilerArgument<T : BtaCompilerArgumentValueType>(
         valueType = BtaCompilerArgumentValueType.SSoTCompilerArgumentValueType(origin.argumentType),
         introducedSinceVersion = origin.releaseVersionsMetadata.introducedVersion,
         deprecatedSinceVersion = origin.releaseVersionsMetadata.deprecatedVersion,
-        removedSinceVersion = origin.releaseVersionsMetadata.removedVersion
+        removedSinceVersion = origin.releaseVersionsMetadata.removedVersion,
+        affectsCompilationOutcome = origin.affectsCompilationOutcome,
     ) {
         constructor(origin: KotlinCompilerArgument) : this(origin.calculateName(), origin)
     }
@@ -55,6 +57,7 @@ sealed class BtaCompilerArgument<T : BtaCompilerArgumentValueType>(
         removedSinceVersion: KotlinReleaseVersion?,
         val applierSimpleName: String,
         val defaultValue: CodeBlock,
+        affectsCompilationOutcome: Boolean = true,
     ) : BtaCompilerArgument<BtaCompilerArgumentValueType.CustomArgumentValueType>(
         name = name,
         description = description,
@@ -62,6 +65,7 @@ sealed class BtaCompilerArgument<T : BtaCompilerArgumentValueType>(
         introducedSinceVersion = introducedSinceVersion,
         deprecatedSinceVersion = deprecatedSinceVersion,
         removedSinceVersion = removedSinceVersion,
+        affectsCompilationOutcome = affectsCompilationOutcome,
     )
 }
 

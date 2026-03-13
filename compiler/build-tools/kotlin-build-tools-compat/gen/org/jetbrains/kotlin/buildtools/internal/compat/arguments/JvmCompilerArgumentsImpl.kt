@@ -15,8 +15,10 @@ import kotlin.OptIn
 import kotlin.String
 import kotlin.Suppress
 import kotlin.collections.List
+import kotlin.collections.Map
 import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
+import kotlin.collections.buildMap
 import kotlin.collections.joinToString
 import kotlin.collections.map
 import kotlin.collections.mutableMapOf
@@ -348,6 +350,85 @@ internal class JvmCompilerArgumentsImpl(
   override fun toArgumentStrings(): List<String> {
     val arguments = toCompilerArguments().compilerToArgumentStrings()
     return arguments
+  }
+
+  @Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
+  override fun toCompilationInputs(): Map<String, String> = super.toCompilationInputs() + buildMap {
+    if (X_ABI_STABILITY in this@JvmCompilerArgumentsImpl) put(X_ABI_STABILITY.id, this@JvmCompilerArgumentsImpl[X_ABI_STABILITY].toString())
+    if (X_ADD_MODULES in this@JvmCompilerArgumentsImpl) put(X_ADD_MODULES.id, this@JvmCompilerArgumentsImpl[X_ADD_MODULES].toString())
+    if (X_ALLOW_NO_SOURCE_FILES in this@JvmCompilerArgumentsImpl) put(X_ALLOW_NO_SOURCE_FILES.id, this@JvmCompilerArgumentsImpl[X_ALLOW_NO_SOURCE_FILES].toString())
+    if (X_ALLOW_UNSTABLE_DEPENDENCIES in this@JvmCompilerArgumentsImpl) put(X_ALLOW_UNSTABLE_DEPENDENCIES.id, this@JvmCompilerArgumentsImpl[X_ALLOW_UNSTABLE_DEPENDENCIES].toString())
+    try { if (X_ANNOTATIONS_IN_METADATA in this@JvmCompilerArgumentsImpl) put(X_ANNOTATIONS_IN_METADATA.id, this@JvmCompilerArgumentsImpl[X_ANNOTATIONS_IN_METADATA].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_ASSERTIONS].toString())
+    if (X_BUILD_FILE in this@JvmCompilerArgumentsImpl) put(X_BUILD_FILE.id, this@JvmCompilerArgumentsImpl[X_BUILD_FILE].toString())
+    try { if (X_COMPILE_BUILTINS_AS_PART_OF_STDLIB in this@JvmCompilerArgumentsImpl) put(X_COMPILE_BUILTINS_AS_PART_OF_STDLIB.id, this@JvmCompilerArgumentsImpl[X_COMPILE_BUILTINS_AS_PART_OF_STDLIB].toString()) } catch (_: NoSuchMethodError) {  }
+    try { if (X_COMPILE_JAVA in this@JvmCompilerArgumentsImpl) put(X_COMPILE_JAVA.id, this@JvmCompilerArgumentsImpl[X_COMPILE_JAVA].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_DEBUG in this@JvmCompilerArgumentsImpl) put(X_DEBUG.id, this@JvmCompilerArgumentsImpl[X_DEBUG].toString())
+    if (X_DEFAULT_SCRIPT_EXTENSION in this@JvmCompilerArgumentsImpl) put(X_DEFAULT_SCRIPT_EXTENSION.id, this@JvmCompilerArgumentsImpl[X_DEFAULT_SCRIPT_EXTENSION].toString())
+    if (X_DISABLE_STANDARD_SCRIPT in this@JvmCompilerArgumentsImpl) put(X_DISABLE_STANDARD_SCRIPT.id, this@JvmCompilerArgumentsImpl[X_DISABLE_STANDARD_SCRIPT].toString())
+    if (X_EMIT_JVM_TYPE_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_EMIT_JVM_TYPE_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_EMIT_JVM_TYPE_ANNOTATIONS].toString())
+    if (X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL in this@JvmCompilerArgumentsImpl) put(X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL.id, this@JvmCompilerArgumentsImpl[X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL].toString())
+    try { if (X_ENHANCED_COROUTINES_DEBUGGING in this@JvmCompilerArgumentsImpl) put(X_ENHANCED_COROUTINES_DEBUGGING.id, this@JvmCompilerArgumentsImpl[X_ENHANCED_COROUTINES_DEBUGGING].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_FRIEND_PATHS in this@JvmCompilerArgumentsImpl) put(X_FRIEND_PATHS.id, this@JvmCompilerArgumentsImpl[X_FRIEND_PATHS].toString())
+    if (X_GENERATE_STRICT_METADATA_VERSION in this@JvmCompilerArgumentsImpl) put(X_GENERATE_STRICT_METADATA_VERSION.id, this@JvmCompilerArgumentsImpl[X_GENERATE_STRICT_METADATA_VERSION].toString())
+    try { if (X_INDY_ALLOW_ANNOTATED_LAMBDAS in this@JvmCompilerArgumentsImpl) put(X_INDY_ALLOW_ANNOTATED_LAMBDAS.id, this@JvmCompilerArgumentsImpl[X_INDY_ALLOW_ANNOTATED_LAMBDAS].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_IR_DO_NOT_CLEAR_BINDING_CONTEXT in this@JvmCompilerArgumentsImpl) put(X_IR_DO_NOT_CLEAR_BINDING_CONTEXT.id, this@JvmCompilerArgumentsImpl[X_IR_DO_NOT_CLEAR_BINDING_CONTEXT].toString())
+    try { if (X_IR_INLINER in this@JvmCompilerArgumentsImpl) put(X_IR_INLINER.id, this@JvmCompilerArgumentsImpl[X_IR_INLINER].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_JAVA_PACKAGE_PREFIX in this@JvmCompilerArgumentsImpl) put(X_JAVA_PACKAGE_PREFIX.id, this@JvmCompilerArgumentsImpl[X_JAVA_PACKAGE_PREFIX].toString())
+    if (X_JAVA_SOURCE_ROOTS in this@JvmCompilerArgumentsImpl) put(X_JAVA_SOURCE_ROOTS.id, this@JvmCompilerArgumentsImpl[X_JAVA_SOURCE_ROOTS].toString())
+    try { if (X_JAVAC_ARGUMENTS in this@JvmCompilerArgumentsImpl) put(X_JAVAC_ARGUMENTS.id, this@JvmCompilerArgumentsImpl[X_JAVAC_ARGUMENTS]?.contentToString() ?: "null") } catch (_: NoSuchMethodError) {  }
+    if (X_JDK_RELEASE in this@JvmCompilerArgumentsImpl) put(X_JDK_RELEASE.id, this@JvmCompilerArgumentsImpl[X_JDK_RELEASE].toString())
+    if (X_JSPECIFY_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_JSPECIFY_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_JSPECIFY_ANNOTATIONS].toString())
+    if (X_JSR305 in this@JvmCompilerArgumentsImpl) put(X_JSR305.id, this@JvmCompilerArgumentsImpl[X_JSR305]?.contentToString() ?: "null")
+    if (X_JVM_DEFAULT in this@JvmCompilerArgumentsImpl) put(X_JVM_DEFAULT.id, this@JvmCompilerArgumentsImpl[X_JVM_DEFAULT].toString())
+    if (X_JVM_ENABLE_PREVIEW in this@JvmCompilerArgumentsImpl) put(X_JVM_ENABLE_PREVIEW.id, this@JvmCompilerArgumentsImpl[X_JVM_ENABLE_PREVIEW].toString())
+    try { if (X_JVM_EXPOSE_BOXED in this@JvmCompilerArgumentsImpl) put(X_JVM_EXPOSE_BOXED.id, this@JvmCompilerArgumentsImpl[X_JVM_EXPOSE_BOXED].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_KLIB in this@JvmCompilerArgumentsImpl) put(X_KLIB.id, this@JvmCompilerArgumentsImpl[X_KLIB].toString())
+    if (X_LAMBDAS in this@JvmCompilerArgumentsImpl) put(X_LAMBDAS.id, this@JvmCompilerArgumentsImpl[X_LAMBDAS].toString())
+    if (X_LINK_VIA_SIGNATURES in this@JvmCompilerArgumentsImpl) put(X_LINK_VIA_SIGNATURES.id, this@JvmCompilerArgumentsImpl[X_LINK_VIA_SIGNATURES].toString())
+    if (X_MODULE_PATH in this@JvmCompilerArgumentsImpl) put(X_MODULE_PATH.id, this@JvmCompilerArgumentsImpl[X_MODULE_PATH].toString())
+    if (X_MULTIFILE_PARTS_INHERIT in this@JvmCompilerArgumentsImpl) put(X_MULTIFILE_PARTS_INHERIT.id, this@JvmCompilerArgumentsImpl[X_MULTIFILE_PARTS_INHERIT].toString())
+    if (X_NO_CALL_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_NO_CALL_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_NO_CALL_ASSERTIONS].toString())
+    if (X_NO_NEW_JAVA_ANNOTATION_TARGETS in this@JvmCompilerArgumentsImpl) put(X_NO_NEW_JAVA_ANNOTATION_TARGETS.id, this@JvmCompilerArgumentsImpl[X_NO_NEW_JAVA_ANNOTATION_TARGETS].toString())
+    if (X_NO_OPTIMIZE in this@JvmCompilerArgumentsImpl) put(X_NO_OPTIMIZE.id, this@JvmCompilerArgumentsImpl[X_NO_OPTIMIZE].toString())
+    if (X_NO_PARAM_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_NO_PARAM_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_NO_PARAM_ASSERTIONS].toString())
+    if (X_NO_RECEIVER_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_NO_RECEIVER_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_NO_RECEIVER_ASSERTIONS].toString())
+    if (X_NO_RESET_JAR_TIMESTAMPS in this@JvmCompilerArgumentsImpl) put(X_NO_RESET_JAR_TIMESTAMPS.id, this@JvmCompilerArgumentsImpl[X_NO_RESET_JAR_TIMESTAMPS].toString())
+    if (X_NO_SOURCE_DEBUG_EXTENSION in this@JvmCompilerArgumentsImpl) put(X_NO_SOURCE_DEBUG_EXTENSION.id, this@JvmCompilerArgumentsImpl[X_NO_SOURCE_DEBUG_EXTENSION].toString())
+    if (X_NO_UNIFIED_NULL_CHECKS in this@JvmCompilerArgumentsImpl) put(X_NO_UNIFIED_NULL_CHECKS.id, this@JvmCompilerArgumentsImpl[X_NO_UNIFIED_NULL_CHECKS].toString())
+    if (X_NULLABILITY_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_NULLABILITY_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_NULLABILITY_ANNOTATIONS]?.contentToString() ?: "null")
+    try { if (X_OUTPUT_BUILTINS_METADATA in this@JvmCompilerArgumentsImpl) put(X_OUTPUT_BUILTINS_METADATA.id, this@JvmCompilerArgumentsImpl[X_OUTPUT_BUILTINS_METADATA].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_SAM_CONVERSIONS in this@JvmCompilerArgumentsImpl) put(X_SAM_CONVERSIONS.id, this@JvmCompilerArgumentsImpl[X_SAM_CONVERSIONS].toString())
+    if (X_SANITIZE_PARENTHESES in this@JvmCompilerArgumentsImpl) put(X_SANITIZE_PARENTHESES.id, this@JvmCompilerArgumentsImpl[X_SANITIZE_PARENTHESES].toString())
+    if (X_SCRIPT_RESOLVER_ENVIRONMENT in this@JvmCompilerArgumentsImpl) put(X_SCRIPT_RESOLVER_ENVIRONMENT.id, this@JvmCompilerArgumentsImpl[X_SCRIPT_RESOLVER_ENVIRONMENT]?.contentToString() ?: "null")
+    try { if (X_SERIALIZE_IR in this@JvmCompilerArgumentsImpl) put(X_SERIALIZE_IR.id, this@JvmCompilerArgumentsImpl[X_SERIALIZE_IR].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_STRING_CONCAT in this@JvmCompilerArgumentsImpl) put(X_STRING_CONCAT.id, this@JvmCompilerArgumentsImpl[X_STRING_CONCAT].toString())
+    if (X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS].toString())
+    if (X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING in this@JvmCompilerArgumentsImpl) put(X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING.id, this@JvmCompilerArgumentsImpl[X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING].toString())
+    if (X_SUPPRESS_MISSING_BUILTINS_ERROR in this@JvmCompilerArgumentsImpl) put(X_SUPPRESS_MISSING_BUILTINS_ERROR.id, this@JvmCompilerArgumentsImpl[X_SUPPRESS_MISSING_BUILTINS_ERROR].toString())
+    if (X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE in this@JvmCompilerArgumentsImpl) put(X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE.id, this@JvmCompilerArgumentsImpl[X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE].toString())
+    if (X_USE_14_INLINE_CLASSES_MANGLING_SCHEME in this@JvmCompilerArgumentsImpl) put(X_USE_14_INLINE_CLASSES_MANGLING_SCHEME.id, this@JvmCompilerArgumentsImpl[X_USE_14_INLINE_CLASSES_MANGLING_SCHEME].toString())
+    if (X_USE_FAST_JAR_FILE_SYSTEM in this@JvmCompilerArgumentsImpl) put(X_USE_FAST_JAR_FILE_SYSTEM.id, this@JvmCompilerArgumentsImpl[X_USE_FAST_JAR_FILE_SYSTEM].toString())
+    try { if (X_USE_INLINE_SCOPES_NUMBERS in this@JvmCompilerArgumentsImpl) put(X_USE_INLINE_SCOPES_NUMBERS.id, this@JvmCompilerArgumentsImpl[X_USE_INLINE_SCOPES_NUMBERS].toString()) } catch (_: NoSuchMethodError) {  }
+    try { if (X_USE_JAVAC in this@JvmCompilerArgumentsImpl) put(X_USE_JAVAC.id, this@JvmCompilerArgumentsImpl[X_USE_JAVAC].toString()) } catch (_: NoSuchMethodError) {  }
+    try { if (X_USE_K2_KAPT in this@JvmCompilerArgumentsImpl) put(X_USE_K2_KAPT.id, this@JvmCompilerArgumentsImpl[X_USE_K2_KAPT].toString()) } catch (_: NoSuchMethodError) {  }
+    if (X_USE_OLD_CLASS_FILES_READING in this@JvmCompilerArgumentsImpl) put(X_USE_OLD_CLASS_FILES_READING.id, this@JvmCompilerArgumentsImpl[X_USE_OLD_CLASS_FILES_READING].toString())
+    if (X_USE_TYPE_TABLE in this@JvmCompilerArgumentsImpl) put(X_USE_TYPE_TABLE.id, this@JvmCompilerArgumentsImpl[X_USE_TYPE_TABLE].toString())
+    if (X_VALIDATE_BYTECODE in this@JvmCompilerArgumentsImpl) put(X_VALIDATE_BYTECODE.id, this@JvmCompilerArgumentsImpl[X_VALIDATE_BYTECODE].toString())
+    if (X_VALUE_CLASSES in this@JvmCompilerArgumentsImpl) put(X_VALUE_CLASSES.id, this@JvmCompilerArgumentsImpl[X_VALUE_CLASSES].toString())
+    try { if (X_WHEN_EXPRESSIONS in this@JvmCompilerArgumentsImpl) put(X_WHEN_EXPRESSIONS.id, this@JvmCompilerArgumentsImpl[X_WHEN_EXPRESSIONS].toString()) } catch (_: NoSuchMethodError) {  }
+    if (CLASSPATH in this@JvmCompilerArgumentsImpl) put(CLASSPATH.id, this@JvmCompilerArgumentsImpl[CLASSPATH].toString())
+    if (D in this@JvmCompilerArgumentsImpl) put(D.id, this@JvmCompilerArgumentsImpl[D].toString())
+    if (INCLUDE_RUNTIME in this@JvmCompilerArgumentsImpl) put(INCLUDE_RUNTIME.id, this@JvmCompilerArgumentsImpl[INCLUDE_RUNTIME].toString())
+    if (JAVA_PARAMETERS in this@JvmCompilerArgumentsImpl) put(JAVA_PARAMETERS.id, this@JvmCompilerArgumentsImpl[JAVA_PARAMETERS].toString())
+    if (JDK_HOME in this@JvmCompilerArgumentsImpl) put(JDK_HOME.id, this@JvmCompilerArgumentsImpl[JDK_HOME].toString())
+    try { if (JVM_DEFAULT in this@JvmCompilerArgumentsImpl) put(JVM_DEFAULT.id, this@JvmCompilerArgumentsImpl[JVM_DEFAULT].toString()) } catch (_: NoSuchMethodError) {  }
+    if (JVM_TARGET in this@JvmCompilerArgumentsImpl) put(JVM_TARGET.id, this@JvmCompilerArgumentsImpl[JVM_TARGET].toString())
+    if (MODULE_NAME in this@JvmCompilerArgumentsImpl) put(MODULE_NAME.id, this@JvmCompilerArgumentsImpl[MODULE_NAME].toString())
+    if (NO_JDK in this@JvmCompilerArgumentsImpl) put(NO_JDK.id, this@JvmCompilerArgumentsImpl[NO_JDK].toString())
+    if (NO_REFLECT in this@JvmCompilerArgumentsImpl) put(NO_REFLECT.id, this@JvmCompilerArgumentsImpl[NO_REFLECT].toString())
+    if (NO_STDLIB in this@JvmCompilerArgumentsImpl) put(NO_STDLIB.id, this@JvmCompilerArgumentsImpl[NO_STDLIB].toString())
+    if (SCRIPT_TEMPLATES in this@JvmCompilerArgumentsImpl) put(SCRIPT_TEMPLATES.id, this@JvmCompilerArgumentsImpl[SCRIPT_TEMPLATES]?.contentToString() ?: "null")
   }
 
   public class JvmCompilerArgument<V>(
