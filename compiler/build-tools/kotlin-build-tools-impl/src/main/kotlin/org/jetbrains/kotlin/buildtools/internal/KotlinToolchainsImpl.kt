@@ -24,7 +24,7 @@ internal class KotlinToolchainsImpl() : KotlinToolchains {
         @Suppress("UNCHECKED_CAST")
         return toolchains.computeIfAbsent(type) { type ->
             when (type) {
-                JvmPlatformToolchain::class.java -> JvmPlatformToolchainImpl(buildIdToSessionFlagFile)
+                JvmPlatformToolchain::class.java -> JvmPlatformToolchainImpl(getCompilerVersion(), buildIdToSessionFlagFile)
                 CriToolchain::class.java -> CriToolchainImpl()
                 else -> error("Unsupported platform toolchain type: $type. Only JVM compilation is supported for now.")
             }

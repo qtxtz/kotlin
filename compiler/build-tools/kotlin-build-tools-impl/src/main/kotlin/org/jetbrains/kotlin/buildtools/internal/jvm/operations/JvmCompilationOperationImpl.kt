@@ -71,6 +71,7 @@ internal class JvmCompilationOperationImpl private constructor(
     override val destinationDirectory: Path,
     override val compilerArguments: JvmCompilerArgumentsImpl = JvmCompilerArgumentsImpl(JvmCompilerArgumentValueAdapter.getOrNull()),
     private val buildIdToSessionFlagFile: MutableMap<ProjectId, File>,
+    private val compilerVersion: String,
 ) : CancellableBuildOperationImpl<CompilationResult>(), JvmCompilationOperation, JvmCompilationOperation.Builder,
     DeepCopyable<JvmCompilationOperationImpl> {
 
@@ -79,12 +80,14 @@ internal class JvmCompilationOperationImpl private constructor(
         destinationDirectory: Path,
         compilerArguments: JvmCompilerArgumentsImpl = JvmCompilerArgumentsImpl(JvmCompilerArgumentValueAdapter.getOrNull()),
         buildIdToSessionFlagFile: MutableMap<ProjectId, File>,
+        compilerVersion: String,
     ) : this(
         options = Options(JvmCompilationOperation::class),
         sources = sources,
         destinationDirectory = destinationDirectory,
         compilerArguments = compilerArguments,
-        buildIdToSessionFlagFile = buildIdToSessionFlagFile
+        buildIdToSessionFlagFile = buildIdToSessionFlagFile,
+        compilerVersion = compilerVersion,
     ) {
         initializeOptions(this::class, options)
     }
@@ -97,7 +100,8 @@ internal class JvmCompilationOperationImpl private constructor(
             sources,
             destinationDirectory,
             compilerArguments.deepCopy(),
-            buildIdToSessionFlagFile
+            buildIdToSessionFlagFile,
+            compilerVersion,
         )
     }
 
@@ -456,6 +460,7 @@ internal class JvmCompilationOperationImpl private constructor(
                 "monotonousIncrementalCompileSetExpansion" to "${aggregatedIcConfigurationOptions[MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION]}",
                 "usePreciseJavaTracking" to "$verifiedPreciseJavaTracking",
                 "kotlinSourceFileExtensions" to kotlinFilenameExtensions.sorted().joinToString(","),
+                "kotlinVersion" to compilerVersion,
             ),
             compilerArguments.toCompilationInputs(),
         )
