@@ -17,13 +17,13 @@ repositories {
 
 android {
     namespace "org.jetbrains.kotlin.android.tests"
-    compileSdkVersion 28
+    compileSdkVersion 23
     buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "org.jetbrains.kotlin.android.tests"
-        minSdkVersion 28
-        targetSdkVersion 28
+        minSdkVersion 23
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testApplicationId "org.jetbrains.kotlin.android.tests.gradle"
@@ -33,17 +33,6 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    packagingOptions {
-        // Exclude license files that collide between JUnit 5 modules
-        resources {
-            excludes += "/META-INF/LICENSE.md"
-            excludes += "/META-INF/LICENSE-notice.md"
-            // Also exclude the platform properties if they are already in the classpath
-            // or merge them if you have multiple property files.
-            pickFirsts += "junit-platform.properties"
         }
     }
 

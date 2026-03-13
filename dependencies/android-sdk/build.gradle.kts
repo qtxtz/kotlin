@@ -233,6 +233,8 @@ androidBuildTools("33.0.1")
 androidBuildTools("34.0.0")
 androidBuildTools("35.0.0")
 
+// SDK artifacts are unpacked manually instead of using sdkmanager (recommended way),
+// so required package metadata (package.xml) is missing. Write the metadata manually.
 unzipSdkTask("emulator-$toolsOsDarwinArch", emulatorVersion, "", "") { emulatorDir ->
     emulatorDir.resolve("emulator/package.xml").writeText(
         """
@@ -266,7 +268,7 @@ unzipSdkTask("emulator-$toolsOsDarwinArch", emulatorVersion, "", "") { emulatorD
         """.trimMargin()
     )
 }
-unzipSdkTask("arm64-v8a", "28", "system-images/android-28/default", "r02", prepareTask = prepareEmulator) { systemImageBaseDir ->
+unzipSdkTask("arm64-v8a", "23", "system-images/android-23/default", "r07", prepareTask = prepareEmulator) { systemImageBaseDir ->
     systemImageBaseDir.resolve("arm64-v8a/package.xml").writeText(
         """
         |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -274,9 +276,9 @@ unzipSdkTask("arm64-v8a", "28", "system-images/android-28/default", "r02", prepa
         |               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         |               xmlns:ns12="http://schemas.android.com/sdk/android/repo/sys-img2/04">
         |  <license id="android-sdk-license" type="text">See android-sdk-license in SDK licenses directory.</license>
-        |  <localPackage path="system-images;android-28;default;arm64-v8a" obsolete="false">
+        |  <localPackage path="system-images;android-23;default;arm64-v8a" obsolete="false">
         |    <type-details xsi:type="ns12:sysImgDetailsType">
-        |      <api-level>28</api-level>
+        |      <api-level>23</api-level>
         |      <base-extension>true</base-extension>
         |      <tag>
         |        <id>default</id>
@@ -286,7 +288,7 @@ unzipSdkTask("arm64-v8a", "28", "system-images/android-28/default", "r02", prepa
         |      <abis>arm64-v8a</abis>
         |    </type-details>
         |    <revision>
-        |      <major>2</major>
+        |      <major>7</major>
         |    </revision>
         |    <display-name>ARM 64 v8a System Image</display-name>
         |    <uses-license ref="android-sdk-license"/>
@@ -295,7 +297,7 @@ unzipSdkTask("arm64-v8a", "28", "system-images/android-28/default", "r02", prepa
         """.trimMargin()
     )
 }
-unzipSdkTask("x86_64", "28", "system-images/android-28/default", "r04", prepareTask = prepareEmulator) { systemImageBaseDir ->
+unzipSdkTask("x86_64", "23", "system-images/android-23/default", "r10", prepareTask = prepareEmulator) { systemImageBaseDir ->
     systemImageBaseDir.resolve("package.xml").delete()
     systemImageBaseDir.resolve("x86_64/package.xml").writeText(
         """
@@ -304,9 +306,9 @@ unzipSdkTask("x86_64", "28", "system-images/android-28/default", "r04", prepareT
         |               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         |               xmlns:ns12="http://schemas.android.com/sdk/android/repo/sys-img2/04">
         |  <license id="android-sdk-license" type="text">See android-sdk-license in SDK licenses directory.</license>
-        |  <localPackage path="system-images;android-28;default;x86_64" obsolete="false">
+        |  <localPackage path="system-images;android-23;default;x86_64" obsolete="false">
         |    <type-details xsi:type="ns12:sysImgDetailsType">
-        |      <api-level>28</api-level>
+        |      <api-level>23</api-level>
         |      <base-extension>true</base-extension>
         |      <tag>
         |        <id>default</id>
@@ -316,7 +318,7 @@ unzipSdkTask("x86_64", "28", "system-images/android-28/default", "r04", prepareT
         |      <abis>x86_64</abis>
         |    </type-details>
         |    <revision>
-        |      <major>4</major>
+        |      <major>10</major>
         |    </revision>
         |    <display-name>Intel x86_64 Atom System Image</display-name>
         |    <uses-license ref="android-sdk-license"/>
