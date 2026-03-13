@@ -153,7 +153,7 @@ class FirCallCompleter(
         completionMode: ConstraintSystemCompletionMode,
     ): T where T : FirResolvable, T : FirExpression {
         return when {
-            !candidate.isSyntheticCallForTopLevelLambda() && !candidate.isSyntheticCallForTopLevelCL() -> {
+            !candidate.isSyntheticCallForTopLevelLambda() && !candidate.isSyntheticCallForTopLevelCollectionLiteral() -> {
                 this
             }
             else -> {
@@ -168,7 +168,7 @@ class FirCallCompleter(
                 transformSingle(
                     createCompletionResultsWriter(
                         finalSubstitutor,
-                        mode = if (candidate.isSyntheticCallForTopLevelCL()) {
+                        mode = if (candidate.isSyntheticCallForTopLevelCollectionLiteral()) {
                             FirCallCompletionResultsWriterTransformer.Mode.TopLevelSyntheticCallInPclaCompletion
                         } else {
                             FirCallCompletionResultsWriterTransformer.Mode.Normal
@@ -181,7 +181,7 @@ class FirCallCompleter(
     }
 
     private fun Candidate.isSyntheticCallForTopLevelLambda(): Boolean = callInfo.callSite is FirAnonymousFunctionExpression
-    private fun Candidate.isSyntheticCallForTopLevelCL(): Boolean {
+    private fun Candidate.isSyntheticCallForTopLevelCollectionLiteral(): Boolean {
         return symbol is FirSyntheticFunctionSymbol && callInfo.callSite is FirCollectionLiteral
     }
 
