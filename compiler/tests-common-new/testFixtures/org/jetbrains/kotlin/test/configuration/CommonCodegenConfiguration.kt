@@ -10,13 +10,7 @@ import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.FIR_DUMP
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.RENDER_FIR_DECLARATION_ATTRIBUTES
 
 fun TestConfigurationBuilder.commonCodegenConfiguration() {
-    configureEvaluateTests()
-}
-
-/**
- * Enables FIR dump for tests inside `compiler/testData/codegen/box/evaluate`
- */
- fun TestConfigurationBuilder.configureEvaluateTests() {
+    // Enables FIR dump for tests inside `compiler/testData/codegen/box/evaluate`
     forTestsMatching("compiler/testData/codegen/box(?:Jvm)?/evaluate/*") {
         defaultDirectives {
             +FIR_DUMP
@@ -24,3 +18,4 @@ fun TestConfigurationBuilder.commonCodegenConfiguration() {
         }
     }
 }
+

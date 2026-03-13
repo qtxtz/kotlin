@@ -5,10 +5,7 @@
 
 package org.jetbrains.kotlin.test
 
-import org.jetbrains.kotlin.konan.test.Fir2IrCliNativeFacade
-import org.jetbrains.kotlin.konan.test.FirCliNativeFacade
 import org.jetbrains.kotlin.konan.test.KlibSerializerNativeCliFacade
-import org.jetbrains.kotlin.konan.test.NativePreSerializationLoweringCliFacade
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.computeBlackBoxTestInstances
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.createTestRunSettings
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.getOrCreateTestRunProvider
@@ -84,12 +81,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                 ::NativeFirstStageEnvironmentConfigurator,
             )
 
-            commonConfigurationForNativeFirstStageUpToSerialization(
-                FrontendKinds.FIR,
-                ::FirCliNativeFacade,
-                ::Fir2IrCliNativeFacade,
-                ::NativePreSerializationLoweringCliFacade,
-            )
+            commonConfigurationForNativeFirstStageUpToSerialization()
 
             // 1st stage (sources -> klibs)
             useAdditionalSourceProviders(
