@@ -85,6 +85,7 @@ class ManagedTestAssertionsTest {
         actual: String?,
         mode: TestDataManagerMode = TestDataManagerMode.UPDATE,
         extension: String = ".txt",
+        sanitizer: (String) -> String = { it }
     ) {
         ManagedTestAssertions.assertEqualsToTestDataFile(
             testDataPath = tempDir.resolve(testDataFileName),
@@ -92,6 +93,7 @@ class ManagedTestAssertionsTest {
             variantChain = variantChain,
             extension = extension,
             mode = mode,
+            sanitizer = sanitizer
         )
     }
 
@@ -104,6 +106,18 @@ class ManagedTestAssertionsTest {
         runAssertion(variantChain = emptyList(), actual = "new content", mode = TestDataManagerMode.UPDATE)
 
         assertFileState("test.txt: new content")
+        // No exception thrown
+    }
+
+    @Test
+    fun `UPDATE mode - golden creates file with sanitizer`() {
+        setupFiles()  // No expected files
+
+        runAssertion(variantChain = emptyList(), actual = "new content", mode = TestDataManagerMode.UPDATE) {
+            "sanitized $it"
+        }
+
+        assertFileState("test.txt: sanitized new content") // text.txt is created with sanitized content
         // No exception thrown
     }
 
@@ -131,6 +145,30 @@ class ManagedTestAssertionsTest {
     }
 
     @Test
+    fun `UPDATE mode - mismatch updates file with sanitizer`() {
+        setupFiles("test.txt" to "old")
+
+        runAssertion(variantChain = emptyList(), actual = "new", mode = TestDataManagerMode.UPDATE) {
+            "sanitized $it"
+        }
+
+        assertFileState("test.txt: sanitized new") // test.txt contains new sanitized content
+        // No exception thrown
+    }
+
+    @Test
+    fun `UPDATE mode - mismatch ignores with sanitizer`() {
+        setupFiles("test.txt" to "old")
+
+        runAssertion(variantChain = emptyList(), actual = "new", mode = TestDataManagerMode.UPDATE) {
+            it.replace("new", "old")
+        }
+
+        assertFileState("test.txt: old") // test.txt stayed the same
+        // No exception thrown
+    }
+
+    @Test
     fun `UPDATE mode - redundant deletes silently`() {
         setupFiles(
             "test.txt" to "same",
@@ -150,6 +188,21 @@ class ManagedTestAssertionsTest {
         runAssertion(variantChain = listOf("js"), actual = "content", mode = TestDataManagerMode.UPDATE)
 
         assertFileState("test.js.txt: content")
+    }
+
+    @Test
+    fun `UPDATE mode - redundant deletes with sanitizer`() {
+        setupFiles(
+            "test.txt" to "Same",
+            "test.js.txt" to "same"
+        )
+
+        runAssertion(variantChain = listOf("js"), actual = "same", mode = TestDataManagerMode.UPDATE) {
+            it.uppercase()
+        }
+
+        assertFileState("test.txt: Same")  // js.txt deleted, original file stayed untouched
+        // No exception thrown
     }
 
     // ========== CHECK mode tests ==========
@@ -181,6 +234,20 @@ class ManagedTestAssertionsTest {
     }
 
     @Test
+    fun `CHECK mode - golden missing creates and throws with sanitizer`() {
+        setupFiles()  // No expected files
+
+        val ex = assertThrows<AssertionFailedError> {
+            runAssertion(variantChain = emptyList(), actual = "content", mode = TestDataManagerMode.CHECK) {
+                "sanitized $it"
+            }
+        }
+
+        assertFileState("test.txt: sanitized content")  // File was created with sanitized content
+        assertTrue(ex.message!!.startsWith("Expected data file did not exist, created: "))
+    }
+
+    @Test
     fun `CHECK mode - redundant deletes and throws`() {
         setupFiles(
             "test.txt" to "same",
@@ -196,11 +263,41 @@ class ManagedTestAssertionsTest {
     }
 
     @Test
+    fun `CHECK mode - redundant deletes and throws with sanitizer`() {
+        setupFiles(
+            "test.txt" to "Same",
+            "test.js.txt" to "same"
+        )
+
+        val ex = assertThrows<AssertionFailedError> {
+            runAssertion(variantChain = listOf("js"), actual = "same", mode = TestDataManagerMode.CHECK) {
+                it.uppercase()
+            }
+        }
+
+        assertFileState("test.txt: Same") // js.txt deleted, original file stayed untouched
+        assertTrue(ex.message!!.contains("Deleted"))
+    }
+
+    @Test
     fun `CHECK mode - mismatch throws without updating`() {
         setupFiles("test.txt" to "expected")
 
         assertThrows<AssertionFailedError> {
             runAssertion(variantChain = emptyList(), actual = "actual", mode = TestDataManagerMode.CHECK)
+        }
+
+        assertFileState("test.txt: expected")  // File unchanged
+    }
+
+    @Test
+    fun `CHECK mode - mismatch throws without updating with sanitizer`() {
+        setupFiles("test.txt" to "expected")
+
+        assertThrows<AssertionFailedError> {
+            runAssertion(variantChain = emptyList(), actual = "actual", mode = TestDataManagerMode.CHECK) {
+                "sanitized $it"
+            }
         }
 
         assertFileState("test.txt: expected")  // File unchanged
@@ -213,6 +310,18 @@ class ManagedTestAssertionsTest {
         runAssertion(variantChain = emptyList(), actual = "content", mode = TestDataManagerMode.CHECK)
 
         assertFileState("test.txt: content")
+        // No exception thrown
+    }
+
+    @Test
+    fun `CHECK mode - content matches passes with sanitizer`() {
+        setupFiles("test.txt" to "Same")
+
+        runAssertion(variantChain = emptyList(), actual = "same", mode = TestDataManagerMode.CHECK) {
+            it.uppercase()
+        }
+
+        assertFileState("test.txt: Same")
         // No exception thrown
     }
 
@@ -360,7 +469,7 @@ class ManagedTestAssertionsTest {
         for ((input, expected) in inputs) {
             assertEquals(
                 expected,
-                ManagedTestAssertions.normalizeContent(input),
+                ManagedTestAssertions.normalizeContent(input) { it },
                 "Input: ${input.replace("\r", "\\r").replace("\n", "\\n")}"
             )
         }
@@ -383,6 +492,20 @@ class ManagedTestAssertionsTest {
     }
 
     @Test
+    fun `UPDATE mode - compound extension - golden creates file with sanitizer`() {
+        setupFiles()  // No expected files
+
+        runAssertion(variantChain = emptyList(), actual = "content", extension = ".pretty.txt") {
+            "sanitized $it"
+        }
+
+        assertFileState(
+            fileNames = listOf("test.pretty.txt"),
+            expected = "test.pretty.txt: sanitized content"
+        ) // Created with sanitized content
+    }
+
+    @Test
     fun `UPDATE mode - compound extension - mismatch updates file`() {
         setupFiles("test.pretty.txt" to "old")
 
@@ -392,6 +515,20 @@ class ManagedTestAssertionsTest {
             fileNames = listOf("test.pretty.txt"),
             expected = "test.pretty.txt: new"
         )
+    }
+
+    @Test
+    fun `UPDATE mode - compound extension - mismatch updates file with sanitizer`() {
+        setupFiles("test.pretty.txt" to "old")
+
+        runAssertion(variantChain = emptyList(), actual = "new", extension = ".pretty.txt") {
+            "sanitized $it"
+        }
+
+        assertFileState(
+            fileNames = listOf("test.pretty.txt"),
+            expected = "test.pretty.txt: sanitized new"
+        ) // Updated with sanitized content
     }
 
     @Test
@@ -406,6 +543,23 @@ class ManagedTestAssertionsTest {
         assertFileState(
             fileNames = listOf("test.pretty.txt", "test.js.pretty.txt"),
             expected = "test.pretty.txt: same"  // js.pretty.txt deleted
+        )
+    }
+
+    @Test
+    fun `UPDATE mode - compound extension - redundant deletes with sanitizer`() {
+        setupFiles(
+            "test.pretty.txt" to "Same",
+            "test.js.pretty.txt" to "same"
+        )
+
+        runAssertion(variantChain = listOf("js"), actual = "same", extension = ".pretty.txt") {
+            it.uppercase()
+        }
+
+        assertFileState(
+            fileNames = listOf("test.pretty.txt", "test.js.pretty.txt"),
+            expected = "test.pretty.txt: Same"  // js.pretty.txt deleted, original stayed untouched
         )
     }
 
@@ -445,6 +599,23 @@ class ManagedTestAssertionsTest {
     }
 
     @Test
+    fun `CHECK mode - compound extension - golden missing creates and throws with sanitizer`() {
+        setupFiles()  // No expected files
+
+        val ex = assertThrows<AssertionFailedError> {
+            runAssertion(variantChain = emptyList(), actual = "content", extension = ".pretty.txt", mode = TestDataManagerMode.CHECK) {
+                "sanitized $it"
+            }
+        }
+
+        assertFileState(
+            fileNames = listOf("test.pretty.txt"),
+            expected = "test.pretty.txt: sanitized content"
+        )
+        assertTrue(ex.message!!.contains("did not exist"))
+    }
+
+    @Test
     fun `CHECK mode - compound extension - mismatch throws without updating`() {
         setupFiles("test.pretty.txt" to "expected")
 
@@ -472,6 +643,26 @@ class ManagedTestAssertionsTest {
         assertFileState(
             fileNames = listOf("test.pretty.txt", "test.js.pretty.txt"),
             expected = "test.pretty.txt: same"  // js.pretty.txt deleted
+        )
+        assertTrue(ex.message!!.contains("Deleted"))
+    }
+
+    @Test
+    fun `CHECK mode - compound extension - redundant deletes and throws with sanitizer`() {
+        setupFiles(
+            "test.pretty.txt" to "Same",
+            "test.js.pretty.txt" to "same"
+        )
+
+        val ex = assertThrows<AssertionFailedError> {
+            runAssertion(variantChain = listOf("js"), actual = "same", extension = ".pretty.txt", mode = TestDataManagerMode.CHECK) {
+                it.uppercase()
+            }
+        }
+
+        assertFileState(
+            fileNames = listOf("test.pretty.txt", "test.js.pretty.txt"),
+            expected = "test.pretty.txt: Same"  // js.pretty.txt deleted
         )
         assertTrue(ex.message!!.contains("Deleted"))
     }

@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.analysis.test.data.manager
 import org.jetbrains.kotlin.analysis.test.data.manager.ManagedTestAssertions.handleMissingFile
 import org.jetbrains.kotlin.analysis.test.data.manager.ManagedTestAssertions.isGoldenTest
 import org.jetbrains.kotlin.analysis.test.data.manager.ManagedTestAssertions.normalizeContent
-import org.jetbrains.kotlin.analysis.test.data.manager.ManagedTestAssertions.trackUpdatedPaths
 import org.jetbrains.kotlin.analysis.test.data.manager.ManagedTestAssertions.updatedTestDataPaths
 import org.jetbrains.kotlin.test.util.convertLineSeparators
 import org.jetbrains.kotlin.test.util.trimTrailingWhitespacesAndAddNewlineAtEOF
@@ -102,6 +101,7 @@ object ManagedTestAssertions {
      * @param variantChain chain of variant identifiers from [ManagedTest.variantChain]
      * @param extension file extension for expected files (e.g., ".txt")
      * @param mode test data manager mode (defaults to [TestDataManagerMode.currentMode])
+     * @param sanitizer optional sanitizer, applied to both actual and expected content.
      * @throws AssertionFailedError on mismatch, missing file, or redundant file
      */
     fun assertEqualsToTestDataFile(
@@ -110,7 +110,8 @@ object ManagedTestAssertions {
         variantChain: TestVariantChain,
         extension: String,
         mode: TestDataManagerMode = TestDataManagerMode.currentMode,
-    ): Unit = context(TestDataContext.build(testDataPath, variantChain, extension, mode)) {
+        sanitizer: (String) -> String = { it },
+    ): Unit = context(TestDataContext.build(testDataPath, variantChain, extension, mode, sanitizer)) {
         assertEqualsToTestDataFile(actual)
     }
 
@@ -292,6 +293,9 @@ object ManagedTestAssertions {
     private fun preserveEofNewline(normalizedContent: String, existingContent: String): String =
         if (!existingContent.endsWith("\n")) normalizedContent.trimEnd('\n') else normalizedContent
 
-    internal fun normalizeContent(content: String): String =
-        content.trim().convertLineSeparators().trimTrailingWhitespacesAndAddNewlineAtEOF()
+    context(context: TestDataContext)
+    private fun normalizeContent(content: String): String = normalizeContent(content, context.sanitizer)
+
+    internal fun normalizeContent(content: String, sanitizer: (String) -> String): String =
+        content.trim().convertLineSeparators().trimTrailingWhitespacesAndAddNewlineAtEOF().let(sanitizer)
 }

@@ -19,9 +19,10 @@ class TestDataContextTest {
         expectedReadable: String,
         expectedWriteTarget: String,
         extension: String = ".txt",
+        sanitizer: (String) -> String = { it },
     ) {
         val testDataPath = tempDir.resolve("test.kt")
-        val context = TestDataContext.build(testDataPath, prefixes, extension, TestDataManagerMode.CHECK)
+        val context = TestDataContext.build(testDataPath, prefixes, extension, TestDataManagerMode.CHECK, sanitizer)
         val actualReadable = context.readableFiles.joinToString(", ") { it.fileName.toString() }
         assertEquals(expectedReadable, actualReadable)
         assertEquals(expectedWriteTarget, context.writeTargetFile.fileName.toString())

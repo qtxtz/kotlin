@@ -39,6 +39,9 @@ internal class TestDataContext private constructor(
 
     /** The test data manager mode for this assertion. */
     val mode: TestDataManagerMode,
+
+    /** The sanitizer function to be applied to both expect and actual contents. */
+    val sanitizer: (String) -> String
 ) {
     /** The most specific file — always the target for write operations (create, update, delete). */
     val writeTargetFile: Path
@@ -58,6 +61,7 @@ internal class TestDataContext private constructor(
             variantChain: TestVariantChain,
             extension: String,
             mode: TestDataManagerMode,
+            sanitizer: (String) -> String
         ): TestDataContext {
             val baseName = testDataPath.nameWithoutExtension
             val directory = testDataPath.parent
@@ -71,7 +75,7 @@ internal class TestDataContext private constructor(
                 add(directory.resolve("$baseName$ext"))
             }
 
-            return TestDataContext(testDataPath, readableFiles, variantChain, mode)
+            return TestDataContext(testDataPath, readableFiles, variantChain, mode, sanitizer)
         }
     }
 }
