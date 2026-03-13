@@ -115,7 +115,7 @@ class ProblemsApiCompilerMessageRendererTest {
     }
 
     @Test
-    fun `replay delegates buffered diagnostics for each severity`() {
+    fun `replay delegates all diagnostics to reporter`() {
         val reporter = RecordingCompilerDiagnosticsProblemsReporter()
         val renderer = ProblemsApiCompilerMessageRenderer()
 
