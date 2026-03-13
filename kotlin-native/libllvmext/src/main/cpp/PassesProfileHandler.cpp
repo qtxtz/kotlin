@@ -4,14 +4,14 @@
 
 #include "PassesProfileHandler.h"
 
+#include "llvm/ADT/StringMap.h"
+#include "llvm/ADT/Twine.h"
+
 #include <chrono>
 #include <sstream>
 
-#include <llvm/ADT/StringMap.h>
-#include <llvm/ADT/Twine.h>
-#include <llvm/Support/Error.h>
-
 using namespace llvm;
+using namespace llvm::kotlin;
 
 using Clock = std::chrono::system_clock;
 
@@ -27,11 +27,9 @@ struct PassesProfileHandler::Event {
   Event &operator=(Event &&) = default;
 };
 
-namespace {
-
 using Event = PassesProfileHandler::Event;
 
-void Finalize(StringMapEntry<Event> &Entry, StringRef P) {
+static void Finalize(StringMapEntry<Event> &Entry, StringRef P) {
   auto Pass = Entry.getKey();
   if (P != Pass) {
     report_fatal_error(Twine("Mismatched event finalization. Expected pass ") +
@@ -42,8 +40,8 @@ void Finalize(StringMapEntry<Event> &Entry, StringRef P) {
   Event.StartedAt = Clock::time_point();
 }
 
-void Dump(const StringMapEntry<Event> &Entry, std::ostream &Out,
-          std::vector<const StringMapEntry<Event> *> &Parents) {
+static void Dump(const StringMapEntry<Event> &Entry, std::ostream &Out,
+                 std::vector<const StringMapEntry<Event> *> &Parents) {
   for (const auto *E : Parents) {
     Out << std::string_view(E->getKey()) << '.';
   }
@@ -57,22 +55,20 @@ void Dump(const StringMapEntry<Event> &Entry, std::ostream &Out,
   Parents.pop_back();
 }
 
-} // namespace
-
-PassesProfileHandler::PassesProfileHandler(bool enabled) : enabled_(enabled) {}
+PassesProfileHandler::PassesProfileHandler(bool Enabled) : Enabled(Enabled) {}
 
 PassesProfileHandler::~PassesProfileHandler() = default;
 
 PassesProfile PassesProfileHandler::serialize() const {
-  if (!pending_events_stack_.empty()) {
+  if (!PendingEventsStack.empty()) {
     report_fatal_error(Twine("Mismatched event finalization. Pending event "
                              "stack is not empty ") +
-                       Twine(pending_events_stack_.size()));
+                       Twine(PendingEventsStack.size()));
   }
 
   std::stringstream Out;
   std::vector<const StringMapEntry<Event> *> Parents;
-  for (const auto &E : roots_) {
+  for (const auto &E : Roots) {
     Dump(E, Out, Parents);
   }
   return PassesProfile{Out.str()};
@@ -80,9 +76,9 @@ PassesProfile PassesProfileHandler::serialize() const {
 
 void PassesProfileHandler::registerCallbacks(
     PassInstrumentationCallbacks &PIC) {
-  if (!enabled_) {
+  if (!Enabled)
     return;
-  }
+
   PIC.registerBeforeNonSkippedPassCallback(
       [this](StringRef P, Any IR) { runBeforePass(P); });
   PIC.registerAfterPassCallback(
@@ -100,25 +96,24 @@ void PassesProfileHandler::registerCallbacks(
 }
 
 void PassesProfileHandler::runBeforePass(StringRef P) {
-  auto &Map = pending_events_stack_.empty()
-                  ? roots_
-                  : pending_events_stack_.back()->second.Children;
+  auto &Map = PendingEventsStack.empty()
+                  ? Roots
+                  : PendingEventsStack.back()->second.Children;
   auto [It, _] = Map.try_emplace(P);
   auto &Entry = *It;
-  pending_events_stack_.push_back(&Entry);
+  PendingEventsStack.push_back(&Entry);
   Entry.getValue().StartedAt = Clock::now();
 }
 
 void PassesProfileHandler::runAfterPass(StringRef P) {
-  Finalize(*pending_events_stack_.back(), P);
-  pending_events_stack_.pop_back();
+  Finalize(*PendingEventsStack.back(), P);
+  PendingEventsStack.pop_back();
 }
 
-extern "C" const char *
-LLVMKotlinPassesProfileAsString(LLVMKotlinPassesProfileRef P) {
+const char *LLVMKotlinPassesProfileAsString(LLVMKotlinPassesProfileRef P) {
   return unwrap(P)->SerializedProfile.c_str();
 }
 
-extern "C" void LLVMKotlinDisposePassesProfile(LLVMKotlinPassesProfileRef P) {
+void LLVMKotlinDisposePassesProfile(LLVMKotlinPassesProfileRef P) {
   delete unwrap(P);
 }

@@ -23,4 +23,4 @@ void LLVMKotlinDisposePassesProfile(LLVMKotlinPassesProfileRef P);
 
 LLVM_C_EXTERN_C_END
 
-#endif // LIBLLVMEXT_PASSES_PROFILE_H
+#endif

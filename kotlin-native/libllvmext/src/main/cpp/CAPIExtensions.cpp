@@ -1,26 +1,24 @@
-//
-// Created by Sergey.Bogolepov on 24.03.2022.
-//
+// Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language
+// contributors. Use of this source code is governed by the Apache 2.0 license
+// that can be found in the license/LICENSE.txt file.
 
-#include <CAPIExtensions.h>
-#include <llvm/IR/Module.h>
-#include <llvm/Passes/PassBuilder.h>
-#include <llvm/Passes/StandardInstrumentations.h>
-#include <llvm/Support/CommandLine.h>
-#include <llvm/Support/Error.h>
-#include <llvm/Transforms/Utils/Cloning.h>
+#include "CAPIExtensions.h"
 
 #include "PassesProfileHandler.h"
 
+#include "llvm/IR/Module.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/StandardInstrumentations.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Support/Error.h"
+#include "llvm/Transforms/Utils/Cloning.h"
+
 using namespace llvm;
+using namespace llvm::kotlin;
 
-namespace {
-
-TargetMachine *unwrap(LLVMTargetMachineRef P) {
+static TargetMachine *unwrap(LLVMTargetMachineRef P) {
   return reinterpret_cast<TargetMachine *>(P);
 }
-
-} // namespace
 
 void LLVMKotlinInitializeTargets() {
 #define INIT_LLVM_TARGET(TargetName)                                           \
@@ -35,13 +33,13 @@ void LLVMKotlinInitializeTargets() {
 #undef INIT_LLVM_TARGET
 }
 
-void LLVMSetNoTailCall(LLVMValueRef Call) {
+void LLVMKotlinSetNoTailCall(LLVMValueRef Call) {
   unwrap<CallInst>(Call)->setTailCallKind(CallInst::TCK_NoTail);
 }
 
-int LLVMInlineCall(LLVMValueRef call) {
+int LLVMKotlinInlineCall(LLVMValueRef Call) {
   InlineFunctionInfo IFI;
-  return InlineFunction(*unwrap<CallBase>(call), IFI).isSuccess();
+  return InlineFunction(*unwrap<CallBase>(Call), IFI).isSuccess();
 }
 
 namespace {
@@ -110,12 +108,11 @@ private:
 
 } // namespace
 
-extern "C" LLVMErrorRef LLVMKotlinRunPasses(LLVMModuleRef M, const char *Passes,
-                                            LLVMTargetMachineRef TM,
-                                            int InlinerThreshold,
-                                            LLVMKotlinPassesProfileRef *Profile,
-                                            const char *SaveIRAfterPasses,
-                                            const char *SaveIRDirectory) {
+LLVMErrorRef LLVMKotlinRunPasses(LLVMModuleRef M, const char *Passes,
+                                 LLVMTargetMachineRef TM, int InlinerThreshold,
+                                 LLVMKotlinPassesProfileRef *Profile,
+                                 const char *SaveIRAfterPasses,
+                                 const char *SaveIRDirectory) {
   // Implementation is taken from
   // https://github.com/Kotlin/llvm-project/blob/0fa53d5183ec3c0654631d719dd6dfa7a270ca98/llvm/lib/Passes/PassBuilderBindings.cpp#L47
   TargetMachine *Machine = unwrap(TM);

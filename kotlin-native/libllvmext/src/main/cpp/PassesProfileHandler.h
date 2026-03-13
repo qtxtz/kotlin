@@ -4,17 +4,18 @@
 
 #pragma once
 
+#include "PassesProfile.h"
+
+#include "llvm/ADT/StringMap.h"
+#include "llvm/ADT/StringMapEntry.h"
+#include "llvm/ADT/StringRef.h"
+#include "llvm/IR/PassInstrumentation.h"
+#include "llvm/Support/CBindingWrapping.h"
+
 #include <string>
 #include <vector>
 
-#include <PassesProfile.h>
-#include <llvm/ADT/StringMap.h>
-#include <llvm/ADT/StringMapEntry.h>
-#include <llvm/ADT/StringRef.h>
-#include <llvm/IR/PassInstrumentation.h>
-#include <llvm/Support/CBindingWrapping.h>
-
-namespace llvm {
+namespace llvm::kotlin {
 
 struct PassesProfile {
   std::string SerializedProfile;
@@ -26,7 +27,7 @@ class PassesProfileHandler {
 public:
   struct Event;
 
-  explicit PassesProfileHandler(bool enabled);
+  explicit PassesProfileHandler(bool Enabled);
   ~PassesProfileHandler();
 
   PassesProfileHandler(const PassesProfileHandler &) = delete;
@@ -34,7 +35,7 @@ public:
   PassesProfileHandler &operator=(const PassesProfileHandler &) = delete;
   PassesProfileHandler &operator=(PassesProfileHandler &&) = delete;
 
-  bool enabled() const { return enabled_; }
+  bool isEnabled() const { return Enabled; }
 
   PassesProfile serialize() const;
 
@@ -44,9 +45,9 @@ private:
   void runBeforePass(StringRef P);
   void runAfterPass(StringRef P);
 
-  bool enabled_ = false;
-  StringMap<Event> roots_;
-  std::vector<StringMapEntry<Event> *> pending_events_stack_;
+  bool Enabled = false;
+  StringMap<Event> Roots;
+  std::vector<StringMapEntry<Event> *> PendingEventsStack;
 };
 
-} // namespace llvm
+} // namespace llvm::kotlin
