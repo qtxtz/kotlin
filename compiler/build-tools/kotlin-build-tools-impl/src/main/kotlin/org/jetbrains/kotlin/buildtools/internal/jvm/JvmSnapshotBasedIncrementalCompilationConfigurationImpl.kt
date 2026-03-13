@@ -10,6 +10,7 @@ package org.jetbrains.kotlin.buildtools.internal.jvm
 import org.jetbrains.kotlin.buildtools.api.SourcesChanges
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompilationConfiguration
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompilationOptions
+import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompilationOptions.Option
 import org.jetbrains.kotlin.buildtools.internal.BaseOptionWithDefault
 import org.jetbrains.kotlin.buildtools.internal.DeepCopyable
 import org.jetbrains.kotlin.buildtools.internal.Options
@@ -145,6 +146,8 @@ internal class JvmSnapshotBasedIncrementalCompilationOptionsImpl internal constr
             Option("UNSAFE_INCREMENTAL_COMPILATION_FOR_MULTIPLATFORM", false)
 
         val MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION: Option<Boolean> = Option("MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION", false)
+
+        val TRACK_CONFIGURATION_INPUTS: Option<Boolean> = Option("TRACK_CONFIGURATION_INPUTS", false)
     }
 }
 

@@ -253,6 +253,27 @@ public open class JvmSnapshotBasedIncrementalCompilationConfiguration
         @JvmField
         @ExperimentalCompilerArgument
         public val MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION: Option<Boolean> = Option("MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION")
+
+        /**
+         * Controls whether configuration inputs should be tracked to automatically trigger a full recompilation
+         * when changes are detected in compiler arguments or incremental compilation settings that affect the compilation result.
+         *
+         * When this feature is active, the system monitors changes to compiler arguments and
+         * incremental compilation settings to determine if the previous compilation state remains valid.
+         * If a change is detected that could compromise the integrity of the build, the system
+         * automatically triggers a full (non-incremental) recompilation to ensure a correct
+         * and consistent output.
+         *
+         * The system specifically tracks:
+         * * **Compiler arguments** that impact the final compilation result.
+         * * **Incremental configuration options** that define how changes are processed.
+         *
+         * This option will have no effect when used with compiler versions below 2.4.0.
+         *
+         * @since 2.4.0
+         */
+        @JvmField
+        public val TRACK_CONFIGURATION_INPUTS: Option<Boolean> = Option("TRACK_CONFIGURATION_INPUTS")
     }
 }
 

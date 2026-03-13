@@ -53,6 +53,7 @@ class JvmSnapshotBasedIncrementalCompilationConfigurationDefaultsTest {
             false,
             icConfiguration[JvmSnapshotBasedIncrementalCompilationConfiguration.MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION]
         )
+        assertEquals(false, icConfiguration[JvmSnapshotBasedIncrementalCompilationConfiguration.TRACK_CONFIGURATION_INPUTS])
     }
 }
 

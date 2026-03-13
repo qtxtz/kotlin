@@ -36,6 +36,7 @@ import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalC
 import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl.Companion.OUTPUT_DIRS
 import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl.Companion.PRECISE_JAVA_TRACKING
 import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl.Companion.ROOT_PROJECT_DIR
+import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl.Companion.TRACK_CONFIGURATION_INPUTS
 import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl.Companion.UNSAFE_INCREMENTAL_COMPILATION_FOR_MULTIPLATFORM
 import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl.Companion.USE_FIR_RUNNER
 import org.jetbrains.kotlin.buildtools.internal.jvm.toOptions
@@ -450,20 +451,24 @@ internal class JvmCompilationOperationImpl private constructor(
         val fileLocations = if (projectDir != null && buildDir != null) {
             FileLocations(projectDir, buildDir)
         } else null
-        val configurationInputs = ConfigurationInputs(
-            mapOf(
-                "rootProjectDir" to "${aggregatedIcConfigurationOptions[ROOT_PROJECT_DIR]}",
-                "moduleBuildDir" to "${aggregatedIcConfigurationOptions[MODULE_BUILD_DIR]}",
-                "outputDirs" to "${aggregatedIcConfigurationOptions[OUTPUT_DIRS]}",
-                "useFirRunner" to "${aggregatedIcConfigurationOptions[USE_FIR_RUNNER]}",
-                "unsafeIncrementalCompilationForMultiplatform" to "${aggregatedIcConfigurationOptions[UNSAFE_INCREMENTAL_COMPILATION_FOR_MULTIPLATFORM]}",
-                "monotonousIncrementalCompileSetExpansion" to "${aggregatedIcConfigurationOptions[MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION]}",
-                "usePreciseJavaTracking" to "$verifiedPreciseJavaTracking",
-                "kotlinSourceFileExtensions" to kotlinFilenameExtensions.sorted().joinToString(","),
-                "kotlinVersion" to compilerVersion,
-            ),
-            compilerArguments.toCompilationInputs(),
-        )
+        val configurationInputs = if (aggregatedIcConfigurationOptions[TRACK_CONFIGURATION_INPUTS]) {
+            ConfigurationInputs(
+                mapOf(
+                    "rootProjectDir" to "${aggregatedIcConfigurationOptions[ROOT_PROJECT_DIR]}",
+                    "moduleBuildDir" to "${aggregatedIcConfigurationOptions[MODULE_BUILD_DIR]}",
+                    "outputDirs" to "${aggregatedIcConfigurationOptions[OUTPUT_DIRS]}",
+                    "useFirRunner" to "${aggregatedIcConfigurationOptions[USE_FIR_RUNNER]}",
+                    "unsafeIncrementalCompilationForMultiplatform" to "${aggregatedIcConfigurationOptions[UNSAFE_INCREMENTAL_COMPILATION_FOR_MULTIPLATFORM]}",
+                    "monotonousIncrementalCompileSetExpansion" to "${aggregatedIcConfigurationOptions[MONOTONOUS_INCREMENTAL_COMPILE_SET_EXPANSION]}",
+                    "usePreciseJavaTracking" to "$verifiedPreciseJavaTracking",
+                    "kotlinSourceFileExtensions" to kotlinFilenameExtensions.sorted().joinToString(","),
+                    "kotlinVersion" to compilerVersion,
+                ),
+                compilerArguments.toCompilationInputs(),
+            )
+        } else {
+            null
+        }
         val compilationResult = incrementalCompiler.compile(
             kotlinSources, arguments, loggerAdapter, sourcesChanges.asChangedFiles, fileLocations, configurationInputs,
         ).asCompilationResult
