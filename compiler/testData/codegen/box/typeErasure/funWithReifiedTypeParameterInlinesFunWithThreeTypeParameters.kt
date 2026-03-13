@@ -2,6 +2,9 @@
 // WITH_STDLIB
 // WITH_REFLECT
 // NO_CHECK_LAMBDA_INLINING
+// Android tests put the file into different package
+// IGNORE_BACKEND: ANDROID
+
 // FILE: lib.kt
 import kotlin.reflect.typeOf
 

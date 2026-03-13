@@ -1,6 +1,4 @@
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
-//  ^ D8 merges method references with empty closure created by 'invokedynamic'
 
 fun checkNotEqual(marker: String, x: Any, y: Any) {
     if (x == y || y == x) throw AssertionError("$marker: $x and $y should NOT be equal")

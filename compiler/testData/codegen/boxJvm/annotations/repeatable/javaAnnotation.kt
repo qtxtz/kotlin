@@ -4,9 +4,6 @@
 // FULL_JDK
 // JVM_TARGET: 1.8
 
-// java.lang.NoSuchMethodError: java.lang.Class.getAnnotationsByType
-// IGNORE_BACKEND: ANDROID
-
 // FILE: box.kt
 
 import test.A

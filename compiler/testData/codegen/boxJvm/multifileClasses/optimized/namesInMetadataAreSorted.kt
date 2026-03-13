@@ -1,4 +1,5 @@
 // TARGET_BACKEND: JVM
+// The test is moved to another package in android tests
 // IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 // INHERIT_MULTIFILE_PARTS

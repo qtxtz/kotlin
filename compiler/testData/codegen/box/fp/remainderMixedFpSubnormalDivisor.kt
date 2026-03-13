@@ -1,4 +1,7 @@
 // WITH_STDLIB
+// fp behavior differs on ART-based emulators
+// IGNORE_BACKEND: ANDROID
+
 import kotlin.math.abs
 
 private fun isPosZero(x: Double) = x == 0.0 && 1.0 / x == Double.POSITIVE_INFINITY

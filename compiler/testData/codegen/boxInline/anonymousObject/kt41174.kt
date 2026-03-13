@@ -1,8 +1,11 @@
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 // FULL_JDK
 // JVM_TARGET: 1.8
+
+// NoSuchMethodError: java.util.List.stream
+// IGNORE_BACKEND: ANDROID
+
 // FILE: 1.kt
 
 inline fun foo(crossinline init: (String) -> String): String =

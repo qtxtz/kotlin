@@ -1,7 +1,7 @@
 // TARGET_BACKEND: JVM
 // LAMBDAS: CLASS
 
-// has declaring class on Android 4.4
+// has declaring class on Android
 // IGNORE_BACKEND: ANDROID
 
 // WITH_STDLIB

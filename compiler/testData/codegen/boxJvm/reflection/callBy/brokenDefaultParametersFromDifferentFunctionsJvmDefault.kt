@@ -2,6 +2,9 @@
 // WITH_REFLECT
 // JVM_DEFAULT_MODE: no-compatibility
 
+// KRIE: This callable does not support a default call
+// IGNORE_BACKEND: ANDROID
+
 import kotlin.test.assertEquals
 import kotlin.reflect.full.instanceParameter
 

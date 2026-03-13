@@ -1,7 +1,6 @@
 // TARGET_BACKEND: JVM
 // ISSUE: KT-53761
 // WITH_STDLIB
-// IGNORE_BACKEND: ANDROID
 
 import kotlin.test.assertEquals
 

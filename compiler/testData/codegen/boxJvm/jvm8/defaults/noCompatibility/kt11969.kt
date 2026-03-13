@@ -1,5 +1,6 @@
 // JVM_DEFAULT_MODE: no-compatibility
 // TARGET_BACKEND: JVM
+// The test is moved to another package in android tests
 // IGNORE_BACKEND: ANDROID
 // JVM_TARGET: 1.8
 // WITH_STDLIB

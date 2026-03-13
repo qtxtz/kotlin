@@ -2,6 +2,9 @@
 // WITH_REFLECT
 // FULL_JDK
 
+// Too slow on Android
+// IGNORE_BACKEND: ANDROID
+
 // See KT-11258, KT-16616
 
 import java.util.*

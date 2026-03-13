@@ -7,6 +7,7 @@
 // Disable test grouping as a workaround:
 // NATIVE_STANDALONE
 
+// The test is moved into another package in android tests
 // IGNORE_BACKEND: ANDROID
 
 annotation class A(val t: String = "d")

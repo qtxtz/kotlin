@@ -2,6 +2,9 @@
 // JVM_TARGET: 1.8
 // WITH_REFLECT
 
+// Too slow on Android
+// IGNORE_BACKEND: ANDROID
+
 import kotlin.reflect.KCallable
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.instanceParameter

@@ -1,6 +1,9 @@
 // TARGET_BACKEND: JVM
 // WITH_REFLECT
 
+// Too slow on Android
+// IGNORE_BACKEND: ANDROID
+
 import kotlin.reflect.KCallable
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf

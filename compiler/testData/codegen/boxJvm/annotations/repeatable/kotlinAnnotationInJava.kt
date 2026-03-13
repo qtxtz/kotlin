@@ -4,9 +4,6 @@
 // WITH_STDLIB
 // FULL_JDK
 
-// java.lang.NoSuchMethodError: java.lang.Class.getAnnotationsByType
-// IGNORE_BACKEND: ANDROID
-
 // FILE: box.kt
 
 @Repeatable

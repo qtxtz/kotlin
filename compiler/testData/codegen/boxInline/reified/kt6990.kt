@@ -1,5 +1,6 @@
 // WITH_REFLECT
 // TARGET_BACKEND: JVM
+// The test is moved to another package in android tests
 // IGNORE_BACKEND: ANDROID
 
 // FILE: 1.kt

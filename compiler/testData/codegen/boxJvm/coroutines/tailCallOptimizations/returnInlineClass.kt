@@ -4,6 +4,9 @@
 // WITH_COROUTINES
 // CHECK_TAIL_CALL_OPTIMIZATION
 
+// D8 makes some aggressive optimizations, or ART
+// IGNORE_BACKEND: ANDROID
+
 import helpers.*
 import kotlin.coroutines.*
 

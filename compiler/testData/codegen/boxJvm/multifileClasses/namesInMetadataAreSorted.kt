@@ -1,4 +1,5 @@
 // TARGET_BACKEND: JVM
+// packages are renamed in android tests
 // IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 // FILE: ccc.kt

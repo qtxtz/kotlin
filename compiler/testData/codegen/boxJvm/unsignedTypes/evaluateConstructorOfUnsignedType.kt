@@ -1,9 +1,6 @@
 // WITH_REFLECT
 // TARGET_BACKEND: JVM
 
-// TODO: it's not clear why compilation fails for Android
-// IGNORE_BACKEND: ANDROID
-
 @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "ARGUMENT_TYPE_MISMATCH")
 
 annotation class AnnoUB(val ub0: UByte, val ub1: UByte)

@@ -1,4 +1,5 @@
 // TARGET_BACKEND: JVM
+// The test is moved to another package on android
 // IGNORE_BACKEND: ANDROID
 
 // FULL_JDK

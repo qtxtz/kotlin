@@ -2,6 +2,9 @@
 // TARGET_BACKEND: JVM
 // WORKS_WHEN_VALUE_CLASS
 // LANGUAGE: +JvmInlineMultiFieldValueClasses
+// $Proxy127 cannot be cast to compiler_testData_codegen_box_inlineClasses_kclassInAnnotation_kt.test.Ann
+// IGNORE_BACKEND: ANDROID
+
 package test
 
 import kotlin.reflect.KClass

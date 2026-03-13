@@ -1,5 +1,7 @@
 // TARGET_BACKEND: JVM
 // WITH_REFLECT
+// The test is moved to another package in android tests
+// IGNORE_BACKEND: ANDROID
 
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals

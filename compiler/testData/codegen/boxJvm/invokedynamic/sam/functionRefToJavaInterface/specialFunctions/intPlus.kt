@@ -1,6 +1,6 @@
 // TARGET_BACKEND: JVM
+// INDY not implemented on minSdkVersion 23
 // IGNORE_BACKEND: ANDROID
-//  ^ uses API not implemented on minSdkVersion 19
 // WITH_STDLIB
 // JVM_TARGET: 1.8
 // FULL_JDK

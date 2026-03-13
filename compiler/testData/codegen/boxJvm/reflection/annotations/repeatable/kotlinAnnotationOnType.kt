@@ -4,10 +4,6 @@
 // FULL_JDK
 // WITH_REFLECT
 
-// Test failed to run to completion. Reason: 'Instrumentation run failed due to 'Native crash''. Check device logcat for details
-// Because TYPE_USE is not avaiable before API level 26
-// IGNORE_BACKEND: ANDROID
-
 import kotlin.annotation.AnnotationTarget.*
 import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.full.findAnnotation

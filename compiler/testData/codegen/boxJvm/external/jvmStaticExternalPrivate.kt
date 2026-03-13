@@ -1,4 +1,5 @@
 // TARGET_BACKEND: JVM
+// No implementation found for void compiler_testData_codegen_box_external_jvmStaticExternalPrivate_kt.C.foo()
 // IGNORE_BACKEND: ANDROID
 
 // WITH_STDLIB

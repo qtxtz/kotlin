@@ -2,6 +2,10 @@
 // TARGET_BACKEND: JVM
 // WORKS_WHEN_VALUE_CLASS
 // LANGUAGE: +JvmInlineMultiFieldValueClasses, +GenericInlineClassParameter
+
+// The test is moved to another package is android tests
+// IGNORE_BACKEND: ANDROID
+
 package test
 
 import kotlin.reflect.KClass

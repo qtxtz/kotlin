@@ -1,7 +1,9 @@
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 // JVM_TARGET: 1.8
 // FULL_JDK
+
+// NCDF: java.util.Optional
+// IGNORE_BACKEND: ANDROID
 
 import java.util.Optional
 

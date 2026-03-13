@@ -2,6 +2,8 @@
 // FULL_JDK
 // WITH_STDLIB
 // JVM_TARGET: 1.8
+
+// No interface method stream()
 // IGNORE_BACKEND: ANDROID
 
 import java.util.stream.Collectors

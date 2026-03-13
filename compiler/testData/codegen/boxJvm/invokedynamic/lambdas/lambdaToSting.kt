@@ -3,9 +3,6 @@
 // LAMBDAS: INDY
 // WITH_STDLIB
 
-// desugaring on Android
-// IGNORE_BACKEND: ANDROID
-
 // CHECK_BYTECODE_TEXT
 // 1 java/lang/invoke/LambdaMetafactory
 

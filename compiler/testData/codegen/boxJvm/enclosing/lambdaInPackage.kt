@@ -1,9 +1,6 @@
 // TARGET_BACKEND: JVM
 // LAMBDAS: CLASS
 
-// has declaring class on Android 4.4
-// IGNORE_BACKEND: ANDROID
-
 // WITH_STDLIB
 
 val l: Any = {}

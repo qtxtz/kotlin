@@ -1,8 +1,8 @@
 // TARGET_BACKEND: JVM_IR
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 
-// For some reason, the tests fails on Android. Might be caused by obfuscation.
+// The test fails for android because the test is moved to another package
+// IGNORE_BACKEND: ANDROID
 
 class C<T> {
     open inner class I1

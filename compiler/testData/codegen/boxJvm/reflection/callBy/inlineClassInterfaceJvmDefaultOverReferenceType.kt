@@ -1,6 +1,8 @@
 // TARGET_BACKEND: JVM_IR
 // WITH_REFLECT
 // JVM_DEFAULT_MODE: no-compatibility
+
+// FRIE: This callable does not support a default call
 // IGNORE_BACKEND: ANDROID
 
 import kotlin.test.assertEquals

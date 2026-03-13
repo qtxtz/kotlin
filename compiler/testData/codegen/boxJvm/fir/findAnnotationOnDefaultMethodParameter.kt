@@ -2,7 +2,6 @@
 // WITH_REFLECT
 // FULL_JDK
 // SKIP_JDK6
-// IGNORE_BACKEND: ANDROID
 
 fun box(): String {
     val impl = object : I {

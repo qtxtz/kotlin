@@ -1,6 +1,9 @@
 // TARGET_BACKEND: JVM_IR
 // WITH_REFLECT
 
+// Too slow on Android
+// IGNORE_BACKEND: ANDROID
+
 import kotlin.reflect.KCallable
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.instanceParameter

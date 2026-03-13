@@ -1,4 +1,5 @@
 // WITH_REFLECT
+// The test is moved to another package in android tests
 // IGNORE_BACKEND: ANDROID
 class A
 

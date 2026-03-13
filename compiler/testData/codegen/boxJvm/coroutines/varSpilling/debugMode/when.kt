@@ -2,6 +2,9 @@
 // FULL_JDK
 // TARGET_BACKEND: JVM
 
+// R8 has much more aggressive optimizations, that do not account for visibility
+// IGNORE_BACKEND: ANDROID
+
 import kotlin.coroutines.*
 import kotlin.coroutines.intrinsics.*
 

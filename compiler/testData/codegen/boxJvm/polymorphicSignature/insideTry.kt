@@ -2,6 +2,9 @@
 // WITH_STDLIB
 // FULL_JDK
 
+// MethodHandle.invoke and MethodHandle.invokeExact are only supported starting with Android O (--min-api 26)
+// IGNORE_BACKEND: ANDROID
+
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 

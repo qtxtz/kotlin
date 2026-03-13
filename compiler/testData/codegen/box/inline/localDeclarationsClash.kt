@@ -1,4 +1,5 @@
 // IGNORE_BACKEND_K2_MULTI_MODULE: JS_IR, WASM_JS, JVM_IR_SERIALIZE
+// `import I` is not properly supported in package renaming in android tests generator
 // IGNORE_BACKEND: ANDROID
 // FILE: 1.kt
 

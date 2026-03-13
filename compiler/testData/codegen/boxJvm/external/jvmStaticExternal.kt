@@ -1,4 +1,5 @@
 // TARGET_BACKEND: JVM
+// No implementation found for double compiler_testData_codegen_box_external_jvmStaticExternal_kt.foo.WithNative.bar(long, java.lang.String)
 // IGNORE_BACKEND: ANDROID
 
 // WITH_STDLIB
