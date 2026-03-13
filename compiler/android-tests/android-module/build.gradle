@@ -2,31 +2,32 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
-    dependencies {        
-        classpath 'com.android.tools.build:gradle:4.1.2'
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
 }
 apply plugin: 'com.android.application'
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "29.0.3"
+    namespace "org.jetbrains.kotlin.android.tests"
+    compileSdkVersion 28
+    buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "org.jetbrains.kotlin.android.tests"
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 28
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testApplicationId "org.jetbrains.kotlin.android.tests.gradle"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "org.jetbrains.kotlin.android.tests.KotlinBoxInstrumentation"
     }
     buildTypes {
         debug {
@@ -35,14 +36,15 @@ android {
         }
     }
 
-    packagingOptions { exclude 'META-INF/build.txt' }
-
-
-    dexOptions {
-        dexInProcess false
-        javaMaxHeapSize "1500m"
-        maxProcessCount 4
-        additionalParameters "--debug"
+    packagingOptions {
+        // Exclude license files that collide between JUnit 5 modules
+        resources {
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
+            // Also exclude the platform properties if they are already in the classpath
+            // or merge them if you have multiple property files.
+            pickFirsts += "junit-platform.properties"
+        }
     }
 
     testOptions {
@@ -50,8 +52,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     flavorDimensions "box"
@@ -70,6 +72,10 @@ android {
         }
 
         common3 {
+            dimension "box"
+        }
+
+        common4 {
             dimension "box"
         }
 
@@ -96,8 +102,6 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['kotlin-test.jar', 'kotlin-stdlib.jar'])
-    androidTestImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 
     android.applicationVariants.all { variant ->
         variant.productFlavors.each {

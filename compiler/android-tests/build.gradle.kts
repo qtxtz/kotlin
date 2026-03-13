@@ -39,6 +39,10 @@ sourceSets {
 
 optInToK1Deprecation()
 
+val acceptAndroidSdkLicenses = with(androidSdkProvisioner) {
+    project.registerAcceptLicensesTask()
+}
+
 projectTests {
     testTask(jUnitMode = JUnitMode.JUnit4) {
         develocity {
@@ -46,7 +50,8 @@ projectTests {
         }
 
         dependsOn(":dist")
-        val jdkHome = project.getToolchainJdkHomeFor(JdkMajorVersion.JDK_1_8)
+        dependsOn(acceptAndroidSdkLicenses)
+        val jdkHome = project.getToolchainJdkHomeFor(JdkMajorVersion.JDK_17_0)
         doFirst {
             environment("kotlin.tests.android.timeout", "45")
             environment("JAVA_HOME", jdkHome.get())
