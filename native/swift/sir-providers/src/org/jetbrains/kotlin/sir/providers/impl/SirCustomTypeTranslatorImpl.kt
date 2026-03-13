@@ -41,8 +41,10 @@ import org.jetbrains.kotlin.sir.CFunctionBridge
 import org.jetbrains.kotlin.sir.KotlinFunctionBridge
 import org.jetbrains.kotlin.sir.SirArrayType
 import org.jetbrains.kotlin.sir.SirDictionaryType
+import org.jetbrains.kotlin.sir.SirExistentialType
 import org.jetbrains.kotlin.sir.SirFunctionBridge
 import org.jetbrains.kotlin.sir.SirNominalType
+import org.jetbrains.kotlin.sir.SirOptionalType
 import org.jetbrains.kotlin.sir.SirType
 import org.jetbrains.kotlin.sir.providers.SirCustomTypeTranslator
 import org.jetbrains.kotlin.sir.providers.SirSession
@@ -85,6 +87,7 @@ public class SirCustomTypeTranslatorImpl(
 
                 isClassType(StandardClassIds.Set) -> {
                     val swiftArgumentType = typeArguments.single().sirType(ctx.copy(requiresHashableAsAny = true))
+                    if (swiftArgumentType.containsExistential()) return null
                     swiftType = SirNominalType(
                         SirSwiftModule.set,
                         listOf(swiftArgumentType)
@@ -94,6 +97,7 @@ public class SirCustomTypeTranslatorImpl(
 
                 isClassType(StandardClassIds.Map) -> {
                     val swiftKeyType = typeArguments.first().sirType(ctx.copy(requiresHashableAsAny = true))
+                    if (swiftKeyType.containsExistential()) return null
                     val swiftValueType = typeArguments.last().sirType(ctx)
                     swiftType = SirDictionaryType(swiftKeyType, swiftValueType)
                     AsNSDictionary(
@@ -321,6 +325,12 @@ public class SirCustomTypeTranslatorImpl(
                 )
             )
         }
+    }
+
+    private fun SirType.containsExistential(): Boolean = when (this) {
+        is SirExistentialType -> true
+        is SirOptionalType -> wrappedType.containsExistential()
+        else -> false
     }
 
     public companion object {

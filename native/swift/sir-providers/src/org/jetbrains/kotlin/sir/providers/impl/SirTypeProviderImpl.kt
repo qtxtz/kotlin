@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.analysis.api.symbols.KaClassSymbol
 import org.jetbrains.kotlin.analysis.api.symbols.KaTypeAliasSymbol
 import org.jetbrains.kotlin.analysis.api.types.*
 import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.sir.*
 import org.jetbrains.kotlin.sir.providers.*
 import org.jetbrains.kotlin.sir.providers.SirTypeProvider.ErrorTypeStrategy
@@ -82,8 +83,9 @@ public class SirTypeProviderImpl(
 
                         else -> {
                             if (sirSession.isClassIdSupported(kaType.classId)) {
-                                val customBridge = kaType.toSirTypeBridge(ctx)?.bridge?.swiftType
-                                if (customBridge != null) return@withSessions customBridge.optionalIfNeeded(kaType)
+                                val bridgeWrapper = kaType.toSirTypeBridge(ctx)
+                                if (bridgeWrapper != null) return@withSessions bridgeWrapper.bridge.swiftType.optionalIfNeeded(kaType)
+                                if (kaType.classId in COLLECTION_CLASS_IDS) return@withSessions SirUnsupportedType
                             }
 
                             // Intercept Flow<T> for typed generic wrapping in covariant position
@@ -280,6 +282,8 @@ public class SirTypeProviderImpl(
             SHARED_FLOW_CLASS_ID, MUTABLE_SHARED_FLOW_CLASS_ID,
             STATE_FLOW_CLASS_ID, MUTABLE_STATE_FLOW_CLASS_ID,
         )
+
+        val COLLECTION_CLASS_IDS = setOf(StandardClassIds.Set, StandardClassIds.Map, StandardClassIds.List)
     }
 }
 
