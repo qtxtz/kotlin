@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 @TestMetadata("compiler/testData/codegen/box")
 @TestDataPath("$PROJECT_ROOT")
 @UseDummyTestCaseGroupProvider()
-class MyNativeCodegenBoxTestGenerated extends AbstractMyNativeTwoPhaseTest {
+class MyNativeCodegenBoxTestManuallyWritten extends AbstractMyNativeTwoPhaseTest {
     @Nested
     @TestMetadata("compiler/testData/codegen/box/arrays")
     @TestDataPath("$PROJECT_ROOT")
