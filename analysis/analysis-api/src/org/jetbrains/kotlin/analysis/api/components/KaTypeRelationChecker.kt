@@ -6,10 +6,7 @@
 package org.jetbrains.kotlin.analysis.api.components
 
 import org.jetbrains.kotlin.analysis.api.KaContextParameterApi
-import org.jetbrains.kotlin.analysis.api.KaExperimentalApi
-import org.jetbrains.kotlin.analysis.api.KaK1Unsupported
 import org.jetbrains.kotlin.analysis.api.KaSession
-import org.jetbrains.kotlin.analysis.api.symbols.KaCallableSymbol
 import org.jetbrains.kotlin.analysis.api.symbols.KaClassLikeSymbol
 import org.jetbrains.kotlin.analysis.api.types.KaType
 import org.jetbrains.kotlin.name.ClassId
@@ -87,16 +84,6 @@ public interface KaTypeRelationChecker : KaSessionComponent {
         symbol: KaClassLikeSymbol,
         errorTypePolicy: KaSubtypingErrorTypePolicy = KaSubtypingErrorTypePolicy.STRICT,
     ): Boolean
-
-
-    /**
-     * Returns whether the given [receiverType] can be used as an extension receiver for [this].
-     *
-     * If [this] is not an extension callable, the result is `false`.
-     */
-    @KaExperimentalApi
-    @KaK1Unsupported
-    public fun KaCallableSymbol.canBeCalledAsExtensionOn(receiverType: KaType): Boolean
 }
 
 /**
@@ -238,24 +225,6 @@ public fun KaType.isSubtypeOf(
         isSubtypeOf(
             symbol = symbol,
             errorTypePolicy = errorTypePolicy,
-        )
-    }
-}
-
-/**
- * Returns whether the given [receiverType] can be used as an extension receiver for [this].
- *
- * If [this] is not an extension callable, the result is `false`.
- */
-// Auto-generated bridge. DO NOT EDIT MANUALLY!
-@KaExperimentalApi
-@KaK1Unsupported
-@KaContextParameterApi
-context(session: KaSession)
-public fun KaCallableSymbol.canBeCalledAsExtensionOn(receiverType: KaType): Boolean {
-    return with(session) {
-        canBeCalledAsExtensionOn(
-            receiverType = receiverType,
         )
     }
 }

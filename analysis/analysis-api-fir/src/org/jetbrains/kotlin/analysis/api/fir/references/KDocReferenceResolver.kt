@@ -8,10 +8,7 @@ package org.jetbrains.kotlin.analysis.api.fir.references
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.analysis.api.KaSession
-import org.jetbrains.kotlin.analysis.api.components.KaScopeKind
-import org.jetbrains.kotlin.analysis.api.components.defaultType
-import org.jetbrains.kotlin.analysis.api.components.deprecationStatus
-import org.jetbrains.kotlin.analysis.api.components.isSubtypeOf
+import org.jetbrains.kotlin.analysis.api.components.*
 import org.jetbrains.kotlin.analysis.api.fir.references.KDocReferenceResolver.getContextElementOrSelf
 import org.jetbrains.kotlin.analysis.api.fir.references.KDocReferenceResolver.getLongestExistingPackageScope
 import org.jetbrains.kotlin.analysis.api.fir.references.KDocReferenceResolver.getNestedScopePossiblyContainingShortName
@@ -705,10 +702,17 @@ internal object KDocReferenceResolver {
         if (possibleExtensionsByScope.flatten().isEmpty() || possibleReceivers.isEmpty()) return emptyList()
 
         return possibleReceivers.mapNotNull { receiverClassSymbol ->
-            val receiverType = receiverClassSymbol.defaultType
+            val actualReceiverType = receiverClassSymbol.defaultType
             possibleExtensionsByScope.firstNotNullOfOrNull { extensions ->
-                extensions.filter { it.canBeCalledAsExtensionOn(receiverType) }
-                    .toResolveResults(receiverClassReference = receiverClassSymbol).ifEmpty { null }
+                extensions.filter { callable ->
+                    if (!callable.isExtension) return@filter false
+                    val expectedReceiverType = callable.receiverType ?: return@filter false
+                    createUnificationSubstitutor(
+                        actualReceiverType,
+                        expectedReceiverType,
+                        KaUnificationSubstitutorPolicy.EXISTENTIAL
+                    ) != null
+                }.toResolveResults(receiverClassReference = receiverClassSymbol).ifEmpty { null }
             }
         }.flatten()
     }

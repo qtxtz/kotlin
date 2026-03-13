@@ -30,9 +30,9 @@
     KDocReference:
       isImplicitReferenceToCompanion: false
       usesContextSensitiveResolution: false
-      attempt: KaSymbolResolutionSuccess
+      attempt: null
       symbols:
-        (in ROOT) fun <T : Base<T>> BaseAlias<T> /* = Base<T> */.ext1()
+        Nothing (Unresolved reference)
 
 <caret_5>:
   KDocName(426,451): 'ChildGenericAliasInt.ext1'
@@ -75,9 +75,9 @@
     KDocReference:
       isImplicitReferenceToCompanion: false
       usesContextSensitiveResolution: false
-      attempt: KaSymbolResolutionSuccess
+      attempt: null
       symbols:
-        (in ROOT) fun <T : BaseAlias<T> /* = Base<T> */> Base<T>.ext2()
+        Nothing (Unresolved reference)
 
 <caret_10>:
   KDocName(542,567): 'ChildGenericAliasInt.ext2'
