@@ -245,6 +245,7 @@ val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLe
         name = "Xir-dce-print-reachability-info"
         description = "Print reachability information about declarations to 'stdout' while performing DCE.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_4_0,

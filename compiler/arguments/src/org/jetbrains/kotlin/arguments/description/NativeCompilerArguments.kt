@@ -134,6 +134,7 @@ val actualNativeArguments by compilerArgumentsLevel(CompilerArgumentsLevelNames.
         deprecatedName = "list_targets"
         description = "List available hardware targets.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_5_20,
@@ -593,6 +594,7 @@ Currently this option is disabled by default on other platforms.""".asReleaseDep
 The default value is 1.""".asReleaseDependent()
         valueType = IntType.defaultOne
         valueDescription = "<N>".asReleaseDependent()
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_9_0,
@@ -616,6 +618,7 @@ The default value is 1.""".asReleaseDependent()
         deprecatedName = "-print_bitcode"
         description = "Print LLVM bitcode.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_5_20,
@@ -638,6 +641,7 @@ The default value is 1.""".asReleaseDependent()
         deprecatedName = "-print_ir"
         description = "Print IR.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_5_20,
@@ -648,6 +652,7 @@ The default value is 1.""".asReleaseDependent()
         name = "Xprint-files"
         description = "Print files.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_5_20,
@@ -728,6 +733,7 @@ The default value is 1.""".asReleaseDependent()
         description = "Save temporary files to the given directory.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "<path>".asReleaseDependent()
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_5_20,

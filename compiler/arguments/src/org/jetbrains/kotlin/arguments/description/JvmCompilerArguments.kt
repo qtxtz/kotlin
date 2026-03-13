@@ -240,6 +240,7 @@ to force diagnostics to be reported.""".asReleaseDependent()
 The default value is 1.""".asReleaseDependent()
         valueType = IntType.defaultOne
         valueDescription = "<N>".asReleaseDependent()
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_6_20,
@@ -771,6 +772,7 @@ The default value is 'indy' if language version is 2.0+, and 'class' otherwise."
         valueType = StringType.defaultNull
         valueDescription = "<profilerPath:command:outputDir>".asReleaseDependent()
         argumentType = ProfileCompilerCommandType
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_4_20,

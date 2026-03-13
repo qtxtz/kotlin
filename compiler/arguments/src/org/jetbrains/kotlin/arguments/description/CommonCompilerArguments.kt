@@ -170,6 +170,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         name = "Xreport-output-files"
         description = "Report the source-to-output file mapping.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_1_3,
@@ -300,6 +301,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         name = "Xreport-perf"
         description = "Report detailed performance statistics.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_2_50,
@@ -312,6 +314,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
                 "For Native, the performance report includes execution time and lines processed per second for every individual lowering.\n" +
                 "For WASM and JS, the performance report includes execution time and lines per second for each lowering of the first stage of compilation.").asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v2_3_0,
@@ -326,6 +329,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
                     "Example: `path/to/dir/*.log` creates logs like `path/to/dir/my-module_2025-06-20-12-22-32.log` in plain text format, `path/to/dir/` creates logs like `path/to/dir/my-log_2025-06-20-12-22-32.json`.").asReleaseDependent()
         valueDescription = "<path>".asReleaseDependent()
         valueType = StringType.defaultNull
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_2_50,
@@ -338,6 +342,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         description = "Dump compilation model to specified directory for use in modularized tests.".asReleaseDependent()
         valueDescription = "<dir>".asReleaseDependent()
         valueType = StringType.defaultNull
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_7_0,
@@ -375,6 +380,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         name = "Xlist-phases"
         description = "List backend phases.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_20,
@@ -401,6 +407,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         description = "Be verbose while performing the given backend phases.".asReleaseDependent()
         valueType = StringArrayType.defaultNull
         argumentType = StringListType.defaultEmpty
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_20,
@@ -414,6 +421,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         description = "Dump the backend's state before these phases.".asReleaseDependent()
         valueType = StringArrayType.defaultNull
         argumentType = StringListType.defaultEmpty
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_20,
@@ -427,6 +435,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         description = "Dump the backend's state after these phases.".asReleaseDependent()
         valueType = StringArrayType.defaultNull
         argumentType = StringListType.defaultEmpty
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_20,
@@ -440,6 +449,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         description = "Dump the backend's state both before and after these phases.".asReleaseDependent()
         valueType = StringArrayType.defaultNull
         argumentType = StringListType.defaultEmpty
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_20,
@@ -451,6 +461,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         name = "Xdump-directory"
         description = "Dump the backend state into this directory.".asReleaseDependent()
         valueType = StringType.defaultNull
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_50,
@@ -463,6 +474,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         compilerName = "dumpOnlyFqName"
         description = "Dump the declaration with the given FqName.".asReleaseDependent()
         valueType = StringType.defaultNull
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_50,
@@ -551,6 +563,7 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
         name = "Xprofile-phases"
         description = "Profile backend phases.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_20,
@@ -914,6 +927,7 @@ Kotlin reports a warning every time you use one of them. You can use this flag t
         name = "Xreport-all-warnings"
         description = "Report all warnings even if errors are found.".asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v2_0_0,
@@ -1301,6 +1315,7 @@ Warning: this flag is not intended for production use. If you want to configure 
             Print compiler configuration.
         """.trimIndent().asReleaseDependent()
         valueType = BooleanType.defaultFalse
+        affectsCompilationOutcome = false
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v2_4_0

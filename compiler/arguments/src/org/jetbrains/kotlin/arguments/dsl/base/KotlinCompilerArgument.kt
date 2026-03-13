@@ -19,6 +19,7 @@ import kotlin.properties.ReadOnlyProperty
  * The description text may have a different value for different Kotlin releases,
  * see [ReleaseDependent] on how to define the description for older versions.
  * @param delimiter if an argument accepts a list of file paths - defines an accepted delimiter between these paths.
+ * @param affectsCompilationOutcome if the argument affects the compilation outcome (e.g. affects the generated code).
  * @param valueType the argument value type.
  * @param valueDescription describes which values are accepted by the argument.
  * The description text may have a different value for different Kotlin releases,
@@ -37,6 +38,7 @@ data class KotlinCompilerArgument(
     val deprecatedName: String? = null,
     val description: ReleaseDependent<String>,
     val delimiter: Delimiter?,
+    val affectsCompilationOutcome: Boolean = true,
 
     val valueType: KotlinArgumentValueType<*>,
     val valueDescription: ReleaseDependent<String?> = null.asReleaseDependent(),
@@ -119,6 +121,11 @@ internal class KotlinCompilerArgumentBuilder {
     var delimiter: KotlinCompilerArgument.Delimiter? = null
 
     /**
+     * @see KotlinCompilerArgument.affectsCompilationOutcome
+     */
+    var affectsCompilationOutcome: Boolean = true
+
+    /**
      * @see KotlinCompilerArgument.releaseVersionsMetadata
      */
     private lateinit var releaseVersionsMetadata: KotlinReleaseVersionLifecycle
@@ -168,6 +175,7 @@ internal class KotlinCompilerArgumentBuilder {
         additionalAnnotations = additionalAnnotations,
         compilerName = compilerName,
         delimiter = delimiter,
+        affectsCompilationOutcome = affectsCompilationOutcome,
     )
 }
 
