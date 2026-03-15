@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -49,6 +49,7 @@ import org.jetbrains.kotlin.fir.resolve.ResolutionMode
 import org.jetbrains.kotlin.fir.resolve.calls.OverloadCandidate
 import org.jetbrains.kotlin.fir.resolve.diagnostics.ConeAmbiguityError
 import org.jetbrains.kotlin.fir.resolve.diagnostics.ConeUnmatchedTypeArgumentsError
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.resolve.referencedMemberSymbol
 import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
@@ -530,6 +531,12 @@ private class ElementsToShortenCollector(
     val typesToShorten: MutableList<ShortenType> = mutableListOf()
     val qualifiersToShorten: MutableList<ShortenQualifier> = mutableListOf()
     val labelsToShorten: MutableList<ShortenThisLabel> = mutableListOf()
+
+    private val contextSensitiveResolutionIsEnabled: Boolean
+        get() {
+            val languageVersionSettings = shorteningContext.analysisSession.firSession.languageVersionSettings
+            return languageVersionSettings.supportsFeature(LanguageFeature.ContextSensitiveResolutionUsingExpectedType)
+        }
 
     fun processTypeRef(resolvedTypeRef: FirResolvedTypeRef) {
         val typeElement = resolvedTypeRef.correspondingTypePsi ?: return
@@ -1173,6 +1180,15 @@ private class ElementsToShortenCollector(
 
         val option = callableShortenStrategy(propertySymbol)
         if (option == ShortenStrategy.DO_NOT_SHORTEN) return
+
+        if (
+            contextSensitiveResolutionIsEnabled &&
+            shortenOptions.removeContextSensitiveResolutionQualifiers &&
+            firPropertyAccess.isResolvableByContextSensitiveResolution
+        ) {
+            addElementToShorten(createElementToShorten(qualifiedProperty))
+            return
+        }
 
         shortenIfAlreadyImportedAsAlias(qualifiedProperty, propertySymbol.callableId?.asSingleFqName())?.let {
             addElementToShorten(it)
