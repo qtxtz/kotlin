@@ -843,6 +843,56 @@ public class FirIdeNormalAnalysisSourceModuleReferenceShortenerTestGenerated ext
   }
 
   @Nested
+  @TestMetadata("analysis/analysis-api/testData/components/referenceShortener/shortenRange/contextSensitiveResolution")
+  @TestDataPath("$PROJECT_ROOT")
+  public class ContextSensitiveResolution {
+    private void run(String fileName) {
+      runTest("analysis/analysis-api/testData/components/referenceShortener/shortenRange/contextSensitiveResolution/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInContextSensitiveResolution() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("analysis/analysis-api/testData/components/referenceShortener/shortenRange/contextSensitiveResolution"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("enumEntry.kt")
+    public void testEnumEntry() {
+      run("enumEntry.kt");
+    }
+
+    @Test
+    @TestMetadata("enumEntryFeatureDisabled.kt")
+    public void testEnumEntryFeatureDisabled() {
+      run("enumEntryFeatureDisabled.kt");
+    }
+
+    @Test
+    @TestMetadata("enumEntryInEquality.kt")
+    public void testEnumEntryInEquality() {
+      run("enumEntryInEquality.kt");
+    }
+
+    @Test
+    @TestMetadata("enumEntryInVariable.kt")
+    public void testEnumEntryInVariable() {
+      run("enumEntryInVariable.kt");
+    }
+
+    @Test
+    @TestMetadata("enumEntryInWhen.kt")
+    public void testEnumEntryInWhen() {
+      run("enumEntryInWhen.kt");
+    }
+
+    @Test
+    @TestMetadata("enumEntryNotApplicable.kt")
+    public void testEnumEntryNotApplicable() {
+      run("enumEntryNotApplicable.kt");
+    }
+  }
+
+  @Nested
   @TestMetadata("analysis/analysis-api/testData/components/referenceShortener/shortenRange/nestedClasses")
   @TestDataPath("$PROJECT_ROOT")
   public class NestedClasses {

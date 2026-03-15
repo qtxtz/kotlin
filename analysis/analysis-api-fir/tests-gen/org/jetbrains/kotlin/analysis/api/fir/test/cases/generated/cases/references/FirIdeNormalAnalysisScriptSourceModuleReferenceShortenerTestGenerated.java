@@ -87,6 +87,20 @@ public class FirIdeNormalAnalysisScriptSourceModuleReferenceShortenerTestGenerat
   }
 
   @Nested
+  @TestMetadata("analysis/analysis-api/testData/components/referenceShortener/shortenRange/contextSensitiveResolution")
+  @TestDataPath("$PROJECT_ROOT")
+  public class ContextSensitiveResolution {
+    private void run(String fileName) {
+      runTest("analysis/analysis-api/testData/components/referenceShortener/shortenRange/contextSensitiveResolution/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInContextSensitiveResolution() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("analysis/analysis-api/testData/components/referenceShortener/shortenRange/contextSensitiveResolution"), Pattern.compile("^(.+)\\.kts$"), null, true);
+    }
+  }
+
+  @Nested
   @TestMetadata("analysis/analysis-api/testData/components/referenceShortener/shortenRange/nestedClasses")
   @TestDataPath("$PROJECT_ROOT")
   public class NestedClasses {
