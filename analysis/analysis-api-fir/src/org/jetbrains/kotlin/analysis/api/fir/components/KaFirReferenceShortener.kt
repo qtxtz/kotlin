@@ -544,7 +544,12 @@ private class ElementsToShortenCollector(
 
         val classifierId = resolvedTypeRef.coneType.abbreviatedTypeOrSelf.lowerBoundIfFlexible().candidateClassId ?: return
 
-        findClassifierQualifierToShorten(classifierId, typeElement)?.let(::addElementToShorten)
+        findClassifierQualifierToShorten(
+            classifierId,
+            typeElement,
+            // TODO: Pass correct information after CSR shortening for types is available (KT-84719, KTIJ-38225)
+            isResolvableByContextSensitiveResolution = false
+        )?.let(::addElementToShorten)
     }
 
     /**
@@ -613,7 +618,11 @@ private class ElementsToShortenCollector(
             else -> return
         }
 
-        findClassifierQualifierToShorten(wholeClassQualifier, wholeQualifierElement)?.let(::addElementToShorten)
+        findClassifierQualifierToShorten(
+            wholeClassQualifier,
+            wholeQualifierElement,
+            resolvedQualifier.isResolvableByContextSensitiveResolution
+        )?.let(::addElementToShorten)
     }
 
     private val FirClassifierSymbol<*>.classIdIfExists: ClassId?
@@ -835,11 +844,20 @@ private class ElementsToShortenCollector(
         positionScopes: List<FirScope>,
         qualifierClassId: ClassId,
         qualifierElement: KtElement,
+        isResolvableByContextSensitiveResolution: Boolean,
     ): ElementToShorten? {
         val classSymbol = shorteningContext.toClassSymbol(qualifierClassId) ?: return null
 
         val option = classShortenStrategy(classSymbol)
         if (option == ShortenStrategy.DO_NOT_SHORTEN) return null
+
+        if (
+            contextSensitiveResolutionIsEnabled &&
+            shortenOptions.removeContextSensitiveResolutionQualifiers &&
+            isResolvableByContextSensitiveResolution
+        ) {
+            return createElementToShorten(qualifierElement)
+        }
 
         // If its parent has a type parameter, we do not shorten it ATM because it will lose its type parameter. See KTIJ-26072
         if (classSymbol.hasTypeParameterFromParent()) return null
@@ -897,6 +915,7 @@ private class ElementsToShortenCollector(
     private fun findClassifierQualifierToShorten(
         wholeQualifierClassId: ClassId,
         wholeQualifierElement: KtElement,
+        isResolvableByContextSensitiveResolution: Boolean,
     ): ElementToShorten? {
         val positionScopes = shorteningContext.findScopesAtPosition(
             wholeQualifierElement,
@@ -911,7 +930,7 @@ private class ElementsToShortenCollector(
         for ((classId, element) in allClassIds.zip(allQualifiedElements)) {
             if (!element.inSelection) continue
 
-            shortenClassifierQualifier(positionScopes, classId, element)?.let { return it }
+            shortenClassifierQualifier(positionScopes, classId, element, isResolvableByContextSensitiveResolution)?.let { return it }
         }
 
         val lastQualifier = allQualifiedElements.last()

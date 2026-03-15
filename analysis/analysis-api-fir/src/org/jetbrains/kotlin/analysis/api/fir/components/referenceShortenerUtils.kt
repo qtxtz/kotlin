@@ -88,3 +88,6 @@ private fun resolvesToSameStaticMethods(
 
 internal val FirQualifiedAccessExpression.isResolvableByContextSensitiveResolution: Boolean
     get() = nonFatalDiagnostics.any { it is ContextSensitiveResolutionMightBeUsed }
+
+internal val FirResolvedQualifier.isResolvableByContextSensitiveResolution: Boolean
+    get() = nonFatalDiagnostics.any { it is ContextSensitiveResolutionMightBeUsed }
