@@ -1,5 +1,6 @@
 Before shortening: MyEnum.A
 with default settings:
+[qualifier] MyEnum.A
 with DO_NOT_SHORTEN:
 with SHORTEN_IF_ALREADY_IMPORTED:
 [qualifier] MyEnum.A

@@ -26,8 +26,10 @@ import org.jetbrains.kotlin.psi.*
 @SubclassOptInRequired(KaSessionComponentImplementationDetail::class)
 public interface KaReferenceShortener : KaSessionComponent {
     /**
-     * Collects possible references to shorten. By default, it shortens a fully-qualified members to the outermost class and does not
-     * shorten enum entries.  In case of KDoc shortens reference only if it is already imported.
+     * Collects possible references to shorten.
+     *
+     * See [defaultClassShortenStrategy] and [defaultCallableShortenStrategy]
+     * for the default shortening logic.
      *
      * N.B. This API is not implemented for the FE10 implementation!
      * For a K1- and K2-compatible API, use `org.jetbrains.kotlin.idea.base.codeInsight.ShortenReferencesFacility`.
@@ -44,8 +46,10 @@ public interface KaReferenceShortener : KaSessionComponent {
     ): ShortenCommand
 
     /**
-     * Collects possible references to shorten in [element]s text range. By default, it shortens a fully-qualified members to the outermost
-     * class and does not shorten enum entries.
+     * Collects possible references to shorten in [element]s text range.
+     *
+     * See [defaultClassShortenStrategy] and [defaultCallableShortenStrategy]
+     * for the default shortening logic.
      *
      * N.B. This API is not implemented for the FE10 implementation!
      * For a K1- and K2-compatible API, use `org.jetbrains.kotlin.idea.base.codeInsight.ShortenReferencesFacility`.
@@ -133,7 +137,7 @@ public enum class ShortenStrategy {
         @KaIdeApi
         public val defaultCallableShortenStrategy: (KaCallableSymbol) -> ShortenStrategy = { symbol ->
             when (symbol) {
-                is KaEnumEntrySymbol -> DO_NOT_SHORTEN
+                is KaEnumEntrySymbol -> SHORTEN_IF_ALREADY_IMPORTED
 
                 is KaConstructorSymbol -> {
                     val isNestedClassConstructor = symbol.containingClassId?.isNestedClass == true
@@ -216,8 +220,10 @@ public interface ShortenCommand {
 }
 
 /**
- * Collects possible references to shorten. By default, it shortens a fully-qualified members to the outermost class and does not
- * shorten enum entries.  In case of KDoc shortens reference only if it is already imported.
+ * Collects possible references to shorten.
+ *
+ * See [defaultClassShortenStrategy] and [defaultCallableShortenStrategy]
+ * for the default shortening logic.
  *
  * N.B. This API is not implemented for the FE10 implementation!
  * For a K1- and K2-compatible API, use `org.jetbrains.kotlin.idea.base.codeInsight.ShortenReferencesFacility`.
@@ -247,8 +253,10 @@ public fun collectPossibleReferenceShortenings(
 }
 
 /**
- * Collects possible references to shorten in [element]s text range. By default, it shortens a fully-qualified members to the outermost
- * class and does not shorten enum entries.
+ * Collects possible references to shorten in [element]s text range.
+ *
+ * See [defaultClassShortenStrategy] and [defaultCallableShortenStrategy]
+ * for the default shortening logic.
  *
  * N.B. This API is not implemented for the FE10 implementation!
  * For a K1- and K2-compatible API, use `org.jetbrains.kotlin.idea.base.codeInsight.ShortenReferencesFacility`.
