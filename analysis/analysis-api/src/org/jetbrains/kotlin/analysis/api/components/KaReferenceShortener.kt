@@ -68,19 +68,33 @@ public interface KaReferenceShortener : KaSessionComponent {
 /**
  * @property removeThis If set to `true`, reference shortener will detect redundant `this` qualifiers
  * and will collect them to [ShortenCommand.listOfQualifierToShortenInfo].
+ *
  * @property removeThisLabels If set to `true`, reference shortener will detect redundant labels on `this` expressions,
  * and will collect them to [ShortenCommand.thisLabelsToShorten]
+ *
+ * @property removeContextSensitiveResolutionQualifiers If set to `true`, the reference shortener will detect removable qualifiers
+ * on references that rely on context-sensitive resolution (e.g., enum entries and sealed class subobjects that can be resolved
+ * without an explicit qualifier when the expected type is known from context).
+ *
+ * This applies only when the corresponding [ShortenStrategy] is [ShortenStrategy.SHORTEN_IF_ALREADY_IMPORTED] or higher.
+ *
+ * See [org.jetbrains.kotlin.config.LanguageFeature.ContextSensitiveResolutionUsingExpectedType].
  */
 @KaIdeApi
 public data class ShortenOptions(
     public val removeThis: Boolean = false,
     public val removeThisLabels: Boolean = false,
+    public val removeContextSensitiveResolutionQualifiers: Boolean = false,
 ) {
     @KaIdeApi
     public companion object {
         public val DEFAULT: ShortenOptions = ShortenOptions()
 
-        public val ALL_ENABLED: ShortenOptions = ShortenOptions(removeThis = true, removeThisLabels = true)
+        public val ALL_ENABLED: ShortenOptions = ShortenOptions(
+            removeThis = true,
+            removeThisLabels = true,
+            removeContextSensitiveResolutionQualifiers = true,
+        )
     }
 }
 
