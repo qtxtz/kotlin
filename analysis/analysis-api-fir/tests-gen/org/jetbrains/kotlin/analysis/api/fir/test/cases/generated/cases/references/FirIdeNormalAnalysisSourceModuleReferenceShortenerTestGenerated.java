@@ -890,6 +890,30 @@ public class FirIdeNormalAnalysisSourceModuleReferenceShortenerTestGenerated ext
     public void testEnumEntryNotApplicable() {
       run("enumEntryNotApplicable.kt");
     }
+
+    @Test
+    @TestMetadata("sealedSubObject.kt")
+    public void testSealedSubObject() {
+      run("sealedSubObject.kt");
+    }
+
+    @Test
+    @TestMetadata("sealedSubObjectFeatureDisabled.kt")
+    public void testSealedSubObjectFeatureDisabled() {
+      run("sealedSubObjectFeatureDisabled.kt");
+    }
+
+    @Test
+    @TestMetadata("sealedSubObjectInVariable.kt")
+    public void testSealedSubObjectInVariable() {
+      run("sealedSubObjectInVariable.kt");
+    }
+
+    @Test
+    @TestMetadata("sealedSubObjectNotApplicable.kt")
+    public void testSealedSubObjectNotApplicable() {
+      run("sealedSubObjectNotApplicable.kt");
+    }
   }
 
   @Nested
