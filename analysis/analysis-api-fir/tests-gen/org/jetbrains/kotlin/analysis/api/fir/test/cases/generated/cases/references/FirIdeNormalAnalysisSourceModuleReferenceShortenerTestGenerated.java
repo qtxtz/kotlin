@@ -245,9 +245,27 @@ public class FirIdeNormalAnalysisSourceModuleReferenceShortenerTestGenerated ext
   }
 
   @Test
+  @TestMetadata("enumEntryAlreadyImported.kt")
+  public void testEnumEntryAlreadyImported() {
+    run("enumEntryAlreadyImported.kt");
+  }
+
+  @Test
   @TestMetadata("enumEntryConflictsWithCompanionMember.kt")
   public void testEnumEntryConflictsWithCompanionMember() {
     run("enumEntryConflictsWithCompanionMember.kt");
+  }
+
+  @Test
+  @TestMetadata("enumEntryConflictsWithParameter.kt")
+  public void testEnumEntryConflictsWithParameter() {
+    run("enumEntryConflictsWithParameter.kt");
+  }
+
+  @Test
+  @TestMetadata("enumEntryInSameClass.kt")
+  public void testEnumEntryInSameClass() {
+    run("enumEntryInSameClass.kt");
   }
 
   @Test
@@ -260,6 +278,12 @@ public class FirIdeNormalAnalysisSourceModuleReferenceShortenerTestGenerated ext
   @TestMetadata("enumEntryInitUsesCompanion2.kt")
   public void testEnumEntryInitUsesCompanion2() {
     run("enumEntryInitUsesCompanion2.kt");
+  }
+
+  @Test
+  @TestMetadata("enumEntryNotImported.kt")
+  public void testEnumEntryNotImported() {
+    run("enumEntryNotImported.kt");
   }
 
   @Test
