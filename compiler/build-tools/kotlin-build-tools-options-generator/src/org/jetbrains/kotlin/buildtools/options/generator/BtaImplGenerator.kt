@@ -131,7 +131,9 @@ internal class BtaImplGenerator(
 
                 maybeAddApplyArgumentStringsFun(level, parentClass)
                 maybeAddToArgumentsStringFun(level, parentClass)
-                generateToCompilationInputsFun(level, implClassName, parentClass)
+                if (!generateCompatLayer) {
+                    generateToCompilationInputsFun(level, implClassName, parentClass)
+                }
             }
         }.build()
         mainFile.writeTo(mainFileAppendable)
@@ -487,7 +489,7 @@ internal class BtaImplGenerator(
             annotation<Suppress> {
                 addMember("%S", "REDUNDANT_CALL_OF_CONVERSION_METHOD")
             }
-            returns(ClassName("kotlin.collections", "Map").parameterizedBy(STRING, STRING))
+            returns(ClassName("kotlin.collections", "Map").parameterizedBy(STRING, STRING.copy(nullable = true)))
 
             val body = CodeBlock.builder()
             if (parentClass != null) {
@@ -514,17 +516,13 @@ internal class BtaImplGenerator(
 
                 val member = MemberName(ClassName(targetPackage, implClassName, "Companion"), name)
 
-                val valueCode = when (argument) {
-                    is BtaCompilerArgument.SSoTCompilerArgument if argument.valueType.origin is StringArrayType ->
-                        CodeBlock.of("this@%L[%M]?.contentToString() ?: %S", implClassName, member, "null")
-                    is BtaCompilerArgument.CustomCompilerArgument -> CodeBlock.of(
-                        "this@%L[%M].%M()",
-                        implClassName,
-                        member,
-                        MemberName(targetPackage, argument.toInputSimpleName, isExtension = true)
-                    )
-                    else -> CodeBlock.of("this@%L[%M].toString()", implClassName, member)
-                }
+                val valueCode = CodeBlock.of(
+                    "this@%L[%M]%L.%M()",
+                    implClassName,
+                    member,
+                    maybeGetNullabilitySign(argument),
+                    MemberName(targetPackage, "transformToInput", isExtension = true)
+                )
 
                 val putStatement = CodeBlock.of(
                     "if (%M in this@%L) put(%M.id, %L)",

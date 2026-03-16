@@ -65,18 +65,3 @@ internal fun applyCompilerPlugins(
     }
     return normalizedCurrentValue + rawValue
 }
-
-internal fun List<CompilerPlugin>.transformCompilerPluginsToInput(): String {
-    val canonical = sortedBy { it.pluginId }.joinToString(";") { plugin ->
-        buildString {
-            append(plugin.pluginId)
-            append(":")
-            append(plugin.classpath.map { it.absolutePathStringOrThrow() }.sorted().joinToString(","))
-            append(":")
-            append(plugin.rawArguments.joinToString(",") { "${it.key}=${it.value}" })
-            append(":")
-            append(plugin.orderingRequirements.map { "${it.relation}:${it.otherPluginId}" }.sorted().joinToString(","))
-        }
-    }
-    return canonical
-}

@@ -56,7 +56,6 @@ sealed class BtaCompilerArgument<T : BtaCompilerArgumentValueType>(
         deprecatedSinceVersion: KotlinReleaseVersion?,
         removedSinceVersion: KotlinReleaseVersion?,
         val applierSimpleName: String,
-        val toInputSimpleName: String,
         val defaultValue: CodeBlock,
         affectsCompilationOutcome: Boolean = true,
     ) : BtaCompilerArgument<BtaCompilerArgumentValueType.CustomArgumentValueType>(
@@ -104,7 +103,6 @@ object CustomCompilerArguments {
         deprecatedSinceVersion = null,
         removedSinceVersion = null,
         applierSimpleName = "applyCompilerPlugins",
-        toInputSimpleName = "transformCompilerPluginsToInput",
         defaultValue = CodeBlock.of(
             "%M<%T>()",
             MemberName("kotlin.collections", "emptyList"),

@@ -12,11 +12,11 @@ data class ConfigurationInputs(
     /**
      * Stable snapshot of IC configuration keys that affect compilation outcome.
      */
-    val icConfigurationInputsSnapshot: Map<String, String>,
+    val icConfigurationInputsSnapshot: Map<String, String?>,
     /**
      * Stable snapshot of compiler arguments that affect compilation outcome (ignoring arguments like, for example, `-version`).
      */
-    val compilerArgumentsInputsSnapshot: Map<String, String>,
+    val compilerArgumentsInputsSnapshot: Map<String, String?>,
 )
 
 internal typealias RebuildReason = BuildAttribute
@@ -35,13 +35,13 @@ internal fun ConfigurationInputs.computeHashedConfigurationInputs(): HashedConfi
 }
 
 private fun computeConfigurationInputsHash(
-    configurationInputsSnapshot: Map<String, String>,
+    configurationInputsSnapshot: Map<String, String?>,
 ): ByteArray {
     val argStrings = configurationInputsSnapshot.toSortedMap()
     return MessageDigest.getInstance("SHA-256").apply {
         argStrings.forEach { (key, value) ->
             update(key.toByteArray())
-            update(value.toByteArray())
+            update((value ?: "").toByteArray())
         }
     }.digest()
 }

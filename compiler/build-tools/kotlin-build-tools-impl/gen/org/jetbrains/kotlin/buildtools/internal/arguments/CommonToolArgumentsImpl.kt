@@ -95,9 +95,9 @@ internal abstract class CommonToolArgumentsImpl(
   }
 
   @Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-  public open fun toCompilationInputs(): Map<String, String> = buildMap {
-    if (WERROR in this@CommonToolArgumentsImpl) put(WERROR.id, this@CommonToolArgumentsImpl[WERROR].toString())
-    if (WEXTRA in this@CommonToolArgumentsImpl) put(WEXTRA.id, this@CommonToolArgumentsImpl[WEXTRA].toString())
+  public open fun toCompilationInputs(): Map<String, String?> = buildMap {
+    if (WERROR in this@CommonToolArgumentsImpl) put(WERROR.id, this@CommonToolArgumentsImpl[WERROR].transformToInput())
+    if (WEXTRA in this@CommonToolArgumentsImpl) put(WEXTRA.id, this@CommonToolArgumentsImpl[WEXTRA].transformToInput())
   }
 
   public class CommonToolArgument<V>(
