@@ -514,11 +514,16 @@ internal class BtaImplGenerator(
 
                 val member = MemberName(ClassName(targetPackage, implClassName, "Companion"), name)
 
-                val valueCode = when {
-                    argument is BtaCompilerArgument.SSoTCompilerArgument && argument.valueType.origin is StringArrayType ->
+                val valueCode = when (argument) {
+                    is BtaCompilerArgument.SSoTCompilerArgument if argument.valueType.origin is StringArrayType ->
                         CodeBlock.of("this@%L[%M]?.contentToString() ?: %S", implClassName, member, "null")
-                    else ->
-                        CodeBlock.of("this@%L[%M].toString()", implClassName, member)
+                    is BtaCompilerArgument.CustomCompilerArgument -> CodeBlock.of(
+                        "this@%L[%M].%M()",
+                        implClassName,
+                        member,
+                        MemberName(targetPackage, argument.toInputSimpleName, isExtension = true)
+                    )
+                    else -> CodeBlock.of("this@%L[%M].toString()", implClassName, member)
                 }
 
                 val putStatement = CodeBlock.of(

@@ -478,7 +478,7 @@ internal abstract class CommonCompilerArgumentsImpl(
     if (OPT_IN in this@CommonCompilerArgumentsImpl) put(OPT_IN.id, this@CommonCompilerArgumentsImpl[OPT_IN]?.contentToString() ?: "null")
     if (PROGRESSIVE in this@CommonCompilerArgumentsImpl) put(PROGRESSIVE.id, this@CommonCompilerArgumentsImpl[PROGRESSIVE].toString())
     if (SCRIPT in this@CommonCompilerArgumentsImpl) put(SCRIPT.id, this@CommonCompilerArgumentsImpl[SCRIPT].toString())
-    try { if (COMPILER_PLUGINS in this@CommonCompilerArgumentsImpl) put(COMPILER_PLUGINS.id, this@CommonCompilerArgumentsImpl[COMPILER_PLUGINS].toString()) } catch (_: NoSuchMethodError) {  }
+    try { if (COMPILER_PLUGINS in this@CommonCompilerArgumentsImpl) put(COMPILER_PLUGINS.id, this@CommonCompilerArgumentsImpl[COMPILER_PLUGINS].transformCompilerPluginsToInput()) } catch (_: NoSuchMethodError) {  }
   }
 
   public class CommonCompilerArgument<V>(
