@@ -39,12 +39,12 @@ class PureJvmCodegenBoxTestChecker(testServices: TestServices) : AfterAnalysisCh
 
         if (testDataPath.startsWith(CODEGEN_BOX_JVM) && !hasSingleJvmTarget) {
 //            moveToBoxJvm(from = CODEGEN_BOX_JVM, to = CODEGEN_BOX)
-            testServices.assertions.fail { "Only pure JVM test should not be located in '$CODEGEN_BOX_JVM' directory.\nPlease move the test to '$CODEGEN_BOX' directory" }
+            testServices.assertions.fail { "Only pure JVM tests should be located in the '$CODEGEN_BOX_JVM' directory.\nPlease move the test to '$CODEGEN_BOX' directory or add the '// TARGET_BACKEND: JVM' directive." }
         }
 
         if (testDataPath.startsWith(CODEGEN_BOX) && hasSingleJvmTarget) {
 //            moveToBoxJvm(from = CODEGEN_BOX, to = CODEGEN_BOX_JVM)
-            testServices.assertions.fail { "Pure JVM test should be located in '$CODEGEN_BOX_JVM' directory.\nPlease move the test there" }
+            testServices.assertions.fail { "Pure JVM tests should be located in '$CODEGEN_BOX_JVM' directory.\nPlease move the test there." }
         }
     }
 
