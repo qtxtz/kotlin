@@ -332,8 +332,8 @@ class BodyResolveContext(
                 context(holder) {
                     val classSymbol = type.fullyExpandedType().toRegularClassSymbol()
                     val staticScope = classSymbol?.staticScope(holder)
-                    if (staticScope != null) {
-                        addNonLocalTowerDataElement(staticScope.asTowerDataElementForStaticScope(classSymbol))
+                    if (classSymbol != null) {
+                        addNonLocalTowerDataElement(classSymbol.asTowerDataElementForStaticScope(staticScope))
                     }
                 }
             } else {

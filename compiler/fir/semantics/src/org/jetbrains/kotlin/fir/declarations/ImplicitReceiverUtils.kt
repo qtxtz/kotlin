@@ -324,6 +324,9 @@ fun FirScope.asTowerDataElement(isLocal: Boolean): FirTowerDataElement =
 fun FirScope.asTowerDataElementForStaticScope(staticScopeOwnerSymbol: FirRegularClassSymbol?): FirTowerDataElement =
     FirTowerDataElement(scope = this, implicitReceiver = null, isLocal = false, staticScopeOwnerSymbol = staticScopeOwnerSymbol)
 
+fun FirRegularClassSymbol.asTowerDataElementForStaticScope(scope: FirScope?): FirTowerDataElement =
+    FirTowerDataElement(scope = scope, implicitReceiver = null, isLocal = false, staticScopeOwnerSymbol = this)
+
 fun FirClassSymbol<*>.staticScope(sessionHolder: SessionAndScopeSessionHolder): FirContainingNamesAwareScope? =
     fir.staticScope(sessionHolder)
 
