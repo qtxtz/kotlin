@@ -273,6 +273,12 @@ testing {
             }
         }
 
+        named<JvmTestSuite>("testInputChangesTracking") {
+            dependencies {
+                implementation(project(":compiler:build-tools:kotlin-build-statistics"))
+            }
+        }
+
         named<JvmTestSuite>("testCompilerPlugins") {
             dependencies {
                 compileOnly(project(":kotlin-scripting-common"))
