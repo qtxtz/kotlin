@@ -8,17 +8,6 @@ package org.jetbrains.kotlin.incremental
 import org.jetbrains.kotlin.build.report.metrics.BuildAttribute
 import java.security.MessageDigest
 
-data class ConfigurationInputs(
-    /**
-     * Stable snapshot of IC configuration keys that affect compilation outcome.
-     */
-    val icConfigurationInputsSnapshot: Map<String, String?>,
-    /**
-     * Stable snapshot of compiler arguments that affect compilation outcome (ignoring arguments like, for example, `-version`).
-     */
-    val compilerArgumentsInputsSnapshot: Map<String, String?>,
-)
-
 internal typealias RebuildReason = BuildAttribute
 
 internal class HashedConfigurationInputs(

@@ -458,7 +458,8 @@ abstract class CompileServiceImplBase(
                                     gradleIncrementalArgs
                                 ),
                                 compilationCanceled,
-                                lookupTracker
+                                lookupTracker,
+                                gradleIncrementalArgs.configurationInputs,
                             )
                         }
                     }
@@ -730,6 +731,7 @@ abstract class CompileServiceImplBase(
         reporter: RemoteBuildReporter<BuildTimeMetric, BuildPerformanceMetric>,
         compilationCanceledStatus: CompilationCanceledStatus? = null,
         lookupTracker: LookupTracker? = null,
+        configurationInputs: ConfigurationInputs?,
     ): ExitCode {
         reporter.startMeasureGc()
         val allKotlinJvmExtensions = (DEFAULT_KOTLIN_SOURCE_FILES_EXTENSIONS +
@@ -781,7 +783,8 @@ abstract class CompileServiceImplBase(
                 allSourceFiles, k2jvmArgs, compilerMessageCollector, incrementalCompilationOptions.sourceChanges.toChangedFiles(),
                 fileLocations = if (rootProjectDir != null && buildDir != null) {
                     FileLocations(rootProjectDir, buildDir)
-                } else null
+                } else null,
+                configurationInputs = configurationInputs,
             )
         } finally {
             reporter.endMeasureGc()
