@@ -518,6 +518,7 @@ enum class LanguageFeature(
     DontIgnoreUpperBoundViolatedOnImplicitArguments(KOTLIN_2_5, "KTLC-287"),
     ForbidUpperBoundsViolationOnTypeOperatorAndParameterBounds(KOTLIN_2_5, enabledInProgressiveMode = true, "KTLC-358"),
     ForbidUselessTypeArgumentsIn25(sinceVersion = KOTLIN_2_5, enabledInProgressiveMode = true, "KTLC-390"),
+    AllowEagerSupertypeAccessibilityChecks(sinceVersion = KOTLIN_2_5, enabledInProgressiveMode = true, "KTLC-398"),
     WrapContinuationForTailCallFunctions(KOTLIN_2_5, sinceApiVersion = ApiVersion.KOTLIN_2_5, "KT-74051"),
     ForbidAnnotationsTypeArgumentsAndParenthesesForPackageQualifier(sinceVersion = KOTLIN_2_5, enabledInProgressiveMode = true, "KTLC-396"),
     EagerLambdaAnalysis(sinceVersion = KOTLIN_2_5, "KT-51107"), // Do not hesitate to move it to KOTLIN_2_6 once it's introduced
@@ -609,7 +610,6 @@ enum class LanguageFeature(
     CollectionLiterals(sinceVersion = null, issue = "KT-80489"),
     ProperFieldAccessGenerationForFieldAccessShadowedByKotlinProperty(sinceVersion = null, "KT-56386"),
     IrCrossModuleInlinerBeforeKlibSerialization(sinceVersion = null, sinceApiVersion = ApiVersion.KOTLIN_2_3, forcesPreReleaseBinaries = true, issue = "KT-79717"),
-    AllowEagerSupertypeAccessibilityChecks(sinceVersion = null, enabledInProgressiveMode = true, "KT-73611"),
     UnnamedLocalVariables(sinceVersion = null, forcesPreReleaseBinaries = false, issue = "KT-74809"),
     ContextSensitiveResolutionUsingExpectedType(sinceVersion = null, "KT-16768"),
     DisableWarningsForValueBasedJavaClasses(sinceVersion = null, "KT-70722"),

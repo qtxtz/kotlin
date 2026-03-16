@@ -1,5 +1,6 @@
 // RUN_PIPELINE_TILL: FRONTEND
 // ISSUE: KT-78800
+// LANGUAGE: -AllowEagerSupertypeAccessibilityChecks
 
 // MODULE: top
 // FILE: top.kt
