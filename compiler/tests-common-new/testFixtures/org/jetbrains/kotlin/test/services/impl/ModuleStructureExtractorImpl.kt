@@ -217,7 +217,9 @@ class ModuleStructureExtractorImpl(
                     val kind = defaultsProvider.defaultDependencyKind
 
                     fun String.toDependencyDescription(relation: DependencyRelation): DependencyDescription {
-                        val dependantModule = modules.find { it.name == this } ?: error("Module $this not found")
+                        val dependantModuleName = escapeModuleNameIfNeeded(this)
+                        val dependantModule = modules.find { it.name == dependantModuleName }
+                            ?: error("Module $this not found. Known modules: ${modules.joinToString { it.name }}")
                         val specificKind = when (relation) {
                             DependencyRelation.DependsOnDependency -> DependencyKind.Source
                             else -> kind
