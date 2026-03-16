@@ -202,7 +202,7 @@ class CallAndReferenceGenerator(
                         valueArgumentsCount = function.valueParameters.size + function.contextParameters.size,
                         contextParameterCount = function.contextParameters.size,
                         hasDispatchReceiver = function.dispatchReceiverType != null,
-                        hasExtensionReceiver = function.isExtension,
+                        hasExtensionReceiver = function.isInstanceExtension,
                         reflectionTarget = irFunctionSymbol
                     )
                         .applyTypeArguments(callableReferenceAccess)
@@ -574,7 +574,7 @@ class CallAndReferenceGenerator(
                             contextParameterCount = constructor.contextParameters.size,
                             constructorTypeArgumentsCount = constructorTypeParametersCount,
                             hasDispatchReceiver = firSymbol.dispatchReceiverType != null,
-                            hasExtensionReceiver = firSymbol.isExtension,
+                            hasExtensionReceiver = firSymbol.isInstanceExtension,
                         )
                     } else {
                         IrConstructorCallImplWithShape(
@@ -587,7 +587,7 @@ class CallAndReferenceGenerator(
                             contextParameterCount = constructor.contextParameters.size,
                             constructorTypeArgumentsCount = constructorTypeParametersCount,
                             hasDispatchReceiver = firSymbol.dispatchReceiverType != null,
-                            hasExtensionReceiver = firSymbol.isExtension,
+                            hasExtensionReceiver = firSymbol.isInstanceExtension,
                         )
                     }
                 }
@@ -612,7 +612,7 @@ class CallAndReferenceGenerator(
                         valueArgumentsCount = firSymbol.valueParametersSize(),
                         contextParameterCount = firSymbol.fir.contextParameters.size,
                         hasDispatchReceiver = firSymbol.dispatchReceiverType != null,
-                        hasExtensionReceiver = firSymbol.isExtension,
+                        hasExtensionReceiver = firSymbol.isInstanceExtension,
                         origin = callOrigin,
                         superQualifierSymbol = dispatchReceiver?.superQualifierSymbolForFunctionAndPropertyAccess()
                     ).apply {
@@ -661,7 +661,7 @@ class CallAndReferenceGenerator(
                                 valueArgumentsCount = property.contextParameters.size,
                                 contextParameterCount = property.contextParameters.size,
                                 hasDispatchReceiver = property.dispatchReceiverType != null,
-                                hasExtensionReceiver = property.isExtension,
+                                hasExtensionReceiver = property.isInstanceExtension,
                                 origin = incOrDecSourceKindToIrStatementOrigin[qualifiedAccess.source?.kind]
                                     ?: augmentedAssignSourceKindToIrStatementOrigin[qualifiedAccess.source?.kind]
                                     ?: IrStatementOrigin.GET_PROPERTY,
@@ -849,7 +849,7 @@ class CallAndReferenceGenerator(
                             valueArgumentsCount = 1 + firProperty.contextParameters.size,
                             contextParameterCount = firProperty.contextParameters.size,
                             hasDispatchReceiver = firProperty.dispatchReceiverType != null,
-                            hasExtensionReceiver = firProperty.isExtension,
+                            hasExtensionReceiver = firProperty.isInstanceExtension,
                             origin = origin,
                             superQualifierSymbol = variableAssignment.dispatchReceiver?.superQualifierSymbolForFunctionAndPropertyAccess()
                         )
@@ -1498,7 +1498,7 @@ class CallAndReferenceGenerator(
                 }
                 // constructors don't have extension receiver (except a case with type alias and inner RHS that is handled above),
                 // but may have receiver parameter in case of inner classes
-                if (declarationSiteSymbol?.receiverParameterSymbol != null && declarationSiteSymbol !is FirConstructorSymbol) {
+                if (declarationSiteSymbol?.isInstanceExtension == true && declarationSiteSymbol !is FirConstructorSymbol) {
                     val contextArgumentCount = (statement as? FirContextArgumentListOwner)?.contextArguments?.size ?: 0
                     val extensionReceiverIndex = (if (hasDispatchReceiver) 1 else 0) + contextArgumentCount
                     arguments[extensionReceiverIndex] = statement.findIrExtensionReceiver(explicitReceiverExpression)

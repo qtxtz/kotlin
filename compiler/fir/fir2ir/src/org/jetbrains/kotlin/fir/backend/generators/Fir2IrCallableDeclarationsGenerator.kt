@@ -676,26 +676,28 @@ class Fir2IrCallableDeclarationsGenerator(private val c: Fir2IrComponents) : Fir
             val typeOrigin = if (forSetter) ConversionTypeOrigin.SETTER else ConversionTypeOrigin.DEFAULT
 
             // extension receiver
-            val receiver: FirReceiverParameter? =
-                if (function !is FirPropertyAccessor && function != null) function.receiverParameter
-                else parentProperty?.receiverParameter
+            if (function?.isCompanionExtension != true && parentProperty?.isCompanionExtension != true) {
+                val receiver: FirReceiverParameter? =
+                    if (function !is FirPropertyAccessor && function != null) function.receiverParameter
+                    else parentProperty?.receiverParameter
 
-            if (receiver != null) {
-                this += receiver.convertWithOffsets { startOffset, endOffset ->
-                    val name = (function as? FirAnonymousFunction)?.label?.name?.let {
-                        val suffix = it.takeIf(Name::isValidIdentifier) ?: $$"$receiver"
-                        Name.identifier($$"$this$$$suffix")
-                    } ?: SpecialNames.THIS
-                    declareThisReceiverParameter(
-                        thisType = receiver.typeRef.toIrType(typeOrigin),
-                        thisOrigin = IrDeclarationOrigin.DEFINED,
-                        startOffset = startOffset,
-                        endOffset = endOffset,
-                        name = name,
-                        explicitReceiver = receiver,
-                        isAssignable = function.shouldParametersBeAssignable(c),
-                        kind = IrParameterKind.ExtensionReceiver,
-                    )
+                if (receiver != null) {
+                    this += receiver.convertWithOffsets { startOffset, endOffset ->
+                        val name = (function as? FirAnonymousFunction)?.label?.name?.let {
+                            val suffix = it.takeIf(Name::isValidIdentifier) ?: $$"$receiver"
+                            Name.identifier($$"$this$$$suffix")
+                        } ?: SpecialNames.THIS
+                        declareThisReceiverParameter(
+                            thisType = receiver.typeRef.toIrType(typeOrigin),
+                            thisOrigin = IrDeclarationOrigin.DEFINED,
+                            startOffset = startOffset,
+                            endOffset = endOffset,
+                            name = name,
+                            explicitReceiver = receiver,
+                            isAssignable = function.shouldParametersBeAssignable(c),
+                            kind = IrParameterKind.ExtensionReceiver,
+                        )
+                    }
                 }
             }
 
