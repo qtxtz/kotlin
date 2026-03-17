@@ -1,7 +1,7 @@
 if (true) {
-    /* ClassId: null */class A
+    /* ClassId: null (KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl) */class A
 }
 
 fun bar() {
-    /* ClassId: null */class Local
+    /* ClassId: null (KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl) */class Local
 }

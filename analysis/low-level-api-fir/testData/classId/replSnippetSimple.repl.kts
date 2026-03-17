@@ -1,8 +1,10 @@
-// IGNORE_CONSISTENCY_CHECK
-/* ClassId: /TopLevel */class TopLevel {
-    /* ClassId: /TopLevel.Nested */class Nested
+/* ClassId: /TopLevel (KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl) */
+class TopLevel {
+    /* ClassId: /TopLevel.Nested (KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl) */class Nested
 }
 
-/* ClassId: /Baz */object Baz {
-    /* ClassId: /Baz.Foo */interface Foo
+/* ClassId: /Baz (KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl) */object Baz {
+    /* ClassId: /Baz.Foo (KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl) */interface Foo
 }
+
+// IGNORE_CONSISTENCY_CHECK
