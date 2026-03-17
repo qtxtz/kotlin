@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -22,7 +22,16 @@ internal fun elementCanBeLazilyResolved(element: KtElement?): Boolean = when (el
     is KtFile -> element !is KtCodeFragment
     is KtDestructuringDeclarationEntry -> elementCanBeLazilyResolved(element.parent as? KtDestructuringDeclaration)
     is KtParameter -> elementCanBeLazilyResolved(element.ownerDeclaration)
-    is KtCallableDeclaration, is KtEnumEntry, is KtDestructuringDeclaration, is KtAnonymousInitializer -> {
+    is KtScriptInitializer -> {
+        val script = element.containingDeclaration
+
+        @OptIn(KtExperimentalApi::class)
+        // Script initializers inside repl snippets are flattened into the eval function,
+        // so they are not present in the FIR tree at all and can't be resolved autonomously.
+        !script.isReplSnippet && elementCanBeLazilyResolved(script)
+    }
+
+    is KtCallableDeclaration, is KtEnumEntry, is KtDestructuringDeclaration, is KtClassInitializer -> {
         val parentToCheck = when (val parent = element.parent) {
             is KtClassOrObject, is KtFile -> parent
             is KtClassBody -> parent.containingClassOrObject

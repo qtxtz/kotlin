@@ -23,7 +23,7 @@
 
 /* anchor (KtProperty) --> */var topLevelVar = 1/* <-- */
 
-/* anchor (KtScriptInitializer) --> */topLevel()/* <-- */
+topLevel()
 
-/* anchor (KtScriptInitializer) --> */123/* <-- */
+123
 /* <-- */
