@@ -511,7 +511,7 @@ abstract class AbstractAnalysisApiBasedTest : TestWithDisposable(), ManagedTest 
 
     private fun prepareToTheAnalysis(testConfiguration: NonGroupingPhaseTestConfiguration) {
         val moduleStructure = testServices.moduleStructure
-        val artifactsProvider = ArtifactsProvider(testServices, moduleStructure.modules)
+        val artifactsProvider = ArtifactsProvider()
         testServices.registerArtifactsProvider(artifactsProvider)
 
         testConfiguration.preAnalysisHandlers.forEach { preprocessor -> preprocessor.preprocessModuleStructure(moduleStructure) }

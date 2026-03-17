@@ -352,7 +352,7 @@ class CodegenTestsOnAndroidGenerator private constructor(private val pathManager
                     val module = moduleStructure.modules.singleOrNull() ?: continue
                     if (module.files.any { it.isJavaFile || it.isKtsFile }) continue
                     if (module.files.isEmpty()) continue
-                    services.registerArtifactsProvider(ArtifactsProvider(services, moduleStructure.modules))
+                    services.registerArtifactsProvider(ArtifactsProvider())
 
                     // The configuration is used as a key here and not used for the actual compiler invocation
                     // So if the configuration is created with default services inside, it messes up the

@@ -22,12 +22,9 @@ sealed class TestRunner<Step : TestStep<*, *>, Configuration : TestConfiguration
     protected val allFailedExceptions = mutableListOf<WrappedException>()
 
     open fun runTestPreprocessing() {
+        testServices.registerArtifactsProvider(ArtifactsProvider())
+
         val moduleStructure = testServices.moduleStructure
-
-        val modules = moduleStructure.modules
-        val artifactsProvider = ArtifactsProvider(testServices, modules)
-        testServices.registerArtifactsProvider(artifactsProvider)
-
         testConfiguration.preAnalysisHandlers.forEach { preprocessor ->
             preprocessor.preprocessModuleStructure(moduleStructure)
         }
