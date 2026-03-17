@@ -90,7 +90,7 @@ class SerializationPluginContext(baseContext: IrPluginContext, val metadataPlugi
 
     internal val jsExportIgnoreClass: IrClass? by lazy {
         val pkg = SerializationJsDependenciesClassIds.jsExportIgnore.packageFqName
-        val jsExportName = SerializationJsDependenciesClassIds.jsExportIgnore.parentClassId!!.shortClassName
+        val jsExportName = SerializationJsDependenciesClassIds.jsExportIgnore.outerClassId!!.shortClassName
         val jsExportIgnoreFqName = SerializationJsDependenciesClassIds.jsExportIgnore.asSingleFqName()
 
         getClassFromRuntimeOrNull(jsExportName.identifier, pkg)

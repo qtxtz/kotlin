@@ -199,7 +199,7 @@ class FirExpectActualMatchingContextImpl private constructor(
             for (name in scope.getClassifierNames()) {
                 scope.processClassifiersByName(name) {
                     // We should skip nested class like declarations from supertypes here
-                    if (it is FirClassLikeSymbol<*> && it.classId.parentClassId == symbol.classId) {
+                    if (it is FirClassLikeSymbol<*> && it.classId.outerClassId == symbol.classId) {
                         add(it)
                     }
                 }

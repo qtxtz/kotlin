@@ -30,12 +30,10 @@ import org.jetbrains.kotlin.ir.util.TypeTranslator
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.name.*
-import org.jetbrains.kotlin.resolve.descriptorUtil.classId
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.storage.LockBasedStorageManager
 import org.jetbrains.kotlin.types.*
 import org.jetbrains.kotlin.types.checker.KotlinTypeChecker
-import org.jetbrains.kotlin.util.OperatorNameConventions
 
 @ObsoleteDescriptorBasedAPI
 @OptIn(InternalSymbolFinderAPI::class)
@@ -565,7 +563,7 @@ class SymbolFinderOverDescriptors(private val builtIns: KotlinBuiltIns, private 
         builtIns.builtInsModule.getPackage(FqName.fromSegments(listOf(*packageNameSegments))).memberScope
 
     private fun getClassDescriptor(classId: ClassId) : ClassDescriptor? {
-        val parentClassId = classId.parentClassId
+        val parentClassId = classId.outerClassId
         return if (parentClassId == null) {
             builtIns.builtInsModule
                 .getPackage(classId.packageFqName)

@@ -105,10 +105,10 @@ class Fir2IrClassifiersGenerator(private val c: Fir2IrComponents) : Fir2IrCompon
         }
         /*
          * `regularClass.isLocal` indicates that either class itsef is local or it is a nested class in some other class
-         * Check for parentClassId allows to distinguish between those cases
+         * Check for outerClassId allows to distinguish between those cases
          */
         irClass.setParent(parent)
-        if (!(regularClass.isLocal && regularClass.classId.parentClassId == null)) {
+        if (!(regularClass.isLocal && regularClass.classId.outerClassId == null)) {
             addDeclarationToParent(irClass, parent)
         }
         return irClass
