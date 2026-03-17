@@ -1,29 +1,29 @@
-/* anchor --> *//* anchor --> */class B {
-    /* anchor --> */fun bar() {}/* <-- */
+/* anchor (KtScript) --> *//* anchor (KtClass) --> */class B {
+    /* anchor (KtNamedFunction) --> */fun bar() {}/* <-- */
 
-    /* anchor --> */val foo = 1/* <-- */
+    /* anchor (KtProperty) --> */val foo = 1/* <-- */
 
-    /* anchor --> */object Nested {
-        /* anchor --> */fun member() {
+    /* anchor (KtObjectDeclaration) --> */object Nested {
+        /* anchor (KtNamedFunction) --> */fun member() {
 
         }/* <-- */
 
-        /* anchor --> */init {
+        /* anchor (KtClassInitializer) --> */init {
             member()
         }/* <-- */
 
-        /* anchor --> */val member: String
-            /* anchor --> */get() = "str"/* <-- *//* <-- */
+        /* anchor (KtProperty) --> */val member: String
+            /* anchor (KtPropertyAccessor) --> */get() = "str"/* <-- *//* <-- */
     }/* <-- */
 }/* <-- */
 
-/* anchor --> */fun topLevel() {
+/* anchor (KtNamedFunction) --> */fun topLevel() {
 
 }/* <-- */
 
-/* anchor --> */var topLevelVar = 1/* <-- */
+/* anchor (KtProperty) --> */var topLevelVar = 1/* <-- */
 
-/* anchor --> */topLevel()/* <-- */
+/* anchor (KtScriptInitializer) --> */topLevel()/* <-- */
 
-/* anchor --> */123/* <-- */
+/* anchor (KtScriptInitializer) --> */123/* <-- */
 /* <-- */
