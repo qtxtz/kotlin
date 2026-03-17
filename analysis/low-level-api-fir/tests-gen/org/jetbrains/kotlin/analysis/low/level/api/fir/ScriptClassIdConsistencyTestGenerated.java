@@ -62,4 +62,16 @@ public class ScriptClassIdConsistencyTestGenerated extends AbstractScriptClassId
   public void testNamelessInsideNamelessClasses() {
     run("namelessInsideNamelessClasses.kts");
   }
+
+  @Test
+  @TestMetadata("replSnippetLocalClasses.repl.kts")
+  public void testReplSnippetLocalClasses_repl() {
+    run("replSnippetLocalClasses.repl.kts");
+  }
+
+  @Test
+  @TestMetadata("replSnippetSimple.repl.kts")
+  public void testReplSnippetSimple_repl() {
+    run("replSnippetSimple.repl.kts");
+  }
 }

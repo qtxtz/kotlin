@@ -52,6 +52,12 @@ public class ScriptNonLocalDeclarationAnchorTestGenerated extends AbstractScript
   }
 
   @Test
+  @TestMetadata("replSnippet.repl.kts")
+  public void testReplSnippet_repl() {
+    run("replSnippet.repl.kts");
+  }
+
+  @Test
   @TestMetadata("statements.kts")
   public void testStatements() {
     run("statements.kts");

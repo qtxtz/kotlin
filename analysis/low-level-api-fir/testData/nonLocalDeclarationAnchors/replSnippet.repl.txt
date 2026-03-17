@@ -1,0 +1,29 @@
+/* anchor --> *//* anchor --> */class B {
+    /* anchor --> */fun bar() {}/* <-- */
+
+    /* anchor --> */val foo = 1/* <-- */
+
+    /* anchor --> */object Nested {
+        /* anchor --> */fun member() {
+
+        }/* <-- */
+
+        /* anchor --> */init {
+            member()
+        }/* <-- */
+
+        /* anchor --> */val member: String
+            /* anchor --> */get() = "str"/* <-- *//* <-- */
+    }/* <-- */
+}/* <-- */
+
+/* anchor --> */fun topLevel() {
+
+}/* <-- */
+
+/* anchor --> */var topLevelVar = 1/* <-- */
+
+/* anchor --> */topLevel()/* <-- */
+
+/* anchor --> */123/* <-- */
+/* <-- */
