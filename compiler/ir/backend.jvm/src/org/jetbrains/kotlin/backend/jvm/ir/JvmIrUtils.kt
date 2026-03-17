@@ -87,7 +87,7 @@ fun IrDeclaration.getJvmNameFromAnnotation(): String? {
     }
 }
 
-private fun IrDeclaration.getJvmNameFromJvmExposeBoxedAnnotation(): String? {
+fun IrDeclaration.getJvmNameFromJvmExposeBoxedAnnotation(): String? {
     val value = getAnnotation(JVM_EXPOSE_BOXED_ANNOTATION_FQ_NAME)?.arguments[0] as? IrConst ?: return null
     return if (value.value == "") null else value.value as? String
 }
