@@ -11,10 +11,8 @@ import kotlin.Boolean
 import kotlin.OptIn
 import kotlin.String
 import kotlin.Suppress
-import kotlin.collections.Map
 import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
-import kotlin.collections.buildMap
 import kotlin.collections.mutableMapOf
 import kotlin.collections.mutableSetOf
 import org.jetbrains.kotlin.buildtools.`internal`.UseFromImplModuleRestricted
@@ -94,10 +92,11 @@ internal abstract class CommonToolArgumentsImpl(
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
   }
 
-  @Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-  public open fun toCompilationInputs(): Map<String, String?> = buildMap {
-    if (WERROR in this@CommonToolArgumentsImpl) put(WERROR.id, this@CommonToolArgumentsImpl[WERROR].transformToInput())
-    if (WEXTRA in this@CommonToolArgumentsImpl) put(WEXTRA.id, this@CommonToolArgumentsImpl[WEXTRA].transformToInput())
+  @Suppress("DEPRECATION")
+  public fun toCompilerArgumentsAffectingOutcome(arguments: CommonToolArguments): CommonToolArguments {
+    if (WERROR in this) { arguments.allWarningsAsErrors = get(WERROR)}
+    if (WEXTRA in this) { arguments.extraWarnings = get(WEXTRA)}
+    return arguments
   }
 
   public class CommonToolArgument<V>(

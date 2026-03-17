@@ -34,3 +34,13 @@ private fun computeConfigurationInputsHash(
         }
     }.digest()
 }
+
+private fun computeConfigurationInputsHash(
+    configurationInputsSnapshot: List<String>,
+): ByteArray {
+    return MessageDigest.getInstance("SHA-256").apply {
+        configurationInputsSnapshot.forEach { s ->
+            update(s.toByteArray())
+        }
+    }.digest()
+}

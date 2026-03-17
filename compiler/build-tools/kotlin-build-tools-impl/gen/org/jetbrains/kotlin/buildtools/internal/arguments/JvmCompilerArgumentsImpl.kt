@@ -15,10 +15,8 @@ import kotlin.OptIn
 import kotlin.String
 import kotlin.Suppress
 import kotlin.collections.List
-import kotlin.collections.Map
 import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
-import kotlin.collections.buildMap
 import kotlin.collections.joinToString
 import kotlin.collections.map
 import kotlin.collections.mutableMapOf
@@ -345,6 +343,89 @@ internal class JvmCompilerArgumentsImpl(
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
   }
 
+  @Suppress("DEPRECATION")
+  public fun toCompilerArgumentsAffectingOutcome(arguments: K2JVMCompilerArguments = K2JVMCompilerArguments()): K2JVMCompilerArguments {
+    super.toCompilerArgumentsAffectingOutcome(arguments)
+    if (X_ABI_STABILITY in this) { arguments.abiStability = get(X_ABI_STABILITY)?.stringValue}
+    if (X_ADD_MODULES in this) { arguments.additionalJavaModules = get(X_ADD_MODULES).toTypedArray()}
+    if (X_ALLOW_NO_SOURCE_FILES in this) { arguments.allowNoSourceFiles = get(X_ALLOW_NO_SOURCE_FILES)}
+    if (X_ALLOW_UNSTABLE_DEPENDENCIES in this) { arguments.allowUnstableDependencies = get(X_ALLOW_UNSTABLE_DEPENDENCIES)}
+    if (X_ANNOTATIONS_IN_METADATA in this) { arguments.annotationsInMetadata = get(X_ANNOTATIONS_IN_METADATA)}
+    if (X_ASSERTIONS in this) { arguments.assertionsMode = get(X_ASSERTIONS)?.stringValue}
+    if (X_BUILD_FILE in this) { arguments.buildFile = get(X_BUILD_FILE)}
+    try { if (X_COMPILE_BUILTINS_AS_PART_OF_STDLIB in this) { arguments.setUsingReflection("expectBuiltinsAsPartOfStdlib", get(X_COMPILE_BUILTINS_AS_PART_OF_STDLIB))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_COMPILE_BUILTINS_AS_PART_OF_STDLIB. Current compiler version is: $KC_VERSION, but the argument was introduced in 2.1.20 and removed in 2.3.20""").initCause(e) }
+    try { if (X_COMPILE_JAVA in this) { arguments.setUsingReflection("compileJava", get(X_COMPILE_JAVA))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_COMPILE_JAVA. Current compiler version is: $KC_VERSION, but the argument was removed in 2.4.0""").initCause(e) }
+    if (X_DEBUG in this) { arguments.enableDebugMode = get(X_DEBUG)}
+    if (X_DEFAULT_SCRIPT_EXTENSION in this) { arguments.defaultScriptExtension = get(X_DEFAULT_SCRIPT_EXTENSION)}
+    if (X_DISABLE_STANDARD_SCRIPT in this) { arguments.disableStandardScript = get(X_DISABLE_STANDARD_SCRIPT)}
+    if (X_EMIT_JVM_TYPE_ANNOTATIONS in this) { arguments.emitJvmTypeAnnotations = get(X_EMIT_JVM_TYPE_ANNOTATIONS)}
+    if (X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL in this) { arguments.enhanceTypeParameterTypesToDefNotNull = get(X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL)}
+    if (X_ENHANCED_COROUTINES_DEBUGGING in this) { arguments.enhancedCoroutinesDebugging = get(X_ENHANCED_COROUTINES_DEBUGGING)}
+    if (X_FRIEND_PATHS in this) { arguments.friendPaths = get(X_FRIEND_PATHS).map { it.absolutePathStringOrThrow() }.toTypedArray()}
+    if (X_GENERATE_STRICT_METADATA_VERSION in this) { arguments.strictMetadataVersionSemantics = get(X_GENERATE_STRICT_METADATA_VERSION)}
+    if (X_IGNORED_ANNOTATIONS_FOR_BRIDGES in this) { arguments.ignoredAnnotationsForBridges = get(X_IGNORED_ANNOTATIONS_FOR_BRIDGES) ?: emptyArray()}
+    if (X_INDY_ALLOW_ANNOTATED_LAMBDAS in this) { arguments.indyAllowAnnotatedLambdas = get(X_INDY_ALLOW_ANNOTATED_LAMBDAS)}
+    if (X_IR_DO_NOT_CLEAR_BINDING_CONTEXT in this) { arguments.doNotClearBindingContext = get(X_IR_DO_NOT_CLEAR_BINDING_CONTEXT)}
+    try { if (X_IR_INLINER in this) { arguments.setUsingReflection("enableIrInliner", get(X_IR_INLINER))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_IR_INLINER. Current compiler version is: $KC_VERSION, but the argument was removed in 2.3.0""").initCause(e) }
+    if (X_JAVA_PACKAGE_PREFIX in this) { arguments.javaPackagePrefix = get(X_JAVA_PACKAGE_PREFIX)}
+    if (X_JAVA_SOURCE_ROOTS in this) { arguments.javaSourceRoots = get(X_JAVA_SOURCE_ROOTS).map { it.absolutePathStringOrThrow() }.toTypedArray()}
+    try { if (X_JAVAC_ARGUMENTS in this) { arguments.setUsingReflection("javacArguments", get(X_JAVAC_ARGUMENTS) ?: emptyArray())} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_JAVAC_ARGUMENTS. Current compiler version is: $KC_VERSION, but the argument was removed in 2.4.0""").initCause(e) }
+    if (X_JDK_RELEASE in this) { arguments.jdkRelease = get(X_JDK_RELEASE)?.stringValue}
+    if (X_JSPECIFY_ANNOTATIONS in this) { arguments.jspecifyAnnotations = get(X_JSPECIFY_ANNOTATIONS)?.stringValue}
+    if (X_JSR305 in this) { arguments.jsr305 = get(X_JSR305) ?: emptyArray()}
+    if (X_JVM_DEFAULT in this) { arguments.jvmDefault = get(X_JVM_DEFAULT)}
+    if (X_JVM_ENABLE_PREVIEW in this) { arguments.enableJvmPreview = get(X_JVM_ENABLE_PREVIEW)}
+    if (X_JVM_EXPOSE_BOXED in this) { arguments.jvmExposeBoxed = get(X_JVM_EXPOSE_BOXED)}
+    if (X_KLIB in this) { arguments.klibLibraries = get(X_KLIB)?.joinToString(File.pathSeparator)}
+    if (X_LAMBDAS in this) { arguments.lambdas = get(X_LAMBDAS)?.stringValue}
+    if (X_LINK_VIA_SIGNATURES in this) { arguments.linkViaSignatures = get(X_LINK_VIA_SIGNATURES)}
+    if (X_MODULE_PATH in this) { arguments.javaModulePath = get(X_MODULE_PATH)?.joinToString(File.pathSeparator)}
+    if (X_MULTIFILE_PARTS_INHERIT in this) { arguments.inheritMultifileParts = get(X_MULTIFILE_PARTS_INHERIT)}
+    if (X_NO_CALL_ASSERTIONS in this) { arguments.noCallAssertions = get(X_NO_CALL_ASSERTIONS)}
+    if (X_NO_NEW_JAVA_ANNOTATION_TARGETS in this) { arguments.noNewJavaAnnotationTargets = get(X_NO_NEW_JAVA_ANNOTATION_TARGETS)}
+    if (X_NO_OPTIMIZE in this) { arguments.noOptimize = get(X_NO_OPTIMIZE)}
+    if (X_NO_PARAM_ASSERTIONS in this) { arguments.noParamAssertions = get(X_NO_PARAM_ASSERTIONS)}
+    if (X_NO_RECEIVER_ASSERTIONS in this) { arguments.noReceiverAssertions = get(X_NO_RECEIVER_ASSERTIONS)}
+    if (X_NO_RESET_JAR_TIMESTAMPS in this) { arguments.noResetJarTimestamps = get(X_NO_RESET_JAR_TIMESTAMPS)}
+    if (X_NO_SOURCE_DEBUG_EXTENSION in this) { arguments.noSourceDebugExtension = get(X_NO_SOURCE_DEBUG_EXTENSION)}
+    if (X_NO_UNIFIED_NULL_CHECKS in this) { arguments.noUnifiedNullChecks = get(X_NO_UNIFIED_NULL_CHECKS)}
+    if (X_NULLABILITY_ANNOTATIONS in this) { arguments.nullabilityAnnotations = get(X_NULLABILITY_ANNOTATIONS) ?: emptyArray()}
+    if (X_OUTPUT_BUILTINS_METADATA in this) { arguments.outputBuiltinsMetadata = get(X_OUTPUT_BUILTINS_METADATA)}
+    if (X_SAM_CONVERSIONS in this) { arguments.samConversions = get(X_SAM_CONVERSIONS)?.stringValue}
+    if (X_SANITIZE_PARENTHESES in this) { arguments.sanitizeParentheses = get(X_SANITIZE_PARENTHESES)}
+    if (X_SCRIPT_RESOLVER_ENVIRONMENT in this) { arguments.scriptResolverEnvironment = get(X_SCRIPT_RESOLVER_ENVIRONMENT) ?: emptyArray()}
+    try { if (X_SERIALIZE_IR in this) { arguments.setUsingReflection("serializeIr", get(X_SERIALIZE_IR))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_SERIALIZE_IR. Current compiler version is: $KC_VERSION, but the argument was removed in 2.4.0""").initCause(e) }
+    if (X_STRING_CONCAT in this) { arguments.stringConcat = get(X_STRING_CONCAT)?.stringValue}
+    if (X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS in this) { arguments.supportCompatqualCheckerFrameworkAnnotations = get(X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS)?.stringValue}
+    if (X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING in this) { arguments.suppressDeprecatedJvmTargetWarning = get(X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING)}
+    if (X_SUPPRESS_MISSING_BUILTINS_ERROR in this) { arguments.suppressMissingBuiltinsError = get(X_SUPPRESS_MISSING_BUILTINS_ERROR)}
+    if (X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE in this) { arguments.typeEnhancementImprovementsInStrictMode = get(X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE)}
+    if (X_USE_14_INLINE_CLASSES_MANGLING_SCHEME in this) { arguments.useOldInlineClassesManglingScheme = get(X_USE_14_INLINE_CLASSES_MANGLING_SCHEME)}
+    if (X_USE_FAST_JAR_FILE_SYSTEM in this) { arguments.useFastJarFileSystem = get(X_USE_FAST_JAR_FILE_SYSTEM)}
+    if (X_USE_INLINE_SCOPES_NUMBERS in this) { arguments.useInlineScopesNumbers = get(X_USE_INLINE_SCOPES_NUMBERS)}
+    try { if (X_USE_JAVAC in this) { arguments.setUsingReflection("useJavac", get(X_USE_JAVAC))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_USE_JAVAC. Current compiler version is: $KC_VERSION, but the argument was removed in 2.4.0""").initCause(e) }
+    try { if (X_USE_K2_KAPT in this) { arguments.setUsingReflection("useK2Kapt", get(X_USE_K2_KAPT))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_USE_K2_KAPT. Current compiler version is: $KC_VERSION, but the argument was removed in 2.3.0""").initCause(e) }
+    if (X_USE_OLD_CLASS_FILES_READING in this) { arguments.useOldClassFilesReading = get(X_USE_OLD_CLASS_FILES_READING)}
+    if (X_USE_TYPE_TABLE in this) { arguments.useTypeTable = get(X_USE_TYPE_TABLE)}
+    if (X_VALIDATE_BYTECODE in this) { arguments.validateBytecode = get(X_VALIDATE_BYTECODE)}
+    if (X_VALUE_CLASSES in this) { arguments.valueClasses = get(X_VALUE_CLASSES)}
+    if (X_WHEN_EXPRESSIONS in this) { arguments.whenExpressionsGeneration = get(X_WHEN_EXPRESSIONS)?.stringValue}
+    if (CLASSPATH in this) { arguments.classpath = get(CLASSPATH)?.joinToString(File.pathSeparator)}
+    if (D in this) { arguments.destination = get(D)}
+    if (EXPRESSION in this) { arguments.expression = get(EXPRESSION)}
+    if (INCLUDE_RUNTIME in this) { arguments.includeRuntime = get(INCLUDE_RUNTIME)}
+    if (JAVA_PARAMETERS in this) { arguments.javaParameters = get(JAVA_PARAMETERS)}
+    if (JDK_HOME in this) { arguments.jdkHome = get(JDK_HOME)?.absolutePathStringOrThrow()}
+    if (JVM_DEFAULT in this) { arguments.jvmDefaultStable = get(JVM_DEFAULT)?.stringValue}
+    if (JVM_TARGET in this) { arguments.jvmTarget = get(JVM_TARGET)?.stringValue}
+    if (MODULE_NAME in this) { arguments.moduleName = get(MODULE_NAME)}
+    if (NO_JDK in this) { arguments.noJdk = get(NO_JDK)}
+    if (NO_REFLECT in this) { arguments.noReflect = get(NO_REFLECT)}
+    if (NO_STDLIB in this) { arguments.noStdlib = get(NO_STDLIB)}
+    if (SCRIPT_TEMPLATES in this) { arguments.scriptTemplates = get(SCRIPT_TEMPLATES).toTypedArray()}
+    return arguments
+  }
+
   override fun applyArgumentStrings(arguments: List<String>) {
     val compilerArgs: K2JVMCompilerArguments = parseCommandLineArguments(arguments)
     validateArguments(compilerArgs.errors)?.let { throw CompilerArgumentsParseException(it) }
@@ -356,86 +437,14 @@ internal class JvmCompilerArgumentsImpl(
     return arguments
   }
 
-  @Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-  override fun toCompilationInputs(): Map<String, String?> = super.toCompilationInputs() + buildMap {
-    if (X_ABI_STABILITY in this@JvmCompilerArgumentsImpl) put(X_ABI_STABILITY.id, this@JvmCompilerArgumentsImpl[X_ABI_STABILITY]?.transformToInput())
-    if (X_ADD_MODULES in this@JvmCompilerArgumentsImpl) put(X_ADD_MODULES.id, this@JvmCompilerArgumentsImpl[X_ADD_MODULES].transformToInput())
-    if (X_ALLOW_NO_SOURCE_FILES in this@JvmCompilerArgumentsImpl) put(X_ALLOW_NO_SOURCE_FILES.id, this@JvmCompilerArgumentsImpl[X_ALLOW_NO_SOURCE_FILES].transformToInput())
-    if (X_ALLOW_UNSTABLE_DEPENDENCIES in this@JvmCompilerArgumentsImpl) put(X_ALLOW_UNSTABLE_DEPENDENCIES.id, this@JvmCompilerArgumentsImpl[X_ALLOW_UNSTABLE_DEPENDENCIES].transformToInput())
-    try { if (X_ANNOTATIONS_IN_METADATA in this@JvmCompilerArgumentsImpl) put(X_ANNOTATIONS_IN_METADATA.id, this@JvmCompilerArgumentsImpl[X_ANNOTATIONS_IN_METADATA].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_ASSERTIONS]?.transformToInput())
-    if (X_BUILD_FILE in this@JvmCompilerArgumentsImpl) put(X_BUILD_FILE.id, this@JvmCompilerArgumentsImpl[X_BUILD_FILE]?.transformToInput())
-    try { if (X_COMPILE_BUILTINS_AS_PART_OF_STDLIB in this@JvmCompilerArgumentsImpl) put(X_COMPILE_BUILTINS_AS_PART_OF_STDLIB.id, this@JvmCompilerArgumentsImpl[X_COMPILE_BUILTINS_AS_PART_OF_STDLIB].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_COMPILE_JAVA in this@JvmCompilerArgumentsImpl) put(X_COMPILE_JAVA.id, this@JvmCompilerArgumentsImpl[X_COMPILE_JAVA].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_DEBUG in this@JvmCompilerArgumentsImpl) put(X_DEBUG.id, this@JvmCompilerArgumentsImpl[X_DEBUG].transformToInput())
-    if (X_DEFAULT_SCRIPT_EXTENSION in this@JvmCompilerArgumentsImpl) put(X_DEFAULT_SCRIPT_EXTENSION.id, this@JvmCompilerArgumentsImpl[X_DEFAULT_SCRIPT_EXTENSION]?.transformToInput())
-    if (X_DISABLE_STANDARD_SCRIPT in this@JvmCompilerArgumentsImpl) put(X_DISABLE_STANDARD_SCRIPT.id, this@JvmCompilerArgumentsImpl[X_DISABLE_STANDARD_SCRIPT].transformToInput())
-    if (X_EMIT_JVM_TYPE_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_EMIT_JVM_TYPE_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_EMIT_JVM_TYPE_ANNOTATIONS].transformToInput())
-    if (X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL in this@JvmCompilerArgumentsImpl) put(X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL.id, this@JvmCompilerArgumentsImpl[X_ENHANCE_TYPE_PARAMETER_TYPES_TO_DEF_NOT_NULL].transformToInput())
-    try { if (X_ENHANCED_COROUTINES_DEBUGGING in this@JvmCompilerArgumentsImpl) put(X_ENHANCED_COROUTINES_DEBUGGING.id, this@JvmCompilerArgumentsImpl[X_ENHANCED_COROUTINES_DEBUGGING].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_FRIEND_PATHS in this@JvmCompilerArgumentsImpl) put(X_FRIEND_PATHS.id, this@JvmCompilerArgumentsImpl[X_FRIEND_PATHS].transformToInput())
-    if (X_GENERATE_STRICT_METADATA_VERSION in this@JvmCompilerArgumentsImpl) put(X_GENERATE_STRICT_METADATA_VERSION.id, this@JvmCompilerArgumentsImpl[X_GENERATE_STRICT_METADATA_VERSION].transformToInput())
-    try { if (X_IGNORED_ANNOTATIONS_FOR_BRIDGES in this@JvmCompilerArgumentsImpl) put(X_IGNORED_ANNOTATIONS_FOR_BRIDGES.id, this@JvmCompilerArgumentsImpl[X_IGNORED_ANNOTATIONS_FOR_BRIDGES]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_INDY_ALLOW_ANNOTATED_LAMBDAS in this@JvmCompilerArgumentsImpl) put(X_INDY_ALLOW_ANNOTATED_LAMBDAS.id, this@JvmCompilerArgumentsImpl[X_INDY_ALLOW_ANNOTATED_LAMBDAS]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_IR_DO_NOT_CLEAR_BINDING_CONTEXT in this@JvmCompilerArgumentsImpl) put(X_IR_DO_NOT_CLEAR_BINDING_CONTEXT.id, this@JvmCompilerArgumentsImpl[X_IR_DO_NOT_CLEAR_BINDING_CONTEXT].transformToInput())
-    try { if (X_IR_INLINER in this@JvmCompilerArgumentsImpl) put(X_IR_INLINER.id, this@JvmCompilerArgumentsImpl[X_IR_INLINER].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_JAVA_PACKAGE_PREFIX in this@JvmCompilerArgumentsImpl) put(X_JAVA_PACKAGE_PREFIX.id, this@JvmCompilerArgumentsImpl[X_JAVA_PACKAGE_PREFIX]?.transformToInput())
-    if (X_JAVA_SOURCE_ROOTS in this@JvmCompilerArgumentsImpl) put(X_JAVA_SOURCE_ROOTS.id, this@JvmCompilerArgumentsImpl[X_JAVA_SOURCE_ROOTS].transformToInput())
-    try { if (X_JAVAC_ARGUMENTS in this@JvmCompilerArgumentsImpl) put(X_JAVAC_ARGUMENTS.id, this@JvmCompilerArgumentsImpl[X_JAVAC_ARGUMENTS]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_JDK_RELEASE in this@JvmCompilerArgumentsImpl) put(X_JDK_RELEASE.id, this@JvmCompilerArgumentsImpl[X_JDK_RELEASE]?.transformToInput())
-    if (X_JSPECIFY_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_JSPECIFY_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_JSPECIFY_ANNOTATIONS]?.transformToInput())
-    if (X_JSR305 in this@JvmCompilerArgumentsImpl) put(X_JSR305.id, this@JvmCompilerArgumentsImpl[X_JSR305]?.transformToInput())
-    if (X_JVM_DEFAULT in this@JvmCompilerArgumentsImpl) put(X_JVM_DEFAULT.id, this@JvmCompilerArgumentsImpl[X_JVM_DEFAULT]?.transformToInput())
-    if (X_JVM_ENABLE_PREVIEW in this@JvmCompilerArgumentsImpl) put(X_JVM_ENABLE_PREVIEW.id, this@JvmCompilerArgumentsImpl[X_JVM_ENABLE_PREVIEW].transformToInput())
-    try { if (X_JVM_EXPOSE_BOXED in this@JvmCompilerArgumentsImpl) put(X_JVM_EXPOSE_BOXED.id, this@JvmCompilerArgumentsImpl[X_JVM_EXPOSE_BOXED].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_KLIB in this@JvmCompilerArgumentsImpl) put(X_KLIB.id, this@JvmCompilerArgumentsImpl[X_KLIB]?.transformToInput())
-    if (X_LAMBDAS in this@JvmCompilerArgumentsImpl) put(X_LAMBDAS.id, this@JvmCompilerArgumentsImpl[X_LAMBDAS]?.transformToInput())
-    if (X_LINK_VIA_SIGNATURES in this@JvmCompilerArgumentsImpl) put(X_LINK_VIA_SIGNATURES.id, this@JvmCompilerArgumentsImpl[X_LINK_VIA_SIGNATURES].transformToInput())
-    if (X_MODULE_PATH in this@JvmCompilerArgumentsImpl) put(X_MODULE_PATH.id, this@JvmCompilerArgumentsImpl[X_MODULE_PATH]?.transformToInput())
-    if (X_MULTIFILE_PARTS_INHERIT in this@JvmCompilerArgumentsImpl) put(X_MULTIFILE_PARTS_INHERIT.id, this@JvmCompilerArgumentsImpl[X_MULTIFILE_PARTS_INHERIT].transformToInput())
-    if (X_NO_CALL_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_NO_CALL_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_NO_CALL_ASSERTIONS].transformToInput())
-    if (X_NO_NEW_JAVA_ANNOTATION_TARGETS in this@JvmCompilerArgumentsImpl) put(X_NO_NEW_JAVA_ANNOTATION_TARGETS.id, this@JvmCompilerArgumentsImpl[X_NO_NEW_JAVA_ANNOTATION_TARGETS].transformToInput())
-    if (X_NO_OPTIMIZE in this@JvmCompilerArgumentsImpl) put(X_NO_OPTIMIZE.id, this@JvmCompilerArgumentsImpl[X_NO_OPTIMIZE].transformToInput())
-    if (X_NO_PARAM_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_NO_PARAM_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_NO_PARAM_ASSERTIONS].transformToInput())
-    if (X_NO_RECEIVER_ASSERTIONS in this@JvmCompilerArgumentsImpl) put(X_NO_RECEIVER_ASSERTIONS.id, this@JvmCompilerArgumentsImpl[X_NO_RECEIVER_ASSERTIONS].transformToInput())
-    if (X_NO_RESET_JAR_TIMESTAMPS in this@JvmCompilerArgumentsImpl) put(X_NO_RESET_JAR_TIMESTAMPS.id, this@JvmCompilerArgumentsImpl[X_NO_RESET_JAR_TIMESTAMPS].transformToInput())
-    if (X_NO_SOURCE_DEBUG_EXTENSION in this@JvmCompilerArgumentsImpl) put(X_NO_SOURCE_DEBUG_EXTENSION.id, this@JvmCompilerArgumentsImpl[X_NO_SOURCE_DEBUG_EXTENSION].transformToInput())
-    if (X_NO_UNIFIED_NULL_CHECKS in this@JvmCompilerArgumentsImpl) put(X_NO_UNIFIED_NULL_CHECKS.id, this@JvmCompilerArgumentsImpl[X_NO_UNIFIED_NULL_CHECKS].transformToInput())
-    if (X_NULLABILITY_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_NULLABILITY_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_NULLABILITY_ANNOTATIONS]?.transformToInput())
-    try { if (X_OUTPUT_BUILTINS_METADATA in this@JvmCompilerArgumentsImpl) put(X_OUTPUT_BUILTINS_METADATA.id, this@JvmCompilerArgumentsImpl[X_OUTPUT_BUILTINS_METADATA].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_SAM_CONVERSIONS in this@JvmCompilerArgumentsImpl) put(X_SAM_CONVERSIONS.id, this@JvmCompilerArgumentsImpl[X_SAM_CONVERSIONS]?.transformToInput())
-    if (X_SANITIZE_PARENTHESES in this@JvmCompilerArgumentsImpl) put(X_SANITIZE_PARENTHESES.id, this@JvmCompilerArgumentsImpl[X_SANITIZE_PARENTHESES].transformToInput())
-    if (X_SCRIPT_RESOLVER_ENVIRONMENT in this@JvmCompilerArgumentsImpl) put(X_SCRIPT_RESOLVER_ENVIRONMENT.id, this@JvmCompilerArgumentsImpl[X_SCRIPT_RESOLVER_ENVIRONMENT]?.transformToInput())
-    try { if (X_SERIALIZE_IR in this@JvmCompilerArgumentsImpl) put(X_SERIALIZE_IR.id, this@JvmCompilerArgumentsImpl[X_SERIALIZE_IR].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_STRING_CONCAT in this@JvmCompilerArgumentsImpl) put(X_STRING_CONCAT.id, this@JvmCompilerArgumentsImpl[X_STRING_CONCAT]?.transformToInput())
-    if (X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS in this@JvmCompilerArgumentsImpl) put(X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS.id, this@JvmCompilerArgumentsImpl[X_SUPPORT_COMPATQUAL_CHECKER_FRAMEWORK_ANNOTATIONS]?.transformToInput())
-    if (X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING in this@JvmCompilerArgumentsImpl) put(X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING.id, this@JvmCompilerArgumentsImpl[X_SUPPRESS_DEPRECATED_JVM_TARGET_WARNING].transformToInput())
-    if (X_SUPPRESS_MISSING_BUILTINS_ERROR in this@JvmCompilerArgumentsImpl) put(X_SUPPRESS_MISSING_BUILTINS_ERROR.id, this@JvmCompilerArgumentsImpl[X_SUPPRESS_MISSING_BUILTINS_ERROR].transformToInput())
-    if (X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE in this@JvmCompilerArgumentsImpl) put(X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE.id, this@JvmCompilerArgumentsImpl[X_TYPE_ENHANCEMENT_IMPROVEMENTS_STRICT_MODE].transformToInput())
-    if (X_USE_14_INLINE_CLASSES_MANGLING_SCHEME in this@JvmCompilerArgumentsImpl) put(X_USE_14_INLINE_CLASSES_MANGLING_SCHEME.id, this@JvmCompilerArgumentsImpl[X_USE_14_INLINE_CLASSES_MANGLING_SCHEME].transformToInput())
-    if (X_USE_FAST_JAR_FILE_SYSTEM in this@JvmCompilerArgumentsImpl) put(X_USE_FAST_JAR_FILE_SYSTEM.id, this@JvmCompilerArgumentsImpl[X_USE_FAST_JAR_FILE_SYSTEM]?.transformToInput())
-    if (X_USE_INLINE_SCOPES_NUMBERS in this@JvmCompilerArgumentsImpl) put(X_USE_INLINE_SCOPES_NUMBERS.id, this@JvmCompilerArgumentsImpl[X_USE_INLINE_SCOPES_NUMBERS].transformToInput())
-    try { if (X_USE_JAVAC in this@JvmCompilerArgumentsImpl) put(X_USE_JAVAC.id, this@JvmCompilerArgumentsImpl[X_USE_JAVAC].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_USE_K2_KAPT in this@JvmCompilerArgumentsImpl) put(X_USE_K2_KAPT.id, this@JvmCompilerArgumentsImpl[X_USE_K2_KAPT]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_USE_OLD_CLASS_FILES_READING in this@JvmCompilerArgumentsImpl) put(X_USE_OLD_CLASS_FILES_READING.id, this@JvmCompilerArgumentsImpl[X_USE_OLD_CLASS_FILES_READING].transformToInput())
-    if (X_USE_TYPE_TABLE in this@JvmCompilerArgumentsImpl) put(X_USE_TYPE_TABLE.id, this@JvmCompilerArgumentsImpl[X_USE_TYPE_TABLE].transformToInput())
-    if (X_VALIDATE_BYTECODE in this@JvmCompilerArgumentsImpl) put(X_VALIDATE_BYTECODE.id, this@JvmCompilerArgumentsImpl[X_VALIDATE_BYTECODE].transformToInput())
-    if (X_VALUE_CLASSES in this@JvmCompilerArgumentsImpl) put(X_VALUE_CLASSES.id, this@JvmCompilerArgumentsImpl[X_VALUE_CLASSES].transformToInput())
-    try { if (X_WHEN_EXPRESSIONS in this@JvmCompilerArgumentsImpl) put(X_WHEN_EXPRESSIONS.id, this@JvmCompilerArgumentsImpl[X_WHEN_EXPRESSIONS]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (CLASSPATH in this@JvmCompilerArgumentsImpl) put(CLASSPATH.id, this@JvmCompilerArgumentsImpl[CLASSPATH]?.transformToInput())
-    if (D in this@JvmCompilerArgumentsImpl) put(D.id, this@JvmCompilerArgumentsImpl[D]?.transformToInput())
-    if (EXPRESSION in this@JvmCompilerArgumentsImpl) put(EXPRESSION.id, this@JvmCompilerArgumentsImpl[EXPRESSION]?.transformToInput())
-    if (INCLUDE_RUNTIME in this@JvmCompilerArgumentsImpl) put(INCLUDE_RUNTIME.id, this@JvmCompilerArgumentsImpl[INCLUDE_RUNTIME].transformToInput())
-    if (JAVA_PARAMETERS in this@JvmCompilerArgumentsImpl) put(JAVA_PARAMETERS.id, this@JvmCompilerArgumentsImpl[JAVA_PARAMETERS].transformToInput())
-    if (JDK_HOME in this@JvmCompilerArgumentsImpl) put(JDK_HOME.id, this@JvmCompilerArgumentsImpl[JDK_HOME]?.transformToInput())
-    try { if (JVM_DEFAULT in this@JvmCompilerArgumentsImpl) put(JVM_DEFAULT.id, this@JvmCompilerArgumentsImpl[JVM_DEFAULT]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (JVM_TARGET in this@JvmCompilerArgumentsImpl) put(JVM_TARGET.id, this@JvmCompilerArgumentsImpl[JVM_TARGET]?.transformToInput())
-    if (MODULE_NAME in this@JvmCompilerArgumentsImpl) put(MODULE_NAME.id, this@JvmCompilerArgumentsImpl[MODULE_NAME]?.transformToInput())
-    if (NO_JDK in this@JvmCompilerArgumentsImpl) put(NO_JDK.id, this@JvmCompilerArgumentsImpl[NO_JDK].transformToInput())
-    if (NO_REFLECT in this@JvmCompilerArgumentsImpl) put(NO_REFLECT.id, this@JvmCompilerArgumentsImpl[NO_REFLECT].transformToInput())
-    if (NO_STDLIB in this@JvmCompilerArgumentsImpl) put(NO_STDLIB.id, this@JvmCompilerArgumentsImpl[NO_STDLIB].transformToInput())
-    if (SCRIPT_TEMPLATES in this@JvmCompilerArgumentsImpl) put(SCRIPT_TEMPLATES.id, this@JvmCompilerArgumentsImpl[SCRIPT_TEMPLATES].transformToInput())
-  }
+  /**
+   * Returns a sorted list of compiler argument strings representing only the arguments
+   * that affect the compilation outcome (i.e. those with [affectsCompilationOutcome][org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgument.affectsCompilationOutcome] set to true).
+   * Arguments with default values are omitted from the output, because [toCompilerArgumentsAffectingOutcome]
+   * only sets arguments that have been explicitly assigned, and [compilerToArgumentStrings][org.jetbrains.kotlin.compilerRunner.toArgumentStrings]
+   * skips properties whose value matches the default.
+   */
+  public fun toCompilationInputs(): List<String> = toCompilerArgumentsAffectingOutcome().compilerToArgumentStrings().sorted()
 
   public class JvmCompilerArgument<V>(
     public val id: String,

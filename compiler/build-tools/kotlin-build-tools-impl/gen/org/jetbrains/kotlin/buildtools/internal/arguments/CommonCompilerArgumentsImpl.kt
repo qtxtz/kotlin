@@ -13,10 +13,8 @@ import kotlin.OptIn
 import kotlin.String
 import kotlin.Suppress
 import kotlin.collections.List
-import kotlin.collections.Map
 import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
-import kotlin.collections.buildMap
 import kotlin.collections.emptyList
 import kotlin.collections.mutableMapOf
 import kotlin.collections.mutableSetOf
@@ -392,93 +390,95 @@ internal abstract class CommonCompilerArgumentsImpl(
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
   }
 
-  @Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-  override fun toCompilationInputs(): Map<String, String?> = super.toCompilationInputs() + buildMap {
-    if (P in this@CommonCompilerArgumentsImpl) put(P.id, this@CommonCompilerArgumentsImpl[P]?.transformToInput())
-    if (XX_LANGUAGE in this@CommonCompilerArgumentsImpl) put(XX_LANGUAGE.id, this@CommonCompilerArgumentsImpl[XX_LANGUAGE]?.transformToInput())
-    try { if (XX_DEBUG_LEVEL_COMPILER_CHECKS in this@CommonCompilerArgumentsImpl) put(XX_DEBUG_LEVEL_COMPILER_CHECKS.id, this@CommonCompilerArgumentsImpl[XX_DEBUG_LEVEL_COMPILER_CHECKS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (XX_EXPLICIT_RETURN_TYPES in this@CommonCompilerArgumentsImpl) put(XX_EXPLICIT_RETURN_TYPES.id, this@CommonCompilerArgumentsImpl[XX_EXPLICIT_RETURN_TYPES].transformToInput())
-    try { if (XX_LENIENT_MODE in this@CommonCompilerArgumentsImpl) put(XX_LENIENT_MODE.id, this@CommonCompilerArgumentsImpl[XX_LENIENT_MODE].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_ALLOW_ANY_SCRIPTS_IN_SOURCE_ROOTS in this@CommonCompilerArgumentsImpl) put(X_ALLOW_ANY_SCRIPTS_IN_SOURCE_ROOTS.id, this@CommonCompilerArgumentsImpl[X_ALLOW_ANY_SCRIPTS_IN_SOURCE_ROOTS].transformToInput())
-    try { if (X_ALLOW_CONDITION_IMPLIES_RETURNS_CONTRACTS in this@CommonCompilerArgumentsImpl) put(X_ALLOW_CONDITION_IMPLIES_RETURNS_CONTRACTS.id, this@CommonCompilerArgumentsImpl[X_ALLOW_CONDITION_IMPLIES_RETURNS_CONTRACTS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_ALLOW_CONTRACTS_ON_MORE_FUNCTIONS in this@CommonCompilerArgumentsImpl) put(X_ALLOW_CONTRACTS_ON_MORE_FUNCTIONS.id, this@CommonCompilerArgumentsImpl[X_ALLOW_CONTRACTS_ON_MORE_FUNCTIONS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_ALLOW_HOLDSIN_CONTRACT in this@CommonCompilerArgumentsImpl) put(X_ALLOW_HOLDSIN_CONTRACT.id, this@CommonCompilerArgumentsImpl[X_ALLOW_HOLDSIN_CONTRACT].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_ALLOW_KOTLIN_PACKAGE in this@CommonCompilerArgumentsImpl) put(X_ALLOW_KOTLIN_PACKAGE.id, this@CommonCompilerArgumentsImpl[X_ALLOW_KOTLIN_PACKAGE].transformToInput())
-    try { if (X_ALLOW_REIFIED_TYPE_IN_CATCH in this@CommonCompilerArgumentsImpl) put(X_ALLOW_REIFIED_TYPE_IN_CATCH.id, this@CommonCompilerArgumentsImpl[X_ALLOW_REIFIED_TYPE_IN_CATCH].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_ANNOTATION_DEFAULT_TARGET in this@CommonCompilerArgumentsImpl) put(X_ANNOTATION_DEFAULT_TARGET.id, this@CommonCompilerArgumentsImpl[X_ANNOTATION_DEFAULT_TARGET]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_ANNOTATION_TARGET_ALL in this@CommonCompilerArgumentsImpl) put(X_ANNOTATION_TARGET_ALL.id, this@CommonCompilerArgumentsImpl[X_ANNOTATION_TARGET_ALL].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_CHECK_PHASE_CONDITIONS in this@CommonCompilerArgumentsImpl) put(X_CHECK_PHASE_CONDITIONS.id, this@CommonCompilerArgumentsImpl[X_CHECK_PHASE_CONDITIONS].transformToInput())
-    try { if (X_COLLECTION_LITERALS in this@CommonCompilerArgumentsImpl) put(X_COLLECTION_LITERALS.id, this@CommonCompilerArgumentsImpl[X_COLLECTION_LITERALS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_COMMON_SOURCES in this@CommonCompilerArgumentsImpl) put(X_COMMON_SOURCES.id, this@CommonCompilerArgumentsImpl[X_COMMON_SOURCES]?.transformToInput())
-    if (X_COMPILER_PLUGIN in this@CommonCompilerArgumentsImpl) put(X_COMPILER_PLUGIN.id, this@CommonCompilerArgumentsImpl[X_COMPILER_PLUGIN]?.transformToInput())
-    try { if (X_COMPILER_PLUGIN_ORDER in this@CommonCompilerArgumentsImpl) put(X_COMPILER_PLUGIN_ORDER.id, this@CommonCompilerArgumentsImpl[X_COMPILER_PLUGIN_ORDER]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_CONSISTENT_DATA_CLASS_COPY_VISIBILITY in this@CommonCompilerArgumentsImpl) put(X_CONSISTENT_DATA_CLASS_COPY_VISIBILITY.id, this@CommonCompilerArgumentsImpl[X_CONSISTENT_DATA_CLASS_COPY_VISIBILITY].transformToInput())
-    try { if (X_CONTEXT_PARAMETERS in this@CommonCompilerArgumentsImpl) put(X_CONTEXT_PARAMETERS.id, this@CommonCompilerArgumentsImpl[X_CONTEXT_PARAMETERS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_CONTEXT_RECEIVERS in this@CommonCompilerArgumentsImpl) put(X_CONTEXT_RECEIVERS.id, this@CommonCompilerArgumentsImpl[X_CONTEXT_RECEIVERS].transformToInput())
-    try { if (X_CONTEXT_SENSITIVE_RESOLUTION in this@CommonCompilerArgumentsImpl) put(X_CONTEXT_SENSITIVE_RESOLUTION.id, this@CommonCompilerArgumentsImpl[X_CONTEXT_SENSITIVE_RESOLUTION].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_DATA_FLOW_BASED_EXHAUSTIVENESS in this@CommonCompilerArgumentsImpl) put(X_DATA_FLOW_BASED_EXHAUSTIVENESS.id, this@CommonCompilerArgumentsImpl[X_DATA_FLOW_BASED_EXHAUSTIVENESS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_DIRECT_JAVA_ACTUALIZATION in this@CommonCompilerArgumentsImpl) put(X_DIRECT_JAVA_ACTUALIZATION.id, this@CommonCompilerArgumentsImpl[X_DIRECT_JAVA_ACTUALIZATION].transformToInput())
-    if (X_DISABLE_DEFAULT_SCRIPTING_PLUGIN in this@CommonCompilerArgumentsImpl) put(X_DISABLE_DEFAULT_SCRIPTING_PLUGIN.id, this@CommonCompilerArgumentsImpl[X_DISABLE_DEFAULT_SCRIPTING_PLUGIN].transformToInput())
-    if (X_DISABLE_PHASES in this@CommonCompilerArgumentsImpl) put(X_DISABLE_PHASES.id, this@CommonCompilerArgumentsImpl[X_DISABLE_PHASES].transformToInput())
-    try { if (X_DONT_SORT_SOURCE_FILES in this@CommonCompilerArgumentsImpl) put(X_DONT_SORT_SOURCE_FILES.id, this@CommonCompilerArgumentsImpl[X_DONT_SORT_SOURCE_FILES].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_DONT_WARN_ON_ERROR_SUPPRESSION in this@CommonCompilerArgumentsImpl) put(X_DONT_WARN_ON_ERROR_SUPPRESSION.id, this@CommonCompilerArgumentsImpl[X_DONT_WARN_ON_ERROR_SUPPRESSION].transformToInput())
-    if (X_ENABLE_INCREMENTAL_COMPILATION in this@CommonCompilerArgumentsImpl) put(X_ENABLE_INCREMENTAL_COMPILATION.id, this@CommonCompilerArgumentsImpl[X_ENABLE_INCREMENTAL_COMPILATION]?.transformToInput())
-    if (X_EXPECT_ACTUAL_CLASSES in this@CommonCompilerArgumentsImpl) put(X_EXPECT_ACTUAL_CLASSES.id, this@CommonCompilerArgumentsImpl[X_EXPECT_ACTUAL_CLASSES].transformToInput())
-    if (X_EXPLICIT_API in this@CommonCompilerArgumentsImpl) put(X_EXPLICIT_API.id, this@CommonCompilerArgumentsImpl[X_EXPLICIT_API].transformToInput())
-    try { if (X_EXPLICIT_BACKING_FIELDS in this@CommonCompilerArgumentsImpl) put(X_EXPLICIT_BACKING_FIELDS.id, this@CommonCompilerArgumentsImpl[X_EXPLICIT_BACKING_FIELDS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_EXPLICIT_CONTEXT_ARGUMENTS in this@CommonCompilerArgumentsImpl) put(X_EXPLICIT_CONTEXT_ARGUMENTS.id, this@CommonCompilerArgumentsImpl[X_EXPLICIT_CONTEXT_ARGUMENTS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_FRAGMENT_DEPENDENCY in this@CommonCompilerArgumentsImpl) put(X_FRAGMENT_DEPENDENCY.id, this@CommonCompilerArgumentsImpl[X_FRAGMENT_DEPENDENCY]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_FRAGMENT_FRIEND_DEPENDENCY in this@CommonCompilerArgumentsImpl) put(X_FRAGMENT_FRIEND_DEPENDENCY.id, this@CommonCompilerArgumentsImpl[X_FRAGMENT_FRIEND_DEPENDENCY]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_FRAGMENT_REFINES in this@CommonCompilerArgumentsImpl) put(X_FRAGMENT_REFINES.id, this@CommonCompilerArgumentsImpl[X_FRAGMENT_REFINES]?.transformToInput())
-    if (X_FRAGMENT_SOURCES in this@CommonCompilerArgumentsImpl) put(X_FRAGMENT_SOURCES.id, this@CommonCompilerArgumentsImpl[X_FRAGMENT_SOURCES]?.transformToInput())
-    if (X_FRAGMENTS in this@CommonCompilerArgumentsImpl) put(X_FRAGMENTS.id, this@CommonCompilerArgumentsImpl[X_FRAGMENTS]?.transformToInput())
-    try { if (X_HEADER_MODE in this@CommonCompilerArgumentsImpl) put(X_HEADER_MODE.id, this@CommonCompilerArgumentsImpl[X_HEADER_MODE].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_HEADER_MODE_TYPE in this@CommonCompilerArgumentsImpl) put(X_HEADER_MODE_TYPE.id, this@CommonCompilerArgumentsImpl[X_HEADER_MODE_TYPE].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_IGNORE_CONST_OPTIMIZATION_ERRORS in this@CommonCompilerArgumentsImpl) put(X_IGNORE_CONST_OPTIMIZATION_ERRORS.id, this@CommonCompilerArgumentsImpl[X_IGNORE_CONST_OPTIMIZATION_ERRORS].transformToInput())
-    if (X_INLINE_CLASSES in this@CommonCompilerArgumentsImpl) put(X_INLINE_CLASSES.id, this@CommonCompilerArgumentsImpl[X_INLINE_CLASSES].transformToInput())
-    if (X_INTELLIJ_PLUGIN_ROOT in this@CommonCompilerArgumentsImpl) put(X_INTELLIJ_PLUGIN_ROOT.id, this@CommonCompilerArgumentsImpl[X_INTELLIJ_PLUGIN_ROOT]?.transformToInput())
-    try { if (X_LOCAL_TYPE_ALIASES in this@CommonCompilerArgumentsImpl) put(X_LOCAL_TYPE_ALIASES.id, this@CommonCompilerArgumentsImpl[X_LOCAL_TYPE_ALIASES].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_METADATA_KLIB in this@CommonCompilerArgumentsImpl) put(X_METADATA_KLIB.id, this@CommonCompilerArgumentsImpl[X_METADATA_KLIB].transformToInput())
-    if (X_METADATA_VERSION in this@CommonCompilerArgumentsImpl) put(X_METADATA_VERSION.id, this@CommonCompilerArgumentsImpl[X_METADATA_VERSION]?.transformToInput())
-    if (X_MULTI_DOLLAR_INTERPOLATION in this@CommonCompilerArgumentsImpl) put(X_MULTI_DOLLAR_INTERPOLATION.id, this@CommonCompilerArgumentsImpl[X_MULTI_DOLLAR_INTERPOLATION].transformToInput())
-    if (X_MULTI_PLATFORM in this@CommonCompilerArgumentsImpl) put(X_MULTI_PLATFORM.id, this@CommonCompilerArgumentsImpl[X_MULTI_PLATFORM].transformToInput())
-    try { if (X_NAME_BASED_DESTRUCTURING in this@CommonCompilerArgumentsImpl) put(X_NAME_BASED_DESTRUCTURING.id, this@CommonCompilerArgumentsImpl[X_NAME_BASED_DESTRUCTURING]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_NESTED_TYPE_ALIASES in this@CommonCompilerArgumentsImpl) put(X_NESTED_TYPE_ALIASES.id, this@CommonCompilerArgumentsImpl[X_NESTED_TYPE_ALIASES].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_NEW_INFERENCE in this@CommonCompilerArgumentsImpl) put(X_NEW_INFERENCE.id, this@CommonCompilerArgumentsImpl[X_NEW_INFERENCE].transformToInput())
-    if (X_NO_CHECK_ACTUAL in this@CommonCompilerArgumentsImpl) put(X_NO_CHECK_ACTUAL.id, this@CommonCompilerArgumentsImpl[X_NO_CHECK_ACTUAL].transformToInput())
-    if (X_NO_INLINE in this@CommonCompilerArgumentsImpl) put(X_NO_INLINE.id, this@CommonCompilerArgumentsImpl[X_NO_INLINE].transformToInput())
-    if (X_NON_LOCAL_BREAK_CONTINUE in this@CommonCompilerArgumentsImpl) put(X_NON_LOCAL_BREAK_CONTINUE.id, this@CommonCompilerArgumentsImpl[X_NON_LOCAL_BREAK_CONTINUE].transformToInput())
-    if (X_PHASES_TO_VALIDATE in this@CommonCompilerArgumentsImpl) put(X_PHASES_TO_VALIDATE.id, this@CommonCompilerArgumentsImpl[X_PHASES_TO_VALIDATE].transformToInput())
-    if (X_PHASES_TO_VALIDATE_AFTER in this@CommonCompilerArgumentsImpl) put(X_PHASES_TO_VALIDATE_AFTER.id, this@CommonCompilerArgumentsImpl[X_PHASES_TO_VALIDATE_AFTER].transformToInput())
-    if (X_PHASES_TO_VALIDATE_BEFORE in this@CommonCompilerArgumentsImpl) put(X_PHASES_TO_VALIDATE_BEFORE.id, this@CommonCompilerArgumentsImpl[X_PHASES_TO_VALIDATE_BEFORE].transformToInput())
-    if (X_PLUGIN in this@CommonCompilerArgumentsImpl) put(X_PLUGIN.id, this@CommonCompilerArgumentsImpl[X_PLUGIN]?.transformToInput())
-    if (X_RENDER_INTERNAL_DIAGNOSTIC_NAMES in this@CommonCompilerArgumentsImpl) put(X_RENDER_INTERNAL_DIAGNOSTIC_NAMES.id, this@CommonCompilerArgumentsImpl[X_RENDER_INTERNAL_DIAGNOSTIC_NAMES].transformToInput())
-    try { if (X_REPL in this@CommonCompilerArgumentsImpl) put(X_REPL.id, this@CommonCompilerArgumentsImpl[X_REPL].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_RETURN_VALUE_CHECKER in this@CommonCompilerArgumentsImpl) put(X_RETURN_VALUE_CHECKER.id, this@CommonCompilerArgumentsImpl[X_RETURN_VALUE_CHECKER].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    try { if (X_SEPARATE_KMP_COMPILATION in this@CommonCompilerArgumentsImpl) put(X_SEPARATE_KMP_COMPILATION.id, this@CommonCompilerArgumentsImpl[X_SEPARATE_KMP_COMPILATION].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_SKIP_METADATA_VERSION_CHECK in this@CommonCompilerArgumentsImpl) put(X_SKIP_METADATA_VERSION_CHECK.id, this@CommonCompilerArgumentsImpl[X_SKIP_METADATA_VERSION_CHECK].transformToInput())
-    if (X_SKIP_PRERELEASE_CHECK in this@CommonCompilerArgumentsImpl) put(X_SKIP_PRERELEASE_CHECK.id, this@CommonCompilerArgumentsImpl[X_SKIP_PRERELEASE_CHECK].transformToInput())
-    if (X_STDLIB_COMPILATION in this@CommonCompilerArgumentsImpl) put(X_STDLIB_COMPILATION.id, this@CommonCompilerArgumentsImpl[X_STDLIB_COMPILATION].transformToInput())
-    if (X_SUPPRESS_API_VERSION_GREATER_THAN_LANGUAGE_VERSION_ERROR in this@CommonCompilerArgumentsImpl) put(X_SUPPRESS_API_VERSION_GREATER_THAN_LANGUAGE_VERSION_ERROR.id, this@CommonCompilerArgumentsImpl[X_SUPPRESS_API_VERSION_GREATER_THAN_LANGUAGE_VERSION_ERROR].transformToInput())
-    if (X_SUPPRESS_VERSION_WARNINGS in this@CommonCompilerArgumentsImpl) put(X_SUPPRESS_VERSION_WARNINGS.id, this@CommonCompilerArgumentsImpl[X_SUPPRESS_VERSION_WARNINGS].transformToInput())
-    if (X_SUPPRESS_WARNING in this@CommonCompilerArgumentsImpl) put(X_SUPPRESS_WARNING.id, this@CommonCompilerArgumentsImpl[X_SUPPRESS_WARNING].transformToInput())
-    if (X_UNRESTRICTED_BUILDER_INFERENCE in this@CommonCompilerArgumentsImpl) put(X_UNRESTRICTED_BUILDER_INFERENCE.id, this@CommonCompilerArgumentsImpl[X_UNRESTRICTED_BUILDER_INFERENCE].transformToInput())
-    if (X_USE_FIR_EXPERIMENTAL_CHECKERS in this@CommonCompilerArgumentsImpl) put(X_USE_FIR_EXPERIMENTAL_CHECKERS.id, this@CommonCompilerArgumentsImpl[X_USE_FIR_EXPERIMENTAL_CHECKERS].transformToInput())
-    if (X_USE_FIR_IC in this@CommonCompilerArgumentsImpl) put(X_USE_FIR_IC.id, this@CommonCompilerArgumentsImpl[X_USE_FIR_IC].transformToInput())
-    if (X_USE_FIR_LT in this@CommonCompilerArgumentsImpl) put(X_USE_FIR_LT.id, this@CommonCompilerArgumentsImpl[X_USE_FIR_LT].transformToInput())
-    try { if (X_USE_K2 in this@CommonCompilerArgumentsImpl) put(X_USE_K2.id, this@CommonCompilerArgumentsImpl[X_USE_K2].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_VERIFY_IR in this@CommonCompilerArgumentsImpl) put(X_VERIFY_IR.id, this@CommonCompilerArgumentsImpl[X_VERIFY_IR]?.transformToInput())
-    try { if (X_VERIFY_IR_NESTED_OFFSETS in this@CommonCompilerArgumentsImpl) put(X_VERIFY_IR_NESTED_OFFSETS.id, this@CommonCompilerArgumentsImpl[X_VERIFY_IR_NESTED_OFFSETS].transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_VERIFY_IR_VISIBILITY in this@CommonCompilerArgumentsImpl) put(X_VERIFY_IR_VISIBILITY.id, this@CommonCompilerArgumentsImpl[X_VERIFY_IR_VISIBILITY].transformToInput())
-    try { if (X_WARNING_LEVEL in this@CommonCompilerArgumentsImpl) put(X_WARNING_LEVEL.id, this@CommonCompilerArgumentsImpl[X_WARNING_LEVEL]?.transformToInput()) } catch (_: NoSuchMethodError) {  }
-    if (X_WHEN_GUARDS in this@CommonCompilerArgumentsImpl) put(X_WHEN_GUARDS.id, this@CommonCompilerArgumentsImpl[X_WHEN_GUARDS].transformToInput())
-    if (API_VERSION in this@CommonCompilerArgumentsImpl) put(API_VERSION.id, this@CommonCompilerArgumentsImpl[API_VERSION]?.transformToInput())
-    if (KOTLIN_HOME in this@CommonCompilerArgumentsImpl) put(KOTLIN_HOME.id, this@CommonCompilerArgumentsImpl[KOTLIN_HOME]?.transformToInput())
-    if (LANGUAGE_VERSION in this@CommonCompilerArgumentsImpl) put(LANGUAGE_VERSION.id, this@CommonCompilerArgumentsImpl[LANGUAGE_VERSION]?.transformToInput())
-    if (OPT_IN in this@CommonCompilerArgumentsImpl) put(OPT_IN.id, this@CommonCompilerArgumentsImpl[OPT_IN].transformToInput())
-    if (PROGRESSIVE in this@CommonCompilerArgumentsImpl) put(PROGRESSIVE.id, this@CommonCompilerArgumentsImpl[PROGRESSIVE].transformToInput())
-    if (SCRIPT in this@CommonCompilerArgumentsImpl) put(SCRIPT.id, this@CommonCompilerArgumentsImpl[SCRIPT].transformToInput())
-    try { if (COMPILER_PLUGINS in this@CommonCompilerArgumentsImpl) put(COMPILER_PLUGINS.id, this@CommonCompilerArgumentsImpl[COMPILER_PLUGINS].transformToInput()) } catch (_: NoSuchMethodError) {  }
+  @Suppress("DEPRECATION")
+  public fun toCompilerArgumentsAffectingOutcome(arguments: CommonCompilerArguments): CommonCompilerArguments {
+    super.toCompilerArgumentsAffectingOutcome(arguments)
+    if (P in this) { arguments.pluginOptions = get(P) ?: emptyArray()}
+    if (XX_LANGUAGE in this) { arguments.manuallyConfiguredFeatures = get(XX_LANGUAGE) ?: emptyArray()}
+    if (XX_DEBUG_LEVEL_COMPILER_CHECKS in this) { arguments.debugLevelCompilerChecks = get(XX_DEBUG_LEVEL_COMPILER_CHECKS)}
+    if (XX_EXPLICIT_RETURN_TYPES in this) { arguments.explicitReturnTypes = get(XX_EXPLICIT_RETURN_TYPES).stringValue}
+    if (XX_LENIENT_MODE in this) { arguments.lenientMode = get(XX_LENIENT_MODE)}
+    if (X_ALLOW_ANY_SCRIPTS_IN_SOURCE_ROOTS in this) { arguments.allowAnyScriptsInSourceRoots = get(X_ALLOW_ANY_SCRIPTS_IN_SOURCE_ROOTS)}
+    if (X_ALLOW_CONDITION_IMPLIES_RETURNS_CONTRACTS in this) { arguments.allowConditionImpliesReturnsContracts = get(X_ALLOW_CONDITION_IMPLIES_RETURNS_CONTRACTS)}
+    if (X_ALLOW_CONTRACTS_ON_MORE_FUNCTIONS in this) { arguments.allowContractsOnMoreFunctions = get(X_ALLOW_CONTRACTS_ON_MORE_FUNCTIONS)}
+    if (X_ALLOW_HOLDSIN_CONTRACT in this) { arguments.allowHoldsinContract = get(X_ALLOW_HOLDSIN_CONTRACT)}
+    if (X_ALLOW_KOTLIN_PACKAGE in this) { arguments.allowKotlinPackage = get(X_ALLOW_KOTLIN_PACKAGE)}
+    if (X_ALLOW_REIFIED_TYPE_IN_CATCH in this) { arguments.allowReifiedTypeInCatch = get(X_ALLOW_REIFIED_TYPE_IN_CATCH)}
+    if (X_ANNOTATION_DEFAULT_TARGET in this) { arguments.annotationDefaultTarget = get(X_ANNOTATION_DEFAULT_TARGET)?.stringValue}
+    if (X_ANNOTATION_TARGET_ALL in this) { arguments.annotationTargetAll = get(X_ANNOTATION_TARGET_ALL)}
+    if (X_CHECK_PHASE_CONDITIONS in this) { arguments.checkPhaseConditions = get(X_CHECK_PHASE_CONDITIONS)}
+    if (X_COLLECTION_LITERALS in this) { arguments.collectionLiterals = get(X_COLLECTION_LITERALS)}
+    if (X_COMMON_SOURCES in this) { arguments.commonSources = get(X_COMMON_SOURCES) ?: emptyArray()}
+    if (X_COMPILER_PLUGIN in this) { arguments.pluginConfigurations = get(X_COMPILER_PLUGIN) ?: emptyArray()}
+    if (X_COMPILER_PLUGIN_ORDER in this) { arguments.pluginOrderConstraints = get(X_COMPILER_PLUGIN_ORDER) ?: emptyArray()}
+    if (X_CONSISTENT_DATA_CLASS_COPY_VISIBILITY in this) { arguments.consistentDataClassCopyVisibility = get(X_CONSISTENT_DATA_CLASS_COPY_VISIBILITY)}
+    if (X_CONTEXT_PARAMETERS in this) { arguments.contextParameters = get(X_CONTEXT_PARAMETERS)}
+    if (X_CONTEXT_RECEIVERS in this) { arguments.contextReceivers = get(X_CONTEXT_RECEIVERS)}
+    if (X_CONTEXT_SENSITIVE_RESOLUTION in this) { arguments.contextSensitiveResolution = get(X_CONTEXT_SENSITIVE_RESOLUTION)}
+    if (X_DATA_FLOW_BASED_EXHAUSTIVENESS in this) { arguments.dataFlowBasedExhaustiveness = get(X_DATA_FLOW_BASED_EXHAUSTIVENESS)}
+    if (X_DIRECT_JAVA_ACTUALIZATION in this) { arguments.directJavaActualization = get(X_DIRECT_JAVA_ACTUALIZATION)}
+    if (X_DISABLE_DEFAULT_SCRIPTING_PLUGIN in this) { arguments.disableDefaultScriptingPlugin = get(X_DISABLE_DEFAULT_SCRIPTING_PLUGIN)}
+    if (X_DISABLE_PHASES in this) { arguments.disablePhases = get(X_DISABLE_PHASES).toTypedArray()}
+    if (X_DONT_SORT_SOURCE_FILES in this) { arguments.dontSortSourceFiles = get(X_DONT_SORT_SOURCE_FILES)}
+    if (X_DONT_WARN_ON_ERROR_SUPPRESSION in this) { arguments.dontWarnOnErrorSuppression = get(X_DONT_WARN_ON_ERROR_SUPPRESSION)}
+    if (X_ENABLE_INCREMENTAL_COMPILATION in this) { arguments.incrementalCompilation = get(X_ENABLE_INCREMENTAL_COMPILATION)}
+    if (X_EXPECT_ACTUAL_CLASSES in this) { arguments.expectActualClasses = get(X_EXPECT_ACTUAL_CLASSES)}
+    if (X_EXPLICIT_API in this) { arguments.explicitApi = get(X_EXPLICIT_API).stringValue}
+    if (X_EXPLICIT_BACKING_FIELDS in this) { arguments.explicitBackingFields = get(X_EXPLICIT_BACKING_FIELDS)}
+    if (X_EXPLICIT_CONTEXT_ARGUMENTS in this) { arguments.explicitContextArguments = get(X_EXPLICIT_CONTEXT_ARGUMENTS)}
+    if (X_FRAGMENT_DEPENDENCY in this) { arguments.fragmentDependencies = get(X_FRAGMENT_DEPENDENCY) ?: emptyArray()}
+    if (X_FRAGMENT_FRIEND_DEPENDENCY in this) { arguments.fragmentFriendDependencies = get(X_FRAGMENT_FRIEND_DEPENDENCY) ?: emptyArray()}
+    if (X_FRAGMENT_REFINES in this) { arguments.fragmentRefines = get(X_FRAGMENT_REFINES) ?: emptyArray()}
+    if (X_FRAGMENT_SOURCES in this) { arguments.fragmentSources = get(X_FRAGMENT_SOURCES) ?: emptyArray()}
+    if (X_FRAGMENTS in this) { arguments.fragments = get(X_FRAGMENTS) ?: emptyArray()}
+    if (X_HEADER_MODE in this) { arguments.headerMode = get(X_HEADER_MODE)}
+    if (X_HEADER_MODE_TYPE in this) { arguments.headerModeType = get(X_HEADER_MODE_TYPE).stringValue}
+    if (X_IGNORE_CONST_OPTIMIZATION_ERRORS in this) { arguments.ignoreConstOptimizationErrors = get(X_IGNORE_CONST_OPTIMIZATION_ERRORS)}
+    if (X_INLINE_CLASSES in this) { arguments.inlineClasses = get(X_INLINE_CLASSES)}
+    if (X_INTELLIJ_PLUGIN_ROOT in this) { arguments.intellijPluginRoot = get(X_INTELLIJ_PLUGIN_ROOT)}
+    if (X_LOCAL_TYPE_ALIASES in this) { arguments.localTypeAliases = get(X_LOCAL_TYPE_ALIASES)}
+    if (X_METADATA_KLIB in this) { arguments.metadataKlib = get(X_METADATA_KLIB)}
+    if (X_METADATA_VERSION in this) { arguments.metadataVersion = get(X_METADATA_VERSION)}
+    if (X_MULTI_DOLLAR_INTERPOLATION in this) { arguments.multiDollarInterpolation = get(X_MULTI_DOLLAR_INTERPOLATION)}
+    if (X_MULTI_PLATFORM in this) { arguments.multiPlatform = get(X_MULTI_PLATFORM)}
+    if (X_NAME_BASED_DESTRUCTURING in this) { arguments.nameBasedDestructuring = get(X_NAME_BASED_DESTRUCTURING)?.stringValue}
+    if (X_NESTED_TYPE_ALIASES in this) { arguments.nestedTypeAliases = get(X_NESTED_TYPE_ALIASES)}
+    if (X_NEW_INFERENCE in this) { arguments.newInference = get(X_NEW_INFERENCE)}
+    if (X_NO_CHECK_ACTUAL in this) { arguments.noCheckActual = get(X_NO_CHECK_ACTUAL)}
+    if (X_NO_INLINE in this) { arguments.noInline = get(X_NO_INLINE)}
+    if (X_NON_LOCAL_BREAK_CONTINUE in this) { arguments.nonLocalBreakContinue = get(X_NON_LOCAL_BREAK_CONTINUE)}
+    if (X_PHASES_TO_VALIDATE in this) { arguments.phasesToValidate = get(X_PHASES_TO_VALIDATE).toTypedArray()}
+    if (X_PHASES_TO_VALIDATE_AFTER in this) { arguments.phasesToValidateAfter = get(X_PHASES_TO_VALIDATE_AFTER).toTypedArray()}
+    if (X_PHASES_TO_VALIDATE_BEFORE in this) { arguments.phasesToValidateBefore = get(X_PHASES_TO_VALIDATE_BEFORE).toTypedArray()}
+    if (X_PLUGIN in this) { arguments.pluginClasspaths = get(X_PLUGIN) ?: emptyArray()}
+    if (X_RENDER_INTERNAL_DIAGNOSTIC_NAMES in this) { arguments.renderInternalDiagnosticNames = get(X_RENDER_INTERNAL_DIAGNOSTIC_NAMES)}
+    if (X_REPL in this) { arguments.repl = get(X_REPL)}
+    if (X_RETURN_VALUE_CHECKER in this) { arguments.returnValueChecker = get(X_RETURN_VALUE_CHECKER).stringValue}
+    if (X_SEPARATE_KMP_COMPILATION in this) { arguments.separateKmpCompilationScheme = get(X_SEPARATE_KMP_COMPILATION)}
+    if (X_SKIP_METADATA_VERSION_CHECK in this) { arguments.skipMetadataVersionCheck = get(X_SKIP_METADATA_VERSION_CHECK)}
+    if (X_SKIP_PRERELEASE_CHECK in this) { arguments.skipPrereleaseCheck = get(X_SKIP_PRERELEASE_CHECK)}
+    if (X_STDLIB_COMPILATION in this) { arguments.stdlibCompilation = get(X_STDLIB_COMPILATION)}
+    if (X_SUPPRESS_API_VERSION_GREATER_THAN_LANGUAGE_VERSION_ERROR in this) { arguments.suppressApiVersionGreaterThanLanguageVersionError = get(X_SUPPRESS_API_VERSION_GREATER_THAN_LANGUAGE_VERSION_ERROR)}
+    if (X_SUPPRESS_VERSION_WARNINGS in this) { arguments.suppressVersionWarnings = get(X_SUPPRESS_VERSION_WARNINGS)}
+    if (X_SUPPRESS_WARNING in this) { arguments.suppressedDiagnostics = get(X_SUPPRESS_WARNING).toTypedArray()}
+    if (X_UNRESTRICTED_BUILDER_INFERENCE in this) { arguments.unrestrictedBuilderInference = get(X_UNRESTRICTED_BUILDER_INFERENCE)}
+    if (X_USE_FIR_EXPERIMENTAL_CHECKERS in this) { arguments.useFirExperimentalCheckers = get(X_USE_FIR_EXPERIMENTAL_CHECKERS)}
+    if (X_USE_FIR_IC in this) { arguments.useFirIC = get(X_USE_FIR_IC)}
+    if (X_USE_FIR_LT in this) { arguments.useFirLT = get(X_USE_FIR_LT)}
+    try { if (X_USE_K2 in this) { arguments.setUsingReflection("useK2", get(X_USE_K2))} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_USE_K2. Current compiler version is: $KC_VERSION, but the argument was removed in 2.2.0""").initCause(e) }
+    if (X_VERIFY_IR in this) { arguments.verifyIr = get(X_VERIFY_IR)?.stringValue}
+    if (X_VERIFY_IR_NESTED_OFFSETS in this) { arguments.verifyIrNestedOffsets = get(X_VERIFY_IR_NESTED_OFFSETS)}
+    if (X_VERIFY_IR_VISIBILITY in this) { arguments.verifyIrVisibility = get(X_VERIFY_IR_VISIBILITY)}
+    if (X_WARNING_LEVEL in this) { arguments.warningLevels = get(X_WARNING_LEVEL) ?: emptyArray()}
+    if (X_WHEN_GUARDS in this) { arguments.whenGuards = get(X_WHEN_GUARDS)}
+    if (API_VERSION in this) { arguments.apiVersion = get(API_VERSION)?.stringValue}
+    if (KOTLIN_HOME in this) { arguments.kotlinHome = get(KOTLIN_HOME)?.absolutePathStringOrThrow()}
+    if (LANGUAGE_VERSION in this) { arguments.languageVersion = get(LANGUAGE_VERSION)?.stringValue}
+    if (OPT_IN in this) { arguments.optIn = get(OPT_IN).toTypedArray()}
+    if (PROGRESSIVE in this) { arguments.progressiveMode = get(PROGRESSIVE)}
+    if (SCRIPT in this) { arguments.script = get(SCRIPT)}
+    if (COMPILER_PLUGINS in this) { arguments.applyCompilerPlugins(get(COMPILER_PLUGINS))}
+    return arguments
   }
 
   public class CommonCompilerArgument<V>(
