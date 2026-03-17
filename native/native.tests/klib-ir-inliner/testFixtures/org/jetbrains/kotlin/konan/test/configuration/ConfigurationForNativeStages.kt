@@ -74,17 +74,19 @@ fun TestConfigurationBuilderBase<*, *>.commonConfigurationForNativeCodegenTest(
  * Sets up all first-stage steps from frontend till pre-serialization lowerings (included).
  * Also, sets up corresponding handlers steps for each facade step.
  */
-fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization() {
+fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization(includeFirHandlers: Boolean = true) {
     facadeStep(::FirCliNativeFacade)
     firHandlersStep {
         commonFirHandlersForCodegenTest()
-        useHandlers(
-            ::FirDumpHandler,
-            ::FirCfgDumpHandler,
-            ::FirCfgConsistencyHandler,
-            ::FirResolvedTypesVerifier,
-            ::FirDiagnosticsHandler,
-        )
+        if (includeFirHandlers) {
+            useHandlers(
+                ::FirDumpHandler,
+                ::FirCfgDumpHandler,
+                ::FirCfgConsistencyHandler,
+                ::FirResolvedTypesVerifier,
+                ::FirDiagnosticsHandler,
+            )
+        }
     }
 
     facadeStep(::Fir2IrCliNativeFacade)
