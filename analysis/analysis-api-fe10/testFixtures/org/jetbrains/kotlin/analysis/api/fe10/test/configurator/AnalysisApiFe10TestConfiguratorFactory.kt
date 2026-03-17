@@ -24,27 +24,23 @@ object AnalysisApiFe10TestConfiguratorFactory : AnalysisApiTestConfiguratorFacto
         }
     }
 
-    override fun supportMode(data: AnalysisApiTestConfiguratorFactoryData): Boolean {
-        return when {
-            data.targetPlatform != TargetPlatformEnum.JVM -> false
-            data.frontend != FrontendKind.Fe10 -> false
-            data.analysisSessionMode != AnalysisSessionMode.Normal -> false
-            data.analysisApiMode != AnalysisApiMode.Ide -> false
-            else -> when (data.moduleKind) {
-                TestModuleKind.Source -> {
-                    true
-                }
+    override fun supportMode(data: AnalysisApiTestConfiguratorFactoryData): Boolean = when {
+        data.targetPlatform != TargetPlatformEnum.JVM -> false
+        data.frontend != FrontendKind.Fe10 -> false
+        data.analysisSessionMode != AnalysisSessionMode.Normal -> false
+        data.analysisApiMode != AnalysisApiMode.Ide -> false
+        else -> when (data.moduleKind) {
+            TestModuleKind.Source,
+                -> true
 
-                TestModuleKind.ScriptSource,
-                TestModuleKind.LibraryBinary,
-                TestModuleKind.LibraryBinaryDecompiled,
-                TestModuleKind.LibrarySource,
-                TestModuleKind.CodeFragment,
-                TestModuleKind.NotUnderContentRoot,
-                TestModuleKind.NotUnderContentRootWithDependencies -> {
-                    false
-                }
-            }
+            TestModuleKind.ScriptSource,
+            TestModuleKind.LibraryBinary,
+            TestModuleKind.LibraryBinaryDecompiled,
+            TestModuleKind.LibrarySource,
+            TestModuleKind.CodeFragment,
+            TestModuleKind.NotUnderContentRoot,
+            TestModuleKind.NotUnderContentRootWithDependencies,
+                -> false
         }
     }
 }
