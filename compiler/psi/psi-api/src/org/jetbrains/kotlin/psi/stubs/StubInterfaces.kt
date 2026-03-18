@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -292,6 +292,14 @@ interface KotlinFunctionTypeStub : KotlinStubElement<KtFunctionType>
 @SubclassOptInRequired(KtImplementationDetail::class)
 interface KotlinScriptStub : KotlinStubWithFqName<KtScript> {
     override val fqName: FqName
+
+    /**
+     * Whether the script is a REPL snippet.
+     *
+     * @see org.jetbrains.kotlin.psi.isReplSnippet
+     */
+    @KtImplementationDetail
+    val isReplSnippet: Boolean
 }
 
 @SubclassOptInRequired(KtImplementationDetail::class)
