@@ -283,7 +283,7 @@ public interface JvmCompilerArguments : CommonCompilerArguments {
      */
     @JvmField
     @ExperimentalCompilerArgument
-    public val X_IGNORED_ANNOTATIONS_FOR_BRIDGES: JvmCompilerArgument<Array<String>?> =
+    public val X_IGNORED_ANNOTATIONS_FOR_BRIDGES: JvmCompilerArgument<List<String>> =
         JvmCompilerArgument("X_IGNORED_ANNOTATIONS_FOR_BRIDGES", KotlinReleaseVersion(2, 3, 20))
 
     /**
