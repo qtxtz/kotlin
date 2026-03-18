@@ -282,6 +282,7 @@ testing {
         named<JvmTestSuite>("testCompilerPlugins") {
             dependencies {
                 compileOnly(project(":kotlin-scripting-common"))
+                implementation(project(":compiler:build-tools:kotlin-build-statistics"))
             }
             targets.all {
                 testTask.configure {
