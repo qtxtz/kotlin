@@ -5,9 +5,19 @@
 
 package org.jetbrains.kotlin.test.services
 
+import com.intellij.core.CoreApplicationEnvironment
+import com.intellij.mock.MockProject
+import com.intellij.pom.PomModel
+import com.intellij.pom.core.impl.PomModelImpl
+import com.intellij.pom.tree.TreeAspect
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.impl.source.tree.TreeCopyHandler
 import org.jetbrains.kotlin.builtins.StandardNames
+import org.jetbrains.kotlin.cli.create
+import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
+import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
+import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.*
@@ -16,10 +26,11 @@ import org.jetbrains.kotlin.psi.psiUtil.getChildrenOfType
 import org.jetbrains.kotlin.psi.psiUtil.nextLeaf
 import org.jetbrains.kotlin.psi.psiUtil.prevLeaf
 import org.jetbrains.kotlin.resolve.ImportPath
+import org.jetbrains.kotlin.test.TestInfrastructureInternals
 import org.jetbrains.kotlin.test.model.TestFile
-import org.jetbrains.kotlin.test.services.JUnit5Assertions.assertEquals
+import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.utils.addIfNotNull
-import java.util.regex.Pattern
+import org.jetbrains.kotlin.utils.addToStdlib.shouldNotBeCalled
 
 /**
  * For every Kotlin file (*.kt) stored in this text:
@@ -43,9 +54,9 @@ import java.util.regex.Pattern
  * Examples: package kotlin.coroutines -> package kotlin.coroutines
  *           import kotlin.test.* -> import kotlin.test.*
  */
-class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFilePreprocessor(testServices) {
+class BatchingPackageInserter(testServices: TestServices) : SourceFilePreprocessor(testServices) {
     companion object {
-        private val packagePattern: Pattern = Pattern.compile("""^(\s*)package\s+(\S+)""", Pattern.MULTILINE)
+        private val lock = Any()
 
         fun computePackage(testServices: TestServices): String {
             val (className, methodName, _) = testServices.testInfo
@@ -54,44 +65,49 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
         }
     }
 
-    override fun process(file: TestFile, content: String): String {
-        val additionalPackage = computePackage(testServices)
-        val matcher = packagePattern.matcher(content)
+    private val packageMapping: MutableMap<FqName, FqName> = mutableMapOf()
 
-        return if (matcher.find()) {
-            val leadingWhitespace = matcher.group(1)
-            val existingPackage = matcher.group(2)
-            val newPackage = "$additionalPackage.$existingPackage"
-            matcher.replaceFirst("${leadingWhitespace}package $newPackage")
-        } else {
-            "package $additionalPackage\n\n$content"
+    override fun process(file: TestFile, content: String): String {
+        shouldNotBeCalled()
+    }
+
+    @TestInfrastructureInternals
+    override fun processModule(module: TestModule, filesContent: MutableMap<TestFile, String>) {
+        // At this point we can't get `project` from `compilerConfigurationProvider`, as it will cause infinite recursion.
+        val psiFactory = createPsiFactory()
+        val additionalBasePackage = FqName(computePackage(testServices))
+        val ktFiles = filesContent.mapValues { (_, content) -> psiFactory.createFile(content) }
+        ktFiles.values.map { it.packageFqName }.associateWithTo(packageMapping) { packageFqName ->
+            additionalBasePackage.child(packageFqName)
+        }
+        val patcher = PackageNamePatcher(psiFactory, packageMapping, additionalBasePackage)
+        ktFiles.values.forEach { it.accept(patcher, emptySet()) }
+        for ((testFile, ktFile) in ktFiles) {
+            filesContent[testFile] = ktFile.text
         }
     }
 
-    override fun revert(file: TestFile, actualContent: String): String {
-        val additionalPackage = computePackage(testServices)
-        val matcher = packagePattern.matcher(actualContent)
+    private fun createPsiFactory(): KtPsiFactory {
+        val configuration = CompilerConfiguration.create()
 
-        if (!matcher.find()) {
-            return actualContent
-        }
-        val leadingWhitespace = matcher.group(1)
-        val currentPackage = matcher.group(2)
-        val additionalPackagePrefix = "$additionalPackage."
+        val environment = KotlinCoreEnvironment.createForProduction(
+            projectDisposable = testServices.compilerConfigurationProvider.testRootDisposable,
+            configuration = configuration,
+            configFiles = EnvironmentConfigFiles.METADATA_CONFIG_FILES
+        )
 
-        return when {
-            currentPackage.startsWith(additionalPackagePrefix) -> {
-                val originalPackage = currentPackage.removePrefix(additionalPackagePrefix)
-                matcher.replaceFirst("${leadingWhitespace}package $originalPackage")
-            }
-            currentPackage == additionalPackage -> {
-                // The file originally had no package directive
-                val packageDirectiveEnd = matcher.end()
-                // Remove the package directive and any following blank lines
-                actualContent.substring(packageDirectiveEnd).trimStart('\n')
-            }
-            else -> actualContent
+        synchronized(lock) {
+            CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(
+                TreeCopyHandler.EP_NAME.name,
+                TreeCopyHandler::class.java
+            )
         }
+
+        val project = environment.project as MockProject
+        project.registerService(PomModel::class.java, PomModelImpl::class.java)
+        project.registerService(TreeAspect::class.java)
+
+        return KtPsiFactory(environment.project)
     }
 
     class PackageNamePatcher(
@@ -479,7 +495,7 @@ private fun FqName.removeSuffix(suffix: FqName): FqName {
     val suffixPathSegments = suffix.pathSegments()
 
     val suffixStart = pathSegments.size - suffixPathSegments.size
-    assertEquals(suffixPathSegments, pathSegments.subList(suffixStart, pathSegments.size))
+    check(suffixPathSegments == pathSegments.subList(suffixStart, pathSegments.size))
 
     return FqName(pathSegments.take(suffixStart).joinToString("."))
 }

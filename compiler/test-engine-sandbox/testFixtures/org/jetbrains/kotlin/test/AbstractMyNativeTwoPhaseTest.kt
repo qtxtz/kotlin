@@ -59,6 +59,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                 )
                 OPT_IN with listOf(
                     "kotlin.native.internal.InternalForKotlinNative",
+                    "kotlin.native.internal.InternalForKotlinNativeTests",
                     "kotlin.experimental.ExperimentalNativeApi"
                 )
             }
@@ -120,8 +121,8 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                     DIAGNOSTICS with "-warnings"
                 }
             }
-
-            enableMetaInfoHandler()
+            // BatchingPackageInserter is not reservable, so meta info rendering doesn't work
+            // enableMetaInfoHandler()
         }
 
         groupingPhase {

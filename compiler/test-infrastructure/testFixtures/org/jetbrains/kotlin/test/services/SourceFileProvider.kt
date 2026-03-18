@@ -13,7 +13,10 @@ import com.intellij.psi.PsiJavaModule
 import com.intellij.psi.PsiManager
 import org.jetbrains.kotlin.KtInMemoryTextSourceFile
 import org.jetbrains.kotlin.KtSourceFile
+import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.test.TestInfrastructureInternals
+import org.jetbrains.kotlin.test.directives.model.RegisteredDirectives
 import org.jetbrains.kotlin.test.model.TestFile
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.util.KtTestUtil
@@ -21,6 +24,15 @@ import java.io.File
 
 abstract class SourceFilePreprocessor(val testServices: TestServices) {
     abstract fun process(file: TestFile, content: String): String
+
+    /**
+     * Override this method only if your preprocessor transformation depends on the whole module.
+     * If each file could be transformed independently, override [process] instead.
+     */
+    @TestInfrastructureInternals
+    open fun processModule(module: TestModule, filesContent: MutableMap<TestFile, String>) {
+        filesContent.replaceAll { file, value -> process(file, value) }
+    }
 }
 
 abstract class ReversibleSourceFilePreprocessor(testServices: TestServices) : SourceFilePreprocessor(testServices) {
@@ -40,7 +52,10 @@ abstract class SourceFileProvider : TestService {
 
 val TestServices.sourceFileProvider: SourceFileProvider by TestServices.testServiceAccessor()
 
-class SourceFileProviderImpl(val testServices: TestServices, override val preprocessors: List<SourceFilePreprocessor>) : SourceFileProvider() {
+class SourceFileProviderImpl(
+    val testServices: TestServices,
+    override val preprocessors: List<SourceFilePreprocessor>,
+) : SourceFileProvider() {
     private val kotlinSourceDirectory: File by lazy(LazyThreadSafetyMode.NONE) { testServices.getOrCreateTempDirectory("kotlin-sources") }
     private val javaSourceDirectory: File by lazy(LazyThreadSafetyMode.NONE) { testServices.getOrCreateTempDirectory("java-sources") }
     private val additionalFilesDirectory: File by lazy(LazyThreadSafetyMode.NONE) { testServices.getOrCreateTempDirectory("additional-files") }
@@ -57,12 +72,28 @@ class SourceFileProviderImpl(val testServices: TestServices, override val prepro
     override fun getAdditionalFilesDirectoryForModule(module: TestModule): File =
         additionalFilesDirectory.resolve(module.name).apply { mkdir() }
 
+    @OptIn(TestInfrastructureInternals::class)
     override fun getContentOfSourceFile(testFile: TestFile): String {
-        return contentOfFiles.getOrPut(testFile) {
-            preprocessors.fold(testFile.originalContent) { content, preprocessor ->
-                preprocessor.process(testFile, content)
-            }
+        contentOfFiles[testFile]?.let { return it }
+
+        // Usually all files belong to some module. But some services (like `FirTestDataConsistencyHandler`)
+        // create test files on the fly which don't have a containing module.
+        // So for them, we also need to create a module on the fly.
+        val module = testServices.moduleStructure.modules.singleOrNull { testFile in it.files } ?: TestModule(
+            name = "_stubModuleForOnTheFlyFile_",
+            files = listOf(testFile),
+            allDependencies = emptyList(),
+            directives = RegisteredDirectives.Empty,
+            languageVersionSettings = LanguageVersionSettingsImpl.DEFAULT
+        )
+
+        val contentPerFile = module.files.associateWithTo(mutableMapOf()) { it.originalContent }
+        for (preprocessor in preprocessors) {
+            preprocessor.processModule(module, contentPerFile)
         }
+        contentOfFiles.putAll(contentPerFile)
+
+        return contentOfFiles.getValue(testFile)
     }
 
     override fun getOrCreateRealFileForSourceFile(testFile: TestFile): File {
@@ -95,7 +126,11 @@ fun SourceFileProvider.getKtFileForSourceFile(testFile: TestFile, project: Proje
     )
 }
 
-fun SourceFileProvider.getKtFilesForSourceFiles(testFiles: Collection<TestFile>, project: Project, findViaVfs: Boolean = false): Map<TestFile, KtFile> {
+fun SourceFileProvider.getKtFilesForSourceFiles(
+    testFiles: Collection<TestFile>,
+    project: Project,
+    findViaVfs: Boolean = false,
+): Map<TestFile, KtFile> {
     return testFiles.mapNotNull {
         if (!it.isKtFile) return@mapNotNull null
         it to getKtFileForSourceFile(it, project, findViaVfs)
