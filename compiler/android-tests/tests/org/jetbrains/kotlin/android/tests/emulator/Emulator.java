@@ -39,7 +39,7 @@ public class Emulator {
     public static final String ARM = "arm";
     public static final String X86 = "x86";
     private static final String AVD_NAME = "kotlin_box_test_avd";
-    private static final String SYSTEM_IMAGE_API = "23";
+    private static final String SYSTEM_IMAGE_API = "26";
 
     private final static Pattern EMULATOR_PATTERN = Pattern.compile("emulator-([0-9])*");
 

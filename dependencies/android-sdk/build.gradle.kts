@@ -83,7 +83,7 @@ val toolsOsDarwin = when {
 }
 
 val toolsOsDarwinArch = when {
-    OperatingSystem.current().isWindows -> "win_x64"
+    OperatingSystem.current().isWindows -> "windows_x64"
     OperatingSystem.current().isMacOsX -> "darwin_aarch64"
     OperatingSystem.current().isLinux -> "linux_x64"
     else -> {
@@ -268,7 +268,7 @@ unzipSdkTask("emulator-$toolsOsDarwinArch", emulatorVersion, "", "") { emulatorD
         """.trimMargin()
     )
 }
-unzipSdkTask("arm64-v8a", "23", "system-images/android-23/default", "r07", prepareTask = prepareEmulator) { systemImageBaseDir ->
+unzipSdkTask("arm64-v8a", "26", "system-images/android-26/default", "r02", prepareTask = prepareEmulator) { systemImageBaseDir ->
     systemImageBaseDir.resolve("arm64-v8a/package.xml").writeText(
         """
         |<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -276,9 +276,9 @@ unzipSdkTask("arm64-v8a", "23", "system-images/android-23/default", "r07", prepa
         |               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         |               xmlns:ns12="http://schemas.android.com/sdk/android/repo/sys-img2/04">
         |  <license id="android-sdk-license" type="text">See android-sdk-license in SDK licenses directory.</license>
-        |  <localPackage path="system-images;android-23;default;arm64-v8a" obsolete="false">
+        |  <localPackage path="system-images;android-26;default;arm64-v8a" obsolete="false">
         |    <type-details xsi:type="ns12:sysImgDetailsType">
-        |      <api-level>23</api-level>
+        |      <api-level>26</api-level>
         |      <base-extension>true</base-extension>
         |      <tag>
         |        <id>default</id>
@@ -288,7 +288,7 @@ unzipSdkTask("arm64-v8a", "23", "system-images/android-23/default", "r07", prepa
         |      <abis>arm64-v8a</abis>
         |    </type-details>
         |    <revision>
-        |      <major>7</major>
+        |      <major>2</major>
         |    </revision>
         |    <display-name>ARM 64 v8a System Image</display-name>
         |    <uses-license ref="android-sdk-license"/>
@@ -297,7 +297,7 @@ unzipSdkTask("arm64-v8a", "23", "system-images/android-23/default", "r07", prepa
         """.trimMargin()
     )
 }
-unzipSdkTask("x86_64", "23", "system-images/android-23/default", "r10", prepareTask = prepareEmulator) { systemImageBaseDir ->
+unzipSdkTask("x86_64", "26", "system-images/android-26/default", "r01", prepareTask = prepareEmulator) { systemImageBaseDir ->
     systemImageBaseDir.resolve("package.xml").delete()
     systemImageBaseDir.resolve("x86_64/package.xml").writeText(
         """
@@ -306,9 +306,9 @@ unzipSdkTask("x86_64", "23", "system-images/android-23/default", "r10", prepareT
         |               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         |               xmlns:ns12="http://schemas.android.com/sdk/android/repo/sys-img2/04">
         |  <license id="android-sdk-license" type="text">See android-sdk-license in SDK licenses directory.</license>
-        |  <localPackage path="system-images;android-23;default;x86_64" obsolete="false">
+        |  <localPackage path="system-images;android-26;default;x86_64" obsolete="false">
         |    <type-details xsi:type="ns12:sysImgDetailsType">
-        |      <api-level>23</api-level>
+        |      <api-level>26</api-level>
         |      <base-extension>true</base-extension>
         |      <tag>
         |        <id>default</id>
@@ -318,7 +318,7 @@ unzipSdkTask("x86_64", "23", "system-images/android-23/default", "r10", prepareT
         |      <abis>x86_64</abis>
         |    </type-details>
         |    <revision>
-        |      <major>10</major>
+        |      <major>1</major>
         |    </revision>
         |    <display-name>Intel x86_64 Atom System Image</display-name>
         |    <uses-license ref="android-sdk-license"/>

@@ -17,13 +17,13 @@ repositories {
 
 android {
     namespace "org.jetbrains.kotlin.android.tests"
-    compileSdkVersion 23
+    compileSdkVersion 26
     buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "org.jetbrains.kotlin.android.tests"
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 26
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testApplicationId "org.jetbrains.kotlin.android.tests.gradle"
