@@ -17,7 +17,7 @@ org.jetbrains.kotlin.psi.impl.KotlinElementTypeProviderImpl
 org.jetbrains.kotlin.psi.psiUtil.KtStringTemplateExpressionManipulator
 org.jetbrains.kotlin.psi.psiUtil.StringTemplateExpressionManipulator
 org.jetbrains.kotlin.psi.stubs.StubUtils
-org.jetbrains.kotlin.psi.stubs.StubUtils.createNestedClassId(StubElement<*>, KtClassLikeDeclaration)
+org.jetbrains.kotlin.psi.stubs.StubUtils.createClassId(StubElement<*>, KtClassLikeDeclaration)
 org.jetbrains.kotlin.psi.stubs.StubUtils.deserializeClassId(StubInputStream)
 org.jetbrains.kotlin.psi.stubs.StubUtils.deserializeKdocText()
 org.jetbrains.kotlin.psi.stubs.StubUtils.isDeclaredInsideValueArgument(ASTNode?)

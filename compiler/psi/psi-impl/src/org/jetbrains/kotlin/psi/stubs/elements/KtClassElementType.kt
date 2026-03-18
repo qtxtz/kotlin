@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 package org.jetbrains.kotlin.psi.stubs.elements
@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.psiUtil.getSuperNames
 import org.jetbrains.kotlin.psi.psiUtil.safeFqNameForLazyResolve
 import org.jetbrains.kotlin.psi.stubs.KotlinClassStub
-import org.jetbrains.kotlin.psi.stubs.StubUtils.createNestedClassId
+import org.jetbrains.kotlin.psi.stubs.StubUtils.createClassId
 import org.jetbrains.kotlin.psi.stubs.StubUtils.deserializeClassId
 import org.jetbrains.kotlin.psi.stubs.StubUtils.deserializeKdocText
 import org.jetbrains.kotlin.psi.stubs.StubUtils.serializeClassId
@@ -34,7 +34,7 @@ internal object KtClassElementType : KtStubElementType<KotlinClassStubImpl, KtCl
 
     override fun createStub(psi: KtClass, parentStub: StubElement<*>): KotlinClassStubImpl {
         val fqName = psi.safeFqNameForLazyResolve()?.asString()
-        val classId = createNestedClassId(parentStub, psi)
+        val classId = createClassId(parentStub, psi)
         val name = psi.getName()
         val superNames = psi.getSuperNames()
         val isInterface = psi.isInterface()
