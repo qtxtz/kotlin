@@ -137,7 +137,7 @@ abstract class AbstractModule(
             if (forceOutput != null) {
                 kotlinLogger.printBuildOutput(forceOutput)
             }
-        } catch (e: AssertionError) {
+        } catch (e: Throwable) {
             val maxLogLevel = if (forceOutput != null) {
                 maxOf(forceOutput, outcome.maxLogLevel)
             } else {
