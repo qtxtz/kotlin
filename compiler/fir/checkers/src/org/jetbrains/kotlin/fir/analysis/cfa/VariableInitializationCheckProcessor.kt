@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.utils.isConst
 import org.jetbrains.kotlin.fir.declarations.utils.isExternal
 import org.jetbrains.kotlin.fir.declarations.utils.isLateInit
+import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.diagnostics.DiagnosticKind
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.packageFqName
@@ -28,6 +29,7 @@ import org.jetbrains.kotlin.fir.resolve.dfa.cfg.*
 import org.jetbrains.kotlin.fir.resolve.dfa.cfg.ControlFlowGraph.Kind
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
+import org.jetbrains.kotlin.fir.symbols.impl.FirEnumEntrySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirLocalPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirVariableSymbol
@@ -50,6 +52,7 @@ abstract class VariableInitializationCheckProcessor {
             isForInitialization,
             doNotReportUninitializedVariable = false,
             doNotReportConstantUninitialized = true,
+            doNotReportStaticUninitialized = true,
             scopes = hashMapOf(),
         )
     }
@@ -63,6 +66,7 @@ abstract class VariableInitializationCheckProcessor {
         isForInitialization: Boolean,
         doNotReportUninitializedVariable: Boolean,
         doNotReportConstantUninitialized: Boolean,
+        doNotReportStaticUninitialized: Boolean,
         scopes: MutableMap<FirVariableSymbol<*>, FirDeclaration?>,
     ) {
         for (node in graph.nodes) {
@@ -76,7 +80,8 @@ abstract class VariableInitializationCheckProcessor {
                 is QualifiedAccessNode -> processQualifiedAccess(
                     node, node.fir, properties,
                     doNotReportUninitializedVariable,
-                    doNotReportConstantUninitialized
+                    doNotReportConstantUninitialized,
+                    doNotReportStaticUninitialized,
                 )
                 is FunctionCallEnterNode -> {
                     val call = node.fir
@@ -88,7 +93,8 @@ abstract class VariableInitializationCheckProcessor {
                             processQualifiedAccess(
                                 receiverExitNode, receiver, properties,
                                 doNotReportUninitializedVariable,
-                                doNotReportConstantUninitialized
+                                doNotReportConstantUninitialized,
+                                doNotReportStaticUninitialized,
                             )
                         }
                     }
@@ -99,6 +105,7 @@ abstract class VariableInitializationCheckProcessor {
                         scope, isForInitialization,
                         doNotReportUninitializedVariable,
                         doNotReportConstantUninitialized,
+                        doNotReportStaticUninitialized,
                         scopes
                     )
                 }
@@ -203,12 +210,14 @@ abstract class VariableInitializationCheckProcessor {
         properties: Set<FirVariableSymbol<*>>,
         doNotReportUninitializedVariable: Boolean,
         doNotReportConstantUninitialized: Boolean,
+        doNotReportStaticUninitialized: Boolean,
     ) {
         if (doNotReportUninitializedVariable) return
         if (expression is FirWhenSubjectExpression) return
         if (expression.resolvedType.hasDiagnosticKind(DiagnosticKind.RecursionInImplicitTypes)) return
         val symbol = expression.calleeReference.toResolvedVariableSymbol() ?: return
         if (doNotReportConstantUninitialized && symbol.isConst) return
+        if (doNotReportStaticUninitialized && symbol.isStatic && symbol !is FirEnumEntrySymbol) return
         if (symbol.source?.kind != KtRealSourceElementKind) return
         if (
             !symbol.isLateInit &&
@@ -236,6 +245,7 @@ abstract class VariableInitializationCheckProcessor {
         isForInitialization: Boolean,
         doNotReportUninitializedVariable: Boolean,
         doNotReportConstantUninitialized: Boolean,
+        doNotReportStaticUninitialized: Boolean,
         scopes: MutableMap<FirVariableSymbol<*>, FirDeclaration?>,
     ) {
         // In the class case, subgraphs of the exit node are member functions, which are considered to not
@@ -254,6 +264,8 @@ abstract class VariableInitializationCheckProcessor {
             // allows "regular" properties to reference constant properties out-of-order, but all other
             // property references must be in-order.
             val isSubGraphConstProperty = (subGraph.declaration as? FirProperty)?.isConst == true
+            // Similarly, instance properties are allowed to access companion properties during initialization out-of-order.
+            val isSubGraphStaticProperty = (subGraph.declaration as? FirProperty)?.isStatic == true
 
             val newScope = subGraph.declaration?.takeIf { !it.evaluatedInPlace } ?: scope
             runCheck(
@@ -261,6 +273,7 @@ abstract class VariableInitializationCheckProcessor {
                 isForInitialization,
                 doNotReportUninitializedVariable = doNotReportUninitializedVariable || doNotReportForSubGraph,
                 doNotReportConstantUninitialized = doNotReportConstantUninitialized && !isSubGraphConstProperty,
+                doNotReportStaticUninitialized = doNotReportStaticUninitialized && !isSubGraphStaticProperty,
                 scopes
             )
         }
