@@ -1,0 +1,2 @@
+Class ID mismatch: PSI: /ReplSnippet_repl.B, stub: /B
+Class ID mismatch: PSI: /ReplSnippet_repl.B.Nested, stub: /B.Nested

@@ -284,7 +284,7 @@ abstract class AbstractAnalysisApiBasedTest : TestWithDisposable(), ManagedTest 
     }
 
     /**
-     * THE FUNCTION IS OBSOLETE. USE THE ONE WITOUT THE RECEIVER.
+     * THE FUNCTION IS OBSOLETE. USE THE ONE WITHOUT THE RECEIVER.
      *
      * Checks whether the [actual] string matches the content of the test output file.
      *
@@ -358,7 +358,7 @@ abstract class AbstractAnalysisApiBasedTest : TestWithDisposable(), ManagedTest 
      * - For golden tests (empty [variantChain]): writes to the default file
      * - For secondary tests: writes to a variant file only if different from golden
      */
-    protected fun assertEqualsToTestOutputFile(
+    fun assertEqualsToTestOutputFile(
         actual: String?,
         extension: String = ".txt",
         subdirectoryName: String? = null,
