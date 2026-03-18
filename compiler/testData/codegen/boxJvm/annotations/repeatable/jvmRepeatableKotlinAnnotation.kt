@@ -6,9 +6,6 @@
 // JVM_TARGET: 1.8
 // STDLIB_JDK8
 
-// java.lang.NoSuchMethodError: java.lang.Class.getAnnotationsByType
-// IGNORE_BACKEND: ANDROID
-
 @JvmRepeatable(As::class)
 annotation class A(val value: String)
 

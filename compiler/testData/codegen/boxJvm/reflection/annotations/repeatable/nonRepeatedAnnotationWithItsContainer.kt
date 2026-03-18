@@ -31,11 +31,11 @@ fun Any?.render(): String =
 
 // Explicit container is not unwrapped.
 fun box(): String {
-    assertEquals("[@test.A(1), @test.As([@test.A(2), @test.A(3)])]", Z::class.annotations.render())
+    assertEquals("[@test.A(1), @test.As([@test.A(2), @test.A(3)])]", Z::class.annotations.sorted().render())
     assertEquals("[@test.A(1)]", Z::class.findAnnotations<A>().render())
     assertEquals("@test.A(1)", Z::class.findAnnotation<A>().render())
 
-    assertEquals("[@test.As([@test.A(1), @test.A(2)]), @test.A(3)]", ZZ::class.annotations.render())
+    assertEquals("[@test.As([@test.A(1), @test.A(2)]), @test.A(3)]", ZZ::class.annotations.sorted().render())
     assertEquals("[@test.A(3)]", ZZ::class.findAnnotations<A>().render())
     assertEquals("@test.A(3)", ZZ::class.findAnnotation<A>().render())
 

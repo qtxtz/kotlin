@@ -1,7 +1,5 @@
 // TARGET_BACKEND: JVM
 // JVM_TARGET: 1.8
-// IGNORE_BACKEND: ANDROID
-//  ^ NSME: java.util.AbstractMap.remove
 // FULL_JDK
 
 interface MSS : Map<String, String>

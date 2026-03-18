@@ -5,9 +5,6 @@
 // WITH_STDLIB
 // FULL_JDK
 
-// no stream api on Android
-// IGNORE_BACKEND: ANDROID
-
 // CHECK_BYTECODE_TEXT
 // 2 java/lang/invoke/LambdaMetafactory
 

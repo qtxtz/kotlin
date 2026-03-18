@@ -2,9 +2,6 @@
 // WITH_REFLECT
 // FULL_JDK
 
-// CNFE: java.util.function.UnaryOperator
-// IGNORE_BACKEND: ANDROID
-
 import java.util.*
 import java.util.concurrent.*
 import java.util.function.*

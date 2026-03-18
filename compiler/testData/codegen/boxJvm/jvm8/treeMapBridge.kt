@@ -1,8 +1,5 @@
 // TARGET_BACKEND: JVM
 
-// java.lang.NoSuchMethodError: java.util.TreeMap.remove
-// IGNORE_BACKEND: ANDROID
-
 // FULL_JDK
 // JVM_TARGET: 1.8
 

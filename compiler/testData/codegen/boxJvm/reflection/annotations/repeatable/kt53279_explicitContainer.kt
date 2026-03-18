@@ -3,9 +3,6 @@
 // FULL_JDK
 // WITH_REFLECT
 
-// Android doesn't have @Repeatable before API level 24, so findAnnotations can't unpack repeatable annotations.
-// IGNORE_BACKEND: ANDROID
-
 import kotlin.test.assertEquals
 import kotlin.reflect.full.findAnnotations
 

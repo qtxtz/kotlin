@@ -2,9 +2,6 @@
 // WITH_REFLECT
 // FULL_JDK
 
-// API level 23 does not support repeatable annotations
-// IGNORE_BACKEND: ANDROID
-
 package test
 
 import kotlin.reflect.KClass

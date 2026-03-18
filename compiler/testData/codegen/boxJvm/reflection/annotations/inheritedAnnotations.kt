@@ -2,9 +2,6 @@
 // WITH_REFLECT
 // FULL_JDK
 
-// NSME: No virtual method getAnnotationsByType
-// IGNORE_BACKEND: ANDROID
-
 package test
 
 import kotlin.reflect.KClass
