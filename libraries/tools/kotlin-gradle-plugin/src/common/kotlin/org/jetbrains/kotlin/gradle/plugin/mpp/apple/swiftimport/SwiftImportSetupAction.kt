@@ -121,22 +121,12 @@ internal val SwiftImportSetupAction = KotlinProjectSetupAction {
         it.syntheticProductType.set(SyntheticProductType.DYNAMIC)
     }
 
-    val syncPackageSwiftLockFileToSynthetic = project.locateOrRegisterTask<SyncPackageSwiftLockFileToSynthetic>(
-        SyncPackageSwiftLockFileToSynthetic.TASK_NAME,
-    ){ taskProvider ->
-        taskProvider.syntheticImportProjectRoot.set(syntheticImportProjectGenerationTaskForCinteropsAndLdDump.map { it.syntheticImportProjectRoot.get() })
+    val syncPackageSwiftLockFileToSyntheticSwiftPMPackage = project.locateOrRegisterTask<SyncPackageResolvedTask>(
+        SyncPackageResolvedTask.SYNC_PROJECT_DIRECTORY_TO_SYNTHETIC_TASK_NAME
+    ) { taskProvider ->
+        taskProvider.sourceFile.set(project.layout.projectDirectory.file("Package.resolved"))
         taskProvider.onlyIf("Project directory Package.resolved exists") {
-            taskProvider.projectDirLockFile.asFile.exists()
-        }
-    }
-
-    val syncPackageSwiftLockFileToProjectDirectory = project.locateOrRegisterTask<SyncPackageSwiftLockFileToProjectDirectory>(
-        SyncPackageSwiftLockFileToProjectDirectory.TASK_NAME,
-    ){ taskProvider ->
-        taskProvider.mustRunAfter(syntheticImportProjectGenerationTaskForCinteropsAndLdDump)
-        taskProvider.syntheticImportProjectRoot.set(syntheticImportProjectGenerationTaskForCinteropsAndLdDump.map { it.syntheticImportProjectRoot.get() })
-        taskProvider.onlyIf("Synthetic Package.resolved exists") {
-            taskProvider.syntheticProjectLockFile.get().asFile.exists()
+            taskProvider.sourceFile.get().asFile.exists()
         }
     }
 
@@ -147,9 +137,8 @@ internal val SwiftImportSetupAction = KotlinProjectSetupAction {
         it.onlyIf("SwiftPM import is only supported on macOS hosts") { isMacOSHost }
         it.onlyIf { hasDirectOrTransitiveSwiftPMDependencies.get() }
         it.dependsOn(hasDirectOrTransitiveSwiftPMDependencies)
-        it.dependsOn(syncPackageSwiftLockFileToSynthetic)
+        it.dependsOn(syncPackageSwiftLockFileToSyntheticSwiftPMPackage)
         it.dependsOn(syntheticImportProjectGenerationTaskForCinteropsAndLdDump)
-        it.finalizedBy(syncPackageSwiftLockFileToProjectDirectory)
         it.localPackageManifests.from(
             transitiveLocalSwiftPMDependenciesProvider.map { localPackageDependencyProvider ->
                 localPackageDependencyProvider.map { localPackageDependency ->
@@ -158,6 +147,33 @@ internal val SwiftImportSetupAction = KotlinProjectSetupAction {
             }
         )
         it.syntheticImportProjectRoot.set(syntheticImportProjectGenerationTaskForCinteropsAndLdDump.map { it.syntheticImportProjectRoot.get() })
+    }
+
+    syncPackageSwiftLockFileToSyntheticSwiftPMPackage.configure { syncTaskProvider ->
+        syncTaskProvider.destinationFile.set(
+            fetchSyntheticImportProjectPackages.map {
+                it.syntheticLockFile.get()
+            }
+        )
+    }
+
+
+    val syncPackageSwiftLockFileToProjectDirectory = project.locateOrRegisterTask<SyncPackageResolvedTask>(
+        SyncPackageResolvedTask.SYNC_SYNTHETIC_TO_PROJECT_DIRECTORY_TASK_NAME
+    ) { taskProvider ->
+        taskProvider.sourceFile.set(
+            fetchSyntheticImportProjectPackages.map { task ->
+                task.syntheticLockFile.get()
+            }
+        )
+        taskProvider.destinationFile.set(project.layout.projectDirectory.file("Package.resolved"))
+        taskProvider.onlyIf("Synthetic Package.resolved exists") {
+            taskProvider.sourceFile.get().asFile.exists()
+        }
+    }
+
+    fetchSyntheticImportProjectPackages.configure {
+        it.finalizedBy(syncPackageSwiftLockFileToProjectDirectory)
     }
 
     val syntheticImportTasks = listOf(
@@ -297,17 +313,21 @@ private fun KotlinTarget.supportsSwiftPMImport() = this is KotlinNativeTarget &&
 private fun KonanTarget.swiftPMPlatform(): SwiftPMDependency.Platform = when (this) {
     KonanTarget.IOS_ARM64,
     KonanTarget.IOS_SIMULATOR_ARM64,
-    KonanTarget.IOS_X64 -> Platform.iOS
+    KonanTarget.IOS_X64,
+        -> Platform.iOS
     KonanTarget.MACOS_ARM64,
-    KonanTarget.MACOS_X64 -> Platform.macOS
+    KonanTarget.MACOS_X64,
+        -> Platform.macOS
     KonanTarget.TVOS_ARM64,
     KonanTarget.TVOS_SIMULATOR_ARM64,
-    KonanTarget.TVOS_X64 -> Platform.tvOS
+    KonanTarget.TVOS_X64,
+        -> Platform.tvOS
     KonanTarget.WATCHOS_ARM32,
     KonanTarget.WATCHOS_ARM64,
     KonanTarget.WATCHOS_DEVICE_ARM64,
     KonanTarget.WATCHOS_SIMULATOR_ARM64,
-    KonanTarget.WATCHOS_X64 -> Platform.watchOS
+    KonanTarget.WATCHOS_X64,
+        -> Platform.watchOS
 
     KonanTarget.ANDROID_ARM32,
     KonanTarget.ANDROID_ARM64,
@@ -316,7 +336,8 @@ private fun KonanTarget.swiftPMPlatform(): SwiftPMDependency.Platform = when (th
     KonanTarget.LINUX_ARM32_HFP,
     KonanTarget.LINUX_ARM64,
     KonanTarget.LINUX_X64,
-    KonanTarget.MINGW_X64 -> error("unsupported targets")
+    KonanTarget.MINGW_X64,
+        -> error("unsupported targets")
 }
 
 private fun Project.checkLocalSwiftDependencyIsValid(swiftPMDependency: SwiftPMDependency.Local): Boolean {
@@ -358,17 +379,21 @@ private fun configureTestTaskDyldSearchPaths(
     task: KotlinNativeTest,
     target: KotlinNativeTarget,
     syntheticImportProjectGenerationTaskForCinteropsAndLdDump: TaskProvider<GenerateSyntheticLinkageImportProject>,
-    defFilesAndLdDumpGenerationTask: TaskProvider<ConvertSyntheticSwiftPMImportProjectIntoDefFile>
+    defFilesAndLdDumpGenerationTask: TaskProvider<ConvertSyntheticSwiftPMImportProjectIntoDefFile>,
 ) {
     val frameworkSearchPathsDump = defFilesAndLdDumpGenerationTask.get().frameworkSearchpathFilePath(target.konanTarget.appleArchitecture)
     val librariesSearchPathsDump = defFilesAndLdDumpGenerationTask.get().librarySearchpathFilePath(target.konanTarget.appleArchitecture)
 
-    val frameworksDyldEnv = if (task is KotlinNativeSimulatorTest) "SIMCTL_CHILD_DYLD_FALLBACK_FRAMEWORK_PATH" else "DYLD_FALLBACK_FRAMEWORK_PATH"
+    val frameworksDyldEnv =
+        if (task is KotlinNativeSimulatorTest) "SIMCTL_CHILD_DYLD_FALLBACK_FRAMEWORK_PATH" else "DYLD_FALLBACK_FRAMEWORK_PATH"
+
     fun extractFrameworkSearchPaths() = frameworkSearchPathsDump.get().asFile.readLines().single()
         .split(DUMP_FILE_ARGS_SEPARATOR).filter { it.isNotEmpty() }
         .joinToString(":")
 
-    val librariesDyldEnv = if (task is KotlinNativeSimulatorTest) "SIMCTL_CHILD_DYLD_FALLBACK_LIBRARY_PATH" else "DYLD_FALLBACK_LIBRARY_PATH"
+    val librariesDyldEnv =
+        if (task is KotlinNativeSimulatorTest) "SIMCTL_CHILD_DYLD_FALLBACK_LIBRARY_PATH" else "DYLD_FALLBACK_LIBRARY_PATH"
+
     fun extractLibrariesSearchPaths() = librariesSearchPathsDump.get().asFile.readLines().single()
         .split(DUMP_FILE_ARGS_SEPARATOR).filter { it.isNotEmpty() }
         .joinToString(":")
@@ -504,11 +529,12 @@ private fun Project.registerXcodeIntegrationTasks(
     syntheticImportProjectGenerationTaskForLinkageForCli: TaskProvider<GenerateSyntheticLinkageImportProject>,
     projectPathProvider: Provider<String>,
 ) {
-    val embedAndSignIntegration = project.registerTask<IntegrateEmbedAndSignIntoXcodeProject>(IntegrateEmbedAndSignIntoXcodeProject.TASK_NAME) {
-        it.dependsOn(syntheticImportProjectGenerationTaskForLinkageForCli)
-        it.currentDir.set(gradle.startParameter.currentDir)
-        it.xcodeprojPath.set(projectPathProvider)
-    }
+    val embedAndSignIntegration =
+        project.registerTask<IntegrateEmbedAndSignIntoXcodeProject>(IntegrateEmbedAndSignIntoXcodeProject.TASK_NAME) {
+            it.dependsOn(syntheticImportProjectGenerationTaskForLinkageForCli)
+            it.currentDir.set(gradle.startParameter.currentDir)
+            it.xcodeprojPath.set(projectPathProvider)
+        }
     project.registerTask<IntegrateLinkagePackageIntoXcodeProject>(IntegrateLinkagePackageIntoXcodeProject.TASK_NAME) {
         it.dependsOn(syntheticImportProjectGenerationTaskForLinkageForCli)
         it.currentDir.set(gradle.startParameter.currentDir)

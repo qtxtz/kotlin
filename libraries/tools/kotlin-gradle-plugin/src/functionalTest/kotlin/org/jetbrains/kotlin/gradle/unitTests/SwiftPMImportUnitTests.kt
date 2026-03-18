@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.FetchSyntheticIm
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.GenerateSyntheticLinkageImportProject
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SwiftPMImportExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SwiftPMDependency
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SyncPackageResolvedTask
 import org.jetbrains.kotlin.gradle.util.*
 import org.jetbrains.kotlin.konan.target.HostManager
 import kotlin.test.Test
@@ -386,6 +387,56 @@ class SwiftPMImportUnitTests {
         project.evaluate()
 
         project.assertContainsDiagnostic(KotlinToolingDiagnostics.SwiftPMLocalPackageInvalidName)
+    }
+
+    @Test
+    fun `test fetchSyntheticImportProjectPackages depends on syncPackageSwiftLockFileToSyntheticSwiftPMPackage`() {
+        val project = swiftPMImportProject(
+            swiftPMDependencies = { layout ->
+                localSwiftPackage(
+                    directory = layout.projectDirectory.dir("my-custom-pkg"),
+                    products = listOf("ManifestPackage"),
+                )
+            }
+        )
+        project.evaluate()
+
+        val fetchTask = project.tasks.findByName(FetchSyntheticImportProjectPackages.TASK_NAME)
+        val syncLockFileToPSyntheticSwiftPMPackageTask = project.tasks.findByName(SyncPackageResolvedTask.SYNC_PROJECT_DIRECTORY_TO_SYNTHETIC_TASK_NAME)
+
+        assertNotNull(fetchTask, "${FetchSyntheticImportProjectPackages.TASK_NAME} should be registered")
+        assertNotNull(syncLockFileToPSyntheticSwiftPMPackageTask, "${SyncPackageResolvedTask.SYNC_PROJECT_DIRECTORY_TO_SYNTHETIC_TASK_NAME} should be registered")
+
+        fetchTask.assertDependsOn(
+            syncLockFileToPSyntheticSwiftPMPackageTask
+        )
+    }
+
+    @Test
+    fun `test syncPackageSwiftLockFileToProjectDirectory depends on fetchSyntheticImportProjectPackages`() {
+        val project = swiftPMImportProject(
+            swiftPMDependencies = { layout ->
+                localSwiftPackage(
+                    directory = layout.projectDirectory.dir("my-custom-pkg"),
+                    products = listOf("ManifestPackage"),
+                )
+            }
+        )
+        project.evaluate()
+
+        val fetchTask = project.tasks.findByName(FetchSyntheticImportProjectPackages.TASK_NAME)
+        val syncLockFileToProjectDirectoryTask =
+            project.tasks.findByName(SyncPackageResolvedTask.SYNC_SYNTHETIC_TO_PROJECT_DIRECTORY_TASK_NAME)
+
+        assertNotNull(fetchTask, "${FetchSyntheticImportProjectPackages.TASK_NAME} should be registered")
+        assertNotNull(
+            syncLockFileToProjectDirectoryTask,
+            "${SyncPackageResolvedTask.SYNC_SYNTHETIC_TO_PROJECT_DIRECTORY_TASK_NAME} should be registered"
+        )
+
+        syncLockFileToProjectDirectoryTask.assertDependsOn(
+            fetchTask
+        )
     }
 }
 

@@ -6,11 +6,9 @@
 package org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileSystemOperations
-import org.gradle.api.tasks.InputFile
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
@@ -18,79 +16,41 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
 import org.jetbrains.kotlin.gradle.utils.contentEquals
-import org.jetbrains.kotlin.gradle.utils.getFile
 import java.io.File
 import javax.inject.Inject
 
 @DisableCachingByDefault(because = "KT-84827 - SwiftPM import doesn't support caching yet")
-internal abstract class SyncPackageSwiftLockFileToProjectDirectory : DefaultTask() {
-
-    @get:Internal
-    val syntheticImportProjectRoot: DirectoryProperty = project.objects.directoryProperty()
-
-    @get:Optional
-    @get:OutputFile
-    val projectDirLockFile = project.layout.projectDirectory.file("Package.resolved")
+internal abstract class SyncPackageResolvedTask : DefaultTask() {
 
     @get:Optional
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    val syntheticProjectLockFile  = syntheticImportProjectRoot.file("Package.resolved")
+    abstract val sourceFile: RegularFileProperty
+
+    @get:OutputFile
+    abstract val destinationFile: RegularFileProperty
 
     @get:Inject
     abstract val fs: FileSystemOperations
 
     @TaskAction
-    fun syncPackageSwiftSyntheticLockFileToProjectDirectory() {
-        if (!syntheticProjectLockFile.isPresent) return
+    fun sync() {
+        if (!sourceFile.isPresent) return
 
-        val src = syntheticProjectLockFile.getFile()
-        val dest = projectDirLockFile.asFile
-
-        if (hasSameContent(dest, src)) return
-
-        copySwiftLockFile(fs, src, dest)
-    }
-
-    companion object Companion {
-        const val TASK_NAME = "syncPackageSwiftLockFileToRoot"
-    }
-}
-
-
-@DisableCachingByDefault(because = "KT-84827 - SwiftPM import doesn't support caching yet")
-internal abstract class SyncPackageSwiftLockFileToSynthetic : DefaultTask() {
-
-    @get:Internal
-    val syntheticImportProjectRoot: DirectoryProperty = project.objects.directoryProperty()
-
-    @get:Optional
-    @get:InputFiles
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    val projectDirLockFile = project.layout.projectDirectory.file("Package.resolved")
-
-    @get:OutputFile
-    val syntheticProjectLockFile  = syntheticImportProjectRoot.file("Package.resolved")
-
-    @get:Inject
-    abstract val fs: FileSystemOperations
-
-    @TaskAction
-    fun syncPackageSwiftLockFileToSyntheticProject() {
-        if(!projectDirLockFile.asFile.exists()) return
-
-        val dest = syntheticProjectLockFile.getFile()
-        val src = projectDirLockFile.asFile
+        val src = sourceFile.get().asFile
+        val dest = destinationFile.get().asFile
 
         if (hasSameContent(src, dest)) return
 
-        dest.parentFile.mkdirs()
+        if (!dest.parentFile.exists()) dest.parentFile.mkdirs()
 
         copySwiftLockFile(fs, src, dest)
     }
 
-    companion object{
-        const val TASK_NAME = "syncPackageSwiftLockFileToSyntheticProject"
+    companion object {
+        const val TASK_NAME = "syncPackageSwiftLockFile"
+        const val SYNC_SYNTHETIC_TO_PROJECT_DIRECTORY_TASK_NAME = "syncPackageSwiftLockFileToProjectDirectory"
+        const val SYNC_PROJECT_DIRECTORY_TO_SYNTHETIC_TASK_NAME = "syncPackageSwiftLockFileToSyntheticSwiftPMPackage"
     }
 }
 
@@ -106,5 +66,4 @@ private fun copySwiftLockFile(
     }
 }
 
-private fun hasSameContent(dest: File, src: File): Boolean =
-    dest.exists() && src.exists() && contentEquals(src, dest)
+private fun hasSameContent(dest: File, src: File): Boolean = dest.exists() && src.exists() && contentEquals(src, dest)
