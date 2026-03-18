@@ -129,8 +129,8 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
                 file.addAfter(newPackageDirective, file.fileAnnotationList).ensureSurroundedByNewLines()
             }
 
-            if (!file.name.endsWith(".def")) { // don't process .def file contents after package directive
-                // Add @ReflectionPackageName annotation to make the compiler use original package name in the reflective information.
+            if (!file.name.endsWith(".def")) { // don't process .def file contents after the package directive
+                // Add @ReflectionPackageName annotation to make the compiler use the original package name in the reflective information.
                 val annotationText =
                     "kotlin.native.internal.ReflectionPackageName(${oldPackageName.asString().quoteAsKotlinStringLiteral()})"
                 val fileAnnotationList = psiFactory.createFileAnnotationListWithAnnotation(annotationText)
@@ -143,7 +143,7 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
         override fun visitPackageDirective(directive: KtPackageDirective, unused: Set<Name>) = Unit
 
         override fun visitImportDirective(importDirective: KtImportDirective, unused: Set<Name>) {
-            // Patch import directive if necessary.
+            // Patch the import directive if necessary.
             val importedFqName = importDirective.importedFqName
             if (importedFqName == null
                 || importedFqName.startsWith(StandardNames.BUILT_INS_PACKAGE_NAME)
@@ -164,29 +164,36 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
             importDirective.replace(psiFactory.createImportDirective(newImportPath))
         }
 
-        override fun visitTypeAlias(typeAlias: KtTypeAlias, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitTypeAlias(typeAlias: KtTypeAlias, parentAccessibleDeclarationNames: Set<Name>) {
             super.visitTypeAlias(typeAlias, parentAccessibleDeclarationNames + typeAlias.collectAccessibleDeclarationNames())
+        }
 
-        override fun visitClassOrObject(classOrObject: KtClassOrObject, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitClassOrObject(classOrObject: KtClassOrObject, parentAccessibleDeclarationNames: Set<Name>) {
             super.visitClassOrObject(
                 classOrObject,
                 parentAccessibleDeclarationNames + classOrObject.collectAccessibleDeclarationNames()
             )
+        }
 
-        override fun visitClassBody(classBody: KtClassBody, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitClassBody(classBody: KtClassBody, parentAccessibleDeclarationNames: Set<Name>) {
             super.visitClassBody(classBody, parentAccessibleDeclarationNames + classBody.collectAccessibleDeclarationNames())
+        }
 
-        override fun visitPropertyAccessor(accessor: KtPropertyAccessor, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitPropertyAccessor(accessor: KtPropertyAccessor, parentAccessibleDeclarationNames: Set<Name>) {
             transformDeclarationWithBody(accessor, parentAccessibleDeclarationNames)
+        }
 
-        override fun visitNamedFunction(function: KtNamedFunction, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitNamedFunction(function: KtNamedFunction, parentAccessibleDeclarationNames: Set<Name>) {
             transformDeclarationWithBody(function, parentAccessibleDeclarationNames)
+        }
 
-        override fun visitPrimaryConstructor(constructor: KtPrimaryConstructor, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitPrimaryConstructor(constructor: KtPrimaryConstructor, parentAccessibleDeclarationNames: Set<Name>) {
             transformDeclarationWithBody(constructor, parentAccessibleDeclarationNames)
+        }
 
-        override fun visitSecondaryConstructor(constructor: KtSecondaryConstructor, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitSecondaryConstructor(constructor: KtSecondaryConstructor, parentAccessibleDeclarationNames: Set<Name>) {
             transformDeclarationWithBody(constructor, parentAccessibleDeclarationNames)
+        }
 
         private fun transformDeclarationWithBody(
             declarationWithBody: KtDeclarationWithBody,
@@ -203,11 +210,12 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
             expressions.forEach { it.accept(this, bodyAccessibleDeclarationNames) }
         }
 
-        override fun visitExpression(expression: KtExpression, parentAccessibleDeclarationNames: Set<Name>) =
+        override fun visitExpression(expression: KtExpression, parentAccessibleDeclarationNames: Set<Name>) {
             if (expression is KtFunctionLiteral)
                 transformDeclarationWithBody(expression, parentAccessibleDeclarationNames)
             else
                 super.visitExpression(expression, parentAccessibleDeclarationNames)
+        }
 
         override fun visitBlockExpression(expression: KtBlockExpression, parentAccessibleDeclarationNames: Set<Name>) {
             val accessibleDeclarationNames = parentAccessibleDeclarationNames.toMutableSet()
@@ -274,8 +282,9 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
     }
 }
 
-fun FqName.child(child: FqName): FqName =
-    child.pathSegments().fold(this) { accumulator, segment -> accumulator.child(segment) }
+fun FqName.child(child: FqName): FqName {
+    return child.pathSegments().fold(this) { accumulator, segment -> accumulator.child(segment) }
+}
 
 fun KtFile.addAnnotations(fileAnnotationList: KtFileAnnotationList) {
     val oldFileAnnotationList = this.fileAnnotationList
@@ -285,7 +294,7 @@ fun KtFile.addAnnotations(fileAnnotationList: KtFileAnnotationList) {
             oldFileAnnotationList.add(it).ensureSurroundedByNewLines()
         }
     } else {
-        // Insert the annotations list immediately before package directive.
+        // Insert the annotations list immediately before the package directive.
         this.addBefore(fileAnnotationList, packageDirective).ensureSurroundedByNewLines()
     }
 }
@@ -294,8 +303,8 @@ val KtFile.packageFqNameForKLib: FqName
     get() = when (name.substringAfterLast(".")) {
         "kt" -> packageFqName
         "def" -> {
-            // Without package directive, CInterop tool puts declarations to a package with kinda odd name, as such:
-            // name of .def file without extension, splitted by dot-separated parts, and reversed.
+            // Without a package directive, CInterop tool puts declarations to a package with kinda odd name, as such:
+            // name of .def file without extension, split by dot-separated parts, and reversed.
             if (packageFqName != FqName.ROOT) packageFqName
             else FqName.fromSegments(name.removeSuffix(".def").split(".").reversed())
         }
@@ -358,7 +367,7 @@ private fun PsiElement.whiteSpaceAfter(): Pair<Boolean, String> {
 }
 
 /**
- * Returns the expression to be parsed by Kotlin as string literal with given contents,
+ * Returns the expression to be parsed by Kotlin as a string literal with given contents.
  * i.e. transforms `foo$bar` to `"foo\$bar"`.
  */
 private fun String.quoteAsKotlinStringLiteral(): String = buildString {
@@ -403,7 +412,6 @@ private fun KtElement.collectAccessibleDeclarationNames(): Set<Name> {
         if (child is KtDestructuringDeclaration) {
             child.entries.mapTo(names) { it.nameAsSafeName }
         }
-
     }
 
     return names
