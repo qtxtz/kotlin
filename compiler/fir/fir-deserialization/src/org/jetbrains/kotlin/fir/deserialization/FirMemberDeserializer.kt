@@ -38,6 +38,7 @@ import org.jetbrains.kotlin.protobuf.MessageLite
 import org.jetbrains.kotlin.serialization.deserialization.ProtoEnumFlags
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedContainerSource
 import org.jetbrains.kotlin.serialization.deserialization.getName
+import org.jetbrains.kotlin.utils.addToStdlib.runUnless
 
 class FirDeserializationContext(
     val nameResolver: NameResolver,
@@ -257,6 +258,7 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
         val visibility = ProtoEnumFlags.visibility(Flags.VISIBILITY.get(getterFlags))
         val accessorModality = ProtoEnumFlags.modality(Flags.MODALITY.get(getterFlags))
         val effectiveVisibility = visibility.toLazyEffectiveVisibility(classSymbol)
+        val isStatic = Flags.IS_STATIC_PROPERTY.get(proto.flags)
         return if (Flags.IS_NOT_DEFAULT.get(getterFlags)) {
             buildPropertyAccessor {
                 moduleData = c.moduleData
@@ -267,9 +269,10 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(visibility, accessorModality, effectiveVisibility).apply {
                     isInline = Flags.IS_INLINE_ACCESSOR.get(getterFlags)
                     isExternal = Flags.IS_EXTERNAL_ACCESSOR.get(getterFlags)
+                    this.isStatic = isStatic
                 }
                 this.symbol = FirPropertyAccessorSymbol()
-                dispatchReceiverType = c.dispatchReceiver
+                dispatchReceiverType = runUnless(isStatic) { c.dispatchReceiver }
                 this.propertySymbol = propertySymbol
             }.apply {
                 this.versionRequirements = VersionRequirement.create(proto, c)
@@ -281,7 +284,9 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 FirDeclarationOrigin.Library,
                 returnTypeRef,
                 propertySymbol,
-                status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(visibility, propertyModality, effectiveVisibility),
+                status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(visibility, propertyModality, effectiveVisibility).apply {
+                    this.isStatic = isStatic
+                },
                 resolvePhase = FirResolvePhase.ANALYZED_DEPENDENCIES,
             )
         }.apply {
@@ -308,6 +313,7 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
         val visibility = ProtoEnumFlags.visibility(Flags.VISIBILITY.get(setterFlags))
         val accessorModality = ProtoEnumFlags.modality(Flags.MODALITY.get(setterFlags))
         val effectiveVisibility = visibility.toLazyEffectiveVisibility(classSymbol)
+        val isStatic = Flags.IS_STATIC_PROPERTY.get(proto.flags)
         return if (Flags.IS_NOT_DEFAULT.get(setterFlags)) {
             buildPropertyAccessor {
                 moduleData = c.moduleData
@@ -318,9 +324,10 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(visibility, accessorModality, effectiveVisibility).apply {
                     isInline = Flags.IS_INLINE_ACCESSOR.get(setterFlags)
                     isExternal = Flags.IS_EXTERNAL_ACCESSOR.get(setterFlags)
+                    this.isStatic = isStatic
                 }
                 this.symbol = FirPropertyAccessorSymbol()
-                dispatchReceiverType = c.dispatchReceiver
+                dispatchReceiverType = runUnless(isStatic) { c.dispatchReceiver }
                 local.memberDeserializer.addValueParametersTo(
                     listOf(proto.setterValueParameter),
                     symbol,
@@ -342,7 +349,9 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 FirDeclarationOrigin.Library,
                 returnTypeRef,
                 propertySymbol,
-                status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(visibility, propertyModality, effectiveVisibility),
+                status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(visibility, propertyModality, effectiveVisibility).apply {
+                    this.isStatic = isStatic
+                },
                 resolvePhase = FirResolvePhase.ANALYZED_DEPENDENCIES,
             )
         }.apply {
@@ -411,8 +420,10 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
             name = callableName
             this.isVar = isVar
             this.symbol = symbol
-            dispatchReceiverType = c.dispatchReceiver
+            val isStatic = Flags.IS_STATIC_PROPERTY.get(flags)
+            dispatchReceiverType = runUnless(isStatic) { c.dispatchReceiver }
             val visibility = ProtoEnumFlags.visibility(Flags.VISIBILITY.get(flags))
+
             status = FirResolvedDeclarationStatusWithLazyEffectiveVisibility(
                 visibility,
                 propertyModality,
@@ -424,6 +435,7 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 isConst = Flags.IS_CONST.get(flags)
                 isLateInit = Flags.IS_LATEINIT.get(flags)
                 isExternal = Flags.IS_EXTERNAL_PROPERTY.get(flags)
+                this.isStatic = isStatic
                 returnValueStatus = ProtoEnumFlags.returnValueStatus(Flags.RETURN_VALUE_STATUS_PROPERTY.get(flags))
             }
             isLocal = false
@@ -641,6 +653,7 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
         val local = c.childContext(proto.typeParameterList, containingDeclarationSymbol = symbol)
 
         val versionRequirements = VersionRequirement.create(proto, c)
+        val isStatic = Flags.IS_STATIC_FUNCTION.get(flags)
         val namedFunction = buildNamedFunction {
             moduleData = c.moduleData
             origin = deserializationOrigin
@@ -672,12 +685,13 @@ class FirMemberDeserializer(private val c: FirDeserializationContext) {
                 isTailRec = Flags.IS_TAILREC.get(flags)
                 isExternal = Flags.IS_EXTERNAL_FUNCTION.get(flags)
                 isSuspend = Flags.IS_SUSPEND.get(flags)
+                this.isStatic = isStatic
                 hasStableParameterNames = !Flags.IS_FUNCTION_WITH_NON_STABLE_PARAMETER_NAMES.get(flags)
                 returnValueStatus = ProtoEnumFlags.returnValueStatus(Flags.RETURN_VALUE_STATUS_FUNCTION.get(flags))
             }
             isLocal = false
             this.symbol = symbol
-            dispatchReceiverType = c.dispatchReceiver
+            dispatchReceiverType = runUnless(isStatic) { c.dispatchReceiver }
             resolvePhase = FirResolvePhase.ANALYZED_DEPENDENCIES
             typeParameters += local.typeDeserializer.ownTypeParameters.map { it.fir }
             local.memberDeserializer.addValueParametersTo(

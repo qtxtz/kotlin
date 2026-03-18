@@ -247,7 +247,7 @@ class FirElementSerializer private constructor(
         val callableMembers = (klass.memberDeclarations() + providedCallables)
 
         for (declaration in callableMembers) {
-            if (declaration !is FirEnumEntry && declaration.isStatic) continue // ??? Miss values() & valueOf()
+            if (declaration.isGeneratedStaticEnumMember(klass)) continue // ??? Miss values() & valueOf()
             if (!declaration.isNotPrivateOrShouldBeSerialized(produceHeaderKlib)) continue
             // We have such declarations when compiling stdlib, but we don't need them as serialized bultins metadata
             if (declaration.origin == FirDeclarationOrigin.Enhancement
@@ -598,8 +598,11 @@ class FirElementSerializer private constructor(
             ProtoEnumFlags.modality(modality),
             property.memberKind(),
             property.isVar, hasGetter, hasSetter, hasConstant, property.isConst, property.isLateInit,
-            property.isExternal, property.delegateFieldSymbol != null, property.isExpect,
-            ProtoEnumFlags.returnValueStatus(property.status.returnValueStatus)
+            property.isExternal,
+            property.delegateFieldSymbol != null,
+            property.isExpect,
+            property.isStatic,
+            ProtoEnumFlags.returnValueStatus(property.status.returnValueStatus),
         )
         if (flags != builder.flags) {
             builder.flags = flags
@@ -683,6 +686,7 @@ class FirElementSerializer private constructor(
             function.isSuspend,
             namedFunction?.isExpect == true,
             shouldSetStableParameterNames(function),
+            function.isStatic,
             ProtoEnumFlags.returnValueStatus(namedFunction?.status?.returnValueStatus),
         )
 

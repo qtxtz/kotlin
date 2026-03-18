@@ -880,6 +880,29 @@ public class LoadKotlinWithTypeTableTestGenerated extends AbstractLoadKotlinWith
     }
   }
 
+  @TestMetadata("compiler/testData/loadJava/compiledKotlin/companionBlocksAndExtensions")
+  @TestDataPath("$PROJECT_ROOT")
+  @RunWith(JUnit3RunnerWithInners.class)
+  public static class CompanionBlocksAndExtensions extends AbstractLoadKotlinWithTypeTableTest {
+    private void runTest(String testDataFilePath) {
+      KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    }
+
+    public void testAllFilesPresentInCompanionBlocksAndExtensions() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/loadJava/compiledKotlin/companionBlocksAndExtensions"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @TestMetadata("companionBlocksAndExtensions.kt")
+    public void testCompanionBlocksAndExtensions() {
+      runTest("compiler/testData/loadJava/compiledKotlin/companionBlocksAndExtensions/companionBlocksAndExtensions.kt");
+    }
+
+    @TestMetadata("enum.kt")
+    public void testEnum() {
+      runTest("compiler/testData/loadJava/compiledKotlin/companionBlocksAndExtensions/enum.kt");
+    }
+  }
+
   @TestMetadata("compiler/testData/loadJava/compiledKotlin/constructor")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)

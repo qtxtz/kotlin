@@ -352,9 +352,36 @@ fun <T> List<T>.smartPlus(other: List<T>): List<T> = when {
 }
 
 // Source element may be missing if the class came from a library
-fun FirVariable.isEnumEntries(containingClass: FirClass): Boolean = isStatic && name == StandardNames.ENUM_ENTRIES && containingClass.isEnumClass
+fun FirVariable.isEnumEntries(containingClass: FirClass): Boolean {
+    return name == StandardNames.ENUM_ENTRIES && isSimpleStaticMemberOfEnumClass(containingClass)
+}
+
 fun FirVariable.isEnumEntries(containingClassSymbol: FirClassSymbol<*>): Boolean {
-    return isStatic && name == StandardNames.ENUM_ENTRIES && containingClassSymbol.isEnumClass
+    return isEnumEntries(containingClassSymbol.fir)
+}
+
+fun FirCallableDeclaration.isGeneratedStaticEnumMember(containingClass: FirClass): Boolean {
+    return when (this) {
+        is FirVariable -> isEnumEntries(containingClass)
+        is FirNamedFunction -> when (name) {
+            StandardNames.ENUM_VALUES ->
+                isSimpleStaticMemberOfEnumClass(containingClass) &&
+                        valueParameters.isEmpty()
+            StandardNames.ENUM_VALUE_OF ->
+                isSimpleStaticMemberOfEnumClass(containingClass) &&
+                        valueParameters.singleOrNull()?.returnTypeRef?.coneType?.isString == true
+            else -> false
+        }
+        else -> false
+    }
+}
+
+private fun FirCallableDeclaration.isSimpleStaticMemberOfEnumClass(containingClass: FirClass): Boolean {
+    return isStatic &&
+            containingClass.isEnumClass &&
+            contextParameters.isEmpty() &&
+            // Currently, companion block members can't have receivers, but maybe in the future they will.
+            receiverParameter == null
 }
 
 val FirExpression.isArraySet: Boolean
