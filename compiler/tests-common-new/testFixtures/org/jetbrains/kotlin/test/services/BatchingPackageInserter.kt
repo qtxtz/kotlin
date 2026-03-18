@@ -3,21 +3,24 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.test
+package org.jetbrains.kotlin.test.services
 
 import org.jetbrains.kotlin.test.model.TestFile
-import org.jetbrains.kotlin.test.services.ReversibleSourceFilePreprocessor
-import org.jetbrains.kotlin.test.services.TestServices
-import org.jetbrains.kotlin.test.services.testInfo
 import java.util.regex.Pattern
 
 class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFilePreprocessor(testServices) {
     companion object {
         private val packagePattern: Pattern = Pattern.compile("""^(\s*)package\s+(\S+)""", Pattern.MULTILINE)
+
+        fun computePackage(testServices: TestServices): String {
+            val (className, methodName, _) = testServices.testInfo
+            val classPart = className.substringAfter("$").replace("$", ".")
+            return "$classPart.$methodName"
+        }
     }
 
     override fun process(file: TestFile, content: String): String {
-        val additionalPackage = additionalPackage(testServices)
+        val additionalPackage = computePackage(testServices)
         val matcher = packagePattern.matcher(content)
 
         return if (matcher.find()) {
@@ -31,7 +34,7 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
     }
 
     override fun revert(file: TestFile, actualContent: String): String {
-        val additionalPackage = additionalPackage(testServices)
+        val additionalPackage = computePackage(testServices)
         val matcher = packagePattern.matcher(actualContent)
 
         if (!matcher.find()) {
@@ -56,9 +59,4 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
         }
     }
 
-    private fun additionalPackage(testServices: TestServices): String {
-        val (className, methodName, _) = testServices.testInfo
-        val classPart = className.substringAfter("$").replace("$", ".")
-        return "$classPart.$methodName"
-    }
 }

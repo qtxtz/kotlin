@@ -436,7 +436,7 @@ class ModuleStructureExtractorImpl(
             for ((module, files) in mutableFilesListPerModule) {
                 additionalSourceProviders.flatMapTo(files) { additionalSourceProvider ->
                     additionalSourceProvider.produceAdditionalFiles(
-                        globalDirectives ?: RegisteredDirectives.Empty,
+                        (globalDirectives ?: RegisteredDirectives.Empty) + testServices.defaultDirectives,
                         module,
                         testModuleStructure
                     ).also { additionalFiles ->
