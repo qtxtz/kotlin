@@ -42,8 +42,16 @@ public class KtScript extends KtNamedDeclarationStub<KotlinScriptStub> implement
         if (stub != null) {
             return stub.getFqName();
         }
+
         KtFile containingKtFile = getContainingKtFile();
-        Name fileBasedName = NameUtils.getScriptNameForFile(containingKtFile.getName());
+        String fileName = containingKtFile.getName();
+        Name fileBasedName;
+         if (KtPsiFactoryKt.isReplSnippet(this)) {
+             fileBasedName = NameUtils.getSnippetTargetClassName(fileName);
+        } else {
+             fileBasedName = NameUtils.getScriptNameForFile(fileName);
+        }
+
         return containingKtFile.getPackageFqName().child(fileBasedName);
     }
 

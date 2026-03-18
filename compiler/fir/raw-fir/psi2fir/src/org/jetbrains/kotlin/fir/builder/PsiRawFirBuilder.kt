@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -41,11 +41,7 @@ import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.builder.*
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
-import org.jetbrains.kotlin.fir.types.impl.FirImplicitTypeRefImplWithoutSource
-import org.jetbrains.kotlin.fir.types.impl.FirQualifierPartImpl
-import org.jetbrains.kotlin.fir.types.impl.FirTypeArgumentListImpl
-import org.jetbrains.kotlin.fir.types.impl.ResolvedImplicitTypeRef
+import org.jetbrains.kotlin.fir.types.impl.*
 import org.jetbrains.kotlin.lexer.KtTokens.*
 import org.jetbrains.kotlin.name.*
 import org.jetbrains.kotlin.psi.*
@@ -1460,7 +1456,7 @@ open class PsiRawFirBuilder(
             functionBodySetup: FirBlockBuilder.() -> Unit,
             statementsSetup: MutableList<FirElement>.() -> Unit,
         ): FirReplSnippet {
-            val snippetName = NameUtils.getSnippetTargetClassName(Name.special("<$fileName>"))
+            val snippetName = NameUtils.getSnippetTargetClassName(fileName)
             val classSymbol = FirRegularClassSymbol(ClassId(FqName.ROOT, snippetName))
 
             val snippetSymbol = FirReplSnippetSymbol(classSymbol)
