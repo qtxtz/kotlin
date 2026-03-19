@@ -11,14 +11,22 @@ import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinGradlePluginDsl
 
 /**
- * @deprecated This class was removed. All its properties have been moved to 'AbiValidationExtension'.
+ * @deprecated This interface was removed. All its properties have been moved to 'AbiValidationExtension'.
  */
+@Deprecated(
+    "Interface 'AbiValidationLegacyDumpExtension' was removed. All its properties have been moved to 'AbiValidationExtension'",
+    level = DeprecationLevel.ERROR
+)
 @KotlinGradlePluginDsl
 @ExperimentalAbiValidation
 interface AbiValidationLegacyDumpExtension {
     /**
-     * @deprecated A separate block 'legacyDump' was removed. All its properties have been moved to a higher level.
+     * @deprecated Property 'referenceDumpDir' was moved to a higher level.
      */
+    @Deprecated(
+        "Property 'referenceDumpDir' was moved to a higher level.",
+        level = DeprecationLevel.ERROR
+    )
     val referenceDumpDir: DirectoryProperty
 
     /**

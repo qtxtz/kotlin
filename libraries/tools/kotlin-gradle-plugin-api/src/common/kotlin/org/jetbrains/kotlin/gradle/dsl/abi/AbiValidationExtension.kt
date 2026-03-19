@@ -37,12 +37,12 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinGradlePluginDsl
 @ExperimentalAbiValidation
 interface AbiValidationExtension {
     /**
-     * @deprecated Property was removed to enable ABI validation call function `abiValidation()`, `abiValidation { ... }` or read `abiValidation` property.
+     * @deprecated Property was removed, to enable ABI validation call function `abiValidation()`, `abiValidation { ... }` or read `abiValidation` property.
      */
-    /*@Deprecated(
-        "Property was removed to enable ABI validation call function abiValidation(), abiValidation { ... } or read abiValidation property.",
+    @Deprecated(
+        "Property was removed, to enable ABI validation call function abiValidation(), abiValidation { ... } or read abiValidation property.",
         level = DeprecationLevel.ERROR
-    )*/
+    )
     val enabled: Property<Boolean>
 
     /**
@@ -153,14 +153,23 @@ interface AbiValidationExtension {
      *
      * @deprecated A separate property 'legacyDump' was removed. Please place all its properties on a higher level.
      */
+    @Deprecated(
+        "A separate property 'legacyDump' was removed. Please place all its properties on a higher level.",
+        level = DeprecationLevel.ERROR
+    )
+    @Suppress("DEPRECATION_ERROR")
     val legacyDump: AbiValidationLegacyDumpExtension
 
     /**
      * Configures the [legacyDump] with the provided configuration.
      * @deprecated A separate block 'legacyDump' was removed. Please place all its properties on a higher level.
      */
+    @Deprecated(
+        "A separate block 'legacyDump' was removed. Please place all its properties on a higher level.",
+        level = DeprecationLevel.ERROR
+    )
+    @Suppress("DEPRECATION_ERROR")
     fun legacyDump(action: Action<AbiValidationLegacyDumpExtension>) {
-        action.execute(legacyDump)
     }
 
     /**
@@ -255,14 +264,14 @@ interface AbiValidationVariantSpec {
      * Left for source compatibility.
      * The @Deprecated annotation is not needed because there is no way to use it from the script.
      */
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION_ERROR")
     val legacyDump: AbiValidationLegacyDumpExtension
 
     /**
      * Left for source compatibility.
      * The @Deprecated annotation is not needed because there is no way to use it from the script.
      */
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION_ERROR")
     fun legacyDump(action: Action<AbiValidationLegacyDumpExtension>) {
         action.execute(legacyDump)
     }

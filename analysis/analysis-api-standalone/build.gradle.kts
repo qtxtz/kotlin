@@ -44,8 +44,7 @@ kotlin {
 
     @OptIn(ExperimentalAbiValidation::class)
     abiValidation {
-        enabled.set(true)
-        legacyDump.referenceDumpDir = File("api-unstable")
+        referenceDumpDir = File("api-unstable")
 
         filters {
             exclude.annotatedWith.addAll(

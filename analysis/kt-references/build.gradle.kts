@@ -33,7 +33,6 @@ private val stableNonPublicMarkers = listOf(
 kotlin {
     @OptIn(ExperimentalAbiValidation::class)
     abiValidation {
-        enabled.set(true)
         filters {
             exclude.annotatedWith.addAll(stableNonPublicMarkers)
         }

@@ -39,6 +39,10 @@ internal abstract class AbiValidationExtensionImpl @Inject constructor(
 
     internal val isActivated: Boolean get() = activated
 
+    @Deprecated(
+        "Property was removed, to enable ABI validation call function abiValidation(), abiValidation { ... } or read abiValidation property.",
+        level = DeprecationLevel.ERROR
+    )
     final override val enabled: Property<Boolean> = objects.property<Boolean>().convention(false)
 
     override val filters: AbiFiltersSpec = objects.AbiFiltersSpecImpl()
@@ -47,7 +51,7 @@ internal abstract class AbiValidationExtensionImpl @Inject constructor(
 
     override val keepLocallyUnsupportedTargets: Property<Boolean> = objects.property<Boolean>()
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION_ERROR")
     @Deprecated(
         "A separate 'legacyDump' property was removed. Please place all its properties on a higher level.",
         level = DeprecationLevel.WARNING
@@ -64,7 +68,7 @@ internal fun Project.AbiValidationExtensionImpl(): AbiValidationExtensionImpl =
     objects.newInstance(AbiValidationExtensionImpl::class.java, objects, name, tasks, layout)
 
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION_ERROR")
 private class AbiValidationLegacyDumpExtensionImpl(
     @Deprecated(
         "A separate block 'legacyDump' was removed. All its properties have been moved to a higher level.",
