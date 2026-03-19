@@ -88,7 +88,7 @@ FILE: lib.kt
             super<R|kotlin/Any|>()
         }
 
-        public final [IsFromPrimaryConstructor=true] val a: R|kotlin/Int| = R|<local>/a|
+        @R|BinaryAnnotation|(str = <strcat>(String(Str), String(ing)) [evaluated = String(String)]) public final [IsFromPrimaryConstructor=true] val a: R|kotlin/Int| = R|<local>/a|
             public [ContainingClassKey=WithConstructorArgumentAnnotation] get(): R|kotlin/Int|
 
     }
