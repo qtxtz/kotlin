@@ -11,7 +11,8 @@ import com.intellij.psi.stubs.StubElement
 import com.intellij.psi.stubs.StubInputStream
 import com.intellij.psi.stubs.StubOutputStream
 import com.intellij.util.io.StringRef
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtExperimentalApi
+import org.jetbrains.kotlin.psi.KtScript
 import org.jetbrains.kotlin.psi.stubs.KotlinScriptStub
 import org.jetbrains.kotlin.psi.stubs.impl.KotlinScriptStubImpl
 
@@ -38,16 +39,6 @@ class KtScriptElementType(debugName: String) : KtStubElementType<KotlinScriptStu
         val fqName = dataStream.readName()!!
         val isReplSnippet = dataStream.readBoolean()
         return KotlinScriptStubImpl(parentStub, fqName, isReplSnippet)
-    }
-
-    override fun createPsi(stub: KotlinScriptStubImpl): KtScript {
-        val script = super.createPsi(stub)
-        if (stub.isReplSnippet) {
-            @OptIn(KtNonPublicApi::class)
-            script.markAsReplSnippet()
-        }
-
-        return script
     }
 
     override fun indexStub(stub: KotlinScriptStubImpl, sink: IndexSink) {

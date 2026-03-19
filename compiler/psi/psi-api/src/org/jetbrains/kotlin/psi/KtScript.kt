@@ -67,14 +67,14 @@ open class KtScript : KtNamedDeclarationStub<KotlinScriptStub>, KtDeclarationCon
     @KtExperimentalApi
     @OptIn(KtImplementationDetail::class)
     val isReplSnippet: Boolean
-        get() = greenStub?.isReplSnippet ?: (this.getUserData(REPL_SNIPPET_KEY) == true)
+        get() = greenStub?.isReplSnippet ?: (this.getCopyableUserData(REPL_SNIPPET_KEY) == true)
 
     /**
      * Marks the [KtScript] as a REPL snippet, so it is treated by the compiler accordingly.
      */
     @KtNonPublicApi
     fun markAsReplSnippet() {
-        putUserData(REPL_SNIPPET_KEY, true)
+        putCopyableUserData(REPL_SNIPPET_KEY, true)
     }
 }
 

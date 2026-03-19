@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators.Analys
 import org.jetbrains.kotlin.analysis.test.framework.base.AbstractAnalysisApiExecutionTest
 import org.jetbrains.kotlin.analysis.test.framework.test.configurators.AnalysisApiTestConfigurator
 import org.jetbrains.kotlin.psi.KtBlockExpression
-import org.jetbrains.kotlin.psi.KtExperimentalApi
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtImplementationDetail
 import org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes
@@ -47,22 +46,5 @@ class SourceStubsTest : AbstractAnalysisApiExecutionTest("testData/source/custom
         val fileStubCopy = fileStub.deepCopy()
         val localFunctionStubCopy = fileStubCopy.findLocalFunction()
         validateLocalFunctionStub(localFunctionStubCopy)
-    }
-
-    @Test
-    @OptIn(KtExperimentalApi::class, KtImplementationDetail::class)
-    fun simpleReplSnippet(file: KtFile, testServices: TestServices) {
-        testServices.assertions.assertTrue(file.script?.isReplSnippet == true)
-        val fileStub = file.calcStubTree().root as KotlinFileStubImpl
-        val scriptStub = fileStub.findChildStubByType(KtStubElementTypes.SCRIPT)!!
-
-        testServices.assertions.assertTrue(scriptStub.isReplSnippet)
-
-        val fileStubCopy = fileStub.deepCopy()
-        val scriptStubCopy = fileStubCopy.findChildStubByType(KtStubElementTypes.SCRIPT)!!
-        testServices.assertions.assertNotEquals(scriptStub, scriptStubCopy)
-
-        testServices.assertions.assertTrue(scriptStubCopy.isReplSnippet)
-        testServices.assertions.assertTrue(scriptStubCopy.psi.isReplSnippet)
     }
 }
