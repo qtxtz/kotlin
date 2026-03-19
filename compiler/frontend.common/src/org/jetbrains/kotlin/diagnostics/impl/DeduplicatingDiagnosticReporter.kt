@@ -6,20 +6,21 @@
 package org.jetbrains.kotlin.diagnostics.impl
 
 import org.jetbrains.kotlin.AbstractKtSourceElement
+import org.jetbrains.kotlin.KtSourceFile
 import org.jetbrains.kotlin.diagnostics.*
 
 class DeduplicatingDiagnosticReporter(private val delegate: DiagnosticReporter) : DiagnosticReporter() {
     override val hasErrors: Boolean get() = delegate.hasErrors
     override val hasWarningsForWError: Boolean get() = delegate.hasWarningsForWError
 
-    private val reported = mutableSetOf<Triple<String?, AbstractKtSourceElement, KtDiagnosticFactoryN>>()
+    private val reported = mutableSetOf<Triple<KtSourceFile?, AbstractKtSourceElement, KtDiagnosticFactoryN>>()
 
     override fun report(diagnostic: KtDiagnostic?, context: DiagnosticContext) {
         when (diagnostic) {
             null -> {}
             is KtDiagnosticWithoutSource -> delegate.report(diagnostic, context)
             is KtDiagnosticWithSource -> {
-                if (reported.add(Triple(context.containingFilePath, diagnostic.element, diagnostic.factory))) {
+                if (reported.add(Triple(context.containingFile, diagnostic.element, diagnostic.factory))) {
                     delegate.report(diagnostic, context)
                 }
             }

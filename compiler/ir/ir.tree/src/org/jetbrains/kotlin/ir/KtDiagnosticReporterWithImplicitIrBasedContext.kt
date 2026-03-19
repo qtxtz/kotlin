@@ -6,7 +6,9 @@
 package org.jetbrains.kotlin.ir
 
 import org.jetbrains.kotlin.AbstractKtSourceElement
+import org.jetbrains.kotlin.KtIoFileSourceFile
 import org.jetbrains.kotlin.KtRealPsiSourceElement
+import org.jetbrains.kotlin.KtSourceFile
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.diagnostics.*
 import org.jetbrains.kotlin.diagnostics.impl.deduplicating
@@ -18,6 +20,7 @@ import org.jetbrains.kotlin.ir.util.hasEqualFqName
 import org.jetbrains.kotlin.ir.util.sourceElement
 import org.jetbrains.kotlin.ir.visitors.IrVisitor
 import org.jetbrains.kotlin.name.FqName
+import java.io.File
 import java.util.*
 
 class KtDiagnosticReporterWithImplicitIrBasedContext(
@@ -63,7 +66,7 @@ class KtDiagnosticReporterWithImplicitIrBasedContext(
 
     override fun report(factory: KtSourcelessDiagnosticFactory, message: String) {
         val context = object : DiagnosticContext {
-            override val containingFilePath: String?
+            override val containingFile: KtSourceFile?
                 get() = null
 
             override fun isDiagnosticSuppressed(diagnostic: KtDiagnostic): Boolean = false
@@ -77,9 +80,10 @@ class KtDiagnosticReporterWithImplicitIrBasedContext(
     internal inner class DiagnosticContextWithSuppressionImpl(
         override val sourceElement: AbstractKtSourceElement?,
         private val irElement: IrElement,
-        private val containingFile: IrFile
+        private val containingIrFile: IrFile
     ) : IrDiagnosticReporter.IrDiagnosticContext {
-        override val containingFilePath: String = containingFile.path
+        override val containingFile: KtSourceFile =
+            KtIoFileSourceFile(File(containingIrFile.path)) // TODO: (KT-85141) consider implementing IrFile-based "source" file, if needed
 
         override val languageVersionSettings: LanguageVersionSettings
             get() = this@KtDiagnosticReporterWithImplicitIrBasedContext.languageVersionSettings
@@ -87,7 +91,7 @@ class KtDiagnosticReporterWithImplicitIrBasedContext(
 
         override fun isDiagnosticSuppressed(diagnostic: KtDiagnostic): Boolean =
             suppressCache.isSuppressed(
-                irElement, containingFile, diagnostic.factory.name.lowercase(), diagnostic.severity
+                irElement, containingIrFile, diagnostic.factory.name.lowercase(), diagnostic.severity
             )
 
         override fun report(factory: KtDiagnosticFactory0) {
@@ -119,7 +123,7 @@ class KtDiagnosticReporterWithImplicitIrBasedContext(
             if (other !is IrDiagnosticReporter.IrDiagnosticContext) return false
 
             if (sourceElement != other.sourceElement) return false
-            if (containingFilePath != other.containingFilePath) return false
+            if (containingFile != other.containingFile) return false
             if (languageVersionSettings != other.languageVersionSettings) return false
 
             return true
@@ -127,7 +131,7 @@ class KtDiagnosticReporterWithImplicitIrBasedContext(
 
         override fun hashCode(): Int {
             var result = sourceElement?.hashCode() ?: 0
-            result = 31 * result + containingFilePath.hashCode()
+            result = 31 * result + containingFile.hashCode()
             result = 31 * result + languageVersionSettings.hashCode()
             return result
         }

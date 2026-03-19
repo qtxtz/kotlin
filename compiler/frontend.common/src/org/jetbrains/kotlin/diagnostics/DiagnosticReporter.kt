@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.diagnostics
 
 import org.jetbrains.kotlin.AbstractKtSourceElement
+import org.jetbrains.kotlin.KtSourceFile
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl
 
@@ -22,13 +23,14 @@ interface DiagnosticBaseContext {
 
 interface DiagnosticContext : DiagnosticBaseContext {
     override val languageVersionSettings: LanguageVersionSettings
-    val containingFilePath: String?
+    val containingFile: KtSourceFile?
+    val containingFilePath: String? get() = containingFile?.path
 
     fun isDiagnosticSuppressed(diagnostic: KtDiagnostic): Boolean
 
     object Default : DiagnosticContext {
         override val languageVersionSettings: LanguageVersionSettings get() = LanguageVersionSettingsImpl.DEFAULT
-        override val containingFilePath: String? get() = null
+        override val containingFile: KtSourceFile? get() = null
         override fun isDiagnosticSuppressed(diagnostic: KtDiagnostic): Boolean = false
     }
 }

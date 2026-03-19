@@ -299,7 +299,11 @@ class LauncherScriptTest : TestCaseWithTmpdir() {
         runProcess(
             "kotlin", "-no-stdlib", "-e", "println(42)",
             expectedExitCode = 1,
-            expectedStderr = """error: unresolved reference 'println'."""
+            expectedStderr = """
+                script.kts:1:1: error: unresolved reference 'println'.
+                println(42)
+                ^
+                """.trimIndent()
         )
     }
 

@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.diagnostics.impl
 
+import org.jetbrains.kotlin.KtSourceFile
 import org.jetbrains.kotlin.diagnostics.DiagnosticContext
 import org.jetbrains.kotlin.diagnostics.KtDiagnostic
 
@@ -13,9 +14,9 @@ import org.jetbrains.kotlin.diagnostics.KtDiagnostic
  */
 class DiagnosticsCollectorImpl : BaseDiagnosticsCollector() {
     override val diagnostics: List<KtDiagnostic>
-        get() = diagnosticsByFilePath.flatMap { it.value }
-    override val diagnosticsByFilePath: Map<String?, List<KtDiagnostic>>
-        field = mutableMapOf<String?, MutableList<KtDiagnostic>>()
+        get() = diagnosticsByFile.flatMap { it.value }
+    override val diagnosticsByFile: Map<KtSourceFile?, List<KtDiagnostic>>
+        field = mutableMapOf<KtSourceFile?, MutableList<KtDiagnostic>>()
 
     override var hasErrors = false
         private set
@@ -25,7 +26,7 @@ class DiagnosticsCollectorImpl : BaseDiagnosticsCollector() {
 
     override fun report(diagnostic: KtDiagnostic?, context: DiagnosticContext) {
         if (diagnostic != null && !context.isDiagnosticSuppressed(diagnostic)) {
-            diagnosticsByFilePath.getOrPut(context.containingFilePath) { mutableListOf() }.run {
+            diagnosticsByFile.getOrPut(context.containingFile) { mutableListOf() }.run {
                 add(diagnostic)
                 hasErrors = hasErrors || diagnostic.severity.isError
                 hasWarningsForWError = hasWarningsForWError || diagnostic.severity.isErrorWhenWError

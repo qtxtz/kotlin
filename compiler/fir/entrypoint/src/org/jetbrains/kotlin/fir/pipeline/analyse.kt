@@ -41,8 +41,8 @@ fun FirSession.runCheckers(
     }
     collector.collectDiagnosticsInSettings(diagnosticsReporter)
     return firFiles.associateWith {
-        val path = it.sourceFile?.path ?: return@associateWith emptyList()
-        diagnosticsCollector.diagnosticsByFilePath[path] ?: emptyList()
+        val sourceFile = it.sourceFile ?: return@associateWith emptyList()
+        diagnosticsCollector.diagnosticsByFile[sourceFile] ?: emptyList()
     }
 }
 
@@ -61,6 +61,6 @@ fun FirSession.collectLostDiagnosticsOnFile(
     withFileAnalysisExceptionWrapping(file) {
         collector.collectDiagnostics(file, diagnosticsReporter)
     }
-    val path = file.sourceFile?.path ?: return emptyList()
-    return diagnosticsCollector.diagnosticsByFilePath[path] ?: emptyList()
+    val sourceFile = file.sourceFile ?: return emptyList()
+    return diagnosticsCollector.diagnosticsByFile[sourceFile] ?: emptyList()
 }
