@@ -1,9 +1,5 @@
 // TARGET_BACKEND: JVM
-// WITH_STDLIB
 // JVM_DEFAULT_MODE: enable
-
-// Packages are relocated on Android tests
-// IGNORE_BACKEND: ANDROID
 
 package test
 

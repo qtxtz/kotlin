@@ -1,8 +1,6 @@
 // TARGET_BACKEND: JVM_IR
-// WITH_STDLIB
 
-// The test fails for android because the test is moved to another package
-// IGNORE_BACKEND: ANDROID
+package test
 
 class C<T> {
     open inner class I1
@@ -33,12 +31,13 @@ fun <T> C<T>.baz(): Any {
 
 fun box(): String {
     val fooSignature = C<String>().foo().javaClass.genericSuperclass.toString()
-    if (fooSignature != "C<T>\$I1") return fooSignature
+    // There is no type parameters on Android
+    if (fooSignature != "test.C<T>\$I1" && fooSignature != "class test.C\$I1") return fooSignature
     val barSignature = C<String>().bar().javaClass.genericSuperclass.toString()
-    if (barSignature != "class C\$bar\$L1") return barSignature
+    if (barSignature != "class test.C\$bar\$L1") return barSignature
     val bazSignature = C<String>().baz().javaClass.genericSuperclass.toString()
-    if (bazSignature != "Kt62584Kt\$baz\$L1<java.lang.String>") return bazSignature
+    if (bazSignature != "test.Kt62584Kt\$baz\$L1<java.lang.String>" && bazSignature != "class test.Kt62584Kt\$baz\$L1") return bazSignature
     val propertySignature =  C<String>().property.javaClass.genericSuperclass.toString()
-    if (propertySignature != "Kt62584Kt\$property\$L1<java.lang.String>") return propertySignature
+    if (propertySignature != "test.Kt62584Kt\$property\$L1<java.lang.String>" && propertySignature != "class test.Kt62584Kt\$property\$L1") return propertySignature
     return "OK"
 }

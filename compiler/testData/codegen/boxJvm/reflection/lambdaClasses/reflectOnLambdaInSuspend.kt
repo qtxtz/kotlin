@@ -3,8 +3,6 @@
 // TARGET_BACKEND: JVM
 // WITH_REFLECT
 // WITH_COROUTINES
-// WITH_STDLIB
-
 // FILE: a.kt
 
 import helpers.*

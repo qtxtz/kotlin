@@ -7,8 +7,7 @@
 // Disable test grouping as a workaround:
 // NATIVE_STANDALONE
 
-// The test is moved into another package in android tests
-// IGNORE_BACKEND: ANDROID
+package test
 
 annotation class A(val t: String = "d")
 annotation class B(
@@ -19,8 +18,8 @@ annotation class B(
 fun box(): String {
     val s = B().toString()
 
-    if (!(s.contains("@B("))) return "Fail1"
-    if (!(s.contains("a=@A(t=d)"))) return "Fail2"
+    if (!(s.contains("@test.B("))) return "Fail1"
+    if (!(s.contains("a=@test.A(t=d)"))) return "Fail2"
     if (!s.contains("arr=[]")) return "Fail3"
 
     return "OK"

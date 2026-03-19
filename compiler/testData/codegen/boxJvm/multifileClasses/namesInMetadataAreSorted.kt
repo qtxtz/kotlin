@@ -1,7 +1,4 @@
 // TARGET_BACKEND: JVM
-// packages are renamed in android tests
-// IGNORE_BACKEND: ANDROID
-// WITH_STDLIB
 // FILE: ccc.kt
 
 @file:JvmName("Facade")
@@ -27,5 +24,8 @@ fun b() {}
 
 fun box(): String {
     val names = Class.forName("test.Facade").getAnnotation(Metadata::class.java).data1.toList()
-    return if (names == listOf("test/Facade__AaaKt", "test/Facade__CccKt", "test/Facade___bKt")) "OK" else "Fail: $names"
+    // Account for package renaming in Android tests
+    return if (names == listOf("test.Facade__AaaKt".replace(".", "/"),
+                               "test.Facade__CccKt".replace(".", "/"),
+                               "test.Facade___bKt".replace(".", "/"))) "OK" else "Fail: $names"
 }

@@ -1,8 +1,5 @@
 // TARGET_BACKEND: JVM
-// No implementation found for double compiler_testData_codegen_box_external_withDefaultArg_kt.foo.ObjWithNative.bar(long, java.lang.String)
-// IGNORE_BACKEND: ANDROID
 
-// WITH_STDLIB
 // FULL_JDK
 
 package foo
@@ -24,7 +21,8 @@ fun box(): String {
     }
     catch (e: java.lang.UnsatisfiedLinkError) {
         if (e.message != "foo.ObjWithNative.bar(JLjava/lang/String;)D" &&
-            e.message != "'double foo.ObjWithNative.bar(long, java.lang.String)'") return "Fail 1: " + e.message
+            e.message != "'double foo.ObjWithNative.bar(long, java.lang.String)'" &&
+            !e.message!!.contains("No implementation found for double foo.ObjWithNative.bar(long, java.lang.String)")) return "Fail 1: " + e.message
     }
 
     try {
@@ -33,7 +31,8 @@ fun box(): String {
     }
     catch (e: java.lang.UnsatisfiedLinkError) {
         if (e.message != "foo.ObjWithNative.foo(I)D" &&
-            e.message != "'double foo.ObjWithNative.foo(int)'") return "Fail 2: " + e.message
+            e.message != "'double foo.ObjWithNative.foo(int)'" &&
+            !e.message!!.contains("No implementation found for double foo.ObjWithNative.foo(int)")) return "Fail 2: " + e.message
     }
 
     try {
@@ -42,7 +41,8 @@ fun box(): String {
     }
     catch (e: java.lang.UnsatisfiedLinkError) {
         if (e.message != "foo.WithDefaultArgKt.topLevel(I)D" &&
-            e.message != "'double foo.WithDefaultArgKt.topLevel(int)'") return "Fail 3: " + e.message
+            e.message != "'double foo.WithDefaultArgKt.topLevel(int)'" &&
+            !e.message!!.contains("No implementation found for double foo.WithDefaultArgKt.topLevel(int)")) return "Fail 3: " + e.message
     }
     return "OK"
 }

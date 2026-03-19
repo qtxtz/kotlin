@@ -1,6 +1,4 @@
 // TARGET_BACKEND: JVM
-// The test is moved to another package in android tests
-// IGNORE_BACKEND: ANDROID
 
 // FULL_JDK
 
@@ -17,7 +15,8 @@ fun box(): String {
     }
     catch (e: java.lang.UnsatisfiedLinkError) {
         if (e.message != "foo.TopLevelKt.bar(JLjava/lang/String;)D" &&
-            e.message != "'double foo.TopLevelKt.bar(long, java.lang.String)'") return "Fail 1: " + e.message
+            e.message != "'double foo.TopLevelKt.bar(long, java.lang.String)'" &&
+            !e.message!!.contains("No implementation found for double foo.TopLevelKt.bar(long, java.lang.String)")) return "Fail 1: " + e.message
     }
 
     return "OK"

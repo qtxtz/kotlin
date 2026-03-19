@@ -1,10 +1,7 @@
 // TARGET_BACKEND: JVM
 // LAMBDAS: CLASS
 
-// has declaring class on Android
-// IGNORE_BACKEND: ANDROID
-
-// WITH_STDLIB
+package test
 
 class O {
     companion object {
@@ -24,7 +21,7 @@ fun box(): String {
     if (enclosingConstructor != null) return "constructor: $enclosingConstructor"
 
     val enclosingClass = javaClass.getEnclosingClass()
-    if (enclosingClass?.getName() != "O") return "enclosing class: $enclosingClass"
+    if (enclosingClass?.getName() != "test.O") return "enclosing class: $enclosingClass"
 
     val declaringClass = javaClass.getDeclaringClass()
     if (declaringClass != null) return "anonymous function has a declaring class: $declaringClass"

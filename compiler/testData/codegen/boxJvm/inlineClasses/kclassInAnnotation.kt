@@ -63,54 +63,59 @@ class CResult
 @AnnArray([ICAnyNArray::class])
 class CAnyNArray
 
+inline fun <reified T> List<*>.firstIsInstance(): T {
+    for (element in this) if (element is T) return element
+    throw NoSuchElementException("No element of given type found")
+}
+
 fun box(): String {
-    var klass = (CInt::class.annotations.first() as Ann).c.toString()
+    var klass = (CInt::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICInt") return "Expected class test.ICInt, got $klass"
 
-    klass = (CIntArray::class.annotations.first() as Ann).c.toString()
+    klass = (CIntArray::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICIntArray") return "Expected class test.ICIntArray, got $klass"
 
-    klass = (CIntN::class.annotations.first() as Ann).c.toString()
+    klass = (CIntN::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICIntN") return "Expected class test.ICIntN, got $klass"
 
-    klass = (CIntNArray::class.annotations.first() as Ann).c.toString()
+    klass = (CIntNArray::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICIntNArray") return "Expected class test.ICIntNArray, got $klass"
 
-    klass = (CAny::class.annotations.first() as Ann).c.toString()
+    klass = (CAny::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICAny") return "Expected class test.ICAny, got $klass"
 
-    klass = (CAnyArray::class.annotations.first() as Ann).c.toString()
+    klass = (CAnyArray::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICAnyArray") return "Expected class test.ICAnyArray, got $klass"
 
-    klass = (CResult::class.annotations.first() as Ann).c.toString()
+    klass = (CResult::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class kotlin.Result") return "Expected class kotlin.Result, got $klass"
 
-    klass = (CAnyNArray::class.annotations.first() as Ann).c.toString()
+    klass = (CAnyNArray::class.annotations.firstIsInstance<Ann>()).c.toString()
     if (klass != "class test.ICAnyNArray") return "Expected class test.ICAnyNArray, got $klass"
 
 
-    klass = (CInt::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CInt::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICInt") return "Expected class test.ICInt, got $klass"
 
-    klass = (CIntArray::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CIntArray::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICIntArray") return "Expected class test.ICIntArray, got $klass"
 
-    klass = (CIntN::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CIntN::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICIntN") return "Expected class test.ICIntN, got $klass"
 
-    klass = (CIntNArray::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CIntNArray::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICIntNArray") return "Expected class test.ICIntNArray, got $klass"
 
-    klass = (CAny::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CAny::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICAny") return "Expected class test.ICAny, got $klass"
 
-    klass = (CAnyArray::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CAnyArray::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICAnyArray") return "Expected class test.ICAnyArray, got $klass"
 
-    klass = (CResult::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CResult::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class kotlin.Result") return "Expected class kotlin.Result, got $klass"
 
-    klass = (CAnyNArray::class.annotations.last() as AnnArray).c[0].toString()
+    klass = (CAnyNArray::class.annotations.firstIsInstance<AnnArray>()).c[0].toString()
     if (klass != "class test.ICAnyNArray") return "Expected class test.ICAnyNArray, got $klass"
 
     return "OK"

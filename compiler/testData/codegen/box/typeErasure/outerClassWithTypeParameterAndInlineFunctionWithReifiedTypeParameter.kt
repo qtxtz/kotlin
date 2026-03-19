@@ -1,10 +1,10 @@
 // DUMP_IR_OF_PREPROCESSED_INLINE_FUNCTIONS
-// WITH_STDLIB
 // WITH_REFLECT
-// Android tests put the file into different package
-// IGNORE_BACKEND: ANDROID
+// WITH_STDLIB
 
 // FILE: lib.kt
+package test
+
 import kotlin.reflect.typeOf
 
 class Pair<A, B>(val x: A, val y: B)
@@ -15,13 +15,15 @@ class A<T>(val a: T) {
 }
 
 // FILE: main.kt
+package test
+
 import kotlin.reflect.typeOf
 
 fun box() : String {
     val arguments = listOf<Any?>(0, "", null, Pair(42, 4.2))
     for (arg in arguments) {
         val pair = A("1").typeOfPair(arg).toString()
-        if (pair != "Pair<T, kotlin.Any?>" &&
+        if (pair != "test.Pair<T, kotlin.Any?>" &&
             // JS_IR, JS_IR_ES6
             pair != "Pair<T, Any?>")
             return "FAIL: $pair"

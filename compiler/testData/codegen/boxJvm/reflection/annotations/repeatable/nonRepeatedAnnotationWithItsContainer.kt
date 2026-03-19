@@ -4,11 +4,9 @@
 // FULL_JDK
 // WITH_REFLECT
 
-// Android doesn't have @Repeatable before API level 24.
-// IGNORE_BACKEND: ANDROID
-
 package test
 
+import kotlin.collections.sorted
 import kotlin.test.assertEquals
 import kotlin.reflect.full.*
 
@@ -31,11 +29,11 @@ fun Any?.render(): String =
 
 // Explicit container is not unwrapped.
 fun box(): String {
-    assertEquals("[@test.A(1), @test.As([@test.A(2), @test.A(3)])]", Z::class.annotations.sorted().render())
+    assertEquals("[@test.A(1), @test.As([@test.A(2), @test.A(3)])]", Z::class.annotations.map { it.toString() }.sorted().render())
     assertEquals("[@test.A(1)]", Z::class.findAnnotations<A>().render())
     assertEquals("@test.A(1)", Z::class.findAnnotation<A>().render())
 
-    assertEquals("[@test.As([@test.A(1), @test.A(2)]), @test.A(3)]", ZZ::class.annotations.sorted().render())
+    assertEquals("[@test.A(3), @test.As([@test.A(1), @test.A(2)])]", ZZ::class.annotations.map { it.toString() }.sorted().render())
     assertEquals("[@test.A(3)]", ZZ::class.findAnnotations<A>().render())
     assertEquals("@test.A(3)", ZZ::class.findAnnotation<A>().render())
 
