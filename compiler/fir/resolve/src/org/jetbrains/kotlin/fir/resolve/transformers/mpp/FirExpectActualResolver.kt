@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.ExpectForActualMatchingData
 import org.jetbrains.kotlin.fir.declarations.expectForActual
 import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
+import org.jetbrains.kotlin.fir.declarations.utils.isCompanionExtension
 import org.jetbrains.kotlin.fir.declarations.utils.isExpect
 import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.resolve.providers.dependenciesSymbolProvider
@@ -70,7 +71,11 @@ object FirExpectActualResolver {
                                     scope.processFunctionsByName(callableId.callableName) { add(it) }
                                     scope.processPropertiesByName(callableId.callableName) { add(it) }
                                 }
-                                .filter { expectSymbol -> expectSymbol.isExpect && expectSymbol.moduleData in transitiveDependsOn }
+                                .filter { expectSymbol ->
+                                    expectSymbol.isExpect &&
+                                            expectSymbol.moduleData in transitiveDependsOn &&
+                                            expectSymbol.isCompanionExtension == actualSymbol.isCompanionExtension
+                                }
                                 .filterContainedInTheFirstWaveOfDependsOnDominatorTree(graphStartingNode = actualSymbol.moduleData)
                         }
                     }

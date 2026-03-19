@@ -43,7 +43,6 @@ import org.jetbrains.kotlin.types.model.TypeSubstitutorMarker
 import org.jetbrains.kotlin.types.model.TypeSystemContext
 import org.jetbrains.kotlin.utils.zipIfSizesAreEqual
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
 
 class FirExpectActualMatchingContextImpl private constructor(
     private val actualSession: FirSession,
@@ -457,7 +456,7 @@ class FirExpectActualMatchingContextImpl private constructor(
         }
         val symbol = asSymbol()
         val classSymbol = containingExpectClass.asSymbol()
-        if (symbol !is FirConstructorSymbol && symbol.dispatchReceiverType?.classId != classSymbol.classId) {
+        if (symbol !is FirConstructorSymbol && symbol.dispatchReceiverType.let { it != null && it.classId != classSymbol.classId }) {
             return true
         }
         return symbol.isSubstitutionOrIntersectionOverride
