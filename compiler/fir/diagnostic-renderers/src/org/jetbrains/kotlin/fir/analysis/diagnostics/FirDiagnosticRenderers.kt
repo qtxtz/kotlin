@@ -13,6 +13,9 @@ import org.jetbrains.kotlin.diagnostics.WhenMissingCase
 import org.jetbrains.kotlin.diagnostics.rendering.*
 import org.jetbrains.kotlin.fir.FirModuleData
 import org.jetbrains.kotlin.fir.containingClassLookupTag
+import org.jetbrains.kotlin.fir.declarations.FirDeclaration
+import org.jetbrains.kotlin.fir.declarations.FirEnumEntry
+import org.jetbrains.kotlin.fir.declarations.isJavaOrEnhancement
 import org.jetbrains.kotlin.fir.declarations.utils.*
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.UnsafeExpressionUtility
@@ -27,12 +30,11 @@ import org.jetbrains.kotlin.fir.resolve.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
-import org.jetbrains.kotlin.fir.types.*
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.metadata.deserialization.VersionRequirement
 import org.jetbrains.kotlin.mpp.DeclarationSymbolMarker
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.renderer.render
 import org.jetbrains.kotlin.resolve.ReturnValueStatus
@@ -40,13 +42,22 @@ import java.text.MessageFormat
 
 @Suppress("NO_EXPLICIT_RETURN_TYPE_IN_API_MODE_WARNING")
 object FirDiagnosticRenderers {
-    val SYMBOL = symbolRenderer(modifierRenderer = ::FirPartialModifierRenderer)
+    object DiagnosticStaticPolicy : FirModifierRenderer.StaticPolicy {
+        override fun renderStatic(memberDeclaration: FirDeclaration): String? {
+            if (memberDeclaration is FirEnumEntry) return null
+            return if (memberDeclaration.isJavaOrEnhancement) "static" else "companion"
+        }
+    }
+
+    val SYMBOL = symbolRenderer(
+        modifierRenderer = { FirPartialModifierRenderer(DiagnosticStaticPolicy) }
+    )
 
     val SYMBOL_WITH_ALL_MODIFIERS = symbolRenderer()
 
     @OptIn(SymbolInternals::class)
     private fun symbolRenderer(
-        modifierRenderer: () -> FirModifierRenderer? = ::FirAllModifierRenderer,
+        modifierRenderer: () -> FirModifierRenderer? = { FirAllModifierRenderer(DiagnosticStaticPolicy) },
     ) = Renderer { symbol: FirBasedSymbol<*> ->
         when (symbol) {
             is FirClassLikeSymbol, is FirCallableSymbol -> FirRenderer(
@@ -80,7 +91,7 @@ object FirDiagnosticRenderers {
                     bodyRenderer = null,
                     propertyAccessorRenderer = null,
                     callArgumentsRenderer = FirCallNoArgumentsRenderer(),
-                    modifierRenderer = FirPartialModifierRenderer(),
+                    modifierRenderer = FirPartialModifierRenderer(DiagnosticStaticPolicy),
                     callableSignatureRenderer = FirCallableSignatureRendererForReadability(),
                     declarationRenderer = FirDeclarationRenderer("local ", renderVerboseAccessors = true),
                     contractRenderer = null,

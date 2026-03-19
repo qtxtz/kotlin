@@ -46,7 +46,7 @@ class FirRenderer(
     override val contractRenderer: ConeContractRenderer? = ConeContractRenderer(),
     override val declarationRenderer: FirDeclarationRenderer? = FirDeclarationRenderer(),
     override val idRenderer: ConeIdRenderer = ConeIdRendererForDebugging(),
-    override val modifierRenderer: FirModifierRenderer? = FirAllModifierRenderer(),
+    override val modifierRenderer: FirModifierRenderer? = FirAllModifierRenderer(FirModifierRenderer.StaticPolicy.Default),
     override val packageDirectiveRenderer: FirPackageDirectiveRenderer? = null,
     override val propertyAccessorRenderer: FirPropertyAccessorRenderer? = FirPropertyAccessorRenderer(),
     override val resolvePhaseRenderer: FirResolvePhaseRenderer? = null,
@@ -90,7 +90,7 @@ class FirRenderer(
             bodyRenderer = null,
             propertyAccessorRenderer = null,
             callArgumentsRenderer = FirCallNoArgumentsRenderer(),
-            modifierRenderer = FirPartialModifierRenderer(),
+            modifierRenderer = FirPartialModifierRenderer(FirModifierRenderer.StaticPolicy.Default),
             callableSignatureRenderer = FirCallableSignatureRendererForReadability(),
             declarationRenderer = FirDeclarationRenderer("local "),
         )
