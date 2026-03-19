@@ -118,7 +118,7 @@ class FirJavaClass @FirImplementationDetail internal constructor(
         }.ifEmpty {
             listOf(
                 buildResolvedTypeRef {
-                    coneType = StandardClassIds.Any.constructClassLikeType(emptyArray(), isMarkedNullable = false)
+                    coneType = StandardClassIds.Any.constructClassLikeType()
                 }
             )
         }

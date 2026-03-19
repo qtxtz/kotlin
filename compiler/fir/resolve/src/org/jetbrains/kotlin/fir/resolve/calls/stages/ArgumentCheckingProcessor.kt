@@ -153,7 +153,7 @@ internal object ArgumentCheckingProcessor {
                         // Assignment
                         null -> checkApplicabilityForArgumentType(
                             atom,
-                            StandardClassIds.Unit.constructClassLikeType(emptyArray(), isMarkedNullable = false),
+                            StandardClassIds.Unit.constructClassLikeType(),
                             SimpleConstraintSystemConstraintPosition,
                         )
                         else -> resolvePlainExpressionArgument(

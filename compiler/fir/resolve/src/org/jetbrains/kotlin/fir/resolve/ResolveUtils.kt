@@ -638,7 +638,7 @@ fun FirSafeCallExpression.propagateTypeFromQualifiedAccessAfterNullCheck(
         // Branch for things that shouldn't be used as expressions.
         // They are forced to return not-null `Unit`, regardless of the receiver.
         else -> {
-            StandardClassIds.Unit.constructClassLikeType(emptyArray(), isMarkedNullable = false)
+            StandardClassIds.Unit.constructClassLikeType()
         }
     }
 
