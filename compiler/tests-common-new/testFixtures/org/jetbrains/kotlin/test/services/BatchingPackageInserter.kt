@@ -54,7 +54,7 @@ import org.jetbrains.kotlin.utils.addToStdlib.shouldNotBeCalled
  * Examples: package kotlin.coroutines -> package kotlin.coroutines
  *           import kotlin.test.* -> import kotlin.test.*
  */
-class BatchingPackageInserter(testServices: TestServices) : SourceFilePreprocessor(testServices) {
+class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFilePreprocessor(testServices) {
     companion object {
         private val lock = Any()
 
@@ -76,7 +76,7 @@ class BatchingPackageInserter(testServices: TestServices) : SourceFilePreprocess
         // At this point we can't get `project` from `compilerConfigurationProvider`, as it will cause infinite recursion.
         val psiFactory = createPsiFactory()
         val additionalBasePackage = FqName(computePackage(testServices))
-        val ktFiles = filesContent.mapValues { (_, content) -> psiFactory.createFile(content) }
+        val ktFiles = filesContent.mapValues { (file, content) -> psiFactory.createFile(file.name, content) }
         ktFiles.values.map { it.packageFqName }.associateWithTo(packageMapping) { packageFqName ->
             additionalBasePackage.child(packageFqName)
         }
@@ -84,6 +84,25 @@ class BatchingPackageInserter(testServices: TestServices) : SourceFilePreprocess
         ktFiles.values.forEach { it.accept(patcher, emptySet()) }
         for ((testFile, ktFile) in ktFiles) {
             filesContent[testFile] = ktFile.text
+        }
+    }
+
+    override fun revert(file: TestFile, actualContent: String): String {
+        var content = actualContent
+        val additionalPackage = computePackage(testServices)
+        content = content.replace("@file:kotlin.native.internal.ReflectionPackageName(.*)\n".toRegex(), "")
+        content = content.replace("package $additionalPackage\n", "")
+        content = content.replace("$additionalPackage.", "")
+        content = content.stripAdditionalEmptyLines(file)
+        return content
+    }
+
+    private fun String.stripAdditionalEmptyLines(file: TestFile): String {
+        return if (file.startLineNumberInOriginalFile != 0) {
+            val prefix = (1 until file.startLineNumberInOriginalFile).joinToString(separator = "") { "\n" }
+            this.removePrefix(prefix)
+        } else {
+            this
         }
     }
 

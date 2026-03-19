@@ -121,8 +121,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                     DIAGNOSTICS with "-warnings"
                 }
             }
-            // BatchingPackageInserter is not reservable, so meta info rendering doesn't work
-            // enableMetaInfoHandler()
+            enableMetaInfoHandler()
         }
 
         groupingPhase {
