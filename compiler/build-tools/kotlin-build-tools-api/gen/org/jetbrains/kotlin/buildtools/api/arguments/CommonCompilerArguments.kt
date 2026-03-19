@@ -183,19 +183,6 @@ public interface CommonCompilerArguments : CommonToolArguments {
         CommonCompilerArgument("X_COLLECTION_LITERALS", KotlinReleaseVersion(2, 4, 0))
 
     /**
-     * Specify an execution order constraint for compiler plugins.
-     * Order constraint can be specified using the 'pluginId' of compiler plugins.
-     * The first specified plugin will be executed before the second plugin.
-     * Multiple constraints can be specified by repeating this option. Cycles in constraints will cause an error.
-     *
-     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
-     */
-    @JvmField
-    @ExperimentalCompilerArgument
-    public val X_COMPILER_PLUGIN_ORDER: CommonCompilerArgument<Array<String>?> =
-        CommonCompilerArgument("X_COMPILER_PLUGIN_ORDER", KotlinReleaseVersion(2, 3, 0))
-
-    /**
      * The effect of this compiler flag is the same as applying @ConsistentCopyVisibility annotation to all data classes in the module. See https://youtrack.jetbrains.com/issue/KT-11914
      *
      * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.

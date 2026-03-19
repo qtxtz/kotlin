@@ -30,6 +30,7 @@ private val levelsToArgumentTransforms: Map<String, Map<String, ArgumentTransfor
             drop("P")
             drop("Xplugin")
             drop("Xcompiler-plugin")
+            drop("Xcompiler-plugin-order")
             drop("Xintellij-plugin-root")
             drop("Xcommon-sources")
             drop("Xenable-incremental-compilation")
