@@ -4,4 +4,8 @@
 package pkg
 
 @JvmRecord
-data class MyRec(val name: String)
+data class MyRec(@property:Ann val name: String, @field:Ann val age: Int, @param:Ann val gender: String) {
+    constructor(name: String) : this(name, 0, "unknown")
+}
+
+annotation class Ann
