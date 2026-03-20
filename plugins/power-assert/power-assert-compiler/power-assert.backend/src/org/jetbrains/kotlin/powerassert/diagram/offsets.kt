@@ -22,11 +22,16 @@ package org.jetbrains.kotlin.powerassert.diagram
 import org.jetbrains.kotlin.backend.common.implicitInvoke
 import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.SourceRangeInfo
+import org.jetbrains.kotlin.ir.declarations.IrConstructor
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationWithName
 import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.lexer.KotlinLexer
 import org.jetbrains.kotlin.lexer.KtTokens
-import org.jetbrains.kotlin.powerassert.*
+import org.jetbrains.kotlin.powerassert.getExplicitReceiver
+import org.jetbrains.kotlin.powerassert.isInnerOfComparisonOperator
+import org.jetbrains.kotlin.powerassert.isInnerOfNotEqualOperator
 
 internal fun IrDiagramVariable.Displayable.toDisplayOffset(): Int {
     return sourceRangeInfo.startOffset + findDisplayOffset(original, sourceRangeInfo, text)
@@ -70,6 +75,17 @@ internal fun findDisplayOffset(
     source: String,
 ): Int {
     return when (expression) {
+        // Placement for reference operators should be on the identifier.
+        // For class references, this should be on the 'class' identifier (calculated from the end).
+        is IrClassReference -> (source.length - 5).coerceAtLeast(0)
+        // For callable references, this should be on the referenced identifier name (again, calculated from the end).
+        is IrCallableReference<*> -> {
+            var named = expression.symbol.owner as? IrDeclarationWithName ?: return 0
+            if (named is IrConstructor) named = named.parentAsClass
+            if (named.name.isSpecial) return 0
+            (source.length - named.name.identifier.length).coerceAtLeast(0)
+        }
+
         is IrMemberAccessExpression<*> -> memberAccessOffset(expression, sourceRangeInfo, source)
         is IrTypeOperatorCall -> typeOperatorOffset(expression, sourceRangeInfo, source)
         else -> 0

@@ -1,23 +1,25 @@
 test1: ---
 assert(Int::property.isOpen)
-       |             |
-       |             false
-       val T.property: T
+            |        |
+            |        false
+            val T.property: T
 ---
 test2: ---
 assert(Int::property.name == "a")
-       |             |    |
-       |             |    false
-       |             "property"
-       val T.property: T
+            |        |    |
+            |        |    false
+            |        "property"
+            val T.property: T
 ---
 test3: ---
 assert((Boolean::property)(false))
-        |                 |
-        val T.property: T false
+                 |        |
+                 |        false
+                 val T.property: T
 ---
 test4: ---
 assert(Boolean::property.get(false))
-       |                 |
-       val T.property: T false
+                |        |
+                |        false
+                val T.property: T
 ---

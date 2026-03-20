@@ -1,6 +1,6 @@
 ---
 assert(Boolean::class.isOpen)
-       |              |
-       |              false
-       class kotlin.Boolean
+                |     |
+                |     false
+                class kotlin.Boolean
 ---

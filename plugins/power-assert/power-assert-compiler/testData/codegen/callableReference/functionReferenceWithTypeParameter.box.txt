@@ -6,21 +6,21 @@ assert(ref())
 ---
 test2: ---
 assert(List<Int>::bar.name == "foo")
-       |              |    |
-       |              |    false
-       |              "bar"
-       fun kotlin.collections.List<T>.bar(): kotlin.Boolean
+                  |   |    |
+                  |   |    false
+                  |   "bar"
+                  fun kotlin.collections.List<T>.bar(): kotlin.Boolean
 ---
 test3: ---
 assert(List<T>::bar.isInfix)
-       |            |
-       |            false
-       fun kotlin.collections.List<T>.bar(): kotlin.Boolean
+                |   |
+                |   false
+                fun kotlin.collections.List<T>.bar(): kotlin.Boolean
 ---
 test4: ---
 assert((List<Int>::bar)(listOf()))
-        |              ||
-        |              |[]
-        |              false
-        fun kotlin.collections.List<T>.bar(): kotlin.Boolean
+                   |   ||
+                   |   |[]
+                   |   false
+                   fun kotlin.collections.List<T>.bar(): kotlin.Boolean
 ---

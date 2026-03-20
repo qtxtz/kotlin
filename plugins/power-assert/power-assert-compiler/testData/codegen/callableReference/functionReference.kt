@@ -3,6 +3,7 @@ fun box(): String = runAll(
     "test1" to { test1() },
     "test2" to { test2() },
     "test3" to { test3() },
+    "test4" to { test4() },
 )
 
 fun foo(x: Int) : Boolean = false
@@ -17,4 +18,8 @@ fun test2() {
 
 fun test3() {
     assert((::foo)(1))
+}
+
+fun test4() {
+    assert(::/*::*/foo.isOpen)
 }

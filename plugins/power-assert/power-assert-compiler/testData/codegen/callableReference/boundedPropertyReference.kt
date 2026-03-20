@@ -10,6 +10,8 @@ fun box(): String = runAll(
     "test8" to { test8("a", "b") },
     "test9" to { test9("Some text", "Another text") },
     "test10" to { test10("Some text") },
+    "test11" to { test11() },
+    "test12" to { test12("Some text") },
 )
 
 class A {
@@ -65,4 +67,12 @@ fun test9(a: String, b: String) {
 
 fun test10(a: String) {
     assert(a::foo.isOpen)
+}
+
+fun test11() {
+    assert(A/*::*/::/*::*/foo.isOpen)
+}
+
+fun test12(a: String) {
+    assert(a/*::*/::/*::*/foo.isOpen)
 }

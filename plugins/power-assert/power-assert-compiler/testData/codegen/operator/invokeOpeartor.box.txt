@@ -30,7 +30,7 @@ assert(listOf(NamedLambda("Hello") { "Hello" }, NamedLambda("World") { "World" }
 ---
 test6: ---
 assert((::foo)(4))
-        |     |
-        |     false
-        fun foo(kotlin.Int): kotlin.Boolean
+          |   |
+          |   false
+          fun foo(kotlin.Int): kotlin.Boolean
 ---
