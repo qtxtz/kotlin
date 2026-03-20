@@ -77,7 +77,7 @@ abstract class KotlinMetadataStubBuilder : ClsStubBuilder() {
                         original = ProtoBasedClassDataFinder(file.proto, nameResolver, file.version),
                         file = virtualFile,
                     ),
-                    annotationLoader = AnnotationLoaderForStubBuilderImpl(protocol),
+                    annotationLoader = MetadataClsAnnotationLoader(protocol),
                     virtualFileForDebug = virtualFile,
                 )
 

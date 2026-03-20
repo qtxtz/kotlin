@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.serialization.deserialization.ProtoContainer
 import org.jetbrains.kotlin.serialization.deserialization.getClassId
 import org.jetbrains.kotlin.serialization.deserialization.getName
 
-class AnnotationLoaderForStubBuilderImpl(
+internal class MetadataClsAnnotationLoader(
     protocol: SerializerExtensionProtocol,
 ) : AbstractAnnotationLoader<AnnotationWithArgs>(protocol), ClsAnnotationLoader {
     override fun loadAnnotation(proto: ProtoBuf.Annotation, nameResolver: NameResolver): AnnotationWithArgs {
