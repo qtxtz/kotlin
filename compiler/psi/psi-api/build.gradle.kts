@@ -35,6 +35,11 @@ sourceSets {
     "main" { projectDefault() }
     "test" { projectDefault() }
     "testFixtures" { projectDefault() }
+    "codebaseTest" {
+        java.srcDirs("codebaseTest")
+        compileClasspath += configurations["testCompileClasspath"]
+        runtimeClasspath += configurations["testRuntimeClasspath"]
+    }
 }
 
 private val stableNonPublicMarkers = listOf(
@@ -57,6 +62,12 @@ testsJar()
 projectTests {
     testTask(jUnitMode = JUnitMode.JUnit5)
 
+    testTask(taskName = "testCodebase", jUnitMode = JUnitMode.JUnit5, skipInLocalBuild = false) {
+        group = "verification"
+        classpath += sourceSets.getByName("codebaseTest").runtimeClasspath
+        testClassesDirs = sourceSets.getByName("codebaseTest").output.classesDirs
+    }
+
     /** The 'test' task inputs cannot depend on [checkForeignClassUsage] outputs. */
     testData(project.isolated, "api/psi-api.api")
     testData(project.isolated, "api/psi-api.undocumented")
@@ -69,11 +80,18 @@ val checkForeignClassUsage by tasks.registering(CheckForeignClassUsageTask::clas
     nonPublicMarkers.addAll(stableNonPublicMarkers)
 }
 
+tasks.named("check") {
+    dependsOn("testCodebase")
+}
+
 run /* Workaround for KT-84365 */ {
     tasks.named("checkKotlinAbi").configure {
         mustRunAfter(checkForeignClassUsage)
     }
     tasks.named("test").configure {
+        mustRunAfter("updateKotlinAbi")
+    }
+    tasks.named("testCodebase").configure {
         mustRunAfter("updateKotlinAbi")
     }
 }

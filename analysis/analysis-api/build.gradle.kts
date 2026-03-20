@@ -58,13 +58,20 @@ kotlin {
 
 sourceSets {
     "main" { projectDefault() }
-    "test" { projectDefault() }
+    "test" { none() }
+    "codebaseTest" {
+        java.srcDirs("codebaseTest")
+        compileClasspath += sourceSets["main"].output + configurations["testCompileClasspath"]
+        runtimeClasspath += sourceSets["main"].output + configurations["testRuntimeClasspath"]
+    }
 }
 
-testsJar()
-
 projectTests {
-    testTask(jUnitMode = JUnitMode.JUnit5)
+    testTask(taskName = "testCodebase", jUnitMode = JUnitMode.JUnit5, skipInLocalBuild = false) {
+        group = "verification"
+        classpath += sourceSets.getByName("codebaseTest").runtimeClasspath
+        testClassesDirs = sourceSets.getByName("codebaseTest").output.classesDirs
+    }
 
     testData(project.isolated, "src")
 
@@ -78,11 +85,15 @@ val checkForeignClassUsage by tasks.registering(CheckForeignClassUsageTask::clas
     nonPublicMarkers.addAll(stableNonPublicMarkers)
 }
 
+tasks.named("check") {
+    dependsOn("testCodebase")
+}
+
 run /* Workaround for KT-84365 */ {
     tasks.named("checkKotlinAbi").configure {
         mustRunAfter(checkForeignClassUsage)
     }
-    tasks.named("test").configure {
+    tasks.named("testCodebase").configure {
         mustRunAfter("updateKotlinAbi")
     }
 }
