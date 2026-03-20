@@ -26,11 +26,14 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrCompositeImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrGetObjectValueImpl
 import org.jetbrains.kotlin.ir.interpreter.toConstantValue
 import org.jetbrains.kotlin.ir.interpreter.transformer.reportOnIr
+import org.jetbrains.kotlin.ir.irAttribute
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.shallowCopy
 import org.jetbrains.kotlin.ir.visitors.IrTransformer
+
+var IrConst.wasInlined: Boolean? by irAttribute(copyByDefault = true)
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 internal class ConstInliner(
@@ -95,13 +98,14 @@ internal class ConstInliner(
         return this.isMarkedAsConst() && initializer is IrConst
     }
 
-    private fun IrField.getInitializerAndReportInlining(original: IrExpression): IrExpression {
+    private fun IrField.getInitializerAndReportInlining(original: IrExpression): IrConst {
         val const = this.initializer?.expression as IrConst
         inlineConstTracker?.reportOnIr(irFile, this, const)
         evaluateConstTracker?.save(original.startOffset, original.endOffset, irFile.evaluatedConstTrackerKey, const.toConstantValue())
-        return const.shallowCopy().apply {
+        return (const.shallowCopy() as IrConst).apply {
             startOffset = original.startOffset
             endOffset = original.endOffset
+            wasInlined = true
         }
     }
 
