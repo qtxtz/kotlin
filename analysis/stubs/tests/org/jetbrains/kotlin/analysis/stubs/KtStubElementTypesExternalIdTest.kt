@@ -1,15 +1,17 @@
 /*
- * Copyright 2010-2022 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.psi
+package org.jetbrains.kotlin.analysis.stubs
 
 import com.intellij.psi.stubs.ObjectStubSerializer
-import junit.framework.TestCase
 import org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-class KtStubElementTypesExternalIdTest : TestCase() {
+class KtStubElementTypesExternalIdTest {
+    @Test
     fun testExternalIds() {
         val clazz = KtStubElementTypes::class.java
         for (declaredField in clazz.declaredFields) {
