@@ -35,11 +35,7 @@ dependencies {
 sourceSets {
     "main" { projectDefault() }
     "test" { none() }
-    "codebaseTest" {
-        java.srcDirs("codebaseTest")
-        compileClasspath += configurations["testCompileClasspath"]
-        runtimeClasspath += configurations["testRuntimeClasspath"]
-    }
+    "codebaseTest" { projectDefault() }
 }
 
 projectTests {

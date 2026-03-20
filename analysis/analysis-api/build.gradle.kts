@@ -59,11 +59,7 @@ kotlin {
 sourceSets {
     "main" { projectDefault() }
     "test" { none() }
-    "codebaseTest" {
-        java.srcDirs("codebaseTest")
-        compileClasspath += sourceSets["main"].output + configurations["testCompileClasspath"]
-        runtimeClasspath += sourceSets["main"].output + configurations["testRuntimeClasspath"]
-    }
+    "codebaseTest" { projectDefault() }
 }
 
 projectTests {

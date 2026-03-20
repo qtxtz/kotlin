@@ -35,11 +35,7 @@ sourceSets {
     "main" { projectDefault() }
     "test" { projectDefault() }
     "testFixtures" { projectDefault() }
-    "codebaseTest" {
-        java.srcDirs("codebaseTest")
-        compileClasspath += configurations["testCompileClasspath"]
-        runtimeClasspath += configurations["testRuntimeClasspath"]
-    }
+    "codebaseTest" { projectDefault() }
 }
 
 private val stableNonPublicMarkers = listOf(

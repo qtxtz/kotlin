@@ -61,11 +61,7 @@ sourceSets {
         generatedTestDir()
     }
     "testFixtures" { projectDefault() }
-    "codebaseTest" {
-        java.srcDirs("codebaseTest")
-        compileClasspath += configurations["testCompileClasspath"]
-        runtimeClasspath += configurations["testRuntimeClasspath"]
-    }
+    "codebaseTest" { projectDefault() }
 }
 
 projectTests {
