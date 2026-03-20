@@ -219,7 +219,6 @@ class JvmIrCodegenFactory(
                 symbolTable,
                 stubGenerator,
                 mangler,
-                enableIdSignatures = true,
             )
         } else {
             stubGenerator

@@ -38,7 +38,6 @@ class JvmIrLinker(
     symbolTable: SymbolTable,
     private val stubGenerator: DeclarationStubGenerator,
     private val manglerDesc: JvmDescriptorMangler,
-    private val enableIdSignatures: Boolean,
 ) : KotlinIrLinker(currentModule, messageCollector, typeSystem.irBuiltIns, symbolTable, emptyList()) {
 
     override val fakeOverrideBuilder = IrLinkerFakeOverrideProvider(
@@ -102,7 +101,7 @@ class JvmIrLinker(
     }
 
     override fun getDeclaration(symbol: IrSymbol): IrDeclaration? =
-        deserializeOrResolveDeclaration(symbol, !enableIdSignatures)
+        deserializeOrResolveDeclaration(symbol, false)
 
     override fun createCurrentModuleDeserializer(moduleFragment: IrModuleFragment, dependencies: Collection<IrModuleDeserializer>): IrModuleDeserializer =
         JvmCurrentModuleDeserializer(moduleFragment, dependencies)
