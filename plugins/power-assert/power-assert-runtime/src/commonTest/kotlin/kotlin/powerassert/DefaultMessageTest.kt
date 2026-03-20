@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 interface ExplanationBuilder {
-    fun value(subSource: String, display: Int, value: Any?)
+    fun value(subSource: String, display: Int = 0, value: Any?)
 }
 
 @ExperimentalPowerAssert
@@ -44,7 +44,7 @@ class DefaultMessageTest {
     }
 
     @Test
-    fun testComplexExpression() {
+    fun testComplexExplanation() {
         val explanation = explanation(
             source = "assert(1 == 1 && 2 == 3)"
         ) {
@@ -62,7 +62,7 @@ class DefaultMessageTest {
     }
 
     @Test
-    fun testMultiLineExpression() {
+    fun testMultiLineExplanation() {
         val explanation = explanation(
             source = """
                 assert(
@@ -87,6 +87,46 @@ class DefaultMessageTest {
                               false
 
                 )
+            """.trimIndent(),
+        )
+    }
+
+    @Test
+    fun testMultiLineExpression() {
+        val explanation = explanation(
+            source = """
+                assert(str.substring(0, 8).length == 0)
+            """.trimIndent()
+        ) {
+            val str = """
+                This
+                 Is
+                  A
+                   Long
+                  Multiple
+                 Line
+                String
+            """.trimIndent()
+            value("str", value = str)
+            value("str.substring(0, 8)", display = 4, value = str.substring(0, 8))
+            value("str.substring(0, 8).length", display = 20, value = str.substring(0, 8).length)
+            value("str.substring(0, 8).length == 0", display = 27, value = false)
+        }
+        assertEquals(
+            actual = explanation.toDefaultMessage().trim(),
+            expected = """
+                assert(str.substring(0, 8).length == 0)
+                       |   |               |      |
+                       |   |               8      false
+                       |   This
+                       |    Is
+                       This
+                        Is
+                         A
+                          Long
+                         Multiple
+                        Line
+                       String
             """.trimIndent(),
         )
     }

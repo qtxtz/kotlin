@@ -30,6 +30,9 @@ private fun StringBuilder.appendDiagram(
         val indent: Int,
         val display: String,
     ) {
+        val multiline: Boolean = '\n' in display
+        val lines: List<String>? = if (multiline) display.split('\n') else null
+
         fun overlaps(other: DiagramValue): Boolean {
             return row == other.row && indent <= other.indent && display.length >= (other.indent - indent)
         }
@@ -86,14 +89,20 @@ private fun StringBuilder.appendDiagram(
             appendLine()
         }
 
-        // To maintain correct indentation of value renders,
-        // if the span of a value render covers a tab character in the row source,
-        // it may not always be displayable with other values.
-        // Precalculate all values that span a tab so they can be excluded as needed.
-        val valuesCoveringTab = mutableSetOf<DiagramValue>()
+        // Collect values that need to always be rendered at the end of a row.
+        val trailingDiagramValues = mutableSetOf<DiagramValue>()
         for (value in rowValues) {
-            if ('\t' in rowSource.substring(value.indent, minOf(rowSource.length, value.indent + value.display.length))) {
-                valuesCoveringTab.add(value)
+            when {
+                // In the case when a value display spans multiple lines,
+                // it must always be rendered at the end of a row.
+                value.multiline -> trailingDiagramValues.add(value)
+
+                // To maintain correct indentation of values,
+                // if the span of a value display covers a tab character in the row source,
+                // it cannot be displayed before other values.
+                '\t' in rowSource.substring(value.indent, minOf(rowSource.length, value.indent + value.display.length)) -> {
+                    trailingDiagramValues.add(value)
+                }
             }
         }
 
@@ -101,18 +110,24 @@ private fun StringBuilder.appendDiagram(
         while (remaining.isNotEmpty()) {
             // Figure out which displays will fit on this row.
             val displayRow = remaining.windowed(2, partialWindows = true)
-                .filter { it.size == 1 || it[0] !in valuesCoveringTab && !it[0].overlaps(it[1]) }
+                .filter { it.size == 1 || it[0] !in trailingDiagramValues && !it[0].overlaps(it[1]) }
                 .mapTo(mutableSetOf()) { it[0] }
 
-            var currentIndent = 0
-            for (diagramValue in remaining) {
-                currentIndent = appendWithIndent(
-                    currentIndent = currentIndent,
-                    indent = diagramValue.indent,
-                    str = if (diagramValue in displayRow) diagramValue.display else "|",
-                )
+            for (currentLine in 0..<displayRow.maxOf { it.lines?.size ?: 1 }) {
+                var currentIndent = 0
+                for (diagramValue in remaining) {
+                    currentIndent = appendWithIndent(
+                        currentIndent = currentIndent,
+                        indent = diagramValue.indent,
+                        str = when {
+                            diagramValue !in displayRow -> "|"
+                            !diagramValue.multiline -> if (currentLine == 0) diagramValue.display else " "
+                            else -> diagramValue.lines!![currentLine]
+                        },
+                    )
+                }
+                appendLine()
             }
-            appendLine()
 
             remaining -= displayRow
         }
