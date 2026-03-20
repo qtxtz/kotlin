@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.powerassert.diagram
 
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.ir.builders.IrBlockBuilder
 import org.jetbrains.kotlin.ir.builders.IrBuilderWithScope
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -28,10 +27,6 @@ class ExplainVariable(
 /**
  * Expand and explain each sub-expression of the specified [IrExpression].
  * [ExplainVariable]s are always provided to [builder] in evaluated order.
- *
- * When provided, a [EvaluatedConstTracker] will be used to determine if a
- * [org.jetbrains.kotlin.ir.expressions.IrConst] was evaluated by the compiler, and include it
- * as a variable if it was. Otherwise, all constants are ignored.
  *
  * For example, the following expression,
  *
@@ -78,10 +73,9 @@ class ExplainVariable(
 fun IrBuilderWithScope.irExplain(
     expression: IrExpression,
     sourceFile: SourceFile,
-    constTracker: EvaluatedConstTracker? = null,
     builder: IrBlockBuilder.(List<ExplainVariable>) -> Unit,
 ): IrExpression {
-    val root = buildTree(constTracker, sourceFile, parameter = null, expression)
+    val root = buildTree(parameter = null, expression)
     val child = root.children.singleOrNull()
     if (child == null || !child.isVisible()) return expression
     return buildDiagramNesting(sourceFile, child) { value, variables ->

@@ -5,14 +5,8 @@
 
 package org.jetbrains.kotlin.powerassert
 
-import org.jetbrains.kotlin.config.CommonConfigurationKeys
-import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.name.FqName
 
 class PowerAssertConfiguration(
-    private val configuration: CompilerConfiguration,
     val functions: Set<FqName>,
-) {
-    val constTracker: EvaluatedConstTracker? get() = configuration[CommonConfigurationKeys.EVALUATED_CONST_TRACKER]
-}
+)

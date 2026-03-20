@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.test.model.TestFile
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.runners.AbstractPhasedJvmDiagnosticPsiTest
 import org.jetbrains.kotlin.test.runners.codegen.AbstractFirLightTreeBlackBoxCodegenTest
-import org.jetbrains.kotlin.test.runners.codegen.AbstractIrBlackBoxCodegenTest
 import org.jetbrains.kotlin.test.services.AdditionalSourceProvider
 import org.jetbrains.kotlin.test.services.EnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.TestModuleStructure
@@ -91,7 +90,6 @@ class PowerAssertEnvironmentConfigurator(testServices: TestServices) : Environme
         IrGenerationExtension.registerExtension(
             PowerAssertIrGenerationExtension(
                 PowerAssertConfiguration(
-                    configuration = configuration,
                     functions = functions,
                 )
             )

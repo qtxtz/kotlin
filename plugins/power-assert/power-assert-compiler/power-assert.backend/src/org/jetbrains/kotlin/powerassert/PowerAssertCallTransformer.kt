@@ -170,7 +170,7 @@ class PowerAssertCallTransformer(
                 if (argument != null) root.addChild(HiddenNode(argument))
                 root
             } else {
-                buildTree(configuration.constTracker, sourceFile, parameter, argument)
+                buildTree(parameter, argument)
             }
         }
     }

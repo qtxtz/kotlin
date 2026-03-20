@@ -46,7 +46,6 @@ class PowerAssertCompilerPluginRegistrar(
         IrGenerationExtension.registerExtension(
             PowerAssertIrGenerationExtension(
                 PowerAssertConfiguration(
-                    configuration = configuration,
                     functions = functions.toSet()
                 )
             )
