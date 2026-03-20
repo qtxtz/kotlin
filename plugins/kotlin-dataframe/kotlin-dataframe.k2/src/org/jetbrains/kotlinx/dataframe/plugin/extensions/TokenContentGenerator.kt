@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
@@ -38,7 +39,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.utils.generateExtensionProperty
  */
 class TokenContentGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    private val propertiesCache: FirCache<FirClassSymbol<*>, Map<Name, List<FirProperty>>?, Nothing?> =
+    private val propertiesCache: FirCache<FirRegularClassSymbol, Map<Name, List<FirProperty>>?, Nothing?> =
         session.firCachesFactory.createCache { k ->
             val callShapeData = k.callShapeData ?: return@createCache null
             when (callShapeData) {
@@ -90,6 +91,7 @@ class TokenContentGenerator(session: FirSession) : FirDeclarationGenerationExten
         }
 
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
+        if (classSymbol !is FirRegularClassSymbol) return emptySet()
         val destination = mutableSetOf<Name>()
         when (classSymbol.callShapeData) {
             is CallShapeData.RefinedType -> destination.add(SpecialNames.INIT)
@@ -101,7 +103,7 @@ class TokenContentGenerator(session: FirSession) : FirDeclarationGenerationExten
     }
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
-        val owner = context?.owner ?: return emptyList()
+        val owner = context?.owner as? FirRegularClassSymbol ?: return emptyList()
         val properties = propertiesCache.getValue(owner)?.get(callableId.callableName) ?: return emptyList()
         return properties.map { it.symbol }
     }

@@ -1,10 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.plugin.extensions
 
 import org.jetbrains.kotlin.KtSourceElement
-import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationDataKey
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationDataRegistry
-import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
+import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.impl.SchemaProperty
@@ -20,16 +19,16 @@ sealed interface CallShapeData {
 
 object CallShapeAttribute : FirDeclarationDataKey()
 
-var FirClass.callShapeData: CallShapeData? by FirDeclarationDataRegistry.data(CallShapeAttribute)
-val FirClassSymbol<*>.callShapeData: CallShapeData? by FirDeclarationDataRegistry.symbolAccessor(CallShapeAttribute)
+var FirRegularClass.callShapeData: CallShapeData? by FirDeclarationDataRegistry.data(CallShapeAttribute)
+val FirRegularClassSymbol.callShapeData: CallShapeData? by FirDeclarationDataRegistry.symbolAccessor(CallShapeAttribute)
 
 object ClassAnchorElementKey : FirDeclarationDataKey()
 
-var FirClass.anchor: KtSourceElement? by FirDeclarationDataRegistry.data(ClassAnchorElementKey)
+var FirRegularClass.anchor: KtSourceElement? by FirDeclarationDataRegistry.data(ClassAnchorElementKey)
 val FirRegularClassSymbol.anchor: KtSourceElement? by FirDeclarationDataRegistry.symbolAccessor(ClassAnchorElementKey)
 
 object GeneratedClassesKey : FirDeclarationDataKey()
 typealias GeneratedClasses = Map<Name, FirRegularClassSymbol>
 
-var FirClass.generatedClasses: GeneratedClasses? by FirDeclarationDataRegistry.data(GeneratedClassesKey)
+var FirRegularClass.generatedClasses: GeneratedClasses? by FirDeclarationDataRegistry.data(GeneratedClassesKey)
 val FirRegularClassSymbol.generatedClasses: GeneratedClasses? by FirDeclarationDataRegistry.symbolAccessor(GeneratedClassesKey)
