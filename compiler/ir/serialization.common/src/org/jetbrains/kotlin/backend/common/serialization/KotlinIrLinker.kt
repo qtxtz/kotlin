@@ -157,7 +157,7 @@ abstract class KotlinIrLinker(
     override fun getDeclaration(symbol: IrSymbol): IrDeclaration? =
         deserializeOrResolveDeclaration(symbol)
 
-    protected fun deserializeOrResolveDeclaration(symbol: IrSymbol): IrDeclaration? {
+    private fun deserializeOrResolveDeclaration(symbol: IrSymbol): IrDeclaration? {
         if (!symbol.isPublicApi && symbol.hasDescriptor && !platformSpecificSymbol(symbol) &&
             symbol.descriptor.module !== currentModule
         ) return null
