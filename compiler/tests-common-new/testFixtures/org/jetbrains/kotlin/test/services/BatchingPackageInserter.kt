@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.resolve.ImportPath
 import org.jetbrains.kotlin.test.TestInfrastructureInternals
 import org.jetbrains.kotlin.test.model.TestFile
 import org.jetbrains.kotlin.test.model.TestModule
+import org.jetbrains.kotlin.util.capitalizeDecapitalize.decapitalizeSmart
 import org.jetbrains.kotlin.utils.addIfNotNull
 import org.jetbrains.kotlin.utils.addToStdlib.shouldNotBeCalled
 
@@ -60,7 +61,18 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
 
         fun computePackage(testInfo: KotlinTestInfo): String {
             val (className, methodName, _) = testInfo
-            val classPart = className.substringAfter("$").replace("$", ".")
+            val classPart = className.substringAfter("$")
+                .split("$")
+                .map { it.decapitalizeSmart() }
+                .joinToString(".") {
+                    // In the original implementation of this logic in the Native test infra we wrapped with '_' only these
+                    // names which were clashing with hard keywords in the language. But for some reason using the same
+                    // approach here leads to a strange situation, when `PackageNamePatcher.visitKtElement` at each
+                    // invocation creates new instances of `KtDotQualifiedExpression` on stack, which leads to several
+                    // GBs (!) of PSI being allocated on stack which causes the OOM when running a lot of tests at once.
+                    // And adding the `_` unconditionally for some reason fixes this problem (TBH, I have no idea why).
+                    "_${it}_"
+                }
             return "$classPart.$methodName"
         }
     }
