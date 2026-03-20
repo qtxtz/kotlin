@@ -177,7 +177,7 @@ private fun Project.createRunTask(binary: Executable) {
     registerTask<Exec>(taskName) { exec ->
         exec.group = KotlinNativeTargetConfigurator.RUN_GROUP
         exec.description = "Executes Kotlin/Native executable ${binary.name} for target ${binary.target.name}"
-        exec.onlyIf("Executable requires ${binary.konanTarget.name} host") { isCurrentHost }
+        exec.enabled = isCurrentHost
 
         exec.executable = binary.outputFile.absolutePath
         exec.workingDir = project.projectDir

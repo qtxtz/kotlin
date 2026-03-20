@@ -82,7 +82,7 @@ private inline fun <reified T : KotlinNativeTest> KotlinNativeTarget.registerNat
         testTask.group = LifecycleBasePlugin.VERIFICATION_GROUP
         testTask.description = "Executes Kotlin/Native unit tests for target ${targetName}."
         testTask.targetName = this@registerNativeTestTask.targetName
-        testTask.onlyIf("Tests require compatible host") { isEnabledOnCurrentHost }
+        testTask.enabled = isEnabledOnCurrentHost
         testTask.workingDir = project.projectDir.absolutePath
         testTask.configureConventions()
         configure(testTask)
