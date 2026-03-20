@@ -322,10 +322,13 @@ private class PropertyClsStubBuilder(
             c.components.annotationLoader.loadPropertyBackingFieldAnnotations(protoContainer, propertyProto)
         val delegateFieldAnnotations =
             c.components.annotationLoader.loadPropertyDelegateFieldAnnotations(protoContainer, propertyProto)
-        val allAnnotations =
-            propertyAnnotations.map { AnnotationWithTarget(it, null) } +
-                    backingFieldAnnotations.map { AnnotationWithTarget(it, AnnotationUseSiteTarget.FIELD) } +
-                    delegateFieldAnnotations.map { AnnotationWithTarget(it, AnnotationUseSiteTarget.PROPERTY_DELEGATE_FIELD) }
+
+        val allAnnotations = buildList {
+            propertyAnnotations.mapTo(this) { AnnotationWithTarget(it, null) }
+            backingFieldAnnotations.mapTo(this) { AnnotationWithTarget(it, AnnotationUseSiteTarget.FIELD) }
+            delegateFieldAnnotations.mapTo(this) { AnnotationWithTarget(it, AnnotationUseSiteTarget.PROPERTY_DELEGATE_FIELD) }
+        }
+
         createTargetedAnnotationStubs(allAnnotations, modifierListStubImpl)
     }
 
