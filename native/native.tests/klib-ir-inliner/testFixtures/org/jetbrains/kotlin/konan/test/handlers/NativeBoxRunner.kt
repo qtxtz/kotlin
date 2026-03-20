@@ -209,16 +209,14 @@ class PrettyResultsHandler(
 ) : ResultHandler(runResult, checks, testRun, loggedParameters) {
     companion object {
         @Suppress("RegExpRepeatedSpace")
-        val failedRegex = """\[  FAILED  ] (.*)\.(.*)\.__launcher__Kt.runTest""".toRegex()
+        val failedRegex = """\[  FAILED  ] (.*)\.__launcher__Kt.runTest""".toRegex()
     }
 
     override fun processNonExpectedFailure(failedResults: List<TestRunCheck.Result.Failed>) {
         val output = getLoggedRun().toString()
         val failedTests = failedRegex.findAll(output)
-            .map { it.groupValues }
-            .distinct()
-            .map { it[1] to it[2] }
-            .toList()
+            .map { it.groupValues }.distinct()
+            .map { it[1] }.toList()
         val phaseInputs = testServices.groupingPhaseInputs
 
         if (phaseInputs.size == 1) {
@@ -233,11 +231,12 @@ class PrettyResultsHandler(
             return
         }
 
-        for ((className, methodName) in failedTests) {
+        for (failedTest in failedTests) {
             val correspondingInput = phaseInputs.find {
                 val testInfo = it.testInfo
-                BatchingPackageInserter.computePackage(testInfo).endsWith(className) && testInfo.methodName == methodName
-            } ?: error("Can't find corresponding input for $className.$methodName")
+                val correspondingTestName = BatchingPackageInserter.computePackage(testInfo)
+                correspondingTestName == failedTest
+            } ?: error("Can't find corresponding input for $failedTest")
             correspondingInput.catchingExecutor.executeWithCatching {
                 super.processNonExpectedFailure(failedResults)
             }
