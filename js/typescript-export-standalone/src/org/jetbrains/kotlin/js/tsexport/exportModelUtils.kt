@@ -28,8 +28,6 @@ import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsExportIgnore
 import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsImplicitExport
 import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsNoRuntime
 import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsStatic
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.psi.KtNonPublicApi
 import org.jetbrains.kotlin.util.OperatorNameConventions
 import org.jetbrains.kotlin.utils.addToStdlib.butIf
@@ -101,13 +99,19 @@ private fun KaSymbol.getSingleAnnotationArgumentStringForOverriddenDeclaration(a
     val argument = (this as? KaAnnotated)?.getSingleAnnotationArgumentString(annotationClassId)
     return when {
         argument != null -> argument
-        this is KaCallableSymbol -> allOverriddenSymbols.firstNotNullOfOrNull { it.getSingleAnnotationArgumentString(annotationClassId) }
+        this is KaCallableSymbol -> allOverriddenSymbols.firstNotNullOfOrNull {
+            when (this) {
+                is KaPropertyGetterSymbol -> (it as? KaPropertySymbol)?.getter?.getSingleAnnotationArgumentString(annotationClassId)
+                is KaPropertySetterSymbol -> (it as? KaPropertySymbol)?.setter?.getSingleAnnotationArgumentString(annotationClassId)
+                else -> it.getSingleAnnotationArgumentString(annotationClassId)
+            }
+        }
         else -> null
     }
 }
 
 context(_: KaSession)
-private fun KaSymbol.getJsNameForOverriddenDeclaration(): String? =
+internal fun KaSymbol.getJsNameForOverriddenDeclaration(): String? =
     getSingleAnnotationArgumentStringForOverriddenDeclaration(JsStandardClassIds.Annotations.JsName)
 
 context(_: KaSession)

@@ -146,9 +146,16 @@ declare namespace JS_TESTS {
                 readonly "foo.InterfaceWithDefaultArguments": unique symbol;
             };
         }
+        namespace InterfaceWithDefaultArguments {
+            namespace DefaultImpls {
+                function foo($this: foo.InterfaceWithDefaultArguments, x?: number): number;
+                function bar($this: foo.InterfaceWithDefaultArguments, x?: number): number;
+            }
+        }
         class ImplementorOfInterfaceWithDefaultArguments implements foo.InterfaceWithDefaultArguments {
             constructor();
             bar(x?: number): number;
+            foo(x?: number): number;
             readonly __doNotUseOrImplementIt: foo.InterfaceWithDefaultArguments["__doNotUseOrImplementIt"];
         }
         namespace ImplementorOfInterfaceWithDefaultArguments {
@@ -180,8 +187,16 @@ declare namespace JS_TESTS {
                 readonly "foo.WithDefaultSuspend": unique symbol;
             };
         }
+        namespace WithDefaultSuspend {
+            namespace DefaultImpls {
+                function regularWithDefault($this: foo.WithDefaultSuspend): string;
+                function suspendWithDefault($this: foo.WithDefaultSuspend): Promise<string>;
+            }
+        }
         class WithDefaultSuspendImpl implements foo.WithDefaultSuspend {
             constructor();
+            regularWithDefault(): string;
+            suspendWithDefault(): Promise<string>;
             readonly __doNotUseOrImplementIt: foo.WithDefaultSuspend["__doNotUseOrImplementIt"];
         }
         namespace WithDefaultSuspendImpl {

@@ -46,6 +46,16 @@ declare namespace JS_TESTS {
         }
         namespace ExportedParent {
             const Symbol: unique symbol;
+            namespace DefaultImpls {
+                function withDefaultImplementation($this: foo.ExportedParent): string;
+                function anotherDefaultImplementation($this: foo.ExportedParent): string;
+                const propertyWithDefaultSetter: {
+                    get($this: foo.ExportedParent): string;
+                    set($this: foo.ExportedParent, value: string): void;
+                };
+                function setDefaultGetterAndSetterWithJsName($this: foo.ExportedParent, value: string): void;
+                function getDefaultGetterAndSetterWithJsName($this: foo.ExportedParent): string;
+            }
         }
         interface IFoo<T extends unknown/* kotlin.Comparable<T> */> extends foo.ExportedParent {
             foo(): string;
@@ -66,6 +76,18 @@ declare namespace JS_TESTS {
         }
         namespace IFoo {
             const Symbol: unique symbol;
+            namespace DefaultImpls {
+                function withDefaultsAndDefaultImplementation<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>, value?: string): string;
+                function suspendWithDefaultImplementation<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>): Promise<string>;
+                function genericWithDefaultImplementation<T extends unknown/* kotlin.Comparable<T> */, T_0>($this: foo.IFoo<T>, x: T_0): string;
+                function delegatingToSuperDefaultImplementation<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>): string;
+                function anotherDefaultImplementation<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>): string;
+                const propertyWithDefaultGetter: {
+                    get<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>): string;
+                };
+                function setTWithDefaultImpl<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>, value: T): void;
+                function getTWithDefaultImpl<T extends unknown/* kotlin.Comparable<T> */>($this: foo.IFoo<T>): T;
+            }
         }
         class KotlinFooImpl implements foo.IFoo<string> {
             constructor();
@@ -80,8 +102,20 @@ declare namespace JS_TESTS {
             get fooProperty(): string;
             get parentPropertyToImplement(): string;
             set parentPropertyToImplement(value: string);
-            get getterAndSetterWithJsName(): string;
-            set getterAndSetterWithJsName(value: string);
+            setGetterAndSetterWithJsName(value: string): void;
+            getGetterAndSetterWithJsName(): string;
+            withDefaultsAndDefaultImplementation(value?: string): string;
+            suspendWithDefaultImplementation(): Promise<string>;
+            genericWithDefaultImplementation<T>(x: T): string;
+            anotherDefaultImplementation(): string;
+            get propertyWithDefaultGetter(): string;
+            setTWithDefaultImpl(value: string): void;
+            getTWithDefaultImpl(): string;
+            withDefaultImplementation(): string;
+            get propertyWithDefaultSetter(): string;
+            set propertyWithDefaultSetter(value: string);
+            setDefaultGetterAndSetterWithJsName(value: string): void;
+            getDefaultGetterAndSetterWithJsName(): string;
             readonly [foo.IFoo.Symbol]: true;
             readonly [foo.ExportedParent.Symbol]: true;
         }
