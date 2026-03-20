@@ -9,6 +9,7 @@ import com.intellij.testFramework.TestDataFile
 import org.jetbrains.kotlin.cli.common.disposeRootInWriteAction
 import org.jetbrains.kotlin.test.directives.model.RegisteredDirectives
 import org.jetbrains.kotlin.test.directives.model.RegisteredDirectivesImpl
+import org.jetbrains.kotlin.test.model.AfterAnalysisChecker
 import org.jetbrains.kotlin.test.model.AnalysisHandler
 import org.jetbrains.kotlin.test.model.ResultingArtifact
 import org.jetbrains.kotlin.test.model.TestModule
@@ -36,12 +37,17 @@ sealed class TestRunner<Step : TestStep<*, *>, Configuration : TestConfiguration
         }
     }
 
-    fun reportFailures() {
+    /**
+     * @return true if there were any failures from any steps, even if they were suppressed by [AfterAnalysisChecker]s
+     */
+    fun reportFailures(): Boolean {
+        val hadFailures = allFailedExceptions.isNotEmpty()
         val filteredFailedAssertions = filterFailedExceptions(allFailedExceptions)
         filteredFailedAssertions.firstIsInstanceOrNull<WrappedException.FromFacade>()?.let {
             throw it
         }
         testServices.assertions.failAll(filteredFailedAssertions)
+        return hadFailures
     }
 
     fun finalizeAndDispose(beforeDispose: (Configuration) -> Unit = {}) {

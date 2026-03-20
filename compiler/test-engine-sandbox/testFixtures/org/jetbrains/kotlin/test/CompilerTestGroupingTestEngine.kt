@@ -170,7 +170,7 @@ class CompilerTestGroupingTestEngine : TestEngine {
                 val testRunner = testInstance.nonGroupingRunner
                 testRunner.runTestPreprocessing()
                 testRunner.runSteps()
-                testRunner.reportFailures()
+                hadIgnoredFailuresOnNonGroupingPhase = testRunner.reportFailures()
             }
             finishIfFailed()
         }
@@ -183,7 +183,7 @@ class CompilerTestGroupingTestEngine : TestEngine {
         tests: List<TestMethodInfo>,
         groupCounter: AtomicInteger,
     ) {
-        val successfulTests = tests.filterNot { it.failed }
+        val successfulTests = tests.filterNot { it.failed || it.hadIgnoredFailuresOnNonGroupingPhase }
         if (successfulTests.isEmpty()) return
         val batches = groupTestsInBatches(successfulTests)
 
@@ -348,6 +348,8 @@ private data class TestMethodInfo(
     val failed: Boolean
         get() = nonGroupingPhaseThrowableCollector.isNotEmpty
 
+    var hadIgnoredFailuresOnNonGroupingPhase: Boolean = false
+
     var finalized: Boolean = false
         private set
 
@@ -369,7 +371,7 @@ private data class TestMethodInfo(
  * @returns true if the test failed
  */
 private fun TestMethodInfo.finishIfFailed(): Boolean {
-    return failed.also {
+    return (failed || hadIgnoredFailuresOnNonGroupingPhase).also {
         if (it) {
             finalizeNonGroupingPhase()
             reportFinished(nonGroupingPhaseThrowableCollector)
