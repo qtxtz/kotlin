@@ -168,7 +168,6 @@ internal class JsIrLinkerLoader(
             compilerConfiguration.languageVersionSettings,
         )
         val linker = JsIrLinker(
-            currentModule = null,
             messageCollector = messageCollector,
             builtIns = irBuiltIns,
             symbolTable = symbolTable,

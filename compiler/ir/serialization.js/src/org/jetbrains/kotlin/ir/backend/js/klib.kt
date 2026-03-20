@@ -172,7 +172,6 @@ fun loadIrForSingleModule(
     )
 
     val irLinker = JsIrLinker(
-        currentModule = null,
         messageCollector = messageLogger,
         builtIns = irBuiltIns,
         symbolTable = symbolTable,
@@ -268,7 +267,6 @@ fun getIrModuleInfoForKlib(
     )
 
     val irLinker = JsIrLinker(
-        currentModule = null,
         messageCollector = messageCollector,
         builtIns = irBuiltIns,
         symbolTable = symbolTable,
