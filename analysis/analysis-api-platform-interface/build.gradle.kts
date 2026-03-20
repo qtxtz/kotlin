@@ -50,28 +50,8 @@ kotlin {
 sourceSets {
     "main" { projectDefault() }
     "test" { none() }
-    "codebaseTest" { projectDefault() }
 }
 
 projectTests {
-    testTask(taskName = "testCodebase", jUnitMode = JUnitMode.JUnit5, skipInLocalBuild = false) {
-        group = "verification"
-
-        classpath += sourceSets.getByName("codebaseTest").runtimeClasspath
-        testClassesDirs = sourceSets.getByName("codebaseTest").output.classesDirs
-    }
-
-    testData(project.isolated, "src")
-    testData(project.isolated, "api")
-    testData(project.isolated, "api-unstable")
-}
-
-tasks.named("check") {
-    dependsOn("testCodebase")
-}
-
-run /* Workaround for KT-84365 */ {
-    tasks.named("testCodebase").configure {
-        mustRunAfter("updateKotlinAbi")
-    }
+    testCodebaseTask(dumpDirs = listOf("api", "api-unstable"))
 }

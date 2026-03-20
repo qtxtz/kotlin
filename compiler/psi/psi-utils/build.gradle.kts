@@ -37,25 +37,10 @@ dependencies {
 sourceSets {
     "main" { projectDefault() }
     "test" { none() }
-    "codebaseTest" { projectDefault() }
 }
 
 projectTests {
-    testTask(taskName = "testCodebase", jUnitMode = JUnitMode.JUnit5, skipInLocalBuild = false) {
-        group = "verification"
-        classpath += sourceSets.getByName("codebaseTest").runtimeClasspath
-        testClassesDirs = sourceSets.getByName("codebaseTest").output.classesDirs
-    }
-
-    /** The 'test' task inputs cannot depend on [checkForeignClassUsage] outputs. */
-    testData(project.isolated, "api/psi-utils-api.api")
-    testData(project.isolated, "api/psi-utils-api.undocumented")
-
-    testData(project.isolated, "src")
-}
-
-tasks.named("check") {
-    dependsOn("testCodebase")
+    testCodebaseTask()
 }
 
 private val stableNonPublicMarkers = listOf(
