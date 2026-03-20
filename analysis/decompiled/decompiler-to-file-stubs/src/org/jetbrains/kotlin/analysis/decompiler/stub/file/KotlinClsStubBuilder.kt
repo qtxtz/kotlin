@@ -204,36 +204,34 @@ private class AnnotationLoaderForClassFileStubBuilder(
 
     override fun loadAnnotation(
         annotationClassId: ClassId, source: SourceElement, result: MutableList<AnnotationWithArgs>
-    ): KotlinJvmBinaryClass.AnnotationArgumentVisitor {
-        return object : AnnotationMemberDefaultValueVisitor() {
-            override fun visitEnd() {
-                when {
-                    isRepeatableWithImplicitContainer(annotationClassId, args) -> {
-                        // do not add `java.lang.annotation.Repeatable` to stub for a repeatable annotation class
-                    }
-                    !isImplicitRepeatableContainer(annotationClassId) -> {
-                        result.add(AnnotationWithArgs(annotationClassId, args))
-                    }
-                    else -> {
-                        extractRepeatableAnnotationsFromRepeatableContainer()
-                    }
+    ): KotlinJvmBinaryClass.AnnotationArgumentVisitor = object : KotlinJvmAnnotationArgumentsCollector() {
+        override fun visitEnd() {
+            when {
+                isRepeatableWithImplicitContainer(annotationClassId, args) -> {
+                    // do not add `java.lang.annotation.Repeatable` to stub for a repeatable annotation class
+                }
+                !isImplicitRepeatableContainer(annotationClassId) -> {
+                    result.add(AnnotationWithArgs(annotationClassId, args))
+                }
+                else -> {
+                    extractRepeatableAnnotationsFromRepeatableContainer()
                 }
             }
+        }
 
-            private fun isRepeatableWithImplicitContainer(annotationClassId: ClassId, arguments: Map<Name, ConstantValue<*>>): Boolean {
-                if (annotationClassId != SpecialJvmAnnotations.JAVA_LANG_ANNOTATION_REPEATABLE) return false
+        private fun isRepeatableWithImplicitContainer(annotationClassId: ClassId, arguments: Map<Name, ConstantValue<*>>): Boolean {
+            if (annotationClassId != SpecialJvmAnnotations.JAVA_LANG_ANNOTATION_REPEATABLE) return false
 
-                val containerKClassValue = arguments[JvmAnnotationNames.DEFAULT_ANNOTATION_MEMBER_NAME] as? KClassValue ?: return false
-                return isImplicitRepeatableContainer((containerKClassValue.value as KClassValue.Value.NormalClass).classId)
-            }
+            val containerKClassValue = arguments[JvmAnnotationNames.DEFAULT_ANNOTATION_MEMBER_NAME] as? KClassValue ?: return false
+            return isImplicitRepeatableContainer((containerKClassValue.value as KClassValue.Value.NormalClass).classId)
+        }
 
-            private fun extractRepeatableAnnotationsFromRepeatableContainer() {
-                val arrayValue = args[Name.identifier("value")] as? ArrayValue ?: return
-                for (annotationValue in arrayValue.value) {
-                    if (annotationValue !is AnnotationValue) continue
-                    val value = annotationValue.value
-                    result += AnnotationWithArgs(value.classId, value.argumentsMapping)
-                }
+        private fun extractRepeatableAnnotationsFromRepeatableContainer() {
+            val arrayValue = args[Name.identifier("value")] as? ArrayValue ?: return
+            for (annotationValue in arrayValue.value) {
+                if (annotationValue !is AnnotationValue) continue
+                val value = annotationValue.value
+                result += AnnotationWithArgs(value.classId, value.argumentsMapping)
             }
         }
     }
@@ -284,7 +282,7 @@ private class AnnotationLoaderForClassFileStubBuilder(
                 }
 
                 override fun visitAnnotationMemberDefaultValue(): KotlinJvmBinaryClass.AnnotationArgumentVisitor {
-                    return object : AnnotationMemberDefaultValueVisitor() {
+                    return object : KotlinJvmAnnotationArgumentsCollector() {
                         override fun visitEnd() {
                             val value = args.values.firstOrNull()
                             if (value != null) {
