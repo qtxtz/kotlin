@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.ir.declarations
 
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.KtSourceElement
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.mpp.DeclarationSymbolMarker
 import org.jetbrains.kotlin.name.FqName
@@ -17,9 +16,7 @@ interface MetadataSource {
     val name: Name?
     val source: KtSourceElement? get() = null
 
-    interface File : MetadataSource {
-        fun asEvaluatedConstTrackerKey(): EvaluatedConstTracker.Key?
-    }
+    interface File : MetadataSource
 
     interface Class : MetadataSource {
         fun recordLocalClassType(type: FqName)
@@ -43,9 +40,7 @@ sealed class DescriptorMetadataSource : MetadataSource {
     override val name: Name?
         get() = descriptor?.name
 
-    class File(val descriptors: List<DeclarationDescriptor>) : DescriptorMetadataSource(), MetadataSource.File {
-        override fun asEvaluatedConstTrackerKey(): EvaluatedConstTracker.Key? = null
-    }
+    class File(val descriptors: List<DeclarationDescriptor>) : DescriptorMetadataSource(), MetadataSource.File
 
     class Class(override val descriptor: ClassDescriptor) : DescriptorMetadataSource(), MetadataSource.Class {
         override fun recordLocalClassType(type: FqName) {}

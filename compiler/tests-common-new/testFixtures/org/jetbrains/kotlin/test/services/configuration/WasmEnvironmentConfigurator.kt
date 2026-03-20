@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.test.services.configuration
 import org.jetbrains.kotlin.cli.common.arguments.K2JSCompilerArguments
 import org.jetbrains.kotlin.config.*
 import org.jetbrains.kotlin.config.AnalysisFlags.allowFullyQualifiedNameInKClass
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.ir.backend.js.MainModule
 import org.jetbrains.kotlin.js.config.*
 import org.jetbrains.kotlin.platform.wasm.WasmTarget
@@ -174,12 +173,6 @@ open class WasmSecondStageEnvironmentConfigurator(
         configuration.put(
             WasmConfigurationKeys.WASM_FORCE_DEBUG_FRIENDLY_COMPILATION,
             FORCE_DEBUG_FRIENDLY_COMPILATION in registeredDirectives
-        )
-
-        val firstPhaseConfiguration = testServices.compilerConfigurationProvider.getCompilerConfiguration(module, CompilationStage.FIRST)
-        configuration.putIfAbsent(
-            CommonConfigurationKeys.EVALUATED_CONST_TRACKER,
-            firstPhaseConfiguration.evaluatedConstTracker ?: EvaluatedConstTracker.create()
         )
     }
 }

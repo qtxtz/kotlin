@@ -5,10 +5,7 @@
 
 package org.jetbrains.kotlin.test.services.configuration
 
-import org.jetbrains.kotlin.config.CommonConfigurationKeys
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.config.evaluatedConstTracker
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.ir.backend.js.MainModule
 import org.jetbrains.kotlin.js.config.*
 import org.jetbrains.kotlin.platform.isJs
@@ -59,11 +56,5 @@ open class JsSecondStageEnvironmentConfigurator(testServices: TestServices) : Js
         configuration.generateRegionComments = true
 
         configuration.filePathsPrefixMap = mapOf(File(".").absolutePath.removeSuffix(".") to "")
-
-        val firstPhaseConfiguration = testServices.compilerConfigurationProvider.getCompilerConfiguration(module, CompilationStage.FIRST)
-        configuration.putIfAbsent(
-            CommonConfigurationKeys.EVALUATED_CONST_TRACKER,
-            firstPhaseConfiguration.evaluatedConstTracker ?: EvaluatedConstTracker.create()
-        )
     }
 }

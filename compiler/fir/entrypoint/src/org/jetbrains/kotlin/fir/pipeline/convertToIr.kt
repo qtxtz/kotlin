@@ -372,10 +372,9 @@ private class Fir2IrPipeline(
 
     private fun Fir2IrConversionResult.inlineConstants() {
         val inlineConstTracker = componentsStorage.configuration.inlineConstTracker
-        val evaluatedConstTracker = componentsStorage.configuration.evaluatedConstTracker
 
         mainIrFragment.files.forEach { irFile ->
-            irFile.transform(ConstInliner(irFile, inlineConstTracker, evaluatedConstTracker), null)
+            irFile.transform(ConstInliner(irFile, inlineConstTracker), null)
         }
     }
 

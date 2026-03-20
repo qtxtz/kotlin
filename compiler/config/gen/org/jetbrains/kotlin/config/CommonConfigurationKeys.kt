@@ -14,7 +14,6 @@ package org.jetbrains.kotlin.config
 
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.config.phaser.PhaseConfig
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.incremental.components.EnumWhenTracker
 import org.jetbrains.kotlin.incremental.components.ExpectActualTracker
 import org.jetbrains.kotlin.incremental.components.ICFileMappingTracker
@@ -96,10 +95,6 @@ object CommonConfigurationKeys {
 
     @JvmField
     val IGNORE_CONST_OPTIMIZATION_ERRORS = CompilerConfigurationKey.create<Boolean>("IGNORE_CONST_OPTIMIZATION_ERRORS")
-
-    // Keeps track of all constants evaluated by IrInterpreter.
-    @JvmField
-    val EVALUATED_CONST_TRACKER = CompilerConfigurationKey.create<EvaluatedConstTracker>("EVALUATED_CONST_TRACKER")
 
     @JvmField
     val MESSAGE_COLLECTOR_KEY = CompilerConfigurationKey.create<MessageCollector>("MESSAGE_COLLECTOR_KEY")
@@ -237,10 +232,6 @@ var CompilerConfiguration.allowAnyScriptsInSourceRoots: Boolean
 var CompilerConfiguration.ignoreConstOptimizationErrors: Boolean
     get() = getBoolean(CommonConfigurationKeys.IGNORE_CONST_OPTIMIZATION_ERRORS)
     set(value) { put(CommonConfigurationKeys.IGNORE_CONST_OPTIMIZATION_ERRORS, value) }
-
-var CompilerConfiguration.evaluatedConstTracker: EvaluatedConstTracker?
-    get() = get(CommonConfigurationKeys.EVALUATED_CONST_TRACKER)
-    set(value) { put(CommonConfigurationKeys.EVALUATED_CONST_TRACKER, requireNotNull(value) { "nullable values are not allowed" }) }
 
 var CompilerConfiguration.messageCollector: MessageCollector
     get() = get(CommonConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)

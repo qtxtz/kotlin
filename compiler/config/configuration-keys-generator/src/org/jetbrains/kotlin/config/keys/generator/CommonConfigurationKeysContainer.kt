@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.config.IrVerificationMode
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.config.keys.generator.model.KeysContainer
 import org.jetbrains.kotlin.config.phaser.PhaseConfig
-import org.jetbrains.kotlin.constant.EvaluatedConstTracker
 import org.jetbrains.kotlin.incremental.components.*
 import org.jetbrains.kotlin.metadata.deserialization.BinaryVersion
 import org.jetbrains.kotlin.platform.TargetPlatform
@@ -46,7 +45,6 @@ object CommonConfigurationKeysContainer : KeysContainer("org.jetbrains.kotlin.co
     val INCREMENTAL_COMPILATION by key<Boolean>()
     val ALLOW_ANY_SCRIPTS_IN_SOURCE_ROOTS by key<Boolean>()
     val IGNORE_CONST_OPTIMIZATION_ERRORS by key<Boolean>()
-    val EVALUATED_CONST_TRACKER by key<EvaluatedConstTracker>("Keeps track of all constants evaluated by IrInterpreter.")
 
     val MESSAGE_COLLECTOR_KEY by key<MessageCollector>(defaultValue = "MessageCollector.NONE", accessorName = "messageCollector")
 
