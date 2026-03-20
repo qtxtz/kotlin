@@ -128,7 +128,7 @@ object KotlinClsStubBuilder : ClsStubBuilder() {
     ): ClsStubBuilderComponents {
         val classFinder = DirectoryBasedClassFinder(file.parent!!, packageFqName)
         val classDataFinder = DirectoryBasedDataFinder(classFinder, LOG, metadataVersion)
-        val annotationLoader = AnnotationLoaderForClassFileStubBuilder(classFinder, file, fileContent, metadataVersion)
+        val annotationLoader = JvmClsAnnotationLoader(classFinder, file, fileContent, metadataVersion)
         return ClsStubBuilderComponents(classDataFinder, annotationLoader, file)
     }
 
@@ -140,7 +140,7 @@ object KotlinClsStubBuilder : ClsStubBuilder() {
     fun isVersioned(virtualFile: VirtualFile): Boolean = VERSIONED_PATH_MARKER in virtualFile.path
 }
 
-private class AnnotationLoaderForClassFileStubBuilder(
+private class JvmClsAnnotationLoader(
     kotlinClassFinder: KotlinClassFinder,
     private val cachedFile: VirtualFile,
     private val cachedFileContent: ByteArray,
