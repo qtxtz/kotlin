@@ -32,7 +32,6 @@ class JsIrLinker(
     private val currentModule: ModuleDescriptor?, messageCollector: MessageCollector, builtIns: IrBuiltIns, symbolTable: SymbolTable,
     override val partialLinkageSupport: PartialLinkageSupportForLinker,
     friendModules: Map<String, Collection<String>> = emptyMap(),
-    private val stubGenerator: DeclarationStubGenerator? = null
 ) : KotlinIrLinker(
     currentModule = currentModule,
     messageCollector = messageCollector,
@@ -69,10 +68,7 @@ class JsIrLinker(
     ): IrModuleDeserializer {
         require(klib != null) { "Expecting kotlin library" }
         val libraryAbiVersion = klib.versions.abiVersion ?: KotlinAbiVersion.CURRENT
-        return when (val lazyIrGenerator = stubGenerator) {
-            null -> JsModuleDeserializer(moduleDescriptor, klib.irOrFail, strategyResolver, libraryAbiVersion)
-            else -> JsLazyIrModuleDeserializer(moduleDescriptor, libraryAbiVersion, builtIns, lazyIrGenerator)
-        }
+        return JsModuleDeserializer(moduleDescriptor, klib.irOrFail, strategyResolver, libraryAbiVersion)
     }
 
     private val deserializedFilesInKlibOrder = mutableMapOf<IrModuleFragment, List<IrFile>>()
