@@ -63,14 +63,6 @@ class KlibMetadataIncrementalSerializer(
         exportKDoc = false,
     )
 
-    constructor(modulesStructure: ModulesStructure, moduleFragment: IrModuleFragment) : this(
-        (modulesStructure.mainModule as MainModule.SourceFiles).files,
-        modulesStructure.compilerConfiguration,
-        modulesStructure.project,
-        modulesStructure.jsFrontEndResult.bindingContext,
-        moduleFragment.descriptor,
-    )
-
     override fun serializeSingleFileMetadata(file: KtFile): ProtoBuf.PackageFragment {
         val memberScope = file.declarations.map { getDescriptorForElement(bindingContext, it) }
         return serializePackageFragment(moduleDescriptor, memberScope, file.packageFqName)
