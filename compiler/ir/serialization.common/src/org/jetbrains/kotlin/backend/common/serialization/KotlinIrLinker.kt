@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.backend.common.overrides.FileLocalAwareLinker
 import org.jetbrains.kotlin.backend.common.overrides.IrLinkerFakeOverrideProvider
 import org.jetbrains.kotlin.backend.common.serialization.encodings.BinarySymbolData
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.declarations.*
@@ -156,14 +155,12 @@ abstract class KotlinIrLinker(
     protected open fun platformSpecificSymbol(symbol: IrSymbol): Boolean = false
 
     override fun getDeclaration(symbol: IrSymbol): IrDeclaration? =
-        deserializeOrResolveDeclaration(symbol, false)
+        deserializeOrResolveDeclaration(symbol)
 
-    protected fun deserializeOrResolveDeclaration(symbol: IrSymbol, allowSymbolsWithoutSignaturesFromOtherModule: Boolean): IrDeclaration? {
-        if (!allowSymbolsWithoutSignaturesFromOtherModule) {
-            if (!symbol.isPublicApi && symbol.hasDescriptor && !platformSpecificSymbol(symbol) &&
-                symbol.descriptor.module !== currentModule
-            ) return null
-        }
+    protected fun deserializeOrResolveDeclaration(symbol: IrSymbol): IrDeclaration? {
+        if (!symbol.isPublicApi && symbol.hasDescriptor && !platformSpecificSymbol(symbol) &&
+            symbol.descriptor.module !== currentModule
+        ) return null
 
         if (!symbol.isBound) {
             try {

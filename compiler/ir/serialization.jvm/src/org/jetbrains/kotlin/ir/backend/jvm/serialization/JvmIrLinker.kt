@@ -101,7 +101,7 @@ class JvmIrLinker(
     }
 
     override fun getDeclaration(symbol: IrSymbol): IrDeclaration? =
-        deserializeOrResolveDeclaration(symbol, false)
+        deserializeOrResolveDeclaration(symbol)
 
     override fun createCurrentModuleDeserializer(moduleFragment: IrModuleFragment, dependencies: Collection<IrModuleDeserializer>): IrModuleDeserializer =
         JvmCurrentModuleDeserializer(moduleFragment, dependencies)
