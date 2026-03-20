@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationDataKey
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationDataRegistry
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.impl.SchemaProperty
@@ -20,6 +21,7 @@ sealed interface CallShapeData {
 object CallShapeAttribute : FirDeclarationDataKey()
 
 var FirClass.callShapeData: CallShapeData? by FirDeclarationDataRegistry.data(CallShapeAttribute)
+val FirClassSymbol<*>.callShapeData: CallShapeData? by FirDeclarationDataRegistry.symbolAccessor(CallShapeAttribute)
 
 object ClassAnchorElementKey : FirDeclarationDataKey()
 

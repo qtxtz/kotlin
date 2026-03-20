@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.resolve.defaultType
-import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
@@ -39,10 +38,9 @@ import org.jetbrains.kotlinx.dataframe.plugin.utils.generateExtensionProperty
  */
 class TokenContentGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    @OptIn(SymbolInternals::class)
     private val propertiesCache: FirCache<FirClassSymbol<*>, Map<Name, List<FirProperty>>?, Nothing?> =
         session.firCachesFactory.createCache { k ->
-            val callShapeData = k.fir.callShapeData ?: return@createCache null
+            val callShapeData = k.callShapeData ?: return@createCache null
             when (callShapeData) {
                 is CallShapeData.Schema -> callShapeData.columns.withIndex().associate { (index, property) ->
                     val identifier = property.propertyName.identifier
@@ -91,10 +89,9 @@ class TokenContentGenerator(session: FirSession) : FirDeclarationGenerationExten
             }
         }
 
-    @OptIn(SymbolInternals::class)
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         val destination = mutableSetOf<Name>()
-        when (classSymbol.fir.callShapeData) {
+        when (classSymbol.callShapeData) {
             is CallShapeData.RefinedType -> destination.add(SpecialNames.INIT)
             is CallShapeData.Schema -> destination.add(SpecialNames.INIT)
             is CallShapeData.Scope -> destination.add(SpecialNames.INIT)
