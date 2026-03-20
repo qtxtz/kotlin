@@ -37,7 +37,6 @@ data class JsFir2IrPipelineArtifact(
     override val result: Fir2IrActualizedResult,
     val frontendOutput: AllModulesFrontendOutput,
     override val configuration: CompilerConfiguration,
-    val moduleStructure: ModulesStructure,
     val hasErrors: Boolean,
 ) : Fir2IrPipelineArtifact() {
     @CliPipelineInternals(OPT_IN_MESSAGE)

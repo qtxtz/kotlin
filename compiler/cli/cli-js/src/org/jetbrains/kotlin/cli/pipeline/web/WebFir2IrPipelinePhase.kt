@@ -55,7 +55,6 @@ object WebFir2IrPipelinePhase : PipelinePhase<WebFrontendPipelineArtifact, JsFir
             fir2IrActualizedResult,
             firResult,
             configuration,
-            moduleStructure,
             hasErrors = hasErrors || configuration.messageCollector.hasErrors() || diagnosticsReporter.hasErrors,
         )
     }

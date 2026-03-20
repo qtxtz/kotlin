@@ -25,7 +25,7 @@ object WebKlibSerializationPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifac
     name = "JsKlibSerializationPipelinePhase",
 ) {
     override fun executePhase(input: JsFir2IrPipelineArtifact): JsSerializedKlibPipelineArtifact {
-        val (fir2IrResult, firResult, configuration, moduleStructure) = input
+        val (fir2IrResult, firResult, configuration) = input
         val irDiagnosticReporter = KtDiagnosticReporterWithImplicitIrBasedContext(
             configuration.diagnosticsCollector,
             configuration.languageVersionSettings
@@ -33,17 +33,17 @@ object WebKlibSerializationPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifac
 
         val outputKlibPath = configuration.computeOutputKlibPath()
         val fir2KlibMetadataSerializer = Fir2KlibMetadataSerializer(
-            moduleStructure.compilerConfiguration,
+            configuration,
             firOutputs = firResult.outputs,
             fir2IrActualizedResult = fir2IrResult,
             exportKDoc = false,
             produceHeaderKlib = false,
         )
         val icData =
-            moduleStructure.compilerConfiguration.incrementalDataProvider?.getSerializedData(fir2KlibMetadataSerializer.sourceFiles)
+            configuration.incrementalDataProvider?.getSerializedData(fir2KlibMetadataSerializer.sourceFiles)
         serializeModuleIntoKlib(
-            moduleName = moduleStructure.compilerConfiguration[CommonConfigurationKeys.MODULE_NAME]!!,
-            configuration = moduleStructure.compilerConfiguration,
+            moduleName = configuration[CommonConfigurationKeys.MODULE_NAME]!!,
+            configuration = configuration,
             diagnosticReporter = irDiagnosticReporter,
             metadataSerializer = fir2KlibMetadataSerializer,
             klibPath = outputKlibPath,
@@ -54,7 +54,7 @@ object WebKlibSerializationPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifac
             jsOutputName = configuration.perModuleOutputName,
             builtInsPlatform = if (configuration.wasmCompilation) BuiltInsPlatform.WASM else BuiltInsPlatform.JS,
             wasmTarget = configuration.wasmTarget,
-            performanceManager = moduleStructure.compilerConfiguration.perfManager,
+            performanceManager = configuration.perfManager,
         )
 
         loadSizeInfo(File(outputKlibPath))?.flatten()?.let { stats ->

@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.fir.pipeline.Fir2IrActualizedResult
 import org.jetbrains.kotlin.fir.pipeline.Fir2KlibMetadataSerializer
 import org.jetbrains.kotlin.ir.KtDiagnosticReporterWithImplicitIrBasedContext
 import org.jetbrains.kotlin.ir.backend.js.JsPreSerializationLoweringContext
-import org.jetbrains.kotlin.ir.backend.js.ModulesStructure
 import org.jetbrains.kotlin.ir.backend.js.jsLoweringsOfTheFirstPhase
 import org.jetbrains.kotlin.ir.backend.js.shouldGoToNextIcRound
 import org.jetbrains.kotlin.js.config.wasmCompilation
@@ -35,8 +34,8 @@ object WebKlibInliningPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifact, Js
     postActions = setOf(PerformanceNotifications.IrPreLoweringFinished, CheckCompilationErrors.CheckDiagnosticCollector),
 ) {
     override fun executePhase(input: JsFir2IrPipelineArtifact): JsFir2IrPipelineArtifact {
-        val (fir2IrResult, firOutput, configuration, moduleStructure) = input
-        processIncrementalCompilationRoundIfNeeded(configuration, moduleStructure, firOutput, fir2IrResult)
+        val (fir2IrResult, firOutput, configuration) = input
+        processIncrementalCompilationRoundIfNeeded(configuration, firOutput, fir2IrResult)
         val irDiagnosticReporter = KtDiagnosticReporterWithImplicitIrBasedContext(
             configuration.diagnosticsCollector,
             configuration.languageVersionSettings
@@ -61,7 +60,6 @@ object WebKlibInliningPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifact, Js
 
     private fun processIncrementalCompilationRoundIfNeeded(
         configuration: CompilerConfiguration,
-        moduleStructure: ModulesStructure,
         frontendOutput: AllModulesFrontendOutput,
         fir2IrResult: Fir2IrActualizedResult,
     ) {
@@ -72,9 +70,9 @@ object WebKlibInliningPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifact, Js
         //  This happens because we check the next round before compilation errors.
         //  Test reproducer:  testFileWithConstantRemoved
         //  Issue: https://youtrack.jetbrains.com/issue/KT-58824/
-        val shouldGoToNextIcRound = shouldGoToNextIcRound(moduleStructure.compilerConfiguration) {
+        val shouldGoToNextIcRound = shouldGoToNextIcRound(configuration) {
             Fir2KlibMetadataSerializer(
-                moduleStructure.compilerConfiguration,
+                configuration,
                 frontendOutput.outputs,
                 fir2IrResult,
                 exportKDoc = false,
