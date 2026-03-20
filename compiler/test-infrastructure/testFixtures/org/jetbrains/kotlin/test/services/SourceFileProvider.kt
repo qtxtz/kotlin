@@ -46,7 +46,7 @@ abstract class SourceFileProvider : TestService {
     abstract fun getJavaSourceDirectoryForModule(module: TestModule): File
     abstract fun getAdditionalFilesDirectoryForModule(module: TestModule): File
 
-    abstract fun getContentOfSourceFile(testFile: TestFile): String
+    abstract fun getContentOfSourceFile(testFile: TestFile, preprocessorFilter: ((SourceFilePreprocessor) -> Boolean)? = null): String
     abstract fun getOrCreateRealFileForSourceFile(testFile: TestFile): File
 }
 
@@ -73,8 +73,14 @@ class SourceFileProviderImpl(
         additionalFilesDirectory.resolve(module.name).apply { mkdir() }
 
     @OptIn(TestInfrastructureInternals::class)
-    override fun getContentOfSourceFile(testFile: TestFile): String {
-        contentOfFiles[testFile]?.let { return it }
+    override fun getContentOfSourceFile(
+        testFile: TestFile,
+        preprocessorFilter: ((SourceFilePreprocessor) -> Boolean)?,
+    ): String {
+        val defaultMode = preprocessorFilter == null
+        if (defaultMode) {
+            contentOfFiles[testFile]?.let { return it }
+        }
 
         // Usually all files belong to some module. But some services (like `FirTestDataConsistencyHandler`)
         // create test files on the fly which don't have a containing module.
@@ -88,12 +94,15 @@ class SourceFileProviderImpl(
         )
 
         val contentPerFile = module.files.associateWithTo(mutableMapOf()) { it.originalContent }
+        val preprocessors = if (defaultMode) preprocessors else preprocessors.filter(preprocessorFilter)
         for (preprocessor in preprocessors) {
             preprocessor.processModule(module, contentPerFile)
         }
-        contentOfFiles.putAll(contentPerFile)
 
-        return contentOfFiles.getValue(testFile)
+        if (defaultMode) {
+            contentOfFiles.putAll(contentPerFile)
+        }
+        return contentPerFile.getValue(testFile)
     }
 
     override fun getOrCreateRealFileForSourceFile(testFile: TestFile): File {
