@@ -47,8 +47,7 @@ projectTests {
 
     testGenerator("org.jetbrains.kotlin.psi.TestGeneratorKt")
 
-    testData(project(":compiler").isolated, "testData/psi")
-    testData(project(":compiler").isolated, "testData/parseCodeFragment")
+    testData(project.isolated, "testData")
 
     testCodebaseTask()
 }

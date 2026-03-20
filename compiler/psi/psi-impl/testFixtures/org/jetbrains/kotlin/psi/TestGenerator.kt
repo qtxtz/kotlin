@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.psi.parsing.AbstractPsiParsingTest
 
 fun main(args: Array<String>) {
     generateTestGroupSuiteWithJUnit5(args) {
-        testGroup("compiler/psi/psi-impl/tests-gen", "compiler/testData") {
+        testGroup("compiler/psi/psi-impl/tests-gen", "compiler/psi/psi-impl/testData") {
             testClass<AbstractPsiParsingTest> {
                 model("psi", pattern = TestGeneratorUtil.KT_OR_KTS)
             }
@@ -23,11 +23,11 @@ fun main(args: Array<String>) {
             }
 
             testClass<AbstractExpressionCodeFragmentParsingTest> {
-                model("parseCodeFragment/expression", pattern = TestGeneratorUtil.KT)
+                model("expressionCodeFragment", pattern = TestGeneratorUtil.KT)
             }
 
             testClass<AbstractBlockCodeFragmentParsingTest> {
-                model("parseCodeFragment/block", pattern = TestGeneratorUtil.KT)
+                model("blockCodeFragment", pattern = TestGeneratorUtil.KT)
             }
         }
     }

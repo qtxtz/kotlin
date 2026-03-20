@@ -16,37 +16,33 @@ import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 
 fun main(args: Array<String>) {
     generateTestGroupSuiteWithJUnit5(args) {
-        testGroup("analysis/stubs/tests-gen", "compiler/testData") {
+        testGroup("analysis/stubs/tests-gen", "compiler/psi/psi-impl/testData") {
             testClass<AbstractSourceStubsTest> {
-                model("psi", pattern = TestGeneratorUtil.KT_OR_KTS_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT_OR_KTS)
             }
 
             testClass<AbstractCompiledJvmStubsTest> {
-                model("psi", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT)
             }
 
             testClass<AbstractCompiledJsStubsTest> {
-                // 1.9 is not supported for non-JVM platforms, so k1 is excluded
-                model("psi", excludeDirs = listOf("k1"), pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT)
             }
 
             testClass<AbstractCompiledCommonStubsTest> {
-                // 1.9 is not supported for non-JVM platforms, so k1 is excluded
-                model("psi", excludeDirs = listOf("k1"), pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT)
             }
 
             testClass<AbstractDecompiledJvmTextTest> {
-                model("psi", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT)
             }
 
             testClass<AbstractDecompiledJsTextTest> {
-                // 1.9 is not supported for non-JVM platforms, so k1 is excluded
-                model("psi", excludeDirs = listOf("k1"), pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT)
             }
 
             testClass<AbstractDecompiledCommonTextTest> {
-                // 1.9 is not supported for non-JVM platforms, so k1 is excluded
-                model("psi", excludeDirs = listOf("k1"), pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                model("psi", pattern = TestGeneratorUtil.KT)
             }
         }
     }

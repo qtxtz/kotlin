@@ -49,7 +49,7 @@ projectTests {
     withDist()
 
     testData(project.isolated, "testData")
-    testData(project(":compiler").isolated, "testData/psi")
+    testData(project(":compiler:psi:psi-impl").isolated, "testData/psi")
 }
 
 testsJar()
