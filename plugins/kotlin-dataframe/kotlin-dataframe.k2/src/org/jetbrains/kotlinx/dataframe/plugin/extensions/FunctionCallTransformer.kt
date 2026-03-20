@@ -201,11 +201,12 @@ class FunctionCallTransformer(
                 analyzeRefinedCallShape<PluginDataFrameSchema>(call, dataSchemaLikeClassId, InterpretationErrorReporter.DEFAULT)
             val (tokens, dataFrameSchema) = callResult ?: return null
             val token = tokens[0]
-            val firstSchema = token.toClassSymbol()?.resolvedSuperTypes?.get(0)!!.toRegularClassSymbol()?.fir!!
+            val rootSchemaSymbol = token.toClassSymbol()?.resolvedSuperTypes?.get(0)!!.toRegularClassSymbol()!!
+            val firstSchema = rootSchemaSymbol.fir
             val dataSchemaApis = materialize(dataFrameSchema ?: PluginDataFrameSchema.EMPTY, call, firstSchema)
 
             val tokenFir = token.toRegularClassSymbol()!!.fir
-            tokenFir.callShapeData = CallShapeData.RefinedType(dataSchemaApis.map { it.scope.symbol })
+            tokenFir.callShapeData = CallShapeData.RefinedType(dataSchemaApis.map { it.scope.symbol }, rootSchemaSymbol)
 
             return buildScopeFunctionCall(call, originalSymbol, dataSchemaApis, listOf(tokenFir)) { tokenFir.generatedClasses = it }
         }
@@ -253,17 +254,19 @@ class FunctionCallTransformer(
                 PluginDataFrameSchema.EMPTY to PluginDataFrameSchema.EMPTY
             }
 
-            val firstSchema = keyMarker.toClassSymbol()?.resolvedSuperTypes?.get(0)!!.toRegularClassSymbol()?.fir!!
-            val firstSchema1 = groupMarker.toClassSymbol()?.resolvedSuperTypes?.get(0)!!.toRegularClassSymbol()?.fir!!
+            val keysRootSchemaSymbol = keyMarker.toClassSymbol()?.resolvedSuperTypes?.get(0)?.toRegularClassSymbol()!!
+            val groupsRootSchemaSymbol = groupMarker.toClassSymbol()?.resolvedSuperTypes?.get(0)?.toRegularClassSymbol()!!
+            val firstSchema = keysRootSchemaSymbol.fir
+            val firstSchema1 = groupsRootSchemaSymbol.fir
 
             val keyApis = materialize(keySchema, call, firstSchema, "Key")
             val groupApis = materialize(groupSchema, call, firstSchema1, "Group", i = keyApis.size)
 
             val groupToken = keyMarker.toRegularClassSymbol()!!.fir
-            groupToken.callShapeData = CallShapeData.RefinedType(keyApis.map { it.scope.symbol })
+            groupToken.callShapeData = CallShapeData.RefinedType(keyApis.map { it.scope.symbol }, keysRootSchemaSymbol)
 
             val keyToken = groupMarker.toRegularClassSymbol()!!.fir
-            keyToken.callShapeData = CallShapeData.RefinedType(groupApis.map { it.scope.symbol })
+            keyToken.callShapeData = CallShapeData.RefinedType(groupApis.map { it.scope.symbol }, groupsRootSchemaSymbol)
 
             return buildScopeFunctionCall(
                 call,

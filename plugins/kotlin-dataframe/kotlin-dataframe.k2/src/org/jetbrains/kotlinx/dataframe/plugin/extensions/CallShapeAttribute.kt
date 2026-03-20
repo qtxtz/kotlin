@@ -13,7 +13,7 @@ sealed interface CallShapeData {
 
     class Scope(val columns: List<SchemaProperty>, val source: KtSourceElement?) : CallShapeData
 
-    class RefinedType(val scopes: List<FirRegularClassSymbol>) : CallShapeData
+    class RefinedType(val scopes: List<FirRegularClassSymbol>, val schemaSymbol: FirRegularClassSymbol) : CallShapeData
 }
 
 
