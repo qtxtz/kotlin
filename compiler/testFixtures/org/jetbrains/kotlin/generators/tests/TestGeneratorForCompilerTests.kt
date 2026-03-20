@@ -26,8 +26,6 @@ import org.jetbrains.kotlin.jvm.compiler.javac.AbstractLoadJavaUsingJavacTest
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
 import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
 import org.jetbrains.kotlin.modules.xml.AbstractModuleXmlParserTest
-import org.jetbrains.kotlin.parsing.AbstractParsingTest
-import org.jetbrains.kotlin.psi.AbstractKDocTagContentTest
 import org.jetbrains.kotlin.resolve.AbstractResolveTest
 import org.jetbrains.kotlin.resolve.calls.AbstractResolvedCallsTest
 import org.jetbrains.kotlin.resolve.calls.AbstractResolvedConstructorDelegationCallsTests
@@ -49,12 +47,6 @@ fun main(args: Array<String>) {
 
             testClass<AbstractResolvedConstructorDelegationCallsTests> {
                 model("resolveConstructorDelegationCalls")
-            }
-
-            testClass<AbstractParsingTest> {
-                model("psi", testMethod = "doParsingTest", pattern = "^(.*)\\.kts?$")
-                model("parseCodeFragment/expression", testMethod = "doExpressionCodeFragmentParsingTest", extension = "kt")
-                model("parseCodeFragment/block", testMethod = "doBlockCodeFragmentParsingTest", extension = "kt")
             }
 
             testClass<AbstractLoadJavaTest> {
@@ -149,10 +141,6 @@ fun main(args: Array<String>) {
 
             testClass<AbstractKDocLexerTest> {
                 model("lexer/kdoc")
-            }
-
-            testClass<AbstractKDocTagContentTest> {
-                model("psi/kdoc")
             }
 
             testClass<AbstractKotlinLexerTest> {

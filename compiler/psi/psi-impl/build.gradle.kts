@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     id("java-test-fixtures")
     id("project-tests-convention")
+    id("test-data-manager")
     id("test-inputs-check")
 }
 
@@ -19,13 +20,14 @@ dependencies {
     implementation(project(":compiler:psi:parser"))
 
     testFixturesApi(platform(libs.junit.bom))
-    testFixturesImplementation(libs.junit.jupiter.api)
-    testImplementation(libs.junit.jupiter.api)
+    testFixturesApi(testFixtures(project(":compiler:tests-common")))
+    testFixturesApi(testFixtures(project(":compiler:tests-common-new")))
+    testFixturesApi(testFixtures(project(":analysis:analysis-test-framework")))
+    testFixturesApi(libs.junit.jupiter.api)
+
     testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.platform.launcher)
 
-    testFixturesImplementation(testFixtures(project(":compiler:tests-common")))
-    testImplementation(testFixtures(project(":compiler:tests-common")))
     testImplementation(testFixtures(project(":compiler:psi:psi-api")))
     testFixturesCompileOnly(intellijCore())
     testCompileOnly(intellijCore())
@@ -33,9 +35,20 @@ dependencies {
 
 sourceSets {
     "main" { projectDefault() }
-    "test" { none() }
+    "test" {
+        projectDefault()
+        generatedTestDir()
+    }
+    "testFixtures" { projectDefault() }
 }
 
 projectTests {
+    testTask(jUnitMode = JUnitMode.JUnit5)
+
+    testGenerator("org.jetbrains.kotlin.psi.TestGeneratorKt")
+
+    testData(project(":compiler").isolated, "testData/psi")
+    testData(project(":compiler").isolated, "testData/parseCodeFragment")
+
     testCodebaseTask()
 }

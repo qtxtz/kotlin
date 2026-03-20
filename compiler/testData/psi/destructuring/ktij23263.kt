@@ -1,4 +1,5 @@
 // COMPILATION_ERRORS
+// IGNORE_ERRORS_FROM_API: KT-85154
 
 class InitOrderDemo(name: String) {
     val (firstProperty = "First property"
