@@ -1,10 +1,11 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.analysis.decompiler.stub
 
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.StubElement
 import com.intellij.util.io.StringRef
@@ -57,13 +58,18 @@ fun createDeclarationsStubs(
     propertyProtos: List<ProtoBuf.Property>,
 ) {
     for (propertyProto in propertyProtos) {
+        ProgressManager.checkCanceled()
+
         if (mustNotBeWrittenToStubs(propertyProto.flags)) {
             continue
         }
 
         PropertyClsStubBuilder(parentStub, outerContext, protoContainer, propertyProto).build()
     }
+
     for (functionProto in functionProtos) {
+        ProgressManager.checkCanceled()
+
         if (mustNotBeWrittenToStubs(functionProto.flags)) {
             continue
         }
@@ -79,6 +85,8 @@ fun createTypeAliasesStubs(
     typeAliasesProtos: List<ProtoBuf.TypeAlias>
 ) {
     for (typeAliasProto in typeAliasesProtos) {
+        ProgressManager.checkCanceled()
+
         createTypeAliasStub(parentStub, typeAliasProto, protoContainer, outerContext)
     }
 }
@@ -112,6 +120,8 @@ abstract class CallableClsStubBuilder(
     protected abstract val callableProto: MessageLite
 
     fun build() {
+        ProgressManager.checkCanceled()
+
         createModifierListStub()
         val typeConstraintListData = typeStubBuilder.createTypeParameterListStub(callableStub, typeParameters)
         createReceiverTypeReferenceStub()
@@ -514,6 +524,8 @@ private class PropertyClsStubBuilder(
         val binaryClass = containerClass ?: (source as? KotlinJvmBinarySourceElement)?.binaryClass
         var constantInitializer: ConstantValue<*>? = null
         if (binaryClass != null) {
+            ProgressManager.checkCanceled()
+
             val callableName = c.nameResolver.getName(propertyProto.name)
             binaryClass.visitMembers(object : KotlinJvmBinaryClass.MemberVisitor {
                 private val getterName = lazy(LazyThreadSafetyMode.NONE) {
@@ -522,6 +534,8 @@ private class PropertyClsStubBuilder(
                 }
 
                 override fun visitMethod(name: Name, desc: String): KotlinJvmBinaryClass.MethodAnnotationVisitor? {
+                    ProgressManager.checkCanceled()
+
                     if (protoContainer is ProtoContainer.Class && protoContainer.kind == ProtoBuf.Class.Kind.ANNOTATION_CLASS && getterName.value == name) {
                         return object : KotlinJvmBinaryClass.MethodAnnotationVisitor {
                             override fun visitParameterAnnotation(
@@ -550,9 +564,12 @@ private class PropertyClsStubBuilder(
                 }
 
                 override fun visitField(name: Name, desc: String, initializer: Any?): KotlinJvmBinaryClass.AnnotationVisitor? {
+                    ProgressManager.checkCanceled()
+
                     if (initializer != null && name == callableName) {
                         constantInitializer = createConstantValue(initializer)
                     }
+
                     return null
                 }
             }, null)

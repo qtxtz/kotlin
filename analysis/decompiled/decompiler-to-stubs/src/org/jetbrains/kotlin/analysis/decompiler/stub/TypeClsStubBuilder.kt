@@ -1,10 +1,11 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.analysis.decompiler.stub
 
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.StubElement
 import com.intellij.util.io.StringRef
@@ -376,6 +377,8 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
         isContextParameter: Boolean,
     ) {
         for ((index, valueParameterProto) in parameters.withIndex()) {
+            ProgressManager.checkCanceled()
+
             val parameterName = computeParameterName(c.nameResolver.getName(valueParameterProto.name))
             val hasDefaultValue = Flags.DECLARES_DEFAULT_VALUE.get(valueParameterProto.flags)
             val parameterStub = KotlinParameterStubImpl(
@@ -450,6 +453,8 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
         val typeParameterListStub = KotlinPlaceHolderStubImpl<KtTypeParameterList>(parent, KtStubElementTypes.TYPE_PARAMETER_LIST)
         val protosForTypeConstraintList = arrayListOf<Pair<Name, Type>>()
         for (proto in typeParameterProtoList) {
+            ProgressManager.checkCanceled()
+
             val name = c.nameResolver.getName(proto.name)
             val typeParameterStub = KotlinTypeParameterStubImpl(
                 typeParameterListStub,
@@ -478,6 +483,8 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
         }
         val typeConstraintListStub = KotlinPlaceHolderStubImpl<KtTypeConstraintList>(parent, KtStubElementTypes.TYPE_CONSTRAINT_LIST)
         for ((name, type) in protosForTypeConstraintList) {
+            ProgressManager.checkCanceled()
+
             val typeConstraintStub = KotlinPlaceHolderStubImpl<KtTypeConstraint>(typeConstraintListStub, KtStubElementTypes.TYPE_CONSTRAINT)
             KotlinNameReferenceExpressionStubImpl(
                 /* parent = */ typeConstraintStub,

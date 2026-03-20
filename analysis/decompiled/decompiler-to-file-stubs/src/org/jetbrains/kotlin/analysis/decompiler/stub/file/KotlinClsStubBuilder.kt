@@ -1,11 +1,12 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.analysis.decompiler.stub.file
 
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.compiled.ClsStubBuilder
 import com.intellij.psi.stubs.PsiFileStub
@@ -212,12 +213,17 @@ private class AnnotationLoaderForClassFileStubBuilder(
         val propertyConstants = HashMap<MemberSignature, ConstantValue<*>>()
         val annotationParametersDefaultValues = HashMap<MemberSignature, ConstantValue<*>>()
 
+        ProgressManager.checkCanceled()
         kotlinClass.visitMembers(object : KotlinJvmBinaryClass.MemberVisitor {
             override fun visitMethod(name: Name, desc: String): KotlinJvmBinaryClass.MethodAnnotationVisitor {
+                ProgressManager.checkCanceled()
+
                 return AnnotationVisitorForMethod(MemberSignature.fromMethodNameAndDesc(name.asString(), desc))
             }
 
             override fun visitField(name: Name, desc: String, initializer: Any?): KotlinJvmBinaryClass.AnnotationVisitor {
+                ProgressManager.checkCanceled()
+
                 val signature = MemberSignature.fromFieldNameAndDesc(name.asString(), desc)
                 return MemberAnnotationVisitor(signature)
             }
