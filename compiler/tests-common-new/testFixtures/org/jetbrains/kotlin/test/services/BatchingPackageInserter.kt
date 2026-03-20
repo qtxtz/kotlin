@@ -58,8 +58,8 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
     companion object {
         private val lock = Any()
 
-        fun computePackage(testServices: TestServices): String {
-            val (className, methodName, _) = testServices.testInfo
+        fun computePackage(testInfo: KotlinTestInfo): String {
+            val (className, methodName, _) = testInfo
             val classPart = className.substringAfter("$").replace("$", ".")
             return "$classPart.$methodName"
         }
@@ -75,7 +75,7 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
     override fun processModule(module: TestModule, filesContent: MutableMap<TestFile, String>) {
         // At this point we can't get `project` from `compilerConfigurationProvider`, as it will cause infinite recursion.
         val psiFactory = createPsiFactory()
-        val additionalBasePackage = FqName(computePackage(testServices))
+        val additionalBasePackage = FqName(computePackage(testServices.testInfo))
         val ktFiles = filesContent.mapValues { (file, content) -> psiFactory.createFile(file.name, content) }
         ktFiles.values.map { it.packageFqName }.associateWithTo(packageMapping) { packageFqName ->
             additionalBasePackage.child(packageFqName)
@@ -89,7 +89,7 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
 
     override fun revert(file: TestFile, actualContent: String): String {
         var content = actualContent
-        val additionalPackage = computePackage(testServices)
+        val additionalPackage = computePackage(testServices.testInfo)
         content = content.replace("@file:kotlin.native.internal.ReflectionPackageName(.*)\n".toRegex(), "")
         content = content.replace("package $additionalPackage\n", "")
         content = content.replace("$additionalPackage.", "")
