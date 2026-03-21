@@ -2155,6 +2155,11 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         val typeParameter: KaTypeParameterSymbol
     }
 
+    interface TypeParameterAsReifiedDeprecationWarning : KaFirDiagnostic<PsiElement> {
+        override val diagnosticClass get() = TypeParameterAsReifiedDeprecationWarning::class
+        val typeParameter: KaTypeParameterSymbol
+    }
+
     interface TypeParameterAsReifiedArrayError : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = TypeParameterAsReifiedArrayError::class
         val typeParameter: KaTypeParameterSymbol
@@ -2177,6 +2182,12 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
 
     interface TypeIntersectionAsReifiedWarning : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = TypeIntersectionAsReifiedWarning::class
+        val typeParameter: KaTypeParameterSymbol
+        val types: List<KaType>
+    }
+
+    interface TypeIntersectionAsReifiedDeprecationWarning : KaFirDiagnostic<PsiElement> {
+        override val diagnosticClass get() = TypeIntersectionAsReifiedDeprecationWarning::class
         val typeParameter: KaTypeParameterSymbol
         val types: List<KaType>
     }

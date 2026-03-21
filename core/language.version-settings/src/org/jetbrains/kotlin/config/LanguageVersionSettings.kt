@@ -529,6 +529,10 @@ enum class LanguageFeature(
     JsAllowExportingAnnotationClasses(sinceVersion = KOTLIN_2_5, "KT-85599"),
     JsAllowExportingStarProjection(sinceVersion = KOTLIN_2_5, "KT-83462"),
 
+    // 2.6
+
+    ReportReificationProblemsInDnnAndFlexible(sinceVersion = KOTLIN_2_6, enabledInProgressiveMode = true, "KTLC-399"),
+
     // End of 2.* language features --------------------------------------------------
 
     ExpectActualClasses(sinceVersion = null, "KT-62885"),

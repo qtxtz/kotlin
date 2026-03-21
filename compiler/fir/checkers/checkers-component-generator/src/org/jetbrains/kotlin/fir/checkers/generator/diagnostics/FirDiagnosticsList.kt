@@ -1015,6 +1015,9 @@ object DIAGNOSTICS_LIST : DiagnosticList("FirErrors") {
         val TYPE_PARAMETER_AS_REIFIED by error<PsiElement> {
             parameter<FirTypeParameterSymbol>("typeParameter")
         }
+        val TYPE_PARAMETER_AS_REIFIED_DEPRECATION_WARNING by warning<PsiElement> {
+            parameter<FirTypeParameterSymbol>("typeParameter")
+        }
 
         val TYPE_PARAMETER_AS_REIFIED_ARRAY_ERROR by error<PsiElement> {
             parameter<FirTypeParameterSymbol>("typeParameter")
@@ -1025,6 +1028,10 @@ object DIAGNOSTICS_LIST : DiagnosticList("FirErrors") {
         }
         val DEFINITELY_NON_NULLABLE_AS_REIFIED by error<PsiElement>()
         val TYPE_INTERSECTION_AS_REIFIED by deprecationError<PsiElement>(LanguageFeature.ProhibitIntersectionReifiedTypeParameter) {
+            parameter<FirTypeParameterSymbol>("typeParameter")
+            parameter<Collection<ConeKotlinType>>("types")
+        }
+        val TYPE_INTERSECTION_AS_REIFIED_DEPRECATION_WARNING by warning<PsiElement> {
             parameter<FirTypeParameterSymbol>("typeParameter")
             parameter<Collection<ConeKotlinType>>("types")
         }

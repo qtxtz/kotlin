@@ -5813,6 +5813,13 @@ private fun KaDiagnosticConverterBuilder.addConversions129() {
             token,
         )
     }
+    add(FirErrors.TYPE_PARAMETER_AS_REIFIED_DEPRECATION_WARNING) { firDiagnostic ->
+        TypeParameterAsReifiedDeprecationWarningImpl(
+            firSymbolBuilder.classifierBuilder.buildTypeParameterSymbol(firDiagnostic.a),
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
     add(FirErrors.CAPTURED_MEMBER_VAL_INITIALIZATION) { firDiagnostic ->
         CapturedMemberValInitializationImpl(
             firSymbolBuilder.variableBuilder.buildVariableSymbol(firDiagnostic.a),
@@ -6018,6 +6025,16 @@ private fun KaDiagnosticConverterBuilder.addConversions133() {
     add(FirErrors.ANNOTATION_ON_ILLEGAL_MULTI_FIELD_VALUE_CLASS_TYPED_TARGET) { firDiagnostic ->
         AnnotationOnIllegalMultiFieldValueClassTypedTargetImpl(
             firDiagnostic.a,
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
+    add(FirErrors.TYPE_INTERSECTION_AS_REIFIED_DEPRECATION_WARNING) { firDiagnostic ->
+        TypeIntersectionAsReifiedDeprecationWarningImpl(
+            firSymbolBuilder.classifierBuilder.buildTypeParameterSymbol(firDiagnostic.a),
+            firDiagnostic.b.map { coneKotlinType ->
+                firSymbolBuilder.typeBuilder.buildKtType(coneKotlinType)
+            },
             firDiagnostic as KtPsiDiagnostic,
             token,
         )

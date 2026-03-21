@@ -817,6 +817,7 @@ import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_ARGUMENT_ON_
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_CANT_BE_USED_FOR_CONST_VAL
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_INFERENCE_ONLY_INPUT_TYPES_ERROR
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_INTERSECTION_AS_REIFIED
+import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_INTERSECTION_AS_REIFIED_DEPRECATION_WARNING
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_MISMATCH
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETERS_IN_ANONYMOUS_OBJECT
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETERS_IN_ENUM
@@ -824,6 +825,7 @@ import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETERS_I
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETERS_NOT_ALLOWED
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETER_AS_REIFIED
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETER_AS_REIFIED_ARRAY_ERROR
+import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETER_AS_REIFIED_DEPRECATION_WARNING
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETER_IN_CATCH_CLAUSE
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETER_IS_NOT_AN_EXPRESSION
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.TYPE_PARAMETER_ON_LHS_OF_DOT
@@ -2142,7 +2144,13 @@ object FirErrorsDefaultMessages : BaseDiagnosticRendererFactory() {
             "Declaration has an inconsistent return type. Add upper bound ''Any'' for type parameter ''{0}'' or specify return type explicitly.",
             SYMBOL,
         )
-        map.put(TYPE_PARAMETER_AS_REIFIED, "Cannot use ''{0}'' as reified type parameter. Use a class instead.", SYMBOL)
+        val typeParameterAsReifiedMessage = "Cannot use ''{0}'' as reified type parameter. Use a class instead."
+        map.put(TYPE_PARAMETER_AS_REIFIED, typeParameterAsReifiedMessage, SYMBOL)
+        map.put(
+            TYPE_PARAMETER_AS_REIFIED_DEPRECATION_WARNING,
+            typeParameterAsReifiedMessage.toDeprecationWarningMessage(LanguageFeature.ReportReificationProblemsInDnnAndFlexible),
+            SYMBOL
+        )
         map.put(
             TYPE_PARAMETER_AS_REIFIED_ARRAY_ERROR,
             "Cannot use ''{0}'' as reified type parameter, since the array type parameter is not reified.",
@@ -2157,11 +2165,19 @@ object FirErrorsDefaultMessages : BaseDiagnosticRendererFactory() {
             DEFINITELY_NON_NULLABLE_AS_REIFIED,
             "Cannot use definitely-non-nullable type as a reified type argument.",
         )
-        map.put(
-            TYPE_INTERSECTION_AS_REIFIED,
+        val typeIntersectionAsReifiedMessage =
             "Type argument for reified type parameter ''{0}'' was inferred to the intersection of {1}. " +
                     "Reification of an intersection type results in the common supertype being used. " +
-                    "This may lead to subtle issues and an explicit type argument is encouraged.",
+                    "This may lead to subtle issues and an explicit type argument is encouraged."
+        map.put(
+            TYPE_INTERSECTION_AS_REIFIED,
+            typeIntersectionAsReifiedMessage,
+            SYMBOL,
+            RENDER_TYPE.joinToString(prefix = "['", postfix = "']", separator = "' & '"),
+        )
+        map.put(
+            TYPE_INTERSECTION_AS_REIFIED_DEPRECATION_WARNING,
+            typeIntersectionAsReifiedMessage.toDeprecationWarningMessage(LanguageFeature.ReportReificationProblemsInDnnAndFlexible),
             SYMBOL,
             RENDER_TYPE.joinToString(prefix = "['", postfix = "']", separator = "' & '"),
         )

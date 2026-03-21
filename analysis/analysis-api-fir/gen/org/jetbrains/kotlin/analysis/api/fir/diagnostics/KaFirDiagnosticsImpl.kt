@@ -2583,6 +2583,12 @@ internal class TypeParameterAsReifiedImpl(
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.TypeParameterAsReified
 
+internal class TypeParameterAsReifiedDeprecationWarningImpl(
+    override val typeParameter: KaTypeParameterSymbol,
+    firDiagnostic: KtPsiDiagnostic,
+    token: KaLifetimeToken,
+) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.TypeParameterAsReifiedDeprecationWarning
+
 internal class TypeParameterAsReifiedArrayErrorImpl(
     override val typeParameter: KaTypeParameterSymbol,
     firDiagnostic: KtPsiDiagnostic,
@@ -2613,6 +2619,13 @@ internal class TypeIntersectionAsReifiedWarningImpl(
     firDiagnostic: KtPsiDiagnostic,
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.TypeIntersectionAsReifiedWarning
+
+internal class TypeIntersectionAsReifiedDeprecationWarningImpl(
+    override val typeParameter: KaTypeParameterSymbol,
+    override val types: List<KaType>,
+    firDiagnostic: KtPsiDiagnostic,
+    token: KaLifetimeToken,
+) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.TypeIntersectionAsReifiedDeprecationWarning
 
 internal class FinalUpperBoundImpl(
     override val type: KaType,
