@@ -29,6 +29,8 @@ import org.jetbrains.kotlin.name.JvmStandardClassIds
 import org.jetbrains.kotlin.name.Name
 
 object FirJvmExposeBoxedChecker : FirBasicDeclarationChecker(MppCheckerKind.Common) {
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirDeclaration) {

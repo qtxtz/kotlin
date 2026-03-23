@@ -21,6 +21,9 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirValueParameterSymbol
 import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 
 object FirArrayOfNullableNothingTypeChecker : FirResolvedTypeRefChecker(MppCheckerKind.Common) {
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(typeRef: FirResolvedTypeRef) {
         if (LanguageFeature.NullableNothingInReifiedPosition.isDisabled()) return

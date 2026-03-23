@@ -23,6 +23,9 @@ object FirJvmFunctionDelegateMemberNameClashChecker : FirCallableDeclarationChec
     private val functionDelegateName: Name = Name.identifier("functionDelegate")
     private val getFunctionDelegateName: Name = Name.identifier("getFunctionDelegate")
 
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirCallableDeclaration) {
         val containingClassSymbol = declaration.getContainingClassSymbol() as? FirRegularClassSymbol ?: return

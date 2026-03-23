@@ -24,8 +24,10 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.isValidJavaFqName
 
 object FirJvmPackageNameAnnotationsChecker : FirAnnotationChecker(MppCheckerKind.Common) {
-
     private val jvmPackageNameClassId = ClassId.topLevel(FqName("kotlin.jvm.JvmPackageName"))
+
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
 
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(expression: FirAnnotation) {

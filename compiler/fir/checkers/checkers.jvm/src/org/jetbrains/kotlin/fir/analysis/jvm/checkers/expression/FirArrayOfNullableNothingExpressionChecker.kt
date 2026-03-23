@@ -19,6 +19,9 @@ import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.types.*
 
 object FirArrayOfNullableNothingExpressionChecker : FirQualifiedAccessExpressionChecker(MppCheckerKind.Common) {
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(expression: FirQualifiedAccessExpression) {
         if (LanguageFeature.NullableNothingInReifiedPosition.isDisabled()) return

@@ -22,5 +22,5 @@ class Child : Parent() {
     protected inline fun foo() = someString
 }
 
-@JvmName("<123>")
+<!ILLEGAL_JVM_NAME!>@JvmName("<123>")<!>
 fun bar() {}
