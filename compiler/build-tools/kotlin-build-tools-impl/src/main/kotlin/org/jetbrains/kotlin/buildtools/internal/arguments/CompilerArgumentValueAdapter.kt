@@ -301,6 +301,13 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
             listValue.toTypedArray() as V
         }
 
+        JvmCompilerArguments.X_NULLABILITY_ANNOTATIONS -> {
+            if (value == null) return emptyArray<String>() as V
+
+            val listValue = value as List<NullabilityAnnotation>
+            listValue.map { item -> "${item.annotationFqName}:${item.mode.stringValue}" }.toTypedArray() as V
+        }
+
         else -> value as V
     }
 
@@ -432,6 +439,21 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
 
                 val arrayValue = value as Array<String>
                 arrayValue.toList() as T
+            }
+
+            JvmCompilerArguments.X_NULLABILITY_ANNOTATIONS -> {
+                if (value == null) return emptyList<NullabilityAnnotation>() as T
+
+                val arrayValue = value as Array<String>
+                arrayValue.map {
+                    val parts = it.split(":")
+                    require(parts.size == 2) { "Invalid -Xnullability-annotations format: $this" }
+
+                    val nullabilityAnnotationMode =
+                        NullabilityAnnotation.Mode.values().firstOrNull { entry -> entry.stringValue == parts[1] }
+                            ?: throw CompilerArgumentsParseException("Unknown -Xnullability-annotations mode: $it")
+                    NullabilityAnnotation(parts[0].removePrefix("@"), nullabilityAnnotationMode)
+                } as T
             }
 
             else -> value as T

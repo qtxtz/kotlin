@@ -556,20 +556,6 @@ public interface JvmCompilerArguments : CommonCompilerArguments {
         JvmCompilerArgument("X_NO_UNIFIED_NULL_CHECKS", KotlinReleaseVersion(1, 4, 10))
 
     /**
-     * Specify the behavior for specific Java nullability annotations (provided with fully qualified package name).
-     * Modes:
-     * * ignore
-     * * strict
-     * * warn (report a warning)
-     *
-     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
-     */
-    @JvmField
-    @ExperimentalCompilerArgument
-    public val X_NULLABILITY_ANNOTATIONS: JvmCompilerArgument<Array<String>?> =
-        JvmCompilerArgument("X_NULLABILITY_ANNOTATIONS", KotlinReleaseVersion(1, 5, 30))
-
-    /**
      * Output builtins metadata as .kotlin_builtins files
      *
      * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
@@ -873,5 +859,19 @@ public interface JvmCompilerArguments : CommonCompilerArguments {
     @ExperimentalCompilerArgument
     public val X_PROFILE: JvmCompilerArgument<ProfileCompilerCommand?> =
         JvmCompilerArgument("X_PROFILE", KotlinReleaseVersion(1, 4, 20))
+
+    /**
+     * Specify the behavior for specific Java nullability annotations (provided with fully qualified package name).
+     * Modes:
+     * * ignore
+     * * strict
+     * * warn (report a warning)
+     *
+     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
+     */
+    @JvmField
+    @ExperimentalCompilerArgument
+    public val X_NULLABILITY_ANNOTATIONS: JvmCompilerArgument<List<NullabilityAnnotation>> =
+        JvmCompilerArgument("X_NULLABILITY_ANNOTATIONS", KotlinReleaseVersion(1, 5, 30))
   }
 }

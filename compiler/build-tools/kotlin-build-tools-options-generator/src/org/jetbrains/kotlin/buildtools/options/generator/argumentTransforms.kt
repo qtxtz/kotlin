@@ -73,6 +73,7 @@ private val levelsToArgumentTransforms: Map<String, Map<String, ArgumentTransfor
             drop("include-runtime") // we're only considering building into directories for now (not jars)
             drop("Xbuild-file")
             override("Xprofile", CustomCompilerArguments.profileCompilerCommandArgumentFactory)
+            override("Xnullability-annotations", CustomCompilerArguments.nullabilityAnnotationFactory)
         }
         with(removedJvmCompilerArguments) {
             drop("Xuse-javac")

@@ -134,6 +134,17 @@ object CustomCompilerArguments {
         ),
         defaultValue = CodeBlock.of("null"),
     )
+
+    val nullabilityAnnotationFactory = CustomCompilerArgumentFactory(
+        valueType = BtaCompilerArgumentValueType.CustomArgumentValueType(
+            type = listTypeNameOf(ClassName(API_ARGUMENTS_PACKAGE, "NullabilityAnnotation")),
+        ),
+        defaultValue = CodeBlock.of(
+            "%M<%T>()",
+            MemberName(KOTLIN_COLLECTIONS, "emptyList"),
+            ClassName(API_ARGUMENTS_PACKAGE, "NullabilityAnnotation"),
+        ),
+    )
 }
 
 class CustomCompilerArgumentFactory(
