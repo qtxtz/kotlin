@@ -10,16 +10,12 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 
-class FunctionTypeInterfacePackages {
-    companion object {
-        private const val FUNCTION_TYPE_INTERFACE_DIR = "function-type-interface"
+object FunctionTypeInterfacePackages {
+    private const val FUNCTION_TYPE_INTERFACE_DIR = "function-type-interface"
 
-        fun isFunctionTypeInterfacePackageFile(file: IrFile): Boolean {
-            return file.fileEntry.name.contains(FUNCTION_TYPE_INTERFACE_DIR)
-        }
+    fun isFunctionTypeInterfacePackageFile(file: IrFile): Boolean {
+        return file.fileEntry.name.contains(FUNCTION_TYPE_INTERFACE_DIR)
     }
-
-    private val functionTypeInterfacePackageFiles = hashSetOf<IrFile>()
 
     // Function type interfaces are not declared in a standard library, and they are generated on flight during a klib deserialization.
     // The accessor allows finding a package for storing the generated function type interfaces.
@@ -42,7 +38,6 @@ class FunctionTypeInterfacePackages {
             "unexpected package in file ${packageFile.fileEntry.name}; expected $packageFqName, got ${packageFile.packageFqName}"
         }
 
-        functionTypeInterfacePackageFiles += packageFile
         packageFile
     }
 }

@@ -146,7 +146,7 @@ internal class JsIrLinkerLoader(
                 irBuiltIns,
                 symbolTable,
                 typeTranslator,
-                FunctionTypeInterfacePackages().makePackageAccessor(stdlibModule),
+                FunctionTypeInterfacePackages.makePackageAccessor(stdlibModule),
                 true
             )
         }

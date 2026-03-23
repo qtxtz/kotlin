@@ -205,7 +205,7 @@ fun loadIrForSingleModule(
         irBuiltIns = irBuiltIns,
         symbolTable = symbolTable,
         typeTranslator = typeTranslator,
-        getPackageFragment = FunctionTypeInterfacePackages().makePackageAccessor(stdlibFragment),
+        getPackageFragment = FunctionTypeInterfacePackages.makePackageAccessor(stdlibFragment),
         referenceFunctionsWhenKFunctionAreReferenced = true
     )
 
@@ -282,7 +282,7 @@ private fun getIrModuleInfoForKlib(
         irBuiltIns,
         symbolTable,
         typeTranslator,
-        moduleDependencies.stdlib?.let { stdlibModule -> FunctionTypeInterfacePackages().makePackageAccessor(stdlibModule) },
+        moduleDependencies.stdlib?.let { stdlibModule -> FunctionTypeInterfacePackages.makePackageAccessor(stdlibModule) },
         true
     )
 
