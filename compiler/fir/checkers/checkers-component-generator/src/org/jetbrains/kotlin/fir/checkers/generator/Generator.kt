@@ -181,6 +181,29 @@ class Generator(
         }
     }
 
+    private fun generateFilteredComponent() {
+        val filteredComponentName = "Filtered$checkersComponentName"
+        val filename = "${filteredComponentName}.kt"
+        generationPath.resolve(filename).writeToFileUsingSmartPrinterIfFileContentChanged {
+            printPackageAndCopyright()
+            printImports(true, MPP_CHECKER_KIND_FQN, MPP_CHECKER_WITH_KIND_FQN)
+            printGeneratedMessage()
+            println("class $filteredComponentName(")
+            withIndent {
+                println("val delegate: $checkersComponentName,")
+                println("val predicate: ($abstractCheckerName<*>) -> Boolean",)
+            }
+            println(") : $checkersComponentName() {")
+            withIndent {
+                // public overrides
+                for ((alias, _) in configuration.aliases.values) {
+                    println("override ${alias.valDeclaration} = delegate.${alias.fieldName}.filterTo(mutableSetOf(), predicate)")
+                }
+            }
+            println("}")
+        }
+    }
+
     private fun generateDiagnosticComponent() {
         val diagnosticComponentName = "${checkersComponentName}DiagnosticComponent"
         val filename = "$diagnosticComponentName.kt"
@@ -365,6 +388,7 @@ class Generator(
         generateAliases()
         generateAbstractCheckersComponent()
         generateComposedComponent()
+        generateFilteredComponent()
         generateDiagnosticComponent()
     }
 }
