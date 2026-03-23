@@ -397,14 +397,14 @@ internal class BtaImplGenerator(
                     MemberName(KOTLIN_COLLECTIONS, "toTypedArray")
                 )
             }
-            argument.valueType.origin is SystemPathType -> {
+            argument.valueType.origin is SearchPathType -> {
                 add(
                     maybeGetNullabilitySign(argument) + ".%M(%T.pathSeparator)",
                     MemberName(KOTLIN_COLLECTIONS, "joinToString"),
                     ClassName(JAVA_IO, "File")
                 )
             }
-            argument.valueType.origin is LiteralPathType -> {
+            argument.valueType.origin is PathListType -> {
                 add(
                     maybeGetNullabilitySign(argument) + ".%M { it.%M() }" + maybeGetNullabilitySign(argument) + ".%M()",
                     MemberName(KOTLIN_COLLECTIONS, "map"),
@@ -487,7 +487,7 @@ internal class BtaImplGenerator(
                     MemberName(targetPackage, "toListOrEmpty", true)
                 )
             }
-            argument.valueType.origin is SystemPathType -> {
+            argument.valueType.origin is SearchPathType -> {
                 add(
                     maybeGetNullabilitySign(argument) + ".%M(%T.pathSeparator)" + maybeGetNullabilitySign(argument) + ".%M { %M(it) }",
                     MemberName(KOTLIN_TEXT, "split", true),
@@ -496,7 +496,7 @@ internal class BtaImplGenerator(
                     MemberName(KOTLIN_IO_PATH, "Path")
                 )
             }
-            argument.valueType.origin is LiteralPathType -> {
+            argument.valueType.origin is PathListType -> {
                 add(
                     maybeGetNullabilitySign(argument) + ".%M { %M(it) }",
                     MemberName(targetPackage, "mapOrEmpty", true),

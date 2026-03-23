@@ -43,8 +43,8 @@ val PathType.Companion.defaultNull: PathType
 val StringListType.Companion.defaultEmpty: StringListType
     get() = StringListType()
 
-val PathListType.Companion.defaultSystemPath: PathListType
-    get() = SystemPathType()
+val SearchPathType.Companion.defaultNull: SearchPathType
+    get() = SearchPathType()
 
-val PathListType.Companion.defaultLiteralPath: PathListType
-    get() = LiteralPathType()
+val PathListType.Companion.defaultEmpty: PathListType
+    get() = PathListType()

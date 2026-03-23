@@ -6669,7 +6669,7 @@
                                     "removedVersion": null
                                 },
                                 "argumentType": {
-                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.LiteralPathType",
+                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.PathListType",
                                     "defaultValue": {
                                         "current": [],
                                         "valueInVersions": []
@@ -6970,7 +6970,7 @@
                                     "removedVersion": null
                                 },
                                 "argumentType": {
-                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.LiteralPathType",
+                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.PathListType",
                                     "defaultValue": {
                                         "current": [],
                                         "valueInVersions": []
@@ -7326,7 +7326,7 @@
                                     "removedVersion": null
                                 },
                                 "argumentType": {
-                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.SystemPathType",
+                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.SearchPathType",
                                     "defaultValue": {
                                         "current": null,
                                         "valueInVersions": []
@@ -7455,7 +7455,7 @@
                                     "removedVersion": null
                                 },
                                 "argumentType": {
-                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.SystemPathType",
+                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.SearchPathType",
                                     "defaultValue": {
                                         "current": null,
                                         "valueInVersions": []
@@ -8829,7 +8829,7 @@
                                     "removedVersion": null
                                 },
                                 "argumentType": {
-                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.SystemPathType",
+                                    "type": "org.jetbrains.kotlin.arguments.dsl.types.SearchPathType",
                                     "defaultValue": {
                                         "current": null,
                                         "valueInVersions": []

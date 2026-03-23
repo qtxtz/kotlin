@@ -5,8 +5,11 @@
 
 package org.jetbrains.kotlin.arguments.description
 
-import org.jetbrains.kotlin.arguments.dsl.*
 import org.jetbrains.kotlin.arguments.dsl.base.*
+import org.jetbrains.kotlin.arguments.dsl.defaultEmpty
+import org.jetbrains.kotlin.arguments.dsl.defaultFalse
+import org.jetbrains.kotlin.arguments.dsl.defaultNull
+import org.jetbrains.kotlin.arguments.dsl.defaultOne
 import org.jetbrains.kotlin.arguments.dsl.types.*
 import org.jetbrains.kotlin.cli.common.arguments.Enables
 import org.jetbrains.kotlin.config.LanguageFeature
@@ -32,7 +35,7 @@ val actualJvmCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLevelN
         description = "List of directories and JAR/ZIP archives to search for user class files.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "<path>".asReleaseDependent()
-        argumentType = PathListType.defaultSystemPath
+        argumentType = SearchPathType.defaultNull
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_0_0,
@@ -254,7 +257,7 @@ The default value is 1.""".asReleaseDependent()
         description = "Paths to Java 9+ modules.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "<path>".asReleaseDependent()
-        argumentType = PathListType.defaultSystemPath
+        argumentType = SearchPathType.defaultNull
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_1_4,
@@ -421,7 +424,7 @@ This can be used in the event of problems with the new implementation.""".asRele
         description = "Paths to directories with Java source files.".asReleaseDependent()
         valueType = StringArrayType.defaultNull
         valueDescription = "<path>".asReleaseDependent()
-        argumentType = PathListType.defaultLiteralPath
+        argumentType = PathListType.defaultEmpty
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_40,
@@ -578,7 +581,7 @@ problems with parentheses in identifiers on certain platforms.""".asReleaseDepen
         description = "Paths to output directories for friend modules (modules whose internals should be visible).".asReleaseDependent()
         valueType = StringArrayType.defaultNull
         valueDescription = "<path>".asReleaseDependent()
-        argumentType = PathListType.defaultLiteralPath
+        argumentType = PathListType.defaultEmpty
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_2_70,
@@ -706,7 +709,7 @@ The default value is 'indy' if language version is 2.0+, and 'class' otherwise."
         description = "Paths to cross-platform libraries in the .klib format.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "<path>".asReleaseDependent()
-        argumentType = PathListType.defaultSystemPath
+        argumentType = SearchPathType.defaultNull
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_4_0,

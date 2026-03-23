@@ -168,10 +168,9 @@ sealed class EnumType<T : WithStringRepresentation>(
  * A value which accepts [Path] type.
  */
 @Serializable
-class PathType(
-    override val isNullable: ReleaseDependent<Boolean> = ReleaseDependent(true),
-    override val defaultValue: ReleaseDependent<Path?> = ReleaseDependent(null),
-) : KotlinArgumentValueType<Path> {
+class PathType : KotlinArgumentValueType<Path> {
+    override val isNullable: ReleaseDependent<Boolean> = ReleaseDependent(true)
+    override val defaultValue: ReleaseDependent<Path?> = ReleaseDependent(null)
 
     override fun stringRepresentation(value: Path?): String? {
         if (value == null) return null
@@ -292,24 +291,13 @@ class StringListType(
 }
 
 /**
- * A value type that accepts a list of [Path] elements.
+ * A value type that accepts a list of [Path] elements joined with system path separator into a single string.
  *
- * There are two rendering strategies:
- * - [SystemPathType]: paths joined with OS separator into a single string
- * - [LiteralPathType]: paths rendered as individual comma-separated literals
- */
-@Serializable
-sealed class PathListType() : KotlinArgumentValueType<List<Path>>
-
-
-/**
- * A [PathListType] rendered as a single quoted string using the OS path separator.
  * Example: `"/usr/bin:/usr/local/bin"` (Unix) or `"C:\bin;D:\bin"` (Windows)
  */
 @Serializable
-class SystemPathType(
-    override val defaultValue: ReleaseDependent<List<Path>?> = ReleaseDependent(null),
-) : PathListType() {
+class SearchPathType : KotlinArgumentValueType<List<Path>> {
+    override val defaultValue: ReleaseDependent<List<Path>?> = ReleaseDependent(null)
     override val isNullable: ReleaseDependent<Boolean> = ReleaseDependent(true)
 
     override fun stringRepresentation(value: List<Path>?): String? {
@@ -320,13 +308,11 @@ class SystemPathType(
 }
 
 /**
- * A [PathListType] rendered as individually quoted paths separated by commas.
- * Example: `"/usr/bin", "/usr/local/bin"`
+ * A value type that accepts a list of [Path] elements.
  */
 @Serializable
-class LiteralPathType(
-    override val defaultValue: ReleaseDependent<List<Path>?> = ReleaseDependent(emptyList()),
-) : PathListType() {
+class PathListType : KotlinArgumentValueType<List<Path>> {
+    override val defaultValue: ReleaseDependent<List<Path>?> = ReleaseDependent(emptyList())
     override val isNullable: ReleaseDependent<Boolean> = ReleaseDependent(false)
 
     override fun stringRepresentation(value: List<Path>?): String? {
