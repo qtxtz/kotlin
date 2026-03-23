@@ -13,6 +13,10 @@ import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 class FunctionTypeInterfacePackages {
     companion object {
         private const val FUNCTION_TYPE_INTERFACE_DIR = "function-type-interface"
+
+        fun isFunctionTypeInterfacePackageFile(file: IrFile): Boolean {
+            return file.fileEntry.name.contains(FUNCTION_TYPE_INTERFACE_DIR)
+        }
     }
 
     private val functionTypeInterfacePackageFiles = hashSetOf<IrFile>()
@@ -41,6 +45,4 @@ class FunctionTypeInterfacePackages {
         functionTypeInterfacePackageFiles += packageFile
         packageFile
     }
-
-    fun isFunctionTypeInterfacePackageFile(file: IrFile) = file in functionTypeInterfacePackageFiles
 }

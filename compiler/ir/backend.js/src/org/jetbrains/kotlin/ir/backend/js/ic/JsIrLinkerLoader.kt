@@ -48,7 +48,6 @@ import kotlin.collections.*
 internal class LoadedJsIr(
     loadedFragments: Map<KotlinLibraryFile, IrModuleFragment>,
     private val linker: JsIrLinker,
-    private val functionTypeInterfacePackages: FunctionTypeInterfacePackages,
 ) {
     // This property is supposed to be accessed after all symbols have been deserialized.
     // This way the linked would be able to track all cross-module dependencies, and make the proper module sorting.
@@ -85,7 +84,7 @@ internal class LoadedJsIr(
         for (fileDeserializer in deserializers) {
             val irFile = fileDeserializer.file
             val sourceFile = sourceFiles[irFile] ?: notFoundIcError("source file name", lib, irFile)
-            if (functionTypeInterfacePackages.isFunctionTypeInterfacePackageFile(irFile)) {
+            if (FunctionTypeInterfacePackages.isFunctionTypeInterfacePackageFile(irFile)) {
                 providers += FileSignatureProvider.GeneratedFunctionTypeInterface(irFile, sourceFile)
             } else {
                 providers += FileSignatureProvider.DeserializedFromKlib(fileDeserializer, sourceFile)
@@ -142,14 +141,12 @@ internal class JsIrLinkerLoader(
         val irBuiltIns: IrBuiltInsOverDescriptors,
         val linker: JsIrLinker,
     ) {
-        val functionTypeInterfacePackages = FunctionTypeInterfacePackages()
-
         fun loadFunctionInterfacesIntoStdlib(stdlibModule: IrModuleFragment) {
             irBuiltIns.functionFactory = IrDescriptorBasedFunctionFactory(
                 irBuiltIns,
                 symbolTable,
                 typeTranslator,
-                functionTypeInterfacePackages.makePackageAccessor(stdlibModule),
+                FunctionTypeInterfacePackages().makePackageAccessor(stdlibModule),
                 true
             )
         }
@@ -273,7 +270,7 @@ internal class JsIrLinkerLoader(
             }
         }
 
-        val loadedIr = LoadedJsIr(irModules, linkerContext.linker, linkerContext.functionTypeInterfacePackages)
+        val loadedIr = LoadedJsIr(irModules, linkerContext.linker)
 
         // This should be done because referenced declaration from the compiler should be loaded as well
         val mainModuleFragment = loadedIr.orderedFragments[mainLibraryFile] ?: notFoundIcError("main module fragment", mainLibraryFile)
