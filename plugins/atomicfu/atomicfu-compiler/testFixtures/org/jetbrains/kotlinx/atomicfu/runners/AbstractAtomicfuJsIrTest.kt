@@ -5,18 +5,13 @@
 
 package org.jetbrains.kotlinx.atomicfu.runners
 
-import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
-import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
-import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.js.test.runners.AbstractJsTest
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE
 import org.jetbrains.kotlin.test.model.TestModule
-import org.jetbrains.kotlin.test.services.EnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.RuntimeClasspathJsProvider
 import org.jetbrains.kotlin.test.services.TestServices
-import org.jetbrains.kotlinx.atomicfu.compiler.extensions.AtomicfuLoweringExtension
 import java.io.File
 
 private val atomicfuJsCompileDependency = System.getProperty("atomicfuJs.classpath")
@@ -50,15 +45,6 @@ open class AbstractAtomicfuJsWithInlinedFunInKlibTest : AbstractAtomicfuJsTest(
                 )
             }
         }
-    }
-}
-
-private class AtomicfuEnvironmentConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices) {
-    override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
-        module: TestModule,
-        configuration: CompilerConfiguration,
-    ) {
-        IrGenerationExtension.registerExtension(AtomicfuLoweringExtension())
     }
 }
 
