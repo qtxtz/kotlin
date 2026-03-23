@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.buildtools.api.KotlinToolchains
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmPlatformToolchain.Companion.jvm
 import org.jetbrains.kotlin.buildtools.api.jvm.operations.JvmCompilationOperation
 import org.jetbrains.kotlin.buildtools.api.jvm.operations.JvmCompilationOperation.CompilerArgumentsLogLevel
-import org.jetbrains.kotlin.buildtools.internal.DefaultCompilerMessageRenderer
 import org.jetbrains.kotlin.buildtools.tests.compilation.util.btaClassloader
 import org.jetbrains.kotlin.buildtools.tests.defaults.BuildOperationDefaultsTest.Companion.DEFAULT_METRICS_COLLECTOR
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -28,7 +27,7 @@ class JvmCompilationOperationDefaultsTest {
         assertEquals(CompilerArgumentsLogLevel.DEBUG, operation[JvmCompilationOperation.COMPILER_ARGUMENTS_LOG_LEVEL])
         assertEquals(false, operation[JvmCompilationOperation.GENERATE_COMPILER_REF_INDEX])
         // we cannot directly acquire objectInstance as it's coupled with the classloader
-        val defaultCompilerMessageRenderer = btaClassloader.loadClass(DefaultCompilerMessageRenderer::class.java.name).kotlin.objectInstance
+        val defaultCompilerMessageRenderer = btaClassloader.loadClass(DefaultCompilerMessageRendererClassName).kotlin.objectInstance
         assertEquals(defaultCompilerMessageRenderer, operation[JvmCompilationOperation.COMPILER_MESSAGE_RENDERER])
     }
 }

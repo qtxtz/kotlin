@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.buildtools.api.BuildOperation
 import org.jetbrains.kotlin.buildtools.api.KotlinToolchains
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmPlatformToolchain.Companion.jvm
 import org.jetbrains.kotlin.buildtools.api.jvm.operations.DiscoverScriptExtensionsOperation
-import org.jetbrains.kotlin.buildtools.internal.DefaultCompilerMessageRenderer
 import org.jetbrains.kotlin.buildtools.tests.compilation.util.btaClassloader
 import org.jetbrains.kotlin.buildtools.tests.defaults.BuildOperationDefaultsTest.Companion.DEFAULT_METRICS_COLLECTOR
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,7 +21,7 @@ class DiscoverScriptExtensionsOperationDefaultsTest {
         val operation = kotlinToolchains.jvm.discoverScriptExtensionsOperationBuilder(emptyList()).build()
         assertEquals(DEFAULT_METRICS_COLLECTOR, operation[BuildOperation.METRICS_COLLECTOR])
         // we cannot directly acquire objectInstance as it's coupled with the classloader
-        val defaultCompilerMessageRenderer = btaClassloader.loadClass(DefaultCompilerMessageRenderer::class.java.name).kotlin.objectInstance
+        val defaultCompilerMessageRenderer = btaClassloader.loadClass(DefaultCompilerMessageRendererClassName).kotlin.objectInstance
         assertEquals(defaultCompilerMessageRenderer, operation[DiscoverScriptExtensionsOperation.COMPILER_MESSAGE_RENDERER])
     }
 }

@@ -261,11 +261,6 @@ testing {
         }
 
         named<JvmTestSuite>("testDefaultOptions") testSuite@{
-            kotlin.target.compilations.named(this@testSuite.name).configure {
-                compileTaskProvider.configure compileTask@{
-                    (this@compileTask as BaseKotlinCompile).friendPaths.from(buildToolsApiImplResolvable.get())
-                }
-            }
             dependencies {
                 implementation(commonDependency("org.jetbrains.kotlin:kotlin-reflect"))
                 implementation(project(":daemon-common"))
