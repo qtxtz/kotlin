@@ -334,21 +334,21 @@ class SwiftPMImportXcodeIntegrationIT : KGPBaseTest() {
                     .replace(Regex("\\s+"), " ")
 
                 assertContains(
-                    manifestContent, ".product( name: \"AWSS3\", package: \"aws-sdk-ios-spm\", condition: .when(platforms: [.iOS]), ),",
+                    manifestContent, ".product( name: \"AWSS3\", package: \"aws-sdk-ios-spm\", condition: .when(platforms: [.iOS]) ),",
                     message = "AWSS3 product should have iOS platform condition"
                 )
                 assertContains(
                     manifestContent,
-                    ".product( name: \"AWSEC2\", package: \"aws-sdk-ios-spm\", condition: .when(platforms: [.macOS, .tvOS]), ),",
+                    ".product( name: \"AWSEC2\", package: \"aws-sdk-ios-spm\", condition: .when(platforms: [.macOS, .tvOS]) ),",
                     message = "AWSEC2 product should have macOS and tvOS platform conditions"
                 )
                 assertContains(
                     manifestContent,
-                    ".product( name: \"AWSMobileClient\", package: \"aws-sdk-ios-spm\", condition: .when(platforms: [.watchOS]), ),",
+                    ".product( name: \"AWSMobileClient\", package: \"aws-sdk-ios-spm\", condition: .when(platforms: [.watchOS]) ),",
                     message = "AWSMobileClient product should have watchOS platform condition"
                 )
                 assertContains(
-                    manifestContent, ".product( name: \"AWSCore\", package: \"aws-sdk-ios-spm\", )",
+                    manifestContent, ".product( name: \"AWSCore\", package: \"aws-sdk-ios-spm\" )",
                     message = "AWSCore product should have no platform condition"
                 )
             }

@@ -766,7 +766,7 @@ public open expect fun initWithAuthorizationEndpoint(authorizationEndpoint: plat
                   ],
                   dependencies: [
                     .package(
-                      path: "../../../localSwiftPackage",
+                      path: "../../../localSwiftPackage"
                     )
                   ],
                   targets: [
@@ -775,7 +775,7 @@ public open expect fun initWithAuthorizationEndpoint(authorizationEndpoint: plat
                       dependencies: [
                         .product(
                           name: "LocalSwiftPackage",
-                          package: "localSwiftPackage",
+                          package: "localSwiftPackage"
                         )
                       ]
                     )
@@ -1068,7 +1068,7 @@ public open expect fun initWithAuthorizationEndpoint(authorizationEndpoint: plat
                               ],
                               dependencies: [
                                 .package(
-                                  path: "../../../../producer/localSwiftPackage",
+                                  path: "../../../../producer/localSwiftPackage"
                                 )
                               ],
                               targets: [
@@ -1077,7 +1077,7 @@ public open expect fun initWithAuthorizationEndpoint(authorizationEndpoint: plat
                                   dependencies: [
                                     .product(
                                       name: "LocalSwiftPackage",
-                                      package: "localSwiftPackage",
+                                      package: "localSwiftPackage"
                                     )
                                   ]
                                 )

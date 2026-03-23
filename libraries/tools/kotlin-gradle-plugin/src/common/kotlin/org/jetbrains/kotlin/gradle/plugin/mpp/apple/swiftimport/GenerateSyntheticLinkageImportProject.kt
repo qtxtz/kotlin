@@ -170,49 +170,51 @@ internal abstract class GenerateSyntheticLinkageImportProject : DefaultTask() {
         val repoDependencies = (directlyImportedSwiftPMDependencies.map { importedPackage ->
             buildString {
                 appendLine(".package(")
+                val dependencyArguments = mutableListOf<String>()
                 when (importedPackage) {
                     is SwiftPMDependency.Remote -> {
-                        when (val repository = importedPackage.repository) {
-                            is SwiftPMDependency.Remote.Repository.Id -> {
-                                appendLine("  id: \"${repository.value}\",")
-                            }
-                            is SwiftPMDependency.Remote.Repository.Url -> {
-                                appendLine("  url: \"${repository.value}\",")
-                            }
+                        dependencyArguments += when (val repository = importedPackage.repository) {
+                            is SwiftPMDependency.Remote.Repository.Id -> "  id: \"${repository.value}\""
+                            is SwiftPMDependency.Remote.Repository.Url -> "  url: \"${repository.value}\""
                         }
-                        when (val version = importedPackage.version) {
-                            is SwiftPMDependency.Remote.Version.Exact -> appendLine("  exact: \"${version.value}\",")
-                            is SwiftPMDependency.Remote.Version.From -> appendLine("  from: \"${version.value}\",")
-                            is SwiftPMDependency.Remote.Version.Range -> appendLine("  \"${version.from}\"...\"${version.through}\",")
-                            is SwiftPMDependency.Remote.Version.Branch -> appendLine("  branch: \"${version.value}\",")
-                            is SwiftPMDependency.Remote.Version.Revision -> appendLine("  revision: \"${version.value}\",")
+                        dependencyArguments += when (val version = importedPackage.version) {
+                            is SwiftPMDependency.Remote.Version.Exact -> "  exact: \"${version.value}\""
+                            is SwiftPMDependency.Remote.Version.From -> "  from: \"${version.value}\""
+                            is SwiftPMDependency.Remote.Version.Range -> "  \"${version.from}\"...\"${version.through}\""
+                            is SwiftPMDependency.Remote.Version.Branch -> "  branch: \"${version.value}\""
+                            is SwiftPMDependency.Remote.Version.Revision -> "  revision: \"${version.value}\""
                         }
                     }
                     is SwiftPMDependency.Local -> {
                         val absolutePath = importedPackage.absolutePath
                         val relativePath = absolutePath.normalizedAbsoluteFile().relativeTo(packageRoot)
-                        appendLine("  path: \"${relativePath.path}\",")
+                        dependencyArguments += "  path: \"${relativePath.path}\""
                     }
                 }
                 if (importedPackage.traits.isNotEmpty()) {
                     val traitsString = importedPackage.traits.joinToString(", ") { "\"${it}\"" }
-                    appendLine("  traits: [${traitsString}],")
+                    dependencyArguments += "  traits: [${traitsString}]"
                 }
+                appendLine(dependencyArguments.joinToString(",\n"))
                 append(")")
             }
         } + transitiveSyntheticPackages.map {
             ".package(path: \"${SUBPACKAGES}/${it.identifier}\")"
         })
-        val targetDependencies = (directlyImportedSwiftPMDependencies.flatMap { dep -> dep.products.map { it to dep.packageName } }.map {
+        val targetDependencies = (directlyImportedSwiftPMDependencies.flatMap { dependency ->
+            dependency.products.map { product -> product to dependency.packageName }
+        }.map { dependency ->
             buildString {
                 appendLine(".product(")
-                appendLine("  name: \"${it.first.name}\",")
-                appendLine("  package: \"${it.second}\",")
-                val platformConstraints = it.first.platformConstraints
+                val dependencyArguments = mutableListOf<String>()
+                dependencyArguments += "  name: \"${dependency.first.name}\""
+                dependencyArguments += "  package: \"${dependency.second}\""
+                val platformConstraints = dependency.first.platformConstraints
                 if (platformConstraints != null) {
-                    val platformsString = platformConstraints.joinToString(", ") { ".${it.swiftEnumName}" }
-                    appendLine("  condition: .when(platforms: [${platformsString}]),")
+                    val platformsString = platformConstraints.joinToString(", ") { platform -> ".${platform.swiftEnumName}" }
+                    dependencyArguments += "  condition: .when(platforms: [${platformsString}])"
                 }
+                appendLine(dependencyArguments.joinToString(",\n"))
                 append(")")
             }
         } + transitiveSyntheticPackages.map {
