@@ -2,24 +2,8 @@
 
 package org.jetbrains.kotlin.buildtools.internal.arguments
 
-import org.jetbrains.kotlin.buildtools.api.arguments.ExperimentalCompilerArgument
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.AbiStabilityMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.AssertionsMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.CompatqualAnnotationsMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.ExplicitApiMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.HeaderMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.JdkRelease
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.JspecifyAnnotationsMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.KotlinVersion
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.LambdasMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.ReturnValueCheckerMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.SamConversionsMode
-import org.jetbrains.kotlin.buildtools.api.arguments.enums.StringConcatMode
-import org.jetbrains.kotlin.buildtools.api.arguments.types.ProfileCompilerCommand
 import org.jetbrains.kotlin.cli.common.arguments.CommonToolArguments
-import org.jetbrains.kotlin.konan.file.File
 import java.nio.file.Path
-import kotlin.io.path.Path
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.declaredMemberProperties
@@ -46,18 +30,6 @@ internal fun <T> CommonToolArguments.getUsingReflection(propertyName: String): T
 }
 
 internal fun Path.absolutePathStringOrThrow(): String = toFile().absolutePath
-
-@OptIn(ExperimentalCompilerArgument::class)
-internal fun ProfileCompilerCommand.toArgumentString(): String =
-    "${profilerPath.absolutePathStringOrThrow()}${File.pathSeparator}$command${File.pathSeparator}${outputDir.absolutePathStringOrThrow()}"
-
-@OptIn(ExperimentalCompilerArgument::class)
-internal fun String.toXprofile(): ProfileCompilerCommand {
-    val parts = this.split(File.pathSeparator)
-    require(parts.size == 3) { "Invalid async profiler settings format: $this" }
-
-    return ProfileCompilerCommand(Path(parts[0]), parts[1], Path(parts[2]))
-}
 
 internal fun <T> Array<out T>?.toListOrEmpty(): List<T> = this?.toList() ?: emptyList()
 

@@ -755,7 +755,6 @@ The default value is 'indy' if language version is 2.0+, and 'class' otherwise."
         )
     }
 
-    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "Xprofile"
         compilerName = "profileCompilerCommand"
@@ -781,7 +780,6 @@ The default value is 'indy' if language version is 2.0+, and 'class' otherwise."
             )
         valueType = StringType.defaultNull
         valueDescription = "<profilerPath:command:outputDir>".asReleaseDependent()
-        argumentType = ProfileCompilerCommandType
         affectsCompilationOutcome = false
 
         lifecycle(

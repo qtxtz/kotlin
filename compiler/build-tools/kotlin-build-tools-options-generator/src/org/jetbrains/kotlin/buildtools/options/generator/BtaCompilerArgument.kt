@@ -127,6 +127,13 @@ object CustomCompilerArguments {
             ClassName(API_ARGUMENTS_PACKAGE, "CompilerPlugin")
         ),
     )
+
+    val profileCompilerCommandArgumentFactory = CustomCompilerArgumentFactory(
+        valueType = BtaCompilerArgumentValueType.CustomArgumentValueType(
+            type = ClassName(API_ARGUMENTS_PACKAGE, "ProfileCompilerCommand").copy(nullable = true),
+        ),
+        defaultValue = CodeBlock.of("null"),
+    )
 }
 
 class CustomCompilerArgumentFactory(

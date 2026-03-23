@@ -179,22 +179,6 @@ class PathType : KotlinArgumentValueType<Path> {
 }
 
 /**
- * A value which accepts [ProfileCompilerCommand] type.
- */
-@Serializable
-object ProfileCompilerCommandType : KotlinArgumentValueType<ProfileCompilerCommand> {
-    override val isNullable: ReleaseDependent<Boolean> = ReleaseDependent(true)
-    override val defaultValue: ReleaseDependent<ProfileCompilerCommand?> = ReleaseDependent(null)
-
-    override fun stringRepresentation(value: ProfileCompilerCommand?): String? {
-        if (value == null) return null
-        return with(value) {
-            $$"\"$${profilerPath.absolutePathStringOrThrow()}${File.pathSeparator}$$command${File.pathSeparator}$${outputDir.absolutePathStringOrThrow()}\""
-        }
-    }
-}
-
-/**
  * A value which accepts [JvmDefaultMode] type.
  */
 @Serializable
