@@ -10,7 +10,6 @@ import com.squareup.kotlinpoet.TypeName
 import org.jetbrains.kotlin.arguments.description.CompilerArgumentsLevelNames
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgumentsLevel
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
-import org.jetbrains.kotlin.arguments.dsl.types.ProfileCompilerCommand
 import org.jetbrains.kotlin.generators.util.GeneratorsFileUtil
 import kotlin.math.max
 import kotlin.reflect.KClass
@@ -21,7 +20,6 @@ internal const val IMPL_ARGUMENTS_PACKAGE = "org.jetbrains.kotlin.buildtools.int
 internal const val API_PACKAGE = "org.jetbrains.kotlin.buildtools.api"
 internal const val API_ARGUMENTS_PACKAGE = "$API_PACKAGE.arguments"
 internal const val API_ENUMS_PACKAGE = "$API_ARGUMENTS_PACKAGE.enums"
-internal const val API_TYPES_PACKAGE = "$API_ARGUMENTS_PACKAGE.types"
 
 internal const val JAVA_IO = "java.io"
 internal const val KOTLIN_IO_PATH = "kotlin.io.path"
@@ -75,15 +73,9 @@ internal fun BtaCompilerArgument<*>.extractName(): String = name.uppercase().rep
     }
 }
 
-internal val customTypeAccessors = mutableSetOf(ProfileCompilerCommand::class)
-
 internal fun KClass<*>.toBtaEnumClassName(): ClassName = ClassName(API_ENUMS_PACKAGE, simpleName!!)
-internal fun KClass<*>.toBtaCustomClassName(): ClassName = ClassName(API_TYPES_PACKAGE, simpleName!!)
-
-internal val KClass<*>?.isCustomType: Boolean get() = this in customTypeAccessors
 
 internal val TypeName.isGeneratedEnum: Boolean get() = (this as? ClassName)?.packageName?.startsWith(API_ENUMS_PACKAGE) ?: false
-internal val TypeName.isCustomType: Boolean get() = (this as? ClassName)?.copy(nullable = false) in customTypeAccessors.map { it.toBtaCustomClassName() }
 
 internal fun createGeneratedFileAppendable(): StringBuilder = StringBuilder(GeneratorsFileUtil.GENERATED_MESSAGE_PREFIX)
     .appendLine("the README.md file").appendLine(GeneratorsFileUtil.GENERATED_MESSAGE_SUFFIX).appendLine()

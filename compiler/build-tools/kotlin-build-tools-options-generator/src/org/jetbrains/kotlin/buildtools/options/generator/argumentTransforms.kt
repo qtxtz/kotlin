@@ -12,11 +12,14 @@ import org.jetbrains.kotlin.arguments.description.removed.removedCommonCompilerA
 import org.jetbrains.kotlin.arguments.description.removed.removedJvmCompilerArguments
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgument
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgumentsLevel
+import org.jetbrains.kotlin.buildtools.options.generator.BtaCompilerArgument.CustomCompilerArgument
+import org.jetbrains.kotlin.buildtools.options.generator.BtaCompilerArgument.SSoTCompilerArgument
 
 sealed interface ArgumentTransform {
     object NoOp : ArgumentTransform
     object Drop : ArgumentTransform
-    class CustomArgument(val argument: BtaCompilerArgument.CustomCompilerArgument) : ArgumentTransform
+    class CustomArgument(val argument: CustomCompilerArgument) : ArgumentTransform
+    class Override(val argument: CustomCompilerArgument) : ArgumentTransform
 //    data class Rename(val to: String) : ArgumentTransform // possible future operations
 }
 
@@ -90,6 +93,12 @@ private fun MutableMap<String, ArgumentTransform>.custom(argument: BtaCompilerAr
 }
 
 context(level: KotlinCompilerArgumentsLevel)
+private fun MutableMap<String, ArgumentTransform>.override(name: String, argumentFactory: CustomCompilerArgumentFactory) {
+    val argument = level.arguments.find { it.name == name } ?: error("Argument $name is not found in level $level")
+    put(name, ArgumentTransform.Override(argumentFactory.create(argument)))
+}
+
+context(level: KotlinCompilerArgumentsLevel)
 private fun KotlinCompilerArgument.transform(): ArgumentTransform =
     levelsToArgumentTransforms[level.name]?.get(name) ?: ArgumentTransform.NoOp
 
@@ -98,24 +107,29 @@ private fun KotlinCompilerArgumentsLevel.generateCustomArguments(): List<BtaComp
     return levelTransforms.values.filterIsInstance<ArgumentTransform.CustomArgument>().map { it.argument }
 }
 
+private fun KotlinCompilerArgumentsLevel.generateOverriddenArguments(): List<BtaCompilerArgument<*>> {
+    val levelTransforms = levelsToArgumentTransforms[name] ?: error("Level $this is not found in levelsToArgumentTransforms")
+    return levelTransforms.values.filterIsInstance<ArgumentTransform.Override>().map { it.argument }
+}
+
 internal fun KotlinCompilerArgumentsLevel.transformApiArguments(): List<BtaCompilerArgument<*>> {
     val transformedArguments = arguments.mapNotNull { argument ->
         when (argument.transform()) {
-            is ArgumentTransform.NoOp -> BtaCompilerArgument.SSoTCompilerArgument(argument)
-            is ArgumentTransform.Drop, is ArgumentTransform.CustomArgument -> null
+            is ArgumentTransform.NoOp -> SSoTCompilerArgument(argument)
+            is ArgumentTransform.Drop, is ArgumentTransform.CustomArgument, is ArgumentTransform.Override -> null
         }
     }
 
-    return transformedArguments + generateCustomArguments()
+    return transformedArguments + generateCustomArguments() + generateOverriddenArguments()
 }
 
 internal fun KotlinCompilerArgumentsLevel.transformImplArguments(): List<BtaCompilerArgument<*>> {
     val transformedArguments = arguments.mapNotNull { argument ->
         when (argument.transform()) {
-            is ArgumentTransform.NoOp, is ArgumentTransform.Drop -> BtaCompilerArgument.SSoTCompilerArgument(argument)
-            is ArgumentTransform.CustomArgument -> null
+            is ArgumentTransform.NoOp, is ArgumentTransform.Drop -> SSoTCompilerArgument(argument)
+            is ArgumentTransform.CustomArgument, is ArgumentTransform.Override -> null
         }
     }
 
-    return transformedArguments + generateCustomArguments()
+    return transformedArguments + generateCustomArguments() + generateOverriddenArguments()
 }

@@ -66,7 +66,25 @@ sealed class BtaCompilerArgument<T : BtaCompilerArgumentValueType>(
         deprecatedSinceVersion = deprecatedSinceVersion,
         removedSinceVersion = removedSinceVersion,
         affectsCompilationOutcome = affectsCompilationOutcome,
-    )
+    ) {
+        constructor(
+            origin: KotlinCompilerArgument,
+            valueType: BtaCompilerArgumentValueType.CustomArgumentValueType,
+            defaultValue: CodeBlock,
+        ) : this(
+            name = origin.name,
+            description = origin.description.current,
+            valueType = valueType,
+            introducedSinceVersion = origin.releaseVersionsMetadata.introducedVersion,
+            deprecatedSinceVersion = origin.releaseVersionsMetadata.deprecatedVersion,
+            removedSinceVersion = origin.releaseVersionsMetadata.removedVersion,
+            defaultValue = defaultValue,
+            applierSimpleName = "apply${
+                origin.calculateName().replaceFirstChar { it.uppercase() }
+            }",
+            affectsCompilationOutcome = origin.affectsCompilationOutcome,
+        )
+    }
 }
 
 /**
@@ -109,4 +127,12 @@ object CustomCompilerArguments {
             ClassName(API_ARGUMENTS_PACKAGE, "CompilerPlugin")
         ),
     )
+}
+
+class CustomCompilerArgumentFactory(
+    private val valueType: BtaCompilerArgumentValueType.CustomArgumentValueType,
+    private val defaultValue: CodeBlock,
+) {
+    fun create(origin: KotlinCompilerArgument): BtaCompilerArgument.CustomCompilerArgument =
+        BtaCompilerArgument.CustomCompilerArgument(origin, valueType, defaultValue)
 }
