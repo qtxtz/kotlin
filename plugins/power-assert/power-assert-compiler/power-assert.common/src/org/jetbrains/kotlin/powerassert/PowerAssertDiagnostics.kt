@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.diagnostics.*
 import org.jetbrains.kotlin.diagnostics.KtDiagnosticRenderers.TO_STRING
 import org.jetbrains.kotlin.diagnostics.rendering.BaseDiagnosticRendererFactory
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.psi.KtAnnotationEntry
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtExpression
 
@@ -18,6 +19,8 @@ object PowerAssertDiagnostics : KtDiagnosticsContainer() {
     // ===== ERRORS ===== //
 
     val POWER_ASSERT_ILLEGAL_EXPLANATION_ACCESS by error0<KtExpression>()
+    val POWER_ASSERT_ILLEGAL_OVERRIDE by error0<KtAnnotationEntry>()
+    val POWER_ASSERT_ILLEGAL_ACTUAL by error0<KtAnnotationEntry>()
 
     // ===== WARNINGS ===== //
 
@@ -39,18 +42,26 @@ object PowerAssertRenderFactory : BaseDiagnosticRendererFactory() {
             message = "'PowerAssert.explanation' can only be accessed from within a function annotated with '@PowerAssert'.",
         )
         map.put(
+            factory = PowerAssertDiagnostics.POWER_ASSERT_ILLEGAL_OVERRIDE,
+            message = "'PowerAssert' annotation is not allowed on an override function without the base function being annotated.",
+        )
+        map.put(
+            factory = PowerAssertDiagnostics.POWER_ASSERT_ILLEGAL_ACTUAL,
+            message = "'PowerAssert' annotation is not allowed on an 'actual' function without the 'expect' function being annotated.",
+        )
+        map.put(
             factory = PowerAssertDiagnostics.POWER_ASSERT_RUNTIME_UNAVAILABLE,
-            message = "Power-Assert runtime library not available.",
+            message = "Could not transform function call because the Power-Assert runtime library is not available.",
         )
         map.put(
             factory = PowerAssertDiagnostics.POWER_ASSERT_FUNCTION_NOT_TRANSFORMED,
-            message = "Called function ''{0}'' was not compiled with the power-assert compiler-plugin.",
+            message = "Called function ''{0}'' was not compiled with the Power-Assert compiler plugin.",
             TO_STRING,
         )
         map.put(
             factory = PowerAssertDiagnostics.POWER_ASSERT_CAPABLE_OVERLOAD_MISSING,
             message = """
-                Unable to find overload of function {0} for power-assert transformation callable as:
+                Unable to find overload of function ''{0}'' for Power-Assert transformation callable as:
                  - {0}({1}String)
                  - {0}({1}() -> String)
                  - {0}({2}String)
@@ -58,10 +69,9 @@ object PowerAssertRenderFactory : BaseDiagnosticRendererFactory() {
             """.trimIndent(),
             TO_STRING, TO_STRING, TO_STRING,
         )
-
         map.put(
             factory = PowerAssertDiagnostics.POWER_ASSERT_CONSTANT,
-            message = "Expression is constant and will not be power-assert transformed",
+            message = "Expression is constant and will not be transformed by Power-Assert.",
         )
     }
 }

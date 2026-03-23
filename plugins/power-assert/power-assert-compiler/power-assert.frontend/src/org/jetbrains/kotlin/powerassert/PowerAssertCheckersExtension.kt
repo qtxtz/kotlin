@@ -7,14 +7,19 @@ package org.jetbrains.kotlin.powerassert
 
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.expression.ExpressionCheckers
+import org.jetbrains.kotlin.fir.analysis.checkers.expression.FirAnnotationChecker
 import org.jetbrains.kotlin.fir.analysis.checkers.expression.FirFunctionCallChecker
 import org.jetbrains.kotlin.fir.analysis.checkers.expression.FirPropertyAccessExpressionChecker
 import org.jetbrains.kotlin.fir.analysis.extensions.FirAdditionalCheckersExtension
+import org.jetbrains.kotlin.powerassert.checkers.PowerAssertAnnotationChecker
 import org.jetbrains.kotlin.powerassert.checkers.PowerAssertExplanationAccessChecker
 import org.jetbrains.kotlin.powerassert.checkers.PowerAssertRuntimeChecker
 
 class PowerAssertCheckersExtension(session: FirSession) : FirAdditionalCheckersExtension(session) {
     override val expressionCheckers: ExpressionCheckers = object : ExpressionCheckers() {
+        override val annotationCheckers: Set<FirAnnotationChecker>
+            get() = setOf(PowerAssertAnnotationChecker)
+
         override val functionCallCheckers: Set<FirFunctionCallChecker>
             get() = setOf(PowerAssertRuntimeChecker)
 

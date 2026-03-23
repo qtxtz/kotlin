@@ -3,13 +3,13 @@
 import kotlin.powerassert.*
 
 interface TypeA {
+    @PowerAssert
     fun describe(value: Any): String?
 }
 
 abstract class TypeB : TypeA {
-    @PowerAssert // TODO should we even support this?
     override fun describe(value: Any): String? {
-        return PowerAssert.explanation?.toDefaultMessage()
+        return "TypeB:\n" + PowerAssert.explanation?.toDefaultMessage()
     }
 
     override fun toString(): String {
@@ -19,7 +19,7 @@ abstract class TypeB : TypeA {
 
 open class TypeC : TypeB() {
     override fun describe(value: Any): String? {
-        return super.describe(value)
+        return "TypeC:\n" + super.describe(value)
     }
 
     override fun toString(): String {
@@ -31,7 +31,13 @@ data object TypeD : TypeC()
 
 data object TypeE : TypeC() {
     override fun describe(value: Any): String? {
-        return TypeC().describe(value)
+        return "TypeE:\n" + TypeC().describe(value)
+    }
+}
+
+data object TypeF : TypeC() {
+    override fun describe(value: Any): String? {
+        return "TypeF:\n" + PowerAssert.explanation?.toDefaultMessage()
     }
 }
 
@@ -41,6 +47,7 @@ fun box(): String = runAllOutput(
     "callTypeC" to ::callTypeC,
     "callTypeD" to ::callTypeD,
     "callTypeE" to ::callTypeE,
+    "callTypeF" to ::callTypeF,
 )
 
 fun callTypeA(): String {
@@ -65,5 +72,10 @@ fun callTypeD(): String {
 
 fun callTypeE(): String {
     val type: TypeE = TypeE
+    return type.describe(1 == 2) ?: "no description"
+}
+
+fun callTypeF(): String {
+    val type: TypeF = TypeF
     return type.describe(1 == 2) ?: "no description"
 }

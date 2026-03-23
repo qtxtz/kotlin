@@ -10,11 +10,9 @@ import org.jetbrains.kotlin.diagnostics.reportOn
 import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.checkers.expression.FirPropertyAccessExpressionChecker
-import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.expressions.FirPropertyAccessExpression
 import org.jetbrains.kotlin.fir.expressions.toResolvedCallableSymbol
 import org.jetbrains.kotlin.powerassert.PowerAssertDiagnostics
-import org.jetbrains.kotlin.powerassert.PowerAssertNames.POWER_ASSERT_CLASS_ID
 import org.jetbrains.kotlin.powerassert.PowerAssertNames.POWER_ASSERT_EXPLANATION_CALLABLE_ID
 
 internal object PowerAssertExplanationAccessChecker : FirPropertyAccessExpressionChecker(MppCheckerKind.Common) {
@@ -24,7 +22,7 @@ internal object PowerAssertExplanationAccessChecker : FirPropertyAccessExpressio
         if (expression.toResolvedCallableSymbol()?.callableId != POWER_ASSERT_EXPLANATION_CALLABLE_ID) return
 
         // One of the containers is annotated with '@PowerAssert'.
-        if (context.containingDeclarations.none { it.hasAnnotation(POWER_ASSERT_CLASS_ID, context.session) }) {
+        if (context.containingDeclarations.none { it.isPowerAssertFunction() }) {
             reporter.reportOn(
                 expression.source,
                 PowerAssertDiagnostics.POWER_ASSERT_ILLEGAL_EXPLANATION_ACCESS,

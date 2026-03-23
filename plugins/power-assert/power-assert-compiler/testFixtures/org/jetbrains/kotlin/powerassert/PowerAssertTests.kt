@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.registerExtension
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.powerassert.PowerAssertConfigurationDirectives.DISABLE_PLUGIN
@@ -107,6 +108,10 @@ class AdditionalSourceFilesProvider(testServices: TestServices) : AdditionalSour
         module: TestModule,
         testModuleStructure: TestModuleStructure
     ): List<TestFile> {
+        // For multiplatform projects, add the files only to common modules with no dependencies.
+        val isMultiplatform = module.languageVersionSettings.supportsFeature(LanguageFeature.MultiPlatformProjects)
+        if (isMultiplatform && module.allDependencies.isNotEmpty()) return emptyList()
+
         return buildList {
             val helpers = "plugins/power-assert/power-assert-compiler/testData/helpers"
             add(ForTestCompileRuntime.transformTestDataPath("$helpers/InfixDispatch.kt").toTestFile())
