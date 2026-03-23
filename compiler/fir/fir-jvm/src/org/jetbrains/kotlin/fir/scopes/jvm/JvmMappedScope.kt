@@ -258,11 +258,11 @@ class JvmMappedScope(
         return declaredMemberScope.getProperties(name).isNotEmpty()
     }
 
-    // Mostly, what this function checks is if the member was serialized to built-ins, but not loaded from JDK.
-    // Currently, we use FirDeclarationOrigin.Library for all deserialized members, including built-in ones.
-    // Another implementation might be `it.origin != FirDeclarationOrigin.Enhancement`, but that shouldn't really matter.
-    private fun isDeclaredInBuiltinClass(it: FirNamedFunctionSymbol) =
-        it.origin == FirDeclarationOrigin.Library
+    // Mostly, what this function checks is if the member was serialized to built-ins but not loaded from JDK.
+    // Currently, in compiler mode we use `FirDeclarationOrigin.Library` for all deserialized members, including built-in ones.
+    // But in AA mode they have `BuiltIns` origin.
+    private fun isDeclaredInBuiltinClass(symbol: FirNamedFunctionSymbol): Boolean =
+        symbol.origin.isBuiltIns || symbol.origin == FirDeclarationOrigin.Library
 
     private fun FirNamedFunctionSymbol.isDeclaredInMappedJavaClass(): Boolean {
         return !fir.isSubstitutionOrIntersectionOverride && firJavaClass.symbol.toLookupTag().isRealOwnerOf(fir.symbol)
