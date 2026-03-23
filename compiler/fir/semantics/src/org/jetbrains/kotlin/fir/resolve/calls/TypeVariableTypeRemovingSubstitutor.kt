@@ -37,6 +37,15 @@ private class TypeVariableTypeRemovingSubstitutor(
         is ConeTypeVariableType if (skippedOuterTypeVariables?.contains(type.typeConstructor) != true) -> {
             convertTypeVariableType(type)
         }
+        is ConeDefinitelyNotNullType -> {
+            val substituted = type.substituteOriginal()
+            // Sometimes we replace Tv with 'uninferred T' and it does make sense with & Any
+            if (substituted is ConeErrorType && substituted.isUninferredParameter &&
+                substituted.diagnostic is ConeCannotInferTypeParameterType
+            ) {
+                ConeDefinitelyNotNullType(substituted)
+            } else null
+        }
         else -> null
     }
 
