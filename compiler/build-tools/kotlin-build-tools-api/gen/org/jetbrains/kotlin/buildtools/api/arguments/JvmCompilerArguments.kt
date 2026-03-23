@@ -362,23 +362,6 @@ public interface JvmCompilerArguments : CommonCompilerArguments {
         JvmCompilerArgument("X_JSPECIFY_ANNOTATIONS", KotlinReleaseVersion(1, 4, 30))
 
     /**
-     * Specify the behavior of 'JSR-305' nullability annotations:
-     * -Xjsr305={ignore/strict/warn}                   global (all non-@UnderMigration annotations)
-     * -Xjsr305=under-migration:{ignore/strict/warn}   all @UnderMigration annotations
-     * -Xjsr305=@<fq.name>:{ignore/strict/warn}        annotation with the given fully qualified class name
-     * Modes:
-     * * ignore
-     * * strict (experimental; treat like other supported nullability annotations)
-     * * warn (report a warning)
-     *
-     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
-     */
-    @JvmField
-    @ExperimentalCompilerArgument
-    public val X_JSR305: JvmCompilerArgument<Array<String>?> =
-        JvmCompilerArgument("X_JSR305", KotlinReleaseVersion(1, 1, 50))
-
-    /**
      * This option is deprecated. Migrate to -jvm-default as follows:
      * -Xjvm-default=disable            -> -jvm-default=disable
      * -Xjvm-default=all-compatibility  -> -jvm-default=enable
@@ -873,5 +856,22 @@ public interface JvmCompilerArguments : CommonCompilerArguments {
     @ExperimentalCompilerArgument
     public val X_NULLABILITY_ANNOTATIONS: JvmCompilerArgument<List<NullabilityAnnotation>> =
         JvmCompilerArgument("X_NULLABILITY_ANNOTATIONS", KotlinReleaseVersion(1, 5, 30))
+
+    /**
+     * Specify the behavior of 'JSR-305' nullability annotations:
+     * -Xjsr305={ignore/strict/warn}                   global (all non-@UnderMigration annotations)
+     * -Xjsr305=under-migration:{ignore/strict/warn}   all @UnderMigration annotations
+     * -Xjsr305=@<fq.name>:{ignore/strict/warn}        annotation with the given fully qualified class name
+     * Modes:
+     * * ignore
+     * * strict (experimental; treat like other supported nullability annotations)
+     * * warn (report a warning)
+     *
+     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
+     */
+    @JvmField
+    @ExperimentalCompilerArgument
+    public val X_JSR305: JvmCompilerArgument<List<Jsr305>> =
+        JvmCompilerArgument("X_JSR305", KotlinReleaseVersion(1, 1, 50))
   }
 }

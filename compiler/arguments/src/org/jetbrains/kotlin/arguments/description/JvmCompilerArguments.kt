@@ -444,6 +444,7 @@ This can be used in the event of problems with the new implementation.""".asRele
         )
     }
 
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "Xjsr305"
         deprecatedName = "Xjsr305-annotations"
@@ -458,6 +459,7 @@ Modes:
         valueType = StringArrayType.defaultNull
         valueDescription =
             "{ignore/strict/warn}|under-migration:{ignore/strict/warn}|@<fq.name>:{ignore/strict/warn}".asReleaseDependent()
+        argumentType = StringListType.defaultEmpty
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_1_50,

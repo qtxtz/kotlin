@@ -109,6 +109,7 @@ import org.jetbrains.kotlin.buildtools.`internal`.arguments.JvmCompilerArguments
 import org.jetbrains.kotlin.buildtools.api.CompilerArgumentsParseException
 import org.jetbrains.kotlin.buildtools.api.KotlinReleaseVersion
 import org.jetbrains.kotlin.buildtools.api.arguments.ExperimentalCompilerArgument
+import org.jetbrains.kotlin.buildtools.api.arguments.Jsr305
 import org.jetbrains.kotlin.buildtools.api.arguments.JvmCompilerArguments
 import org.jetbrains.kotlin.buildtools.api.arguments.NullabilityAnnotation
 import org.jetbrains.kotlin.buildtools.api.arguments.ProfileCompilerCommand
@@ -140,6 +141,7 @@ internal class JvmCompilerArgumentsImpl(
   init {
     optionsMap["X_PROFILE"] = null
     optionsMap["X_NULLABILITY_ANNOTATIONS"] = emptyList<NullabilityAnnotation>()
+    optionsMap["X_JSR305"] = emptyList<NullabilityAnnotation>()
   }
   init {
     applyCompilerArguments(K2JVMCompilerArguments())
@@ -209,7 +211,6 @@ internal class JvmCompilerArgumentsImpl(
     try { if (X_JAVAC_ARGUMENTS in this) { arguments.setUsingReflection("javacArguments", get(X_JAVAC_ARGUMENTS) ?: emptyArray())} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_JAVAC_ARGUMENTS. Current compiler version is: $KC_VERSION, but the argument was removed in 2.4.0""").initCause(e) }
     if (X_JDK_RELEASE in this) { arguments.jdkRelease = get(X_JDK_RELEASE)?.stringValue}
     if (X_JSPECIFY_ANNOTATIONS in this) { arguments.jspecifyAnnotations = get(X_JSPECIFY_ANNOTATIONS)?.stringValue}
-    if (X_JSR305 in this) { arguments.jsr305 = get(X_JSR305) ?: emptyArray()}
     if (X_JVM_DEFAULT in this) { arguments.jvmDefault = get(X_JVM_DEFAULT)}
     if (X_JVM_ENABLE_PREVIEW in this) { arguments.enableJvmPreview = get(X_JVM_ENABLE_PREVIEW)}
     if (X_JVM_EXPOSE_BOXED in this) { arguments.jvmExposeBoxed = get(X_JVM_EXPOSE_BOXED)}
@@ -261,6 +262,7 @@ internal class JvmCompilerArgumentsImpl(
     if (SCRIPT_TEMPLATES in this) { arguments.scriptTemplates = get(SCRIPT_TEMPLATES).toTypedArray()}
     if (X_PROFILE in this) { arguments.applyProfileCompilerCommand(get(X_PROFILE))}
     if (X_NULLABILITY_ANNOTATIONS in this) { arguments.applyNullabilityAnnotations(get(X_NULLABILITY_ANNOTATIONS))}
+    if (X_JSR305 in this) { arguments.applyJsr305(get(X_JSR305))}
     arguments.internalArguments = parseCommandLineArguments<K2JVMCompilerArguments>(internalArguments.toList()).internalArguments
     return arguments
   }
@@ -295,7 +297,6 @@ internal class JvmCompilerArgumentsImpl(
     try { this[X_JAVAC_ARGUMENTS] = arguments.getUsingReflection("javacArguments") } catch (_: NoSuchMethodError) {  }
     try { this[X_JDK_RELEASE] = arguments.jdkRelease?.let { JdkRelease.entries.firstOrNull { entry -> entry.stringValue == it } ?: throw CompilerArgumentsParseException("Unknown -Xjdk-release value: $it") } } catch (_: NoSuchMethodError) {  }
     try { this[X_JSPECIFY_ANNOTATIONS] = arguments.jspecifyAnnotations?.let { JspecifyAnnotationsMode.entries.firstOrNull { entry -> entry.stringValue == it } ?: throw CompilerArgumentsParseException("Unknown -Xjspecify-annotations value: $it") } } catch (_: NoSuchMethodError) {  }
-    try { this[X_JSR305] = arguments.jsr305 } catch (_: NoSuchMethodError) {  }
     try { this[X_JVM_DEFAULT] = arguments.jvmDefault } catch (_: NoSuchMethodError) {  }
     try { this[X_JVM_ENABLE_PREVIEW] = arguments.enableJvmPreview } catch (_: NoSuchMethodError) {  }
     try { this[X_JVM_EXPOSE_BOXED] = arguments.jvmExposeBoxed } catch (_: NoSuchMethodError) {  }
@@ -347,6 +348,7 @@ internal class JvmCompilerArgumentsImpl(
     try { this[SCRIPT_TEMPLATES] = arguments.scriptTemplates.toListOrEmpty() } catch (_: NoSuchMethodError) {  }
     try { this[X_PROFILE] = applyProfileCompilerCommand(this[X_PROFILE], arguments) } catch (_: NoSuchMethodError) {  }
     try { this[X_NULLABILITY_ANNOTATIONS] = applyNullabilityAnnotations(this[X_NULLABILITY_ANNOTATIONS], arguments) } catch (_: NoSuchMethodError) {  }
+    try { this[X_JSR305] = applyJsr305(this[X_JSR305], arguments) } catch (_: NoSuchMethodError) {  }
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
   }
 
@@ -379,7 +381,6 @@ internal class JvmCompilerArgumentsImpl(
     try { if (X_JAVAC_ARGUMENTS in this) { arguments.setUsingReflection("javacArguments", get(X_JAVAC_ARGUMENTS) ?: emptyArray())} } catch (e: NoSuchMethodError) { throw IllegalStateException("""Compiler parameter not recognized: X_JAVAC_ARGUMENTS. Current compiler version is: $KC_VERSION, but the argument was removed in 2.4.0""").initCause(e) }
     if (X_JDK_RELEASE in this) { arguments.jdkRelease = get(X_JDK_RELEASE)?.stringValue}
     if (X_JSPECIFY_ANNOTATIONS in this) { arguments.jspecifyAnnotations = get(X_JSPECIFY_ANNOTATIONS)?.stringValue}
-    if (X_JSR305 in this) { arguments.jsr305 = get(X_JSR305) ?: emptyArray()}
     if (X_JVM_DEFAULT in this) { arguments.jvmDefault = get(X_JVM_DEFAULT)}
     if (X_JVM_ENABLE_PREVIEW in this) { arguments.enableJvmPreview = get(X_JVM_ENABLE_PREVIEW)}
     if (X_JVM_EXPOSE_BOXED in this) { arguments.jvmExposeBoxed = get(X_JVM_EXPOSE_BOXED)}
@@ -430,6 +431,7 @@ internal class JvmCompilerArgumentsImpl(
     if (NO_STDLIB in this) { arguments.noStdlib = get(NO_STDLIB)}
     if (SCRIPT_TEMPLATES in this) { arguments.scriptTemplates = get(SCRIPT_TEMPLATES).toTypedArray()}
     if (X_NULLABILITY_ANNOTATIONS in this) { arguments.applyNullabilityAnnotations(get(X_NULLABILITY_ANNOTATIONS))}
+    if (X_JSR305 in this) { arguments.applyJsr305(get(X_JSR305))}
     return arguments
   }
 
@@ -539,8 +541,6 @@ internal class JvmCompilerArgumentsImpl(
 
     public val X_JSPECIFY_ANNOTATIONS: JvmCompilerArgument<JspecifyAnnotationsMode?> =
         JvmCompilerArgument("X_JSPECIFY_ANNOTATIONS")
-
-    public val X_JSR305: JvmCompilerArgument<Array<String>?> = JvmCompilerArgument("X_JSR305")
 
     public val X_JVM_DEFAULT: JvmCompilerArgument<String?> = JvmCompilerArgument("X_JVM_DEFAULT")
 
@@ -682,5 +682,7 @@ internal class JvmCompilerArgumentsImpl(
 
     public val X_NULLABILITY_ANNOTATIONS: JvmCompilerArgument<List<NullabilityAnnotation>> =
         JvmCompilerArgument("X_NULLABILITY_ANNOTATIONS")
+
+    public val X_JSR305: JvmCompilerArgument<List<Jsr305>> = JvmCompilerArgument("X_JSR305")
   }
 }

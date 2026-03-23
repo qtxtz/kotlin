@@ -391,6 +391,55 @@ public final class org/jetbrains/kotlin/buildtools/api/arguments/CompilerPluginP
 public abstract interface annotation class org/jetbrains/kotlin/buildtools/api/arguments/ExperimentalCompilerArgument : java/lang/annotation/Annotation {
 }
 
+public abstract class org/jetbrains/kotlin/buildtools/api/arguments/Jsr305 {
+	public abstract fun getMode ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+}
+
+public final class org/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Global : org/jetbrains/kotlin/buildtools/api/arguments/Jsr305 {
+	public fun <init> (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;)V
+	public final fun component1 ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public final fun copy (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Global;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Global;Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Global;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMode ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode : java/lang/Enum {
+	public static final field IGNORE Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public static final field STRICT Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public static final field WARN Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public final fun getStringValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public static fun values ()[Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+}
+
+public final class org/jetbrains/kotlin/buildtools/api/arguments/Jsr305$SpecificAnnotation : org/jetbrains/kotlin/buildtools/api/arguments/Jsr305 {
+	public fun <init> (Ljava/lang/String;Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public final fun copy (Ljava/lang/String;Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$SpecificAnnotation;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$SpecificAnnotation;Ljava/lang/String;Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$SpecificAnnotation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnnotationFqName ()Ljava/lang/String;
+	public final fun getFqName ()Ljava/lang/String;
+	public fun getMode ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlin/buildtools/api/arguments/Jsr305$UnderMigration : org/jetbrains/kotlin/buildtools/api/arguments/Jsr305 {
+	public fun <init> (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;)V
+	public final fun component1 ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public final fun copy (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$UnderMigration;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$UnderMigration;Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$UnderMigration;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMode ()Lorg/jetbrains/kotlin/buildtools/api/arguments/Jsr305$Mode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class org/jetbrains/kotlin/buildtools/api/arguments/JvmCompilerArguments : org/jetbrains/kotlin/buildtools/api/arguments/CommonCompilerArguments {
 	public static final field CLASSPATH Lorg/jetbrains/kotlin/buildtools/api/arguments/JvmCompilerArguments$JvmCompilerArgument;
 	public static final field Companion Lorg/jetbrains/kotlin/buildtools/api/arguments/JvmCompilerArguments$Companion;

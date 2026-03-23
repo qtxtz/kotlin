@@ -445,6 +445,30 @@ internal class KotlinWrapperPre2_4_0(
                     } as V
                 }
 
+                JvmCompilerArguments.X_JSR305 -> {
+                    @Suppress("SENSELESS_COMPARISON")
+                    if (delegate[key] == null) return emptyList<Jsr305>() as V
+
+                    val arrayValue = delegate[key] as Array<String>
+                    fun jsr305mode(stringValue: String) = Jsr305.Mode.values().firstOrNull { entry -> entry.stringValue == stringValue }
+                        ?: throw CompilerArgumentsParseException("Unknown -Xjsr305 mode: $stringValue")
+
+                    arrayValue.map {
+                        val parts = it.split(":")
+                        when (parts.size) {
+                            1 -> Jsr305.Global(jsr305mode(parts[0]))
+                            2 -> {
+                                if (parts[0] == "under-migration") {
+                                    Jsr305.UnderMigration(jsr305mode(parts[1]))
+                                } else {
+                                    Jsr305.SpecificAnnotation(parts[0].removePrefix("@"), jsr305mode(parts[1]))
+                                }
+                            }
+                            else -> throw CompilerArgumentsParseException("Invalid -Xjsr30 format: $it")
+                        }
+                    } as V
+                }
+
                 else -> delegate[key]
             }
         }
@@ -590,6 +614,22 @@ internal class KotlinWrapperPre2_4_0(
                     val listValue: List<NullabilityAnnotation>? =
                         (value as? List<*>)?.takeIf { it.all { item -> item is NullabilityAnnotation } } as List<NullabilityAnnotation>?
                     val arrayValue = listValue?.map { item -> "${item.annotationFqName}:${item.mode.stringValue}" }?.toTypedArray()
+                    val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
+
+                    delegate[arrayKey] = arrayValue
+                }
+
+                JvmCompilerArguments.X_JSR305 -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val listValue: List<Jsr305>? =
+                        (value as? List<*>)?.takeIf { it.all { item -> item is Jsr305 } } as List<Jsr305>?
+                    val arrayValue = listValue?.map { item ->
+                        when (item) {
+                            is Jsr305.Global -> item.mode.stringValue
+                            is Jsr305.UnderMigration -> "under-migration:${item.mode.stringValue}"
+                            is Jsr305.SpecificAnnotation -> "${item.annotationFqName}:${item.mode.stringValue}"
+                        }
+                    }?.toTypedArray()
                     val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
 
                     delegate[arrayKey] = arrayValue

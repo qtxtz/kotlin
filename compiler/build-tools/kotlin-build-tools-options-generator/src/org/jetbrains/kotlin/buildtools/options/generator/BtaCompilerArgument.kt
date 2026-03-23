@@ -145,6 +145,17 @@ object CustomCompilerArguments {
             ClassName(API_ARGUMENTS_PACKAGE, "NullabilityAnnotation"),
         ),
     )
+
+    val jsr305Factory = CustomCompilerArgumentFactory(
+        valueType = BtaCompilerArgumentValueType.CustomArgumentValueType(
+            type = listTypeNameOf(ClassName(API_ARGUMENTS_PACKAGE, "Jsr305")),
+        ),
+        defaultValue = CodeBlock.of(
+            "%M<%T>()",
+            MemberName(KOTLIN_COLLECTIONS, "emptyList"),
+            ClassName(API_ARGUMENTS_PACKAGE, "Jsr305"),
+        ),
+    )
 }
 
 class CustomCompilerArgumentFactory(

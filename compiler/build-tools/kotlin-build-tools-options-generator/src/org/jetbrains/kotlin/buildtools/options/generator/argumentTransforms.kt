@@ -74,6 +74,7 @@ private val levelsToArgumentTransforms: Map<String, Map<String, ArgumentTransfor
             drop("Xbuild-file")
             override("Xprofile", CustomCompilerArguments.profileCompilerCommandArgumentFactory)
             override("Xnullability-annotations", CustomCompilerArguments.nullabilityAnnotationFactory)
+            override("Xjsr305", CustomCompilerArguments.jsr305Factory)
         }
         with(removedJvmCompilerArguments) {
             drop("Xuse-javac")

@@ -308,6 +308,19 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
             listValue.map { item -> "${item.annotationFqName}:${item.mode.stringValue}" }.toTypedArray() as V
         }
 
+        JvmCompilerArguments.X_JSR305 -> {
+            if (value == null) return emptyArray<String>() as V
+
+            val listValue = value as List<Jsr305>
+            listValue.map { item ->
+                when (item) {
+                    is Jsr305.Global -> item.mode.stringValue
+                    is Jsr305.UnderMigration -> "under-migration:${item.mode.stringValue}"
+                    is Jsr305.SpecificAnnotation -> "${item.annotationFqName}:${item.mode.stringValue}"
+                }
+            }.toTypedArray() as V
+        }
+
         else -> value as V
     }
 
@@ -453,6 +466,24 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
                         NullabilityAnnotation.Mode.values().firstOrNull { entry -> entry.stringValue == parts[1] }
                             ?: throw CompilerArgumentsParseException("Unknown -Xnullability-annotations mode: $it")
                     NullabilityAnnotation(parts[0].removePrefix("@"), nullabilityAnnotationMode)
+                } as T
+            }
+
+            JvmCompilerArguments.X_JSR305 -> {
+                if (value == null) return emptyList<Jsr305>() as T
+
+                val arrayValue = value as Array<String>
+                fun jsr305mode(stringValue: String) = Jsr305.Mode.values().firstOrNull { entry -> entry.stringValue == stringValue }
+                    ?: throw CompilerArgumentsParseException("Unknown -Xjsr305 mode: $stringValue")
+
+                arrayValue.map {
+                    val parts = it.split(":")
+                    when (parts.size) {
+                        1 -> Jsr305.Global(jsr305mode(parts[0]))
+                        2 if parts[0] == "under-migration" -> Jsr305.UnderMigration(jsr305mode(parts[1]))
+                        2 -> Jsr305.SpecificAnnotation(parts[0].removePrefix("@"), jsr305mode(parts[1]))
+                        else -> throw CompilerArgumentsParseException("Invalid -Xjsr30 format: $it")
+                    }
                 } as T
             }
 
