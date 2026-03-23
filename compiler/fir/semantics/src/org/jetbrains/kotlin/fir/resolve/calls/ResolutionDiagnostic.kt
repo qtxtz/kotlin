@@ -227,3 +227,5 @@ val ResolutionDiagnostic.isSuccess: Boolean get() = applicability.isSuccess
 class InaccessibleOuterClassReceiver(val symbol: FirClassSymbol<*>) : ResolutionDiagnostic(INAPPLICABLE)
 
 object InaccessibleFromClassHeader : ResolutionDiagnostic(INAPPLICABLE)
+
+object UnsupportedCompanionBlockOrExtensionCall : ResolutionDiagnostic(INAPPLICABLE)

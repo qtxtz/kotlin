@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.fir.analysis.diagnostics
 import com.intellij.lang.LighterASTTokenNode
 import com.intellij.psi.TokenType
 import org.jetbrains.kotlin.*
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.diagnostics.*
@@ -324,6 +325,13 @@ private fun ConeInapplicableCandidateError.mapInapplicableCandidateError(
                 qualifiedAccessSource ?: source,
                 "<this>",
                 session,
+            )
+
+            UnsupportedCompanionBlockOrExtensionCall -> FirErrors.UNSUPPORTED_FEATURE.createOn(
+                qualifiedAccessSource ?: source,
+                LanguageFeature.CompanionBlocksAndExtensions to session.languageVersionSettings,
+                session,
+                positioningStrategy = SourceElementPositioningStrategies.REFERENCE_BY_QUALIFIED,
             )
 
             else -> genericDiagnostic.takeIf { candidate.symbol !is FirSyntheticFunctionSymbol }
@@ -1062,8 +1070,9 @@ private fun FirSession.toDiagnosticContext(): DiagnosticBaseContext {
 internal fun KtDiagnosticFactory0.createOn(
     element: KtSourceElement?,
     session: FirSession,
+    positioningStrategy: AbstractSourceElementPositioningStrategy? = null,
 ): KtSimpleDiagnostic? {
-    return on(element.requireNotNull(), positioningStrategy = null, session.toDiagnosticContext())
+    return on(element.requireNotNull(), positioningStrategy, session.toDiagnosticContext())
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
@@ -1071,8 +1080,9 @@ internal fun <A> KtDiagnosticFactory1<A>.createOn(
     element: KtSourceElement?,
     a: A,
     session: FirSession,
+    positioningStrategy: AbstractSourceElementPositioningStrategy? = null,
 ): KtDiagnosticWithParameters1<A>? {
-    return on(element.requireNotNull(), a, positioningStrategy = null, session.toDiagnosticContext())
+    return on(element.requireNotNull(), a, positioningStrategy, session.toDiagnosticContext())
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
@@ -1081,8 +1091,9 @@ private fun <A, B> KtDiagnosticFactory2<A, B>.createOn(
     a: A,
     b: B,
     session: FirSession,
+    positioningStrategy: AbstractSourceElementPositioningStrategy? = null,
 ): KtDiagnosticWithParameters2<A, B>? {
-    return on(element.requireNotNull(), a, b, positioningStrategy = null, session.toDiagnosticContext())
+    return on(element.requireNotNull(), a, b, positioningStrategy, session.toDiagnosticContext())
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
@@ -1092,8 +1103,9 @@ private fun <A, B, C> KtDiagnosticFactory3<A, B, C>.createOn(
     b: B,
     c: C,
     session: FirSession,
+    positioningStrategy: AbstractSourceElementPositioningStrategy? = null,
 ): KtDiagnosticWithParameters3<A, B, C>? {
-    return on(element.requireNotNull(), a, b, c, positioningStrategy = null, session.toDiagnosticContext())
+    return on(element.requireNotNull(), a, b, c, positioningStrategy, session.toDiagnosticContext())
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
@@ -1104,6 +1116,7 @@ private fun <A, B, C, D> KtDiagnosticFactory4<A, B, C, D>.createOn(
     c: C,
     d: D,
     session: FirSession,
+    positioningStrategy: AbstractSourceElementPositioningStrategy? = null,
 ): KtDiagnosticWithParameters4<A, B, C, D>? {
-    return on(element.requireNotNull(), a, b, c, d, positioningStrategy = null, session.toDiagnosticContext())
+    return on(element.requireNotNull(), a, b, c, d, positioningStrategy, session.toDiagnosticContext())
 }

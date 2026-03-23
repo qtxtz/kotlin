@@ -9,17 +9,16 @@ import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.*
-import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
-import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
+import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.builder.buildErrorFunction
 import org.jetbrains.kotlin.fir.declarations.builder.buildErrorProperty
 import org.jetbrains.kotlin.fir.declarations.builder.buildNamedFunctionCopy
-import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
-import org.jetbrains.kotlin.fir.declarations.isDeprecationLevelHidden
+import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.diagnostics.ConeDiagnostic
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.resolve.calls.*
+import org.jetbrains.kotlin.fir.resolve.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.resolve.inference.inferenceLogger
 import org.jetbrains.kotlin.fir.resolve.isIntegerLiteralOrOperatorCall
 import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
@@ -177,7 +176,25 @@ class CandidateFactory private constructor(
             result.addDiagnostic(givenExtensionReceiver.toInaccessibleReceiverDiagnostic())
         }
 
+        if (!context.session.languageVersionSettings.supportsFeature(LanguageFeature.CompanionBlocksAndExtensions) &&
+            result.symbol.requiresCompanionBlockOrExtensionLf()
+        ) {
+            result.addDiagnostic(UnsupportedCompanionBlockOrExtensionCall)
+        }
+
         return result
+    }
+
+    private fun FirBasedSymbol<*>.requiresCompanionBlockOrExtensionLf(): Boolean {
+        if (this !is FirCallableSymbol) return false
+        if (isJavaOrEnhancement) return false
+        if (!isStatic) return false
+        // The only static Kotlin declarations that existed before were enum entries and Enum.entires/values/valueOf
+        if (this is FirEnumEntrySymbol) return false
+        (this.getContainingClassSymbol() as? FirClassSymbol)?.let { containingClassSymbol ->
+            if (this.fir.isGeneratedStaticEnumMember(containingClassSymbol.fir)) return false
+        }
+        return true
     }
 
     @OptIn(FirExtensionApiInternals::class)
