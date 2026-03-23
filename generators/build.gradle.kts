@@ -145,6 +145,12 @@ val generateKeywordStrings by generator(
     inputKind = RuntimeClasspath
 )
 
+val generateDescriptorRendererOptionsCopy by generator(
+    "org.jetbrains.kotlin.generators.frontend.GenerateDescriptorRendererOptionsCopy",
+    testSourceSet,
+    inputKind = RuntimeClasspath
+)
+
 val generateBuiltins by generator(
     "org.jetbrains.kotlin.generators.builtins.generateBuiltIns.GenerateBuiltInsKt",
     builtinsSourceSet,
