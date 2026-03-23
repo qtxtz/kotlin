@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.analysis.api.components.fullyExpandedType
 import org.jetbrains.kotlin.analysis.api.components.isFunctionType
 import org.jetbrains.kotlin.analysis.api.components.isNothingType
 import org.jetbrains.kotlin.analysis.api.components.isPrimitive
+import org.jetbrains.kotlin.analysis.api.components.isSuspendFunctionType
 import org.jetbrains.kotlin.analysis.api.export.utilities.isAllSuperTypesExported
 import org.jetbrains.kotlin.analysis.api.symbols.*
 import org.jetbrains.kotlin.analysis.api.symbols.markers.KaAnnotatedSymbol

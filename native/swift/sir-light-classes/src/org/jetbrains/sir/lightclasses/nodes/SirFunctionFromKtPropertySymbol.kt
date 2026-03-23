@@ -165,5 +165,5 @@ internal class SirFunctionFromKtPropertySymbol(
 
     override var body: SirFunctionBody?
         set(value) {}
-        get() = bridgeProxy?.createSwiftInvocation { "return $it" }?.let(::SirFunctionBody)
+        get() = withSessions { bridgeProxy?.createSwiftInvocation { "return $it" }?.let(::SirFunctionBody) }
 }

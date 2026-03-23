@@ -139,7 +139,11 @@ public interface BridgeFunctionBuilder {
 public interface BridgeFunctionProxy {
     context(sir: SirSession)
     public fun createSirBridges(kotlinCall: BridgeFunctionBuilder.() -> String): List<SirBridge>
+
+    context(session: SirSession)
     public fun createSwiftInvocation(resultTransformer: ((String) -> String)?): List<String>
+
+    context(session: SirSession)
     public fun argumentsForInvocation(): List<String>
 }
 
@@ -158,31 +162,31 @@ private class BridgeFunctionDescriptor(
     val kotlinBridgeName = bridgeDeclarationName(baseBridgeName, parameters, typeNamer)
     val cBridgeName = kotlinBridgeName
 
+    context(session: SirSession)
     val allParameters
         get() = listOfNotNull(selfParameter) + parameters + listOfNotNull(errorParameter.takeIf { !isAsync }) +
                 (asyncParameters?.toList() ?: emptyList())
 
-    val asyncParameters: Triple<BridgedParameter.In, BridgedParameter.In, BridgedParameter.In>? by lazy {
-        isAsync.ifTrue {
-            Triple(
-                BridgedParameter.In(
-                    name = "continuation",
-                    bridge = Bridge.AsContravariantBlock(parameters = listOf(returnType), returnType = Bridge.AsVoid)
-                ),
-                BridgedParameter.In(
-                    name = "exception",
-                    bridge = Bridge.AsContravariantBlock(parameters = listOfNotNull(errorParameter?.bridge), returnType = Bridge.AsVoid)
-                ),
-                BridgedParameter.In(
-                    name = "cancellation",
-                    bridge = Bridge.AsObject(
-                        swiftType = KotlinCoroutineSupportModule.swiftJob.nominalType(),
-                        kotlinType = KotlinType.KotlinObject,
-                        cType = CType.Object,
-                    )
-                ),
-            )
-        }
+    context(session: SirSession)
+    val asyncParameters: Triple<BridgedParameter.In, BridgedParameter.In, BridgedParameter.In>? get() = isAsync.ifTrue {
+        Triple(
+            BridgedParameter.In(
+                name = "continuation",
+                bridge = Bridge.AsContravariantBlock(parameters = listOf(returnType), returnType = Bridge.AsVoid)
+            ),
+            BridgedParameter.In(
+                name = "exception",
+                bridge = Bridge.AsContravariantBlock(parameters = listOfNotNull(errorParameter?.bridge), returnType = Bridge.AsVoid)
+            ),
+            BridgedParameter.In(
+                name = "cancellation",
+                bridge = Bridge.AsObject(
+                    swiftType = KotlinCoroutineSupportModule.swiftJob.nominalType(),
+                    kotlinType = KotlinType.KotlinObject,
+                    cType = CType.Object,
+                )
+            ),
+        )
     }
 
     override val name
@@ -262,6 +266,7 @@ private class BridgeFunctionDescriptor(
         }.distinct()
     }
 
+    context(session: SirSession)
     override fun createSwiftInvocation(resultTransformer: ((String) -> String)?): List<String> = buildList {
         val descriptor = this@BridgeFunctionDescriptor
         val contextParameters = descriptor.contextParameters
@@ -285,6 +290,7 @@ private class BridgeFunctionDescriptor(
         }
     }
 
+    context(session: SirSession)
     override fun argumentsForInvocation(): List<String> = allParameters.map {
         it.name.takeIf { it == "self" } ?: it.name.swiftIdentifier
     }
@@ -308,6 +314,7 @@ private fun bridgeDeclarationName(bridgeName: String, parameterBridges: List<Bri
     return result
 }
 
+context(session: SirSession)
 private fun BridgeFunctionDescriptor.createKotlinBridge(
     typeNamer: SirTypeNamer,
     buildCallSite: BridgeFunctionDescriptor.() -> String,
@@ -319,24 +326,23 @@ private fun BridgeFunctionDescriptor.createKotlinBridge(
         // As we can't return multiple types, we use native pointer instead
         else -> KotlinType.KotlinObject
     }
-    add(
-        "public fun $kotlinBridgeName(${
-            allParameters.filter { it.bridge.typeList.isNotEmpty() }.joinToString {
-                val bridge = it.bridge
-                val identifier = it.name.kotlinIdentifier
-                if (bridge.typeList.size > 1) {
-                    var index = 0
-                    bridge.typeList.joinToString { (kotlinType, _) ->
-                        index++
-                        "${identifier}_$index: ${kotlinType.repr}"
-                    }
-                } else {
-                    val typeRepresentation = bridge.typeList.single().kotlinType.repr
-                    "$identifier: $typeRepresentation"
-                }
+
+    val parameters = allParameters.filter { it.bridge.typeList.isNotEmpty() }.joinToString {
+        val bridge = it.bridge
+        val identifier = it.name.kotlinIdentifier
+        if (bridge.typeList.size > 1) {
+            var index = 0
+            bridge.typeList.joinToString { (kotlinType, _) ->
+                index++
+                "${identifier}_$index: ${kotlinType.repr}"
             }
-        }): ${kotlinReturnType.repr} {"
-    )
+        } else {
+            val typeRepresentation = bridge.typeList.single().kotlinType.repr
+            "$identifier: $typeRepresentation"
+        }
+    }
+
+    add("public fun $kotlinBridgeName($parameters): ${kotlinReturnType.repr} {")
     val indent = "    "
 
     allParameters.forEach {
@@ -388,6 +394,7 @@ private fun BridgeFunctionDescriptor.createKotlinBridge(
     add("}")
 }
 
+context(session: SirSession)
 private fun BridgeFunctionDescriptor.swiftInvocationLineForCBridge(typeNamer: SirTypeNamer): String {
     val parameters = allParameters.joinToString {
         // We fix ugly `self` escaping here. This is the only place we'd otherwise need full support for swift's contextual keywords
@@ -396,6 +403,7 @@ private fun BridgeFunctionDescriptor.swiftInvocationLineForCBridge(typeNamer: Si
     return "$cBridgeName($parameters)"
 }
 
+context(session: SirSession)
 private fun BridgeFunctionDescriptor.swiftLinesForCBridgeCallAndTransformation(typeNamer: SirTypeNamer): List<String> {
     val swiftInvocation = swiftInvocationLineForCBridge(typeNamer)
     if (returnType.typeList.size <= 1) {
@@ -407,6 +415,7 @@ private fun BridgeFunctionDescriptor.swiftLinesForCBridgeCallAndTransformation(t
     }
 }
 
+context(session: SirSession)
 private fun BridgeFunctionDescriptor.swiftAsyncCall(typeNamer: SirTypeNamer): String {
     val (continuation, exception, cancellation) = asyncParameters ?: error("Async function must have a continuation & cancellation")
     val errorParameter = errorParameter ?: error("Async function must have an error parameter")
@@ -435,6 +444,7 @@ private fun BridgeFunctionDescriptor.swiftAsyncCall(typeNamer: SirTypeNamer): St
     """.trimIndent()
 }
 
+context(session: SirSession)
 private fun BridgeFunctionDescriptor.cDeclaration() = buildString {
     val returnTypeBridge = returnType.takeIf { !isAsync } ?: Bridge.AsVoid
     val returnType = when {

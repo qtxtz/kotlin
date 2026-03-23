@@ -167,7 +167,7 @@ internal abstract class SirAbstractGetter(
 
     override var body: SirFunctionBody?
         set(value) {}
-        get() = bridgeProxy?.createSwiftInvocation { "return $it" }?.let(::SirFunctionBody)
+        get() = with(sirSession) { bridgeProxy?.createSwiftInvocation { "return $it" }?.let(::SirFunctionBody) }
 
     private inline fun <R> lazyWithSessions(crossinline block: context(KaSession, SirSession) () -> R): Lazy<R> = lazy {
         sirSession.withSessions(block)
@@ -235,7 +235,7 @@ internal abstract class SirAbstractSetter(
 
     override var body: SirFunctionBody?
         set(value) {}
-        get() = bridgeProxy?.createSwiftInvocation { "return $it" }?.let(::SirFunctionBody)
+        get() = with(sirSession) { bridgeProxy?.createSwiftInvocation { "return $it" }?.let(::SirFunctionBody) }
 
     private inline fun <R> lazyWithSessions(crossinline block: context(KaSession, SirSession) () -> R): Lazy<R> = lazy {
         sirSession.withSessions(block)

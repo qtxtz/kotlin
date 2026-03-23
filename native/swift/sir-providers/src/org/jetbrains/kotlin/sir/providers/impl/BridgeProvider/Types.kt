@@ -42,6 +42,7 @@ internal sealed class CType {
     data object id : Predefined("id")
     data object NSString : Predefined("NSString *")
     data object NSNumber : Predefined("NSNumber *")
+    data object NSError : Predefined("NSError *")
     data object NSObject : Predefined("id<NSObject>") // NSProxy and NSObject conforms to this
 
     sealed class Generic(base: String, vararg args: CType) : Predefined(

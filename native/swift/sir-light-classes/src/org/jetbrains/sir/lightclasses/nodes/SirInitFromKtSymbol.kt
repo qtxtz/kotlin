@@ -181,11 +181,11 @@ internal class SirRegularInitFromKtSymbol(
 
     override var body: SirFunctionBody?
         set(_) {}
-        get() {
-            val initDescriptor = bridgeInitProxy ?: return null
-            val allocDescriptor = bridgeAllocProxy ?: return null
+        get() = withSessions {
+            val initDescriptor = bridgeInitProxy ?: return@withSessions null
+            val allocDescriptor = bridgeAllocProxy ?: return@withSessions null
 
-            return SirFunctionBody(buildList {
+            return@withSessions SirFunctionBody(buildList {
                 (parent as? SirScopeDefiningDeclaration)?.let {
                     add("if Self.self != ${it.swiftFqName}.self { fatalError(\"Inheritance from exported Kotlin classes is not supported yet: \\(String(reflecting: Self.self)) inherits from ${it.swiftFqName} \") }")
                 }

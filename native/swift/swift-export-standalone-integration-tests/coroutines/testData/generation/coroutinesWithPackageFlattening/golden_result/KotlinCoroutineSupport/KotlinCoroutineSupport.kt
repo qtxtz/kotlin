@@ -33,12 +33,17 @@ fun Job.alsoCancel(another: Job) {
  *  Returns Boolean indicating if the external work was already cancelled before the call.
  *
  */
-@OptIn(InternalCoroutinesApi::class)
+@OptIn(InternalCoroutinesApi::class, kotlin.concurrent.atomics.ExperimentalAtomicApi::class)
 class SwiftJob private constructor(
     val backingJob: Job,
-    val cancellationCallback: (Boolean) -> Boolean,
+    private val _cancellationCallback: AtomicReference<(Boolean) -> Boolean>,
 ) : Job by backingJob {
-    constructor(cancellationCallback: (Boolean) -> Boolean = { it }) : this(backingJob = Job(), cancellationCallback = cancellationCallback)
+    var cancellationCallback: (Boolean) -> Boolean
+        get() = _cancellationCallback.load()
+        set(value) { _cancellationCallback.store(value) }
+
+    constructor(cancellationCallback: (Boolean) -> Boolean = { it }) : this(backingJob = Job(), _cancellationCallback = AtomicReference(cancellationCallback))
+    constructor(parentJob: Job) : this(backingJob = Job(parentJob), _cancellationCallback = AtomicReference({ it }))
 
     init {
         // It is necessary to forward cancellation as soon as it is triggered to make it visible before the job completes,
@@ -75,6 +80,13 @@ public fun __root___SwiftJob_init_initialize(__kt: kotlin.native.internal.Native
 public fun __root___SwiftJob_cancelExternally(self: kotlin.native.internal.NativePtr): Unit {
     val instance = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as SwiftJob
     instance.cancelExternally()
+}
+
+@ExportedBridge("__root___SwiftJob_setCallback")
+public fun __root___SwiftJob_setCallback(self: kotlin.native.internal.NativePtr, _block: kotlin.native.internal.NativePtr): Unit {
+    val instance = kotlin.native.internal.ref.dereferenceExternalRCRef(self) as SwiftJob
+    val block = convertBlockPtrToKotlinFunction<(Boolean)->Boolean>(_block)
+    instance.cancellationCallback = block
 }
 
 /**

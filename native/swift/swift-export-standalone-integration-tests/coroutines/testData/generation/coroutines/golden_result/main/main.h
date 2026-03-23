@@ -7,6 +7,8 @@ void * __root___Foo_init_allocate();
 
 _Bool __root___Foo_init_initialize__TypesOfArguments__Swift_UnsafeMutableRawPointer__(void * __kt);
 
+_Bool __root___accept_suspend_function_type__TypesOfArguments__U282920asyncU20throwsU202D_U20Swift_Int32__(void (^block)(void *, void *, void *));
+
 _Bool __root___alwaysFails(_Bool (^continuation)(_Bool), _Bool (^exception)(void * _Nullable ), void * cancellation);
 
 void * __root___demo();
@@ -34,6 +36,10 @@ int32_t main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Sw
 _Bool main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Double__(void * pointerToBlock, double _1, _Bool (^continuation)(int32_t), _Bool (^exception)(void * _Nullable ), void * cancellation);
 
 _Bool main_internal_functional_type_caller_SwiftU2EInt64__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Float__(void * pointerToBlock, float _1, _Bool (^continuation)(int64_t), _Bool (^exception)(void * _Nullable ), void * cancellation);
+
+_Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(void * pointerToBlock, int32_t _1);
+
+_Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(void * pointerToBlock, NSError * _1);
 
 _Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(void * pointerToBlock, _Bool (^continuation)(_Bool), _Bool (^exception)(void * _Nullable ), void * cancellation);
 

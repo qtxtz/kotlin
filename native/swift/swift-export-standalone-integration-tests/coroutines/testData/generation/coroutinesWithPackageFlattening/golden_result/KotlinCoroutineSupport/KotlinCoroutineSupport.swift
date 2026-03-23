@@ -8,6 +8,7 @@ import KotlinRuntimeSupport
 /// This type is a manually bridged counterpart to SwiftJob type in Kotlin
 /// It wraps `UnsafeCurrentTask` can communicates cancellation between it and kotlin world.
 /// The value of this type should never outlive the task it wraps.
+@objc(KotlinTask)
 package final class KotlinTask: KotlinRuntime.KotlinBase {
     public convenience init(_ currentTask: UnsafeCurrentTask) {
         self.init { shouldCancel in
@@ -36,6 +37,10 @@ package final class KotlinTask: KotlinRuntime.KotlinBase {
 
     public func cancelExternally() -> Swift.Void {
         return __root___SwiftJob_cancelExternally(self.__externalRCRef())
+    }
+
+    public func setCallback(_ callback: @escaping @convention(block) (Bool) -> Bool) {
+        __root___SwiftJob_setCallback(self.__externalRCRef(), callback)
     }
 }
 

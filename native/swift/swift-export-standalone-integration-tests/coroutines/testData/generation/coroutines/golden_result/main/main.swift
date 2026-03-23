@@ -25,6 +25,41 @@ public var flowFoo: any KotlinCoroutineSupport.KotlinTypedFlow<main.Foo> {
         return KotlinCoroutineSupport._KotlinTypedFlowImpl<main.Foo>(KotlinRuntime.KotlinBase.__createProtocolWrapper(externalRCRef: __root___flowFoo_get()) as! any ExportedKotlinPackages.kotlinx.coroutines.flow.Flow)
     }
 }
+public func accept_suspend_function_type(
+    block: @escaping () async throws -> Swift.Int32
+) -> Swift.Void {
+    return { __root___accept_suspend_function_type__TypesOfArguments__U282920asyncU20throwsU202D_U20Swift_Int32__({
+        let originalBlock = block
+        return { __continuationPtr, __exceptionPtr, __cancellationPtr in
+            let __continuation: (Swift.Int32) -> Swift.Void = {
+        let pointerToBlock = __continuationPtr
+        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(pointerToBlock, _1); return () }() }
+    }()
+            let __exception: (Swift.Error) -> Swift.Void = {
+        let pointerToBlock = __exceptionPtr
+        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock, _1); return () }() }
+    }()
+            let __cancellation: KotlinCoroutineSupport.KotlinTask = KotlinCoroutineSupport.KotlinTask.__createClassWrapper(externalRCRef: __cancellationPtr)
+
+            let task = Task {
+                await withTaskCancellationHandler {
+                    do {
+                        let result = try await originalBlock()
+                        __continuation(result)
+                    } catch {
+                        __exception(error)
+                    }
+                } onCancel: {
+                    __cancellation.cancelExternally()
+                }
+            }
+            __cancellation.setCallback { shouldCancel in
+                defer { if shouldCancel { task.cancel() } }
+                return task.isCancelled
+            }
+        }
+    }()); return () }()
+}
 public func alwaysFails() async throws -> Swift.Never {
     try await {
         try Task.checkCancellation()
