@@ -2,77 +2,61 @@
  * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
+package org.jetbrains.kotlin.psi
 
-package org.jetbrains.kotlin.psi;
-
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.KtStubBasedElementTypes;
-import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.name.NameUtils;
-import org.jetbrains.kotlin.psi.stubs.KotlinScriptStub;
-
-import java.util.List;
+import com.intellij.lang.ASTNode
+import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.KtStubBasedElementTypes
+import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.NameUtils
+import org.jetbrains.kotlin.psi.stubs.KotlinScriptStub
 
 /**
  * Represents a Kotlin script file containing top-level statements and declarations.
+ * 
+ * ### Example:
  *
- * <h3>Example:</h3>
- * <pre>{@code
  * // script.kts
- * val x = 1
- * println(x)
- * }</pre>
+ * ```kotlin
+ * val x = 1 println(x)
+ * ```
+ *
+ * Note: this class is not intended to be extended and is marked `open` solely for backward compatibility.
  */
-public class KtScript extends KtNamedDeclarationStub<KotlinScriptStub> implements KtDeclarationContainer {
-    public KtScript(@NotNull ASTNode node) {
-        super(node);
-    }
+open class KtScript : KtNamedDeclarationStub<KotlinScriptStub>, KtDeclarationContainer {
+    constructor(node: ASTNode) : super(node)
 
-    public KtScript(@NotNull KotlinScriptStub stub) {
-        super(stub, KtStubBasedElementTypes.SCRIPT);
-    }
+    constructor(stub: KotlinScriptStub) : super(stub, KtStubBasedElementTypes.SCRIPT)
 
-    @NotNull
-    @Override
-    public FqName getFqName() {
-        KotlinScriptStub stub = getGreenStub();
+    override fun getFqName(): FqName {
+        val stub = greenStub
         if (stub != null) {
-            return stub.getFqName();
+            return stub.fqName
         }
 
-        KtFile containingKtFile = getContainingKtFile();
-        String fileName = containingKtFile.getName();
-        Name fileBasedName;
-         if (KtPsiFactoryKt.isReplSnippet(this)) {
-             fileBasedName = NameUtils.getSnippetTargetClassName(fileName);
+        val containingKtFile = containingKtFile
+        val fileName = containingKtFile.name
+
+        @OptIn(KtExperimentalApi::class)
+        val fileBasedName = if (isReplSnippet) {
+            NameUtils.getSnippetTargetClassName(fileName)
         } else {
-             fileBasedName = NameUtils.getScriptNameForFile(fileName);
+            NameUtils.getScriptNameForFile(fileName)
         }
 
-        return containingKtFile.getPackageFqName().child(fileBasedName);
+        return containingKtFile.packageFqName.child(fileBasedName)
     }
 
-    @Override
-    public String getName() {
-        return getFqName().shortName().asString();
+    override fun getName(): String = fqName.shortName().asString()
+
+    val blockExpression: KtBlockExpression
+        get() = findNotNullChildByClass(KtBlockExpression::class.java)
+
+    override fun getDeclarations(): List<KtDeclaration> {
+        return PsiTreeUtil.getChildrenOfTypeAsList(this.blockExpression, KtDeclaration::class.java)
     }
 
-    @NotNull
-    public KtBlockExpression getBlockExpression() {
-        return findNotNullChildByClass(KtBlockExpression.class);
-    }
-
-    @Override
-    @NotNull
-    public List<KtDeclaration> getDeclarations() {
-        return PsiTreeUtil.getChildrenOfTypeAsList(getBlockExpression(), KtDeclaration.class);
-    }
-
-    @Override
-    public <R, D> R accept(@NotNull KtVisitor<R, D> visitor, D data) {
-        return visitor.visitScript(this, data);
+    override fun <R, D> accept(visitor: KtVisitor<R, D>, data: D): R {
+        return visitor.visitScript(this, data)
     }
 }

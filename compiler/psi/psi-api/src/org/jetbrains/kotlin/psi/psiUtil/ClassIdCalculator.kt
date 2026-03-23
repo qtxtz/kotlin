@@ -36,7 +36,7 @@ internal object ClassIdCalculator {
                 is KtScript -> {
                     @OptIn(KtExperimentalApi::class)
                     if (element.isReplSnippet) {
-                        containingClassNames += element.name ?: SpecialNames.NO_NAME_PROVIDED.asString()
+                        containingClassNames += element.name
                     } else {
                         // Skip script parent
                     }

@@ -690,6 +690,9 @@ org.jetbrains.kotlin.psi.KtNamed:getNameAsName()
 org.jetbrains.kotlin.psi.KtNamedDeclaration
 org.jetbrains.kotlin.psi.KtNamedDeclaration:getFqName()
 org.jetbrains.kotlin.psi.KtNamedDeclaration:getNameAsSafeName()
+org.jetbrains.kotlin.psi.KtNamedDeclarationStub
+org.jetbrains.kotlin.psi.KtNamedDeclarationStub:constructor(ASTNode)
+org.jetbrains.kotlin.psi.KtNamedDeclarationStub:constructor(T, IStubElementType)
 org.jetbrains.kotlin.psi.KtNamedDeclarationUtil
 org.jetbrains.kotlin.psi.KtNamedDeclarationUtil:getParentFqName(KtNamedDeclaration)
 org.jetbrains.kotlin.psi.KtNamedDeclarationUtil:getUnsafeFQName(KtNamedDeclaration)
@@ -1046,9 +1049,9 @@ org.jetbrains.kotlin.psi.KtReturnExpression:constructor(ASTNode)
 org.jetbrains.kotlin.psi.KtReturnExpression:getLabeledExpression()
 org.jetbrains.kotlin.psi.KtReturnExpression:getReturnKeyword()
 org.jetbrains.kotlin.psi.KtReturnExpression:getReturnedExpression()
+org.jetbrains.kotlin.psi.KtScript.blockExpression
 org.jetbrains.kotlin.psi.KtScript:constructor(ASTNode)
 org.jetbrains.kotlin.psi.KtScript:constructor(KotlinScriptStub)
-org.jetbrains.kotlin.psi.KtScript:getBlockExpression()
 org.jetbrains.kotlin.psi.KtScriptInitializer:constructor(ASTNode)
 org.jetbrains.kotlin.psi.KtScriptInitializer:constructor(KotlinPlaceHolderStub<KtScriptInitializer>)
 org.jetbrains.kotlin.psi.KtSecondaryConstructor.getDelegationCall()
