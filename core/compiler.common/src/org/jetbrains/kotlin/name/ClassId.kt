@@ -34,6 +34,12 @@ data class ClassId(val packageFqName: FqName, val relativeClassName: FqName, @pr
         assert(!relativeClassName.isRoot) { "Class name must not be root: " + packageFqName + if (isLocal) " (local)" else "" }
     }
 
+    // TODO KT-85186 remove property
+    @Deprecated(
+        "Use `outerClassId` instead. It is semantically equivalent.",
+        ReplaceWith("outerClassId"),
+        DeprecationLevel.WARNING,
+    )
     val parentClassId: ClassId?
         get() = runIf(isNestedClass) {
             ClassId(packageFqName, relativeClassName.parent(), isLocal)
