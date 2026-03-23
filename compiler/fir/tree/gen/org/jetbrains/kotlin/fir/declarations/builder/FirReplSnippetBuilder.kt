@@ -29,6 +29,7 @@ class FirReplSnippetBuilder : FirAnnotationContainerBuilder {
     lateinit var moduleData: FirModuleData
     lateinit var origin: FirDeclarationOrigin
     var attributes: FirDeclarationAttributes = FirDeclarationAttributes()
+    lateinit var name: Name
     lateinit var symbol: FirReplSnippetSymbol
     lateinit var source: KtSourceElement
     val receivers: MutableList<FirScriptReceiverParameter> = mutableListOf()
@@ -42,6 +43,7 @@ class FirReplSnippetBuilder : FirAnnotationContainerBuilder {
             moduleData,
             origin,
             attributes,
+            name,
             symbol,
             source,
             receivers.toMutableOrEmpty(),

@@ -27,6 +27,10 @@ abstract class FirReplSnippet : FirDeclaration(), FirControlFlowGraphOwner {
     abstract override val origin: FirDeclarationOrigin
     abstract override val attributes: FirDeclarationAttributes
     abstract override val controlFlowGraphReference: FirControlFlowGraphReference?
+    /**
+     * The name of the REPL snippet, used to derive the name of the generated [snippetClass].
+     */
+    abstract val name: Name
     abstract override val symbol: FirReplSnippetSymbol
     abstract override val source: KtSourceElement
     abstract val receivers: List<FirScriptReceiverParameter>

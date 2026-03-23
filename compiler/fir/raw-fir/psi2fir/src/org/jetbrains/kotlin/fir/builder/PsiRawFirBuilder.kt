@@ -1456,21 +1456,22 @@ open class PsiRawFirBuilder(
             functionBodySetup: FirBlockBuilder.() -> Unit,
             statementsSetup: MutableList<FirElement>.() -> Unit,
         ): FirReplSnippet {
-            val snippetName = NameUtils.getSnippetTargetClassName(fileName)
-            val classSymbol = FirRegularClassSymbol(ClassId(FqName.ROOT, snippetName))
+            val snippetName = firSnippetName(fileName)
+            val snippetClassName = NameUtils.getSnippetTargetClassName(snippetName)
+            val classSymbol = FirRegularClassSymbol(ClassId(FqName.ROOT, snippetClassName))
 
             val snippetSymbol = FirReplSnippetSymbol(classSymbol)
 
-            val evalName = Name.identifier("$\$eval")
+            val evalName = Name.identifier($$$"$$eval")
 
             val klass = withContainerReplSymbol(snippetSymbol) {
-                withChildClassName(snippetName, isExpect = false) {
+                withChildClassName(snippetClassName, isExpect = false) {
                     withContainerSymbol(classSymbol) {
                         buildRegularClass {
                             source = script.toKtPsiSourceElement(KtFakeSourceElementKind.ReplBaseClass)
                             moduleData = baseModuleData
                             origin = FirDeclarationOrigin.Synthetic.ReplContainerClass
-                            name = snippetName
+                            name = snippetClassName
                             status = FirDeclarationStatusImpl(Visibilities.Public, Modality.FINAL)
                             classKind = ClassKind.OBJECT
                             scopeProvider = baseScopeProvider
@@ -1549,6 +1550,7 @@ open class PsiRawFirBuilder(
                 source = scriptSource
                 moduleData = baseModuleData
                 origin = FirDeclarationOrigin.Source
+                name = snippetName
                 symbol = snippetSymbol
 
                 snippetClass = klass

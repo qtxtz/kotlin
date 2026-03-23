@@ -31,6 +31,7 @@ internal class FirReplSnippetImpl(
     override val moduleData: FirModuleData,
     override val origin: FirDeclarationOrigin,
     override val attributes: FirDeclarationAttributes,
+    override val name: Name,
     override val symbol: FirReplSnippetSymbol,
     override val source: KtSourceElement,
     override var receivers: MutableOrEmptyList<FirScriptReceiverParameter>,
