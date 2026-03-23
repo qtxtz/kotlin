@@ -65,8 +65,9 @@ open class KtScript : KtNamedDeclarationStub<KotlinScriptStub>, KtDeclarationCon
      * Determines whether a [KtScript] should be treated as a REPL snippet or not.
      */
     @KtExperimentalApi
+    @OptIn(KtImplementationDetail::class)
     val isReplSnippet: Boolean
-        get() = this.getUserData(REPL_SNIPPET_KEY) == true
+        get() = greenStub?.isReplSnippet ?: (this.getUserData(REPL_SNIPPET_KEY) == true)
 
     /**
      * Marks the [KtScript] as a REPL snippet, so it is treated by the compiler accordingly.
