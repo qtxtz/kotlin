@@ -212,23 +212,27 @@ abstract class AbstractFirMetadataSessionFactory(
     }
 
     override fun FirSessionConfigurator.registerPlatformCheckers() {
-        processPlatforms(
-            onJvmPlatform = { registerPlatformCheckers() },
-            onJsPlatform = { registerPlatformCheckers() },
-            onWasmJsPlatform = { registerPlatformCheckers() },
-            onWasmWasiPlatform = { registerPlatformCheckers() },
-            onNativePlatform = { registerPlatformCheckers() },
-        )
+        withOnlyPlatformSpecificCheckersEnabledInMetadataCompilation {
+            processPlatforms(
+                onJvmPlatform = { registerPlatformCheckers() },
+                onJsPlatform = { registerPlatformCheckers() },
+                onWasmJsPlatform = { registerPlatformCheckers() },
+                onWasmWasiPlatform = { registerPlatformCheckers() },
+                onNativePlatform = { registerPlatformCheckers() },
+            )
+        }
     }
 
     override fun FirSessionConfigurator.registerExtraPlatformCheckers() {
-        processPlatforms(
-            onJvmPlatform = { registerExtraPlatformCheckers() },
-            onJsPlatform = { registerExtraPlatformCheckers() },
-            onWasmJsPlatform = { registerExtraPlatformCheckers() },
-            onWasmWasiPlatform = { registerExtraPlatformCheckers() },
-            onNativePlatform = { registerExtraPlatformCheckers() },
-        )
+        withOnlyPlatformSpecificCheckersEnabledInMetadataCompilation {
+            processPlatforms(
+                onJvmPlatform = { registerExtraPlatformCheckers() },
+                onJsPlatform = { registerExtraPlatformCheckers() },
+                onWasmJsPlatform = { registerExtraPlatformCheckers() },
+                onWasmWasiPlatform = { registerExtraPlatformCheckers() },
+                onNativePlatform = { registerExtraPlatformCheckers() },
+            )
+        }
     }
 
     override fun FirSession.registerSourceSessionComponents(c: Context) {

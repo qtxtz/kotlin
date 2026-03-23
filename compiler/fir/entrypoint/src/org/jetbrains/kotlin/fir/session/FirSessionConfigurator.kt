@@ -11,7 +11,10 @@ import org.jetbrains.kotlin.fir.FirSessionComponent
 import org.jetbrains.kotlin.fir.SessionConfiguration
 import org.jetbrains.kotlin.fir.analysis.checkers.LanguageVersionSettingsCheckers
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.DeclarationCheckers
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FilteredDeclarationCheckers
 import org.jetbrains.kotlin.fir.analysis.checkers.expression.ExpressionCheckers
+import org.jetbrains.kotlin.fir.analysis.checkers.expression.FilteredExpressionCheckers
+import org.jetbrains.kotlin.fir.analysis.checkers.type.FilteredTypeCheckers
 import org.jetbrains.kotlin.fir.analysis.checkers.type.TypeCheckers
 import org.jetbrains.kotlin.fir.analysis.checkersComponent
 import org.jetbrains.kotlin.fir.analysis.diagnostics.registeredDiagnosticFactoriesStorage
@@ -22,6 +25,7 @@ import kotlin.reflect.KClass
 
 class FirSessionConfigurator(private val session: FirSession) {
     private val registeredExtensions: MutableList<BunchOfRegisteredExtensions> = mutableListOf(BunchOfRegisteredExtensions.empty())
+    private var filterPlatformSpecificCheckers: Boolean = false
 
     fun registerExtensions(extensions: BunchOfRegisteredExtensions) {
         registeredExtensions += extensions
@@ -32,6 +36,11 @@ class FirSessionConfigurator(private val session: FirSession) {
      */
     @OptIn(SessionConfiguration::class)
     fun useCheckers(checkers: ExpressionCheckers) {
+        val checkers = if (filterPlatformSpecificCheckers) {
+            FilteredExpressionCheckers(checkers) { it.platformSpecificCheckerEnabledInMetadataCompilation }
+        } else {
+            checkers
+        }
         session.checkersComponent.register(checkers)
     }
 
@@ -40,6 +49,11 @@ class FirSessionConfigurator(private val session: FirSession) {
      */
     @OptIn(SessionConfiguration::class)
     fun useCheckers(checkers: DeclarationCheckers) {
+        val checkers = if (filterPlatformSpecificCheckers) {
+            FilteredDeclarationCheckers(checkers) { it.platformSpecificCheckerEnabledInMetadataCompilation }
+        } else {
+            checkers
+        }
         session.checkersComponent.register(checkers)
     }
 
@@ -48,6 +62,11 @@ class FirSessionConfigurator(private val session: FirSession) {
      */
     @OptIn(SessionConfiguration::class)
     fun useCheckers(checkers: TypeCheckers) {
+        val checkers = if (filterPlatformSpecificCheckers) {
+            FilteredTypeCheckers(checkers) { it.platformSpecificCheckerEnabledInMetadataCompilation }
+        } else {
+            checkers
+        }
         session.checkersComponent.register(checkers)
     }
 
@@ -67,6 +86,17 @@ class FirSessionConfigurator(private val session: FirSession) {
     @OptIn(SessionConfiguration::class)
     fun registerDiagnosticContainers(vararg diagnosticContainers: KtDiagnosticsContainer) {
         session.registeredDiagnosticFactoriesStorage.registerDiagnosticContainers(*diagnosticContainers)
+    }
+
+    @SessionConfiguration
+    fun withOnlyPlatformSpecificCheckersEnabledInMetadataCompilation(block: () -> Unit) {
+        val oldFilterPlatformSpecificCheckers = filterPlatformSpecificCheckers
+        filterPlatformSpecificCheckers = true
+        try {
+            block()
+        } finally {
+            filterPlatformSpecificCheckers = oldFilterPlatformSpecificCheckers
+        }
     }
 
     @OptIn(PluginServicesInitialization::class)

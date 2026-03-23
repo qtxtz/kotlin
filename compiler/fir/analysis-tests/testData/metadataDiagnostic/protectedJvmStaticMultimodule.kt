@@ -19,8 +19,8 @@ abstract class Parent {
 import kotlin.jvm.JvmName
 
 class Child : Parent() {
-    protected inline fun foo() = <!SUBCLASS_CANT_CALL_COMPANION_PROTECTED_NON_STATIC!>someString<!>
+    protected inline fun foo() = someString
 }
 
-<!ILLEGAL_JVM_NAME!>@JvmName("<123>")<!>
+@JvmName("<123>")
 fun bar() {}
