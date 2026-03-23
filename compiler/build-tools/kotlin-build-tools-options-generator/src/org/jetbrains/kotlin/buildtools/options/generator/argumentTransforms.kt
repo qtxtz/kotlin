@@ -38,6 +38,7 @@ private val levelsToArgumentTransforms: Map<String, Map<String, ArgumentTransfor
             drop("Xcommon-sources")
             drop("Xenable-incremental-compilation")
             custom(CustomCompilerArguments.compilerPlugins)
+            override("Xwarning-level", CustomCompilerArguments.warningLevel)
 
             // KMP related
             drop("Xmulti-platform")

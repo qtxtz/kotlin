@@ -1099,7 +1099,7 @@ The argument should be used only if the new compilation scheme is enabled with -
         )
     }
 
-
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "Xwarning-level"
         compilerName = "warningLevels"
@@ -1109,6 +1109,7 @@ The argument should be used only if the new compilation scheme is enabled with -
 - `warning` level overrides -nowarn and -Werror for this specific warning (the warning will be reported/won't be considered as an error)""".asReleaseDependent()
         valueDescription = "<WARNING_NAME>:(error|warning|disabled)".asReleaseDependent()
         valueType = StringArrayType.defaultNull
+        argumentType = StringListType.defaultEmpty
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v2_2_0,

@@ -4,7 +4,6 @@
 package org.jetbrains.kotlin.buildtools.api.arguments
 
 import java.nio.`file`.Path
-import kotlin.Array
 import kotlin.Boolean
 import kotlin.Deprecated
 import kotlin.String
@@ -775,19 +774,6 @@ public interface CommonCompilerArguments : CommonToolArguments {
         CommonCompilerArgument("X_VERIFY_IR_VISIBILITY", KotlinReleaseVersion(2, 0, 20))
 
     /**
-     * Set the severity of the given warning.
-     * - `error` level raises the severity of a warning to error level (similar to -Werror but more granular)
-     * - `disabled` level suppresses reporting of a warning (similar to -nowarn but more granular)
-     * - `warning` level overrides -nowarn and -Werror for this specific warning (the warning will be reported/won't be considered as an error)
-     *
-     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
-     */
-    @JvmField
-    @ExperimentalCompilerArgument
-    public val X_WARNING_LEVEL: CommonCompilerArgument<Array<String>?> =
-        CommonCompilerArgument("X_WARNING_LEVEL", KotlinReleaseVersion(2, 2, 0))
-
-    /**
      * Enable experimental language support for when guards.
      *
      * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
@@ -842,5 +828,18 @@ public interface CommonCompilerArguments : CommonToolArguments {
     @JvmField
     public val COMPILER_PLUGINS: CommonCompilerArgument<List<CompilerPlugin>> =
         CommonCompilerArgument("COMPILER_PLUGINS", KotlinReleaseVersion(2, 3, 20))
+
+    /**
+     * Set the severity of the given warning.
+     * - `error` level raises the severity of a warning to error level (similar to -Werror but more granular)
+     * - `disabled` level suppresses reporting of a warning (similar to -nowarn but more granular)
+     * - `warning` level overrides -nowarn and -Werror for this specific warning (the warning will be reported/won't be considered as an error)
+     *
+     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
+     */
+    @JvmField
+    @ExperimentalCompilerArgument
+    public val X_WARNING_LEVEL: CommonCompilerArgument<List<WarningLevel>> =
+        CommonCompilerArgument("X_WARNING_LEVEL", KotlinReleaseVersion(2, 2, 0))
   }
 }

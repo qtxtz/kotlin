@@ -236,7 +236,9 @@ internal class BtaImplGenerator(
                 }
 
                 is BtaCompilerArgument.CustomCompilerArgument -> {
-                    defaultsInitializer.addStatement("optionsMap[%S] = %L", name, argument.defaultValue)
+                    if (!(generateCompatLayer && wasIntroducedRecently)) {
+                        defaultsInitializer.addStatement("optionsMap[%S] = %L", name, argument.defaultValue)
+                    }
                     generateCustomRepresentation(
                         implClassName,
                         name,

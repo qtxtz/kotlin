@@ -100,17 +100,26 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
                 val mode = value as AnnotationDefaultTargetMode
                 mode.stringValue as V
             }
+
             CommonCompilerArguments.X_NAME_BASED_DESTRUCTURING -> {
                 if (value == null) return null as V
 
                 val mode = value as NameBasedDestructuringMode
                 mode.stringValue as V
             }
+
             CommonCompilerArguments.X_VERIFY_IR -> {
                 if (value == null) return null as V
 
                 val mode = value as VerifyIrMode
                 mode.stringValue as V
+            }
+
+            CommonCompilerArguments.X_WARNING_LEVEL -> {
+                if (value == null) return emptyArray<String>() as V
+
+                val listValue: List<WarningLevel> = value as List<WarningLevel>
+                listValue.map { item -> "${item.warningName}:${item.severity.stringValue}" }.toTypedArray() as V
             }
 
             else -> {
@@ -154,6 +163,7 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
                 AnnotationDefaultTargetMode.entries.firstOrNull { it.stringValue == stringValue } as T
                     ?: throw CompilerArgumentsParseException("Unknown -Xannotation-default-target value: $stringValue")
             }
+
             CommonCompilerArguments.X_NAME_BASED_DESTRUCTURING -> {
                 if (value == null) return null as T
 
@@ -161,12 +171,27 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
                 NameBasedDestructuringMode.entries.firstOrNull { it.stringValue == stringValue } as T
                     ?: throw CompilerArgumentsParseException("Unknown -Xname-based-destructuring value: $stringValue")
             }
+
             CommonCompilerArguments.X_VERIFY_IR -> {
                 if (value == null) return null as T
 
                 val stringValue = value as String
                 VerifyIrMode.entries.firstOrNull { it.stringValue == stringValue } as T
                     ?: throw CompilerArgumentsParseException("Unknown -Xverify-ir value: $stringValue")
+            }
+
+            CommonCompilerArguments.X_WARNING_LEVEL -> {
+                if (value == null) return emptyList<WarningLevel>() as T
+
+                val arrayValue = value as Array<String>
+                arrayValue.map {
+                    val parts = it.split(":", limit = 2)
+                    require(parts.size == 2) { "Invalid -Xwarning-level format: $it" }
+
+                    val level = WarningLevel.Severity.entries.firstOrNull { entry -> entry.stringValue == parts[1] }
+                        ?: throw CompilerArgumentsParseException("Unknown -Xwarning-level level: $it")
+                    WarningLevel(parts[0], level)
+                } as T
             }
 
             else -> {

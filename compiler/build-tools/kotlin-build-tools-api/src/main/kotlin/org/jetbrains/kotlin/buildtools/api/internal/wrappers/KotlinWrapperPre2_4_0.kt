@@ -228,6 +228,20 @@ internal class KotlinWrapperPre2_4_0(
                         ?: throw CompilerArgumentsParseException("Unknown -Xverify-ir value: $stringValue")
                 }
 
+                CommonCompilerArguments.X_WARNING_LEVEL -> {
+                    @Suppress("SENSELESS_COMPARISON")
+                    if (delegate[key] == null) return emptyList<WarningLevel>() as V
+
+                    val arrayValue = delegate[key] as Array<String>
+                    arrayValue.map {
+                        val parts = it.split(":", limit = 2)
+                        require(parts.size == 2) { "Invalid -Xwarning-level format: $it" }
+                        val severity = WarningLevel.Severity.values().firstOrNull { entry -> entry.stringValue == parts[1] }
+                            ?: throw CompilerArgumentsParseException("Unknown -Xwarning-level level: $it")
+                        WarningLevel(parts[0], severity)
+                    } as V
+                }
+
                 else -> delegate[key]
             }
         }
@@ -289,6 +303,14 @@ internal class KotlinWrapperPre2_4_0(
                     val stringKey = CommonCompilerArguments.CommonCompilerArgument<String?>(key.id, key.availableSinceVersion)
 
                     delegate[stringKey] = stringValue
+                }
+
+                CommonCompilerArguments.X_WARNING_LEVEL -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val listValue = value as List<WarningLevel>
+                    val arrayValue = listValue.map { item -> "${item.warningName}:${item.severity.stringValue}" }.toTypedArray()
+                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
+                    delegate[arrayKey] = arrayValue
                 }
 
                 else -> {

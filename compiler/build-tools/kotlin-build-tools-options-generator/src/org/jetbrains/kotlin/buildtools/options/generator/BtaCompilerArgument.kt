@@ -156,6 +156,17 @@ object CustomCompilerArguments {
             ClassName(API_ARGUMENTS_PACKAGE, "Jsr305"),
         ),
     )
+
+    val warningLevel = CustomCompilerArgumentFactory(
+        valueType = BtaCompilerArgumentValueType.CustomArgumentValueType(
+            type = listTypeNameOf(ClassName(API_ARGUMENTS_PACKAGE, "WarningLevel")),
+        ),
+        defaultValue = CodeBlock.of(
+            "%M<%T>()",
+            MemberName(KOTLIN_COLLECTIONS, "emptyList"),
+            ClassName(API_ARGUMENTS_PACKAGE, "WarningLevel"),
+        ),
+    )
 }
 
 class CustomCompilerArgumentFactory(

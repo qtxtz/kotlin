@@ -558,6 +558,21 @@ public final class org/jetbrains/kotlin/buildtools/api/arguments/ProfileCompiler
 	public final fun getProfilerPath ()Ljava/nio/file/Path;
 }
 
+public final class org/jetbrains/kotlin/buildtools/api/arguments/WarningLevel {
+	public fun <init> (Ljava/lang/String;Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;)V
+	public final fun getSeverity ()Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;
+	public final fun getWarningName ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity : java/lang/Enum {
+	public static final field DISABLED Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;
+	public static final field ERROR Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;
+	public static final field WARNING Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;
+	public final fun getStringValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;
+	public static fun values ()[Lorg/jetbrains/kotlin/buildtools/api/arguments/WarningLevel$Severity;
+}
+
 public final class org/jetbrains/kotlin/buildtools/api/arguments/enums/AbiStabilityMode : java/lang/Enum {
 	public static final field STABLE Lorg/jetbrains/kotlin/buildtools/api/arguments/enums/AbiStabilityMode;
 	public static final field UNSTABLE Lorg/jetbrains/kotlin/buildtools/api/arguments/enums/AbiStabilityMode;
