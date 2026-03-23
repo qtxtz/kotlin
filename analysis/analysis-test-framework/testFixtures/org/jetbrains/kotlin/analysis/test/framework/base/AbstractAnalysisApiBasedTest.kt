@@ -173,7 +173,8 @@ abstract class AbstractAnalysisApiBasedTest : TestWithDisposable(), ManagedTest 
      * Use only if [doTestByMainModuleAndOptionalMainFile] is not suitable for your use case.
      */
     protected open fun doTest(testServices: TestServices) {
-        val (mainFile, mainModule) = findMainFileAndModule(testServices)
+        val (mainFile, mainModule) = findMainFileAndModule(testServices) ?: error("Cannot find the main test module")
+
         doTestByMainModuleAndOptionalMainFile(mainFile, mainModule, testServices)
     }
 
@@ -220,12 +221,12 @@ abstract class AbstractAnalysisApiBasedTest : TestWithDisposable(), ManagedTest 
 
     data class ModuleWithMainFile(val mainFile: KtFile?, val module: KtTestModule)
 
-    protected fun findMainFileAndModule(testServices: TestServices): ModuleWithMainFile {
+    protected fun findMainFileAndModule(testServices: TestServices): ModuleWithMainFile? {
         findMainFileByMarkers(testServices)?.let { return it }
 
         // We have this search not at the beginning of the function as we should prefer marked files to
         // a main module with one file
-        val mainModule = findMainModule(testServices) ?: error("Cannot find the main test module")
+        val mainModule = findMainModule(testServices) ?: return null
         val mainFile = findMainFile(mainModule, testServices)
         return ModuleWithMainFile(mainFile, mainModule)
     }
