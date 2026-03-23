@@ -52,7 +52,6 @@ import org.jetbrains.kotlin.util.PerformanceManager
 import org.jetbrains.kotlin.util.PhaseType
 import org.jetbrains.kotlin.util.klibMetadataVersionOrDefault
 import org.jetbrains.kotlin.util.tryMeasurePhaseTime
-import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 import org.jetbrains.kotlin.utils.toSmartList
 import java.io.File
 
@@ -113,7 +112,6 @@ private fun deserializeDependencies(
 fun loadIr(
     modulesStructure: ModulesStructure,
     irFactory: IrFactory,
-    loadFunctionInterfacesIntoStdlib: Boolean = false,
 ): IrModuleInfo {
     val mainModule = modulesStructure.mainModule
     val configuration = modulesStructure.compilerConfiguration
@@ -137,7 +135,6 @@ fun loadIr(
                 configuration = configuration,
                 symbolTable = symbolTable,
                 messageCollector = messageLogger,
-                loadFunctionInterfacesIntoStdlib = loadFunctionInterfacesIntoStdlib,
             ) { modulesStructure.getModuleDescriptor(it) }
         }
     }
@@ -253,7 +250,6 @@ private fun getIrModuleInfoForKlib(
     configuration: CompilerConfiguration,
     symbolTable: SymbolTable,
     messageCollector: MessageCollector,
-    loadFunctionInterfacesIntoStdlib: Boolean,
     mapping: (KotlinLibrary) -> ModuleDescriptor,
 ): IrModuleInfo {
     val typeTranslator = TypeTranslatorImpl(symbolTable, configuration.languageVersionSettings, moduleDescriptor)
@@ -286,9 +282,7 @@ private fun getIrModuleInfoForKlib(
         irBuiltIns,
         symbolTable,
         typeTranslator,
-        loadFunctionInterfacesIntoStdlib.ifTrue {
-            moduleDependencies.stdlib?.let { stdlibModule -> FunctionTypeInterfacePackages().makePackageAccessor(stdlibModule) }
-        },
+        moduleDependencies.stdlib?.let { stdlibModule -> FunctionTypeInterfacePackages().makePackageAccessor(stdlibModule) },
         true
     )
 

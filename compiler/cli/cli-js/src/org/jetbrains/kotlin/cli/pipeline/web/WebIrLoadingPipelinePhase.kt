@@ -31,7 +31,7 @@ abstract class WebIrLoadingPipelinePhase(
         configuration: CompilerConfiguration,
         irFactory: IrFactory,
         modulesStructure: ModulesStructure,
-    ): IrModuleInfo = loadIr(modulesStructure, irFactory, loadFunctionInterfacesIntoStdlib = true)
+    ): IrModuleInfo = loadIr(modulesStructure, irFactory)
 
     override fun executePhase(input: ConfigurationPipelineArtifact): WebLoadedIrPipelineArtifact {
         val configuration = input.configuration
