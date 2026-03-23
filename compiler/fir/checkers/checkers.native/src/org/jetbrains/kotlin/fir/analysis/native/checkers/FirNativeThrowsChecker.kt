@@ -100,28 +100,6 @@ sealed class FirNativeThrowsChecker(mppKind: MppCheckerKind) : FirBasicDeclarati
         throwsAnnotation: FirAnnotation?,
     ): Boolean {
         if (declaration !is FirNamedFunction) return true
-        /**
-         * We don't want to check for `@Throws` inheritance during metadata compilation.
-         *
-         * Considering the following example:
-         *
-         * ```
-         *     // common
-         *     expect annotation class ThrowsOnSomePlatforms(clazz: KClass<*>)
-         *     interface I {
-         *        @ThrowsOnSomePlatforms(Throwable::class)
-         *        fun foo()
-         *     }
-         *     class B : I {
-         *        @Throws(Throwable::class)
-         *        fun foo()
-         *     }
-         *     // native
-         *     typealias ThrowsOnSomePlatforms = Throws
-         * ```
-         */
-        if (context.session.moduleData.platform.isMultiPlatform()) return true
-
         val inherited = getInheritedThrows(declaration, throwsAnnotation).entries.distinctBy { it.value }
 
         if (inherited.size >= 2) {

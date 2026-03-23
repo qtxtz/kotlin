@@ -23,6 +23,9 @@ object FirNativeIdentifierChecker : FirBasicDeclarationChecker(MppCheckerKind.Co
         ':', '\\', '$', '&', '~', '*', '?', '#', '|', '§', '%', '@',
     )
 
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirDeclaration) {
         val source = declaration.source
