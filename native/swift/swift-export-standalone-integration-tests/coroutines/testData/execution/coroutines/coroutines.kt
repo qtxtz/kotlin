@@ -86,3 +86,26 @@ suspend fun finallyDelayInt(delay: Long, onFinally: (() -> Unit)?): Int {
     }
     return result
 }
+
+suspend fun testOnAnotherThread(): Int = withContext(Dispatchers.Default) {
+    delay(10L)
+    42
+}
+
+suspend fun throwInFinally(message: String): Int {
+    try {
+        delay(10L)
+        return 42
+    } finally {
+        error(message)
+    }
+}
+
+suspend fun cancelledWithThrowInFinally(delay: Long, message: String): Int {
+    try {
+        delay(delay)
+        return 42
+    } finally {
+        error(message)
+    }
+}

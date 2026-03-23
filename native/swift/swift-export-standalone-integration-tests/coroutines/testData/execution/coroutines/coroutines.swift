@@ -269,6 +269,45 @@ func testCallingKotlinLambdaThatUsesCoroutines() async throws {
     try #expect(await block() == 42)
 }
 
+@Test
+func testReturnAfterThreadSwitch() async throws {
+    try #expect(await testOnAnotherThread() == 42)
+}
+
+@Test
+func testFinallyThrows() async {
+    let task = Task<Int32, any Error>.detached {
+        return try await throwInFinally(message: "finally-error")
+    }
+
+    let result = await task.result
+
+    if case let .failure(e) = result {
+        #expect(!(e is CancellationError))
+        #expect(String(describing: e).contains("finally-error"), "finally exception should propagate")
+    } else {
+        Issue.record("function should fail with exception from finally block")
+    }
+}
+
+@Test
+func testCancelledFinallyThrows() async {
+    let task = Task<Int32, any Error>.detached {
+        return try await cancelledWithThrowInFinally(delay: 3000, message: "finally-error")
+    }
+
+    try? await Task.sleep(nanoseconds: 20_000_000)
+    task.cancel()
+    let result = await task.result
+
+    if case let .failure(e) = result {
+        #expect(!(e is CancellationError), "finally exception should win over cancellation")
+        #expect(String(describing: e).contains("finally-error"), "finally exception should propagate")
+    } else {
+        Issue.record("function should fail with exception from finally block")
+    }
+}
+
 func ==<T>(_ lhs: Result<T, any Error>, _ rhs: Result<T, any Error>) -> Bool where T: Equatable {
     switch (lhs, rhs) {
     case (.success(let l), .success(let r)): l == r
