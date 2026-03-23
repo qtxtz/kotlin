@@ -6,6 +6,9 @@
 package org.jetbrains.kotlin.analysis.api.codebaseTest
 
 import com.intellij.psi.PsiFile
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.IMPLEMENTATION_DETAIL_ANNOTATION
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.IMPLEMENTATION_DETAIL_SUBCLASS_ANNOTATION
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.KA_SESSION
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.test.TestDataAssertions
@@ -25,16 +28,16 @@ class AnalysisApiMixinStructureTest : AbstractAnalysisApiSurfaceCodebaseValidati
         if (psiFile !is KtFile) return
 
         val sessionComponent = psiFile.findSessionComponent()?.takeUnless {
-            it.name == KA_SESSION_CLASS
+            it.name == KA_SESSION
         } ?: return
 
         assertNoNestedClasses(file, sessionComponent)
 
         // OptIn annotation itself
-        assertSpecialAnnotation(file, sessionComponent, KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL_ANNOTATION)
+        assertSpecialAnnotation(file, sessionComponent, IMPLEMENTATION_DETAIL_ANNOTATION)
 
         // OptIn annotation for subclasses
-        assertSpecialAnnotation(file, sessionComponent, KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL_SUBCLASS_ANNOTATION)
+        assertSpecialAnnotation(file, sessionComponent, IMPLEMENTATION_DETAIL_SUBCLASS_ANNOTATION)
     }
 
     private fun assertNoNestedClasses(file: File, sessionComponent: KtClassOrObject) {
@@ -56,12 +59,5 @@ class AnalysisApiMixinStructureTest : AbstractAnalysisApiSurfaceCodebaseValidati
             /* expectedFile = */ file,
             /* actual = */ actualText,
         )
-    }
-
-    private companion object {
-        const val KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL: String = "KaSessionComponentImplementationDetail"
-        const val KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL_ANNOTATION: String = "@$KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL"
-        val KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL_SUBCLASS_ANNOTATION: String =
-            "@${SubclassOptInRequired::class.simpleName}($KA_SESSION_COMPONENT_IMPLEMENTATION_DETAIL::class)"
     }
 }

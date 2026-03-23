@@ -6,8 +6,9 @@
 package org.jetbrains.kotlin.analysis.api.codebaseTest
 
 import org.jetbrains.kotlin.AbstractAnalysisApiCodebaseValidationTest
-import org.jetbrains.kotlin.analysis.api.KaSession
-import org.jetbrains.kotlin.analysis.api.components.KaSessionComponent
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.DEPRECATED
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.KA_SESSION
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.KA_SESSION_COMPONENT
 import org.jetbrains.kotlin.psi.KtAnnotated
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtDeclaration
@@ -70,17 +71,9 @@ abstract class AbstractAnalysisApiSurfaceCodebaseValidationTest : AbstractAnalys
         annotation.shortName.toString() == annotationName
     }
 
-    protected fun KtAnnotated.hasDeprecatedAnnotation(): Boolean = hasAnnotation(DEPRECATED_ANNOTATION)
+    protected fun KtAnnotated.hasDeprecatedAnnotation(): Boolean = hasAnnotation(DEPRECATED)
 
     protected val KtClassOrObject.isSessionComponent: Boolean
-        get() = superTypeListEntries.any { it.textMatches(KA_SESSION_COMPONENT) } || name == KA_SESSION_CLASS
+        get() = superTypeListEntries.any { it.textMatches(KA_SESSION_COMPONENT) } || name == KA_SESSION
 
-    protected companion object {
-        @Suppress("OPT_IN_USAGE") // Suppress instead of @OptIn because the annotation is not available in the test sources
-        val KA_SESSION_COMPONENT: String = KaSessionComponent::class.simpleName!!
-
-        val KA_SESSION_CLASS: String = KaSession::class.simpleName!!
-
-        private val DEPRECATED_ANNOTATION: String = Deprecated::class.simpleName!!
-    }
 }

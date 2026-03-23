@@ -6,6 +6,9 @@
 package org.jetbrains.kotlin.analysis.api.codebaseTest
 
 import com.intellij.psi.PsiFile
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.KA_SPI
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.SUBCLASS_OPT_IN_REQUIRED
+import org.jetbrains.kotlin.analysis.api.codebaseTest.AnalysisApiSurfaceNames.SUBCLASS_OPT_IN_REQUIRED_ANNOTATION
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtClassOrObject
@@ -37,12 +40,12 @@ class AnalysisApiExtensibilityTest : AbstractAnalysisApiSurfaceCodebaseValidatio
     private fun assertExtensibility(file: File, classOrObject: KtClassOrObject) {
         if (classOrObject.hasAnnotation(KA_SPI) || classOrObject.isInheritanceLimited) return
 
-        val actualText = fileTextWithNewAnnotation(classOrObject, SUBCLASS_OPT_IN_ANNOTATION)
+        val actualText = fileTextWithNewAnnotation(classOrObject, SUBCLASS_OPT_IN_REQUIRED_ANNOTATION)
         TestDataAssertions.assertEqualsToFile(
             /* message = */
             """
                 The inheritance has to be limited to not guarantee its compatibility by default.
-                It can be limited by `sealed` modifier (if applicable) or by `@$SUBCLASS_OPT_IN` annotation.
+                It can be limited by `sealed` modifier (if applicable) or by `@$SUBCLASS_OPT_IN_REQUIRED` annotation.
                 If the API is designed to be extensible, add `@$KA_SPI` annotation to it.
             """.trimIndent(),
             /* expectedFile = */ file,
@@ -53,7 +56,7 @@ class AnalysisApiExtensibilityTest : AbstractAnalysisApiSurfaceCodebaseValidatio
     private val KtClassOrObject.isInheritanceLimited: Boolean
         get() = when {
             // Already requires opt-in on subclassing
-            hasAnnotation(SUBCLASS_OPT_IN) -> true
+            hasAnnotation(SUBCLASS_OPT_IN_REQUIRED) -> true
 
             this is KtClass -> when {
                 hasModifier(KtTokens.SEALED_KEYWORD) -> true
@@ -67,10 +70,4 @@ class AnalysisApiExtensibilityTest : AbstractAnalysisApiSurfaceCodebaseValidatio
 
             else -> false
         }
-
-    private companion object {
-        const val KA_SPI: String = "KaSpi"
-        val SUBCLASS_OPT_IN: String = SubclassOptInRequired::class.simpleName!!
-        val SUBCLASS_OPT_IN_ANNOTATION = "@$SUBCLASS_OPT_IN(KaImplementationDetail::class)"
-    }
 }
