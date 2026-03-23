@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.backend.jvm.isJavaLangDeprecatedOnlyAddedByCompiler
 import org.jetbrains.kotlin.backend.jvm.mapping.mapTypeAsDeclaration
 import org.jetbrains.kotlin.backend.jvm.mapping.mapTypeParameter
 import org.jetbrains.kotlin.backend.jvm.originalOfSuspendForInline
+import org.jetbrains.kotlin.builtins.StandardNames
 import org.jetbrains.kotlin.codegen.AsmUtil
 import org.jetbrains.kotlin.codegen.inline.*
 import org.jetbrains.kotlin.codegen.state.JvmBackendConfig
@@ -26,6 +27,9 @@ import org.jetbrains.kotlin.ir.expressions.IrClassReference
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrVararg
+import org.jetbrains.kotlin.ir.types.isClassWithFqName
+import org.jetbrains.kotlin.ir.types.isKotlinResult
+import org.jetbrains.kotlin.ir.types.starProjectedType
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.load.java.JavaDescriptorVisibilities
 import org.jetbrains.kotlin.load.kotlin.TypeMappingMode
@@ -66,12 +70,7 @@ class FunctionCodegen(private val irFunction: IrFunction, private val classCodeg
             flags,
             signature.asmMethod.name,
             signature.asmMethod.descriptor,
-            signature.genericsSignature
-                .takeIf {
-                    (irFunction.isInline && irFunction.origin != IrDeclarationOrigin.FUNCTION_FOR_DEFAULT_PARAMETER) ||
-                            (!isSynthetic && irFunction.origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) ||
-                            (irFunction.origin == JvmLoweredDeclarationOrigin.SUSPEND_IMPL_STATIC_FUNCTION)
-                },
+            signature.genericsSignature.takeIf { irFunction.needsGenericSignature(isSynthetic) },
             getThrownExceptions(irFunction)?.toTypedArray()
         )
         val methodVisitor: MethodVisitor = wrapWithMaxLocalCalc(methodNode)
@@ -142,6 +141,20 @@ class FunctionCodegen(private val irFunction: IrFunction, private val classCodeg
         }
         methodVisitor.visitEnd()
         return SMAPAndMethodNode(methodNode, smap)
+    }
+
+    private fun IrFunction.needsGenericSignature(isSynthetic: Boolean): Boolean {
+        if (irFunction.hasAnnotation(JvmStandardClassIds.JVM_EXPOSE_BOXED_ANNOTATION_FQ_NAME) &&
+            typeParameters.any { it.erasedUpperBound.isClassWithFqName(StandardNames.RESULT_FQ_NAME) }
+        ) {
+            // Starting from JDK 11, javac reports ambiguity when there are two functions with the same generic signature.
+            // Do not write generic signature for exposed function when there's a type parameter with upper bound `Result`.
+            return false
+        }
+
+        return (isInline && origin != IrDeclarationOrigin.FUNCTION_FOR_DEFAULT_PARAMETER) ||
+                (!isSynthetic && origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) ||
+                (irFunction.origin == JvmLoweredDeclarationOrigin.SUSPEND_IMPL_STATIC_FUNCTION)
     }
 
     private fun postReifyEvaluatorGeneratedMethod(methodNode: MethodNode) {
