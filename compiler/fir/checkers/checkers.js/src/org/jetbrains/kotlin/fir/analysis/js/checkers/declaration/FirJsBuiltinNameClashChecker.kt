@@ -30,6 +30,9 @@ object FirJsBuiltinNameClashChecker : FirBasicDeclarationChecker(MppCheckerKind.
     private val PROHIBITED_MEMBER_NAMES = setOf("constructor")
     private val PROHIBITED_STATIC_NAMES = setOf("prototype", "length", "\$metadata\$")
 
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(declaration: FirDeclaration) {
         if (declaration.symbol.isNativeObject(context.session)) return

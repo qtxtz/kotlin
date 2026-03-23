@@ -26,6 +26,9 @@ import kotlin.collections.orEmpty
 import kotlin.collections.plus
 
 object FirJsNoRuntimeTypeOperatorChecker : FirTypeOperatorCallChecker(MppCheckerKind.Common) {
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(expression: FirTypeOperatorCall) {
         val op = expression.operation
@@ -46,6 +49,9 @@ object FirJsNoRuntimeTypeOperatorChecker : FirTypeOperatorCallChecker(MppChecker
 }
 
 object FirJsNoRuntimeClassReferenceChecker : FirGetClassCallChecker(MppCheckerKind.Common) {
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext, reporter: DiagnosticReporter)
     override fun check(expression: FirGetClassCall) {
         val classSymbol = expression.argument.resolvedType.toRegularClassSymbol()?.takeIf { it.isInterface } ?: return

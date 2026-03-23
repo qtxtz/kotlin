@@ -19,6 +19,9 @@ import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 
 object FirJsNameClashFileTopLevelDeclarationsChecker : FirFileChecker(MppCheckerKind.Common) {
+    override val platformSpecificCheckerEnabledInMetadataCompilation: Boolean
+        get() = true
+
     context(context: CheckerContext)
     private fun MutableMap<String, MutableList<FirJsStableName>>.addStableName(
         symbol: FirBasedSymbol<*>
