@@ -56,8 +56,6 @@ import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLI
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_WASM_PER_MODULE
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.reportDiagnosticOncePerBuild
-import org.jetbrains.kotlin.gradle.plugin.internal.isProjectIsolationEnabled
-import org.jetbrains.kotlin.gradle.plugin.mpp.KmpIsolatedProjectsSupportDeprecated
 import org.jetbrains.kotlin.gradle.plugin.mpp.uklibs.consumption.KmpResolutionStrategy
 import org.jetbrains.kotlin.gradle.plugin.mpp.uklibs.publication.KmpPublicationStrategy
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinIrJsGeneratedTSValidationStrategy
@@ -594,21 +592,6 @@ internal class PropertiesProvider private constructor(private val project: Proje
     val enableKlibsCrossCompilation: Boolean
         get() = booleanProperty(PropertyNames.KOTLIN_NATIVE_ENABLE_KLIBS_CROSSCOMPILATION) ?: true
 
-    @Suppress("DEPRECATION")
-    val kotlinKmpProjectIsolationEnabled: Boolean
-        get() {
-            val mode = enumProperty<KmpIsolatedProjectsSupportDeprecated>(
-                PropertyNames.KOTLIN_KMP_ISOLATED_PROJECT_SUPPORT,
-                KmpIsolatedProjectsSupportDeprecated.ENABLE
-            )
-
-            return when (mode) {
-                KmpIsolatedProjectsSupportDeprecated.ENABLE -> true
-                KmpIsolatedProjectsSupportDeprecated.DISABLE -> false
-                KmpIsolatedProjectsSupportDeprecated.AUTO -> project.isProjectIsolationEnabled
-            }
-        }
-
     /**
      * Emit diagnostics with "error:" and "warning:" prefixes to make sure they are displayed in the IDE build logs
      */
@@ -789,7 +772,6 @@ internal class PropertiesProvider private constructor(private val project: Proje
         val KOTLIN_KMP_STRICT_RESOLVE_IDE_DEPENDENCIES = property("${KOTLIN_INTERNAL_NAMESPACE}.kmp.strictResolveIdeDependencies")
         val KOTLIN_KMP_ALLOW_MATCHING_BY_REQUESTED_COORDINATES_IN_GMDT =
             property("${KOTLIN_INTERNAL_NAMESPACE}.kmp.allowMatchingByRequestedCoordinatesInMetadataTransformations")
-        val KOTLIN_KMP_ISOLATED_PROJECT_SUPPORT = property("kotlin.kmp.isolated-projects.support")
         val KOTLIN_INCREMENTAL_FIR = property("kotlin.incremental.jvm.fir")
         val KOTLIN_KMP_UNRESOLVED_DEPENDENCIES_DIAGNOSTIC = property("kotlin.kmp.unresolvedDependenciesDiagnostic")
         val KOTLIN_KMP_EAGER_UNRESOLVED_DEPENDENCIES_DIAGNOSTIC = property("kotlin.kmp.eagerUnresolvedDependenciesDiagnostic")

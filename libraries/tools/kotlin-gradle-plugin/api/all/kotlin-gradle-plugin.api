@@ -1026,14 +1026,6 @@ public final class org/jetbrains/kotlin/gradle/plugin/mpp/JointAndroidKotlinTarg
 	public fun setPublicationDelegate (Lorg/gradle/api/publish/maven/MavenPublication;)V
 }
 
-public final class org/jetbrains/kotlin/gradle/plugin/mpp/KmpIsolatedProjectsSupport : java/lang/Enum {
-	public static final field AUTO Lorg/jetbrains/kotlin/gradle/plugin/mpp/KmpIsolatedProjectsSupport;
-	public static final field DISABLE Lorg/jetbrains/kotlin/gradle/plugin/mpp/KmpIsolatedProjectsSupport;
-	public static final field ENABLE Lorg/jetbrains/kotlin/gradle/plugin/mpp/KmpIsolatedProjectsSupport;
-	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlin/gradle/plugin/mpp/KmpIsolatedProjectsSupport;
-	public static fun values ()[Lorg/jetbrains/kotlin/gradle/plugin/mpp/KmpIsolatedProjectsSupport;
-}
-
 public abstract class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinAndroidTarget : org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinTarget, org/jetbrains/kotlin/gradle/dsl/HasConfigurableKotlinCompilerOptions {
 	public fun <init> (Ljava/lang/String;Lorg/gradle/api/Project;Z)V
 	public fun compilerOptions (Lkotlin/jvm/functions/Function1;)V

@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.gradle.internal.properties.PropertiesBuildService
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginLifecycle
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_DEPRECATED_TEST_PROPERTY
-import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_KMP_ISOLATED_PROJECT_SUPPORT
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_MPP_ENABLE_PLATFORM_INTEGER_COMMONIZATION
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_MPP_ENABLE_OPTIMISTIC_NUMBER_COMMONIZATION
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_PUBLISH_JVM_ENVIRONMENT_ATTRIBUTE
@@ -89,8 +88,8 @@ internal object GradleDeprecatedPropertyChecker : KotlinGradleProjectChecker {
             }
         ), // since 2.3.0
         DeprecatedProperty(
-            propertyName = KOTLIN_KMP_ISOLATED_PROJECT_SUPPORT,
-            details = "Since Kotlin 2.2, the KMP Isolated Projects support is enabled by default. This property will be removed in 2.4 release." +
+            propertyName = "kotlin.kmp.isolated-projects.support",
+            details = "Since Kotlin 2.2, KMP Isolated Projects support is enabled by default. This property no longer has any effect." +
                     " Leave your questions here https://youtrack.jetbrains.com/issue/KT-79257",
         ), // Since 2.3.20
         DeprecatedProperty(

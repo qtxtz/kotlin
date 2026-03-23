@@ -14,15 +14,6 @@ import kotlin.test.assertNull
 
 class GradleDeprecatedPropertyChecker {
 
-    @Test
-    fun `KOTLIN_KMP_ISOLATED_PROJECT_SUPPORT reports deprecation warning`() {
-        val project = buildProjectWithMPP(
-            preApplyCode = { enableKmpProjectIsolationSupport(enabled = true) },
-        ) {
-            kotlin { jvm() }
-        }.evaluate()
-        project.checkDiagnostics("KmpIsolatedProjectsSupportDeprecated")
-    }
 
     @Test
     fun `KT-83254 - diagnostic with filtering - emits only when filter passes the property`() {
