@@ -216,8 +216,7 @@ internal object DataSchemaDeclarationChecker : FirRegularClassChecker(mppKind = 
                 "@DataSchema declaration cannot be local. Move it outside function body. This is required so that plugin-generated extension properties can refer to this @DataSchema",
                 context
             )
-        }
-        if (declaration.effectiveVisibility !in ALLOWED_DECLARATION_VISIBILITY) {
+        } else if (declaration.effectiveVisibility !in ALLOWED_DECLARATION_VISIBILITY) {
             val visibilityOptions = ALLOWED_DECLARATION_VISIBILITY.joinToString(", ")
             reporter.reportOn(
                 declaration.source,
