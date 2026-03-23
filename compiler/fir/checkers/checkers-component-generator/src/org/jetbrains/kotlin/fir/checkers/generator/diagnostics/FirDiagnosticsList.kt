@@ -474,7 +474,9 @@ object DIAGNOSTICS_LIST : DiagnosticList("FirErrors") {
         val INAPPLICABLE_TARGET_PROPERTY_HAS_NO_BACKING_FIELD by error<KtAnnotationEntry>()
         val INAPPLICABLE_PARAM_TARGET by error<KtAnnotationEntry>()
         val INAPPLICABLE_FILE_TARGET by error<KtAnnotationEntry>(PositioningStrategy.ANNOTATION_USE_SITE)
-        val INAPPLICABLE_ALL_TARGET by error<KtAnnotationEntry>(PositioningStrategy.ANNOTATION_USE_SITE)
+        val INAPPLICABLE_ALL_TARGET by error<KtAnnotationEntry>(PositioningStrategy.ANNOTATION_USE_SITE) {
+            parameter<String>("inapplicableTargetDescription")
+        }
         val INAPPLICABLE_ALL_TARGET_IN_MULTI_ANNOTATION by error<KtAnnotationEntry>()
 
         val REPEATED_ANNOTATION by error<PsiElement>()

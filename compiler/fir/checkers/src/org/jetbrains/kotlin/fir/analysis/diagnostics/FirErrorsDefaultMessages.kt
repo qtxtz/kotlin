@@ -1438,7 +1438,8 @@ object FirErrorsDefaultMessages : BaseDiagnosticRendererFactory() {
         )
         map.put(
             INAPPLICABLE_ALL_TARGET,
-            "'@all:' annotations cannot be applied to local or delegated properties.",
+            "''@all:'' annotations cannot be applied to {0}.",
+            STRING,
         )
         map.put(
             INAPPLICABLE_ALL_TARGET_IN_MULTI_ANNOTATION,

@@ -1012,6 +1012,7 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
 
     interface InapplicableAllTarget : KaFirDiagnostic<KtAnnotationEntry> {
         override val diagnosticClass get() = InapplicableAllTarget::class
+        val inapplicableTargetDescription: String
     }
 
     interface InapplicableAllTargetInMultiAnnotation : KaFirDiagnostic<KtAnnotationEntry> {

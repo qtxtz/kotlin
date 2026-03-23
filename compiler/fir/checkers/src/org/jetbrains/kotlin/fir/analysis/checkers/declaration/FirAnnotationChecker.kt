@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.fir.packageFqName
 import org.jetbrains.kotlin.fir.resolve.forEachExpandedType
 import org.jetbrains.kotlin.fir.resolve.fqName
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirLocalPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.hasContextParameters
@@ -296,6 +297,11 @@ object FirAnnotationChecker : FirBasicDeclarationChecker(MppCheckerKind.Common) 
                                 reporter.reportOn(
                                     annotation.source,
                                     FirErrors.INAPPLICABLE_ALL_TARGET,
+                                    if (annotated.containingDeclarationSymbol is FirConstructorSymbol) {
+                                        "constructor parameters without corresponding property (consider adding val/var)"
+                                    } else {
+                                        "value parameters, only properties are allowed"
+                                    },
                                 )
                             }
                         }
@@ -304,11 +310,13 @@ object FirAnnotationChecker : FirBasicDeclarationChecker(MppCheckerKind.Common) 
                                 reporter.reportOn(
                                     annotation.source,
                                     FirErrors.INAPPLICABLE_ALL_TARGET,
+                                    "local properties, only member or top-level properties are allowed",
                                 )
                             } else if (annotated.delegate != null) {
                                 reporter.reportOn(
                                     annotation.source,
                                     FirErrors.INAPPLICABLE_ALL_TARGET,
+                                    "delegated properties",
                                 )
                             } else if (KotlinTarget.PROPERTY !in applicableTargets) {
                                 reporter.reportOn(
@@ -324,6 +332,7 @@ object FirAnnotationChecker : FirBasicDeclarationChecker(MppCheckerKind.Common) 
                             reporter.reportOn(
                                 annotation.source,
                                 FirErrors.INAPPLICABLE_ALL_TARGET,
+                                "elements other than properties",
                             )
                         }
                     }

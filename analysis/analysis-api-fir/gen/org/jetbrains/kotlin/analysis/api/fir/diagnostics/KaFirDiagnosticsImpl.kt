@@ -1211,6 +1211,7 @@ internal class InapplicableFileTargetImpl(
 ) : KaAbstractFirDiagnostic<KtAnnotationEntry>(firDiagnostic, token), KaFirDiagnostic.InapplicableFileTarget
 
 internal class InapplicableAllTargetImpl(
+    override val inapplicableTargetDescription: String,
     firDiagnostic: KtPsiDiagnostic,
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<KtAnnotationEntry>(firDiagnostic, token), KaFirDiagnostic.InapplicableAllTarget

@@ -5072,6 +5072,7 @@ private fun KaDiagnosticConverterBuilder.addConversions113() {
 private fun KaDiagnosticConverterBuilder.addConversions114() {
     add(FirErrors.INAPPLICABLE_ALL_TARGET) { firDiagnostic ->
         InapplicableAllTargetImpl(
+            firDiagnostic.a,
             firDiagnostic as KtPsiDiagnostic,
             token,
         )
