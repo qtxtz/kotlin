@@ -224,7 +224,8 @@ fun main(args: Array<String>) {
 
 private fun klib() = annotation(Tag::class.java, "klib")
 fun klibIrInliner() = annotation(Tag::class.java, KLIB_IR_INLINER)
-private fun klibSyntheticAccessors() = arrayOf(
+
+fun klibSyntheticAccessors() = arrayOf(
     annotation(
         EnforcedProperty::class.java,
         "property" to ClassLevelProperty.TEST_KIND,

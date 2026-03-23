@@ -3,13 +3,15 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.konan.test.blackbox;
+package org.jetbrains.kotlinx.atomicfu.runners;
 
 import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.junit.jupiter.api.Tag;
-import org.jetbrains.kotlin.konan.test.blackbox.support.EnforcedHostTarget;
+import org.jetbrains.kotlin.konan.test.blackbox.support.EnforcedProperty;
+import org.jetbrains.kotlin.konan.test.blackbox.support.ClassLevelProperty;
 import org.jetbrains.kotlin.konan.test.blackbox.support.group.UseExtTestCaseGroupProvider;
+import org.jetbrains.kotlin.konan.test.blackbox.support.EnforcedHostTarget;
 import org.jetbrains.kotlin.test.TestMetadata;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,10 +24,12 @@ import java.util.regex.Pattern;
 @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box")
 @TestDataPath("$PROJECT_ROOT")
 @Tag("klibIrInliner")
+@EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+@EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+@UseExtTestCaseGroupProvider()
 @Tag("atomicfu-native")
 @EnforcedHostTarget()
-@UseExtTestCaseGroupProvider()
-public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNativeCodegenBoxTest {
+public class AtomicfuNativeKlibSyntheticAccessorTestGenerated extends AbstractAtomicfuNativeKlibSyntheticAccessorTest {
   private void run(String fileName) {
     runTest("plugins/atomicfu/atomicfu-compiler/testData/box/" + fileName);
   }
@@ -39,9 +43,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/atomic_extensions")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Atomic_extensions {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/atomic_extensions/" + fileName);
@@ -123,9 +129,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/atomics_basic")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Atomics_basic {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/atomics_basic/" + fileName);
@@ -243,9 +251,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/context_parameters")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Context_parameters {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/context_parameters/" + fileName);
@@ -267,9 +277,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/delegated")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Delegated {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/delegated/" + fileName);
@@ -291,9 +303,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/locks")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Locks {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/locks/" + fileName);
@@ -321,9 +335,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/top-level")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Top_level {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/top-level/" + fileName);
@@ -351,9 +367,11 @@ public class AtomicfuNativeTestWithInlinedFunInKlibGenerated extends AbstractNat
   @TestMetadata("plugins/atomicfu/atomicfu-compiler/testData/box/trace")
   @TestDataPath("$PROJECT_ROOT")
   @Tag("klibIrInliner")
+  @EnforcedProperty(property = ClassLevelProperty.TEST_KIND, propertyValue = "STANDALONE")
+  @EnforcedProperty(property = ClassLevelProperty.CACHE_MODE, propertyValue = "NO")
+  @UseExtTestCaseGroupProvider()
   @Tag("atomicfu-native")
   @EnforcedHostTarget()
-  @UseExtTestCaseGroupProvider()
   public class Trace {
     private void run(String fileName) {
       runTest("plugins/atomicfu/atomicfu-compiler/testData/box/trace/" + fileName);

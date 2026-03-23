@@ -101,7 +101,7 @@ value class CompilerPlugins(val compilerPluginJars: Set<File>) {
  * The set of custom (external) klibs that should be passed to the Kotlin/Native compiler.
  */
 @JvmInline
-internal value class CustomKlibs(val klibs: Set<File>) {
+value class CustomKlibs(val klibs: Set<File>) {
     init {
         val invalidKlibs = klibs.filterNot { it.isDirectory || (it.isFile && it.extension == "klib") }
         assertTrue(invalidKlibs.isEmpty()) {
