@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.fir.declarations.utils.isOperator
 import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.declarations.utils.visibility
 import org.jetbrains.kotlin.fir.isDisabled
+import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.isVisible
 import org.jetbrains.kotlin.fir.resolve.providers.firProvider
 import org.jetbrains.kotlin.fir.resolve.providers.getContainingFile
@@ -381,7 +382,17 @@ object FirImportsChecker : FirFileChecker(MppCheckerKind.Common) {
     private fun checkImportApiStatus(import: FirImport) {
         val importedFqName = import.importedFqName ?: return
         if (importedFqName.isRoot || importedFqName.shortName().asString().isEmpty()) return
-        val classId = (import as? FirResolvedImport)?.resolvedParentClassId ?: ClassId.topLevel(importedFqName)
+
+        val parentClassId = (import as? FirResolvedImport)?.resolvedParentClassId
+
+        // When parentClassId is null, the import resolves to a top-level class (or callable declaration),
+        // and a potential deprecation will be reported on the use-site anyway.
+        // If parentClassId is not null, the import is the only place where the deprecation of an outer class is reported.
+        if (parentClassId == null && LanguageFeature.NoDeprecationOnImportStatements.isEnabled()) return
+
+        // TODO(KT-85230) report deprecations on indirect outer classes.
+
+        val classId = parentClassId ?: ClassId.topLevel(importedFqName)
         val symbol = classId.toSymbol() ?: return
         FirDeprecationChecker.reportApiStatusIfNeeded(import.source, symbol)
     }
