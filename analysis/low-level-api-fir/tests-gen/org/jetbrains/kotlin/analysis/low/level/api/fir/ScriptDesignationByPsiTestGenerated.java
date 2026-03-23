@@ -28,9 +28,21 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("classInitializerRepl.repl.kts")
+  public void testClassInitializerRepl_repl() {
+    run("classInitializerRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("classInitializerScript.kts")
   public void testClassInitializerScript() {
     run("classInitializerScript.kts");
+  }
+
+  @Test
+  @TestMetadata("deeplyNestedMemberPropertyRepl.repl.kts")
+  public void testDeeplyNestedMemberPropertyRepl_repl() {
+    run("deeplyNestedMemberPropertyRepl.repl.kts");
   }
 
   @Test
@@ -40,9 +52,21 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("deeplyNestedMemberRepl.repl.kts")
+  public void testDeeplyNestedMemberRepl_repl() {
+    run("deeplyNestedMemberRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("deeplyNestedMemberScript.kts")
   public void testDeeplyNestedMemberScript() {
     run("deeplyNestedMemberScript.kts");
+  }
+
+  @Test
+  @TestMetadata("memberFunctionRepl.repl.kts")
+  public void testMemberFunctionRepl_repl() {
+    run("memberFunctionRepl.repl.kts");
   }
 
   @Test
@@ -52,9 +76,21 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("memberPropertyRepl.repl.kts")
+  public void testMemberPropertyRepl_repl() {
+    run("memberPropertyRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("memberPropertyScript.kts")
   public void testMemberPropertyScript() {
     run("memberPropertyScript.kts");
+  }
+
+  @Test
+  @TestMetadata("nestedClassRepl.repl.kts")
+  public void testNestedClassRepl_repl() {
+    run("nestedClassRepl.repl.kts");
   }
 
   @Test
@@ -64,9 +100,27 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("primaryConstructorRepl.repl.kts")
+  public void testPrimaryConstructorRepl_repl() {
+    run("primaryConstructorRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("primaryConstructorScript.kts")
   public void testPrimaryConstructorScript() {
     run("primaryConstructorScript.kts");
+  }
+
+  @Test
+  @TestMetadata("replResult.repl.kts")
+  public void testReplResult_repl() {
+    run("replResult.repl.kts");
+  }
+
+  @Test
+  @TestMetadata("replWithResult.repl.kts")
+  public void testReplWithResult_repl() {
+    run("replWithResult.repl.kts");
   }
 
   @Test
@@ -82,6 +136,18 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("scriptInitializerRepl.repl.kts")
+  public void testScriptInitializerRepl_repl() {
+    run("scriptInitializerRepl.repl.kts");
+  }
+
+  @Test
+  @TestMetadata("scriptRepl.repl.kts")
+  public void testScriptRepl_repl() {
+    run("scriptRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("scriptResult.kts")
   public void testScriptResult() {
     run("scriptResult.kts");
@@ -94,9 +160,21 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("secondaryConstructorRepl.repl.kts")
+  public void testSecondaryConstructorRepl_repl() {
+    run("secondaryConstructorRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("secondaryConstructorScript.kts")
   public void testSecondaryConstructorScript() {
     run("secondaryConstructorScript.kts");
+  }
+
+  @Test
+  @TestMetadata("topLevelClassRepl.repl.kts")
+  public void testTopLevelClassRepl_repl() {
+    run("topLevelClassRepl.repl.kts");
   }
 
   @Test
@@ -106,15 +184,33 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("topLevelFunctionRepl.repl.kts")
+  public void testTopLevelFunctionRepl_repl() {
+    run("topLevelFunctionRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("topLevelFunctionScript.kts")
   public void testTopLevelFunctionScript() {
     run("topLevelFunctionScript.kts");
   }
 
   @Test
+  @TestMetadata("topLevelPropertyRepl.repl.kts")
+  public void testTopLevelPropertyRepl_repl() {
+    run("topLevelPropertyRepl.repl.kts");
+  }
+
+  @Test
   @TestMetadata("topLevelPropertyScript.kts")
   public void testTopLevelPropertyScript() {
     run("topLevelPropertyScript.kts");
+  }
+
+  @Test
+  @TestMetadata("typeAliasRepl.repl.kts")
+  public void testTypeAliasRepl_repl() {
+    run("typeAliasRepl.repl.kts");
   }
 
   @Test

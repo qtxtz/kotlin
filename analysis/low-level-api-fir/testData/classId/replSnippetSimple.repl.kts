@@ -1,10 +1,8 @@
-/* ClassId: /ReplSnippetSimple_repl.TopLevel [KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl] */
+/* ClassId: /ReplSnippetSimple_repl.TopLevel */
 class TopLevel {
-    /* ClassId: /ReplSnippetSimple_repl.TopLevel.Nested [KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl] */class Nested
+    /* ClassId: /ReplSnippetSimple_repl.TopLevel.Nested */class Nested
 }
 
-/* ClassId: /ReplSnippetSimple_repl.Baz [KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl] */object Baz {
-    /* ClassId: /ReplSnippetSimple_repl.Baz.Foo [KotlinIllegalArgumentExceptionWithAttachments: Unexpected declaration FirReplSnippetImpl] */interface Foo
+/* ClassId: /ReplSnippetSimple_repl.Baz */object Baz {
+    /* ClassId: /ReplSnippetSimple_repl.Baz.Foo */interface Foo
 }
-
-// IGNORE_CONSISTENCY_CHECK: repl is not properly supported yet

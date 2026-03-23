@@ -533,6 +533,37 @@ val KtDeclaration.containingClassOrObject: KtClassOrObject?
     }
 
 /**
+ * The containing script for top-level declarations.
+ *
+ * @see containingClassOrObject
+ */
+@KtExperimentalApi
+val KtDeclaration.containingScript: KtScript?
+    get() = when (val parent = parent) {
+        is KtBlockExpression -> parent.parent as? KtScript
+        else -> null
+    }
+
+
+/**
+ * Containing [ClassId] for a declaration. It supports [KtScript] in REPL mode.
+ *
+ * @see containingScript
+ * @see containingClassOrObject
+ */
+@KtExperimentalApi
+val KtDeclaration.containingClassId: ClassId?
+    get() {
+        containingClassOrObject?.let {
+            return it.getClassId()
+        }
+
+        val script = containingScript?.takeIf(KtScript::isReplSnippet) ?: return null
+        return ClassId.topLevel(script.fqName)
+    }
+
+
+/**
  * The containing class for the body.
  *
  * **Note**: it bypasses [KtCompanionBlock].

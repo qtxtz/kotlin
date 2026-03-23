@@ -50,7 +50,7 @@ class FirDesignation(
      *
      * ### Contracts:
      * * Can contain [FirFile] only in the first position
-     * * Can contain [FirScript] only in the first or second position
+     * * Can contain [FirScript]/[FirReplSnippet] only in the first or second position
      *
      * @see file
      * @see fileOrNull
@@ -72,9 +72,9 @@ class FirDesignation(
                     withFirDesignationEntry("designation", this@FirDesignation)
                 }
 
-                is FirScript -> requireWithAttachment(
+                is FirScript, is FirReplSnippet -> requireWithAttachment(
                     index == 0 || index == 1 && path.first() is FirFile,
-                    { "${FirScript::class.simpleName} can be only in the first or second position of the path, but actual is '$index'" },
+                    { "${declaration::class.simpleName} can be only in the first or second position of the path, but actual is '$index'" },
                 ) {
                     withFirDesignationEntry("designation", this@FirDesignation)
                 }
