@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("d8-configuration")
     id("java-test-fixtures")
     id("project-tests-convention")
 }
@@ -7,6 +8,7 @@ plugins {
 dependencies {
     testFixturesApi(project(":plugins:plugin-sandbox"))
     testFixturesApi(project(":compiler:incremental-compilation-impl"))
+    testFixturesApi(testFixtures(project(":js:js.tests")))
     testFixturesApi(testFixtures(project(":compiler:incremental-compilation-impl")))
     testFixturesApi(libs.junit.jupiter.api)
 
@@ -21,6 +23,7 @@ dependencies {
 
     testRuntimeOnly(toolsJar())
     testRuntimeOnly(libs.junit.vintage.engine)
+    testRuntimeOnly(libs.junit.jupiter.engine)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
@@ -36,11 +39,15 @@ projectTests {
         workingDir = rootDir
         dependsOn(":plugins:plugin-sandbox:jar")
         dependsOn(":plugins:plugin-sandbox:plugin-annotations:distAnnotations")
+        useJsIrBoxTests(buildDir = layout.buildDirectory)
     }
 
     testGenerator("org.jetbrains.kotlin.incremental.TestGeneratorForPluginSandboxICTestsKt")
 
     withJvmStdlibAndReflect()
+    withJsRuntime()
+    withStdlibWeb()
+    withStdlibCommon()
 }
 
 testsJar()

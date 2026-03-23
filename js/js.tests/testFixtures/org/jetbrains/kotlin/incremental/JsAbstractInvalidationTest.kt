@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -61,6 +61,9 @@ abstract class JsAbstractInvalidationTest(
 
     override val kotlinTestKLib: String =
         File(System.getProperty("kotlin.js.kotlin.test.klib.path") ?: error("Please set kotlin.test path")).canonicalPath
+
+    open val libraryNamesToExcludeFromStats
+        get() = setOf(STDLIB_MODULE_NAME, KOTLIN_TEST_MODULE_NAME)
 
     final override val rootDisposable: TestDisposable =
         TestDisposable("${JsAbstractInvalidationTest::class.simpleName}.rootDisposable")
@@ -185,7 +188,7 @@ abstract class JsAbstractInvalidationTest(
         }
 
         private fun verifyJsExecutableProducerBuildModules(stepId: Int, gotRebuilt: List<String>, expectedRebuilt: List<String>) {
-            val got = gotRebuilt.filter { !it.startsWith(STDLIB_MODULE_NAME) && !it.startsWith(KOTLIN_TEST_MODULE_NAME) }
+            val got = gotRebuilt.filter { moduleName -> libraryNamesToExcludeFromStats.none { moduleName.startsWith(it) } }
             JUnit4Assertions.assertSameElements(got, expectedRebuilt) {
                 "Mismatched rebuilt modules at step $stepId"
             }

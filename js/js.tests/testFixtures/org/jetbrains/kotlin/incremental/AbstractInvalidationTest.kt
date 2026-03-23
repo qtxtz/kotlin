@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.cli.common.renderDiagnosticInternalName
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.cli.pipeline.CheckCompilationErrors
 import org.jetbrains.kotlin.cli.pipeline.ConfigurationPipelineArtifact
+import org.jetbrains.kotlin.cli.pipeline.FrontendFilesForPluginsGenerationPipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.PipelineContext
 import org.jetbrains.kotlin.cli.pipeline.PipelineStepException
 import org.jetbrains.kotlin.cli.pipeline.web.WebFir2IrPipelinePhase
@@ -33,7 +34,6 @@ import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime
 import org.jetbrains.kotlin.config.*
 import org.jetbrains.kotlin.config.phaser.PhaseConfig
 import org.jetbrains.kotlin.config.phaser.invokeToplevel
-import org.jetbrains.kotlin.diagnostics.impl.DiagnosticsCollectorImpl
 import org.jetbrains.kotlin.ir.backend.js.ic.DirtyFileState
 import org.jetbrains.kotlin.ir.backend.js.ic.KotlinLibraryFile
 import org.jetbrains.kotlin.ir.backend.js.ic.KotlinSourceFileMap
@@ -95,6 +95,9 @@ abstract class AbstractInvalidationTest(
     protected abstract val rootDisposable: TestDisposable
 
     protected abstract val environment: KotlinCoreEnvironment
+
+    protected open val librariesToExcludeFromStats
+        get() = setOf(stdlibKLib, kotlinTestKLib)
 
     @AfterEach
     protected fun disposeEnvironment() {
@@ -297,7 +300,7 @@ abstract class AbstractInvalidationTest(
             stats: KotlinSourceFileMap<EnumSet<DirtyFileState>>,
             testInfo: List<TestStepInfo>
         ) {
-            val gotStats = stats.filter { it.key.path != stdlibKLib && it.key.path != kotlinTestKLib }
+            val gotStats = stats.filter { it.key.path !in librariesToExcludeFromStats }
 
             val checkedLibs = mutableSetOf<KotlinLibraryFile>()
 
@@ -430,6 +433,7 @@ abstract class AbstractInvalidationTest(
         configuration.allowNoSourceFiles = true
 
         val klibSerializationCompoundPhase = WebFrontendPipelinePhase then
+                FrontendFilesForPluginsGenerationPipelinePhase() then
                 WebFir2IrPipelinePhase then
                 WebKlibInliningPipelinePhase then
                 WebKlibSerializationPipelinePhase
