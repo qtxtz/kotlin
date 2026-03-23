@@ -1000,7 +1000,9 @@ object FirTree : AbstractFirTreeBuilder() {
         +field("source", sourceElementType, nullable = false)
         +listField("receivers", scriptReceiverParameter, useMutableOrEmpty = true, withTransform = true)
         +field("snippetClass", regularClass, withTransform = true)
-        +field("evalFunctionName", nameType)
+        +referencedSymbol("evalFunctionSymbol", namedFunctionSymbolType) {
+            withBindThis = false
+        }
     }
 
     val replDeclarationReference: Element by element(Expression) {

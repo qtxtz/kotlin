@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.fir.builder.toMutableOrEmpty
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.impl.FirReplSnippetImpl
 import org.jetbrains.kotlin.fir.expressions.FirAnnotation
+import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirReplSnippetSymbol
 import org.jetbrains.kotlin.name.Name
 
@@ -34,7 +35,7 @@ class FirReplSnippetBuilder : FirAnnotationContainerBuilder {
     lateinit var source: KtSourceElement
     val receivers: MutableList<FirScriptReceiverParameter> = mutableListOf()
     lateinit var snippetClass: FirRegularClass
-    lateinit var evalFunctionName: Name
+    lateinit var evalFunctionSymbol: FirNamedFunctionSymbol
 
     override fun build(): FirReplSnippet {
         return FirReplSnippetImpl(
@@ -48,7 +49,7 @@ class FirReplSnippetBuilder : FirAnnotationContainerBuilder {
             source,
             receivers.toMutableOrEmpty(),
             snippetClass,
-            evalFunctionName,
+            evalFunctionSymbol,
         )
     }
 }

@@ -1463,11 +1463,11 @@ open class PsiRawFirBuilder(
             val snippetSymbol = FirReplSnippetSymbol(classSymbol)
 
             val evalName = Name.identifier($$$"$$eval")
-
-            val klass = withContainerReplSymbol(snippetSymbol) {
+            val (klass, evalSymbol) = withContainerReplSymbol(snippetSymbol) {
                 withChildClassName(snippetClassName, isExpect = false) {
                     withContainerSymbol(classSymbol) {
-                        buildRegularClass {
+                        val evalSymbol = FirNamedFunctionSymbol(callableIdForName(evalName))
+                        val klass = buildRegularClass {
                             source = script.toKtPsiSourceElement(KtFakeSourceElementKind.ReplBaseClass)
                             moduleData = baseModuleData
                             origin = FirDeclarationOrigin.Synthetic.ReplContainerClass
@@ -1485,7 +1485,6 @@ open class PsiRawFirBuilder(
 
                             val replClassMembers = mutableListOf<FirDeclaration>()
 
-                            val evalSymbol = FirNamedFunctionSymbol(callableIdForName(evalName))
                             val evalFunction = withContainerSymbol(evalSymbol) {
                                 val copiedDelegatedProperties = mutableMapOf<FirPropertySymbol, FirProperty>()
 
@@ -1542,6 +1541,8 @@ open class PsiRawFirBuilder(
 
                             declarations += listOf(constructor, evalFunction) + replClassMembers
                         }
+
+                        klass to evalSymbol
                     }
                 }
             }
@@ -1554,7 +1555,7 @@ open class PsiRawFirBuilder(
                 symbol = snippetSymbol
 
                 snippetClass = klass
-                evalFunctionName = evalName
+                evalFunctionSymbol = evalSymbol
 
                 snippetSetup()
             }

@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirModuleData
 import org.jetbrains.kotlin.fir.expressions.FirAnnotation
 import org.jetbrains.kotlin.fir.references.FirControlFlowGraphReference
+import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirReplSnippetSymbol
 import org.jetbrains.kotlin.fir.visitors.FirTransformer
 import org.jetbrains.kotlin.fir.visitors.FirVisitor
@@ -35,7 +36,7 @@ abstract class FirReplSnippet : FirDeclaration(), FirControlFlowGraphOwner {
     abstract override val source: KtSourceElement
     abstract val receivers: List<FirScriptReceiverParameter>
     abstract val snippetClass: FirRegularClass
-    abstract val evalFunctionName: Name
+    abstract val evalFunctionSymbol: FirNamedFunctionSymbol
 
     override fun <R, D> accept(visitor: FirVisitor<R, D>, data: D): R =
         visitor.visitReplSnippet(this, data)
