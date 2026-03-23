@@ -14,6 +14,8 @@ object PowerAssertNames {
     @JvmField
     val POWER_ASSERT_PACKAGE_FQ_NAME = FqName("kotlin.powerassert")
 
+    // ===== PowerAssert annotation and nested symbols ===== //
+
     @JvmField
     val POWER_ASSERT_FQ_NAME = POWER_ASSERT_PACKAGE_FQ_NAME.child(Name.identifier("PowerAssert"))
 
@@ -26,11 +28,35 @@ object PowerAssertNames {
     val POWER_ASSERT_EXPLANATION_CALLABLE_ID = CallableId(POWER_ASSERT_COMPANION_CLASS_ID, Name.identifier("explanation"))
 
     @JvmField
-    val POWER_ASSERT_EXPLANATION_GETTER_CALLABLE_ID = CallableId(POWER_ASSERT_COMPANION_CLASS_ID, Name.special("<get-explanation>"))
-
-    @JvmField
     val POWER_ASSERT_IGNORE_CLASS_ID = POWER_ASSERT_CLASS_ID.createNestedClassId(Name.identifier("Ignore"))
+
+    // ===== CallExplanation class and nested symbols ===== //
 
     @JvmField
     val CALL_EXPLANATION_CLASS_ID = ClassId.topLevel(POWER_ASSERT_PACKAGE_FQ_NAME.child(Name.identifier("CallExplanation")))
+
+    @JvmField
+    val CALL_EXPLANATION_ARGUMENT_CLASS_ID = CALL_EXPLANATION_CLASS_ID.createNestedClassId(Name.identifier("Argument"))
+
+    @JvmField
+    val CALL_EXPLANATION_ARGUMENT_KIND_CLASS_ID = CALL_EXPLANATION_ARGUMENT_CLASS_ID.createNestedClassId(Name.identifier("Kind"))
+
+    // ===== Expression classes ===== //
+
+    @JvmField
+    val EXPRESSION_CLASS_ID = ClassId.topLevel(POWER_ASSERT_PACKAGE_FQ_NAME.child(Name.identifier("Expression")))
+
+    @JvmField
+    val VALUE_EXPRESSION_CLASS_ID = ClassId.topLevel(POWER_ASSERT_PACKAGE_FQ_NAME.child(Name.identifier("ValueExpression")))
+
+    @JvmField
+    val LITERAL_EXPRESSION_CLASS_ID = ClassId.topLevel(POWER_ASSERT_PACKAGE_FQ_NAME.child(Name.identifier("LiteralExpression")))
+
+    @JvmField
+    val EQUALITY_EXPRESSION_CLASS_ID = ClassId.topLevel(POWER_ASSERT_PACKAGE_FQ_NAME.child(Name.identifier("EqualityExpression")))
+
+    // ===== Utility functions ===== //
+
+    @JvmField
+    val EXPLANATION_TO_DEFAULT_MESSAGE_CALLABLE_ID = CallableId(POWER_ASSERT_PACKAGE_FQ_NAME, Name.identifier("toDefaultMessage"))
 }

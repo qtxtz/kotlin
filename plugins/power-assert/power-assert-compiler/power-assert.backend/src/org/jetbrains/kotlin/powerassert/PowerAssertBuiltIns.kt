@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.builtins.StandardNames
 import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
+import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.typeWith
@@ -21,9 +22,16 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.JvmStandardClassIds
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.CALL_EXPLANATION_ARGUMENT_CLASS_ID
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.CALL_EXPLANATION_ARGUMENT_KIND_CLASS_ID
 import org.jetbrains.kotlin.powerassert.PowerAssertNames.CALL_EXPLANATION_CLASS_ID
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.EQUALITY_EXPRESSION_CLASS_ID
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.EXPLANATION_TO_DEFAULT_MESSAGE_CALLABLE_ID
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.EXPRESSION_CLASS_ID
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.LITERAL_EXPRESSION_CLASS_ID
 import org.jetbrains.kotlin.powerassert.PowerAssertNames.POWER_ASSERT_CLASS_ID
-import org.jetbrains.kotlin.powerassert.PowerAssertNames.POWER_ASSERT_PACKAGE_FQ_NAME
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.POWER_ASSERT_EXPLANATION_CALLABLE_ID
+import org.jetbrains.kotlin.powerassert.PowerAssertNames.VALUE_EXPRESSION_CLASS_ID
 
 class PowerAssertBuiltIns private constructor(
     irBuiltIns: IrBuiltIns,
@@ -45,59 +53,65 @@ class PowerAssertBuiltIns private constructor(
 
         private fun dependencyError(message: String? = null): Nothing {
             if (message != null) {
-                error("Power-Assert plugin runtime dependency was not found: $message")
+                error("Power-Assert plugin runtime dependency error: $message")
             } else {
-                error("Power-Assert plugin runtime dependency was not found.")
+                error("Power-Assert plugin runtime dependency error.")
             }
         }
 
-        private fun classId(identifier: String): ClassId =
-            ClassId(POWER_ASSERT_PACKAGE_FQ_NAME, Name.identifier(identifier))
-
-        private fun classId(parent: ClassId, identifier: String): ClassId =
-            parent.createNestedClassId(Name.identifier(identifier))
-
-        private fun callableId(identifier: String): CallableId =
-            CallableId(POWER_ASSERT_PACKAGE_FQ_NAME, Name.identifier(identifier))
-
-
         private fun DeclarationFinder.findClassOrError(classId: ClassId): IrClassSymbol =
-            findClass(classId) ?: dependencyError(classId.toString())
+            findClass(classId) ?: dependencyError("class not found '$classId'")
 
-        private fun DeclarationFinder.findFunctionOrError(callableId: CallableId): IrSimpleFunctionSymbol =
-            findFunctions(callableId).singleOrNull() ?: dependencyError()
+        private fun DeclarationFinder.findFunctionOrError(callableId: CallableId): IrSimpleFunctionSymbol {
+            val found = findFunctions(callableId)
+            return when (found.size) {
+                0 -> dependencyError("function not found '$callableId'")
+                1 -> found.single()
+                else -> dependencyError("multiple functions found for '$callableId': $found")
+            }
+        }
+
+        private fun DeclarationFinder.findPropertyOrError(callableId: CallableId): IrPropertySymbol {
+            val found = findProperties(callableId)
+            return when (found.size) {
+                0 -> dependencyError("property not found '$callableId'")
+                1 -> found.single()
+                else -> dependencyError("multiple properties found for '$callableId': $found")
+            }
+        }
 
         private val IrClassSymbol.primaryConstructorOrError: IrConstructorSymbol
             get() = owner.primaryConstructor?.symbol ?: dependencyError()
-
-        private val argumentClassId = classId(CALL_EXPLANATION_CLASS_ID, "Argument")
-        private val kindClassId = classId(argumentClassId, "Kind")
     }
 
-    val expressionClass = finder.findClassOrError(classId("Expression"))
+    private val powerAssertExplanationProperty = finder.findPropertyOrError(POWER_ASSERT_EXPLANATION_CALLABLE_ID)
+    val powerAssertExplanationGetter = powerAssertExplanationProperty.owner.getter?.symbol ?: dependencyError()
+
+    private val expressionClass = finder.findClassOrError(EXPRESSION_CLASS_ID)
     val expressionType = expressionClass.defaultType
 
-    val valueExpressionClass = finder.findClassOrError(classId("ValueExpression"))
+    private val valueExpressionClass = finder.findClassOrError(VALUE_EXPRESSION_CLASS_ID)
     val valueExpressionConstructor = valueExpressionClass.primaryConstructorOrError
 
-    val literalExpressionClass = finder.findClassOrError(classId("LiteralExpression"))
+    private val literalExpressionClass = finder.findClassOrError(LITERAL_EXPRESSION_CLASS_ID)
     val literalExpressionConstructor = literalExpressionClass.primaryConstructorOrError
 
-    val equalityExpressionClass = finder.findClassOrError(classId("EqualityExpression"))
+    private val equalityExpressionClass by lazy { finder.findClassOrError(EQUALITY_EXPRESSION_CLASS_ID) }
     val equalityExpressionConstructor = equalityExpressionClass.primaryConstructorOrError
 
-    val callExplanationClass = finder.findClassOrError(CALL_EXPLANATION_CLASS_ID)
+    private val callExplanationClass = finder.findClassOrError(CALL_EXPLANATION_CLASS_ID)
     val callExplanationType = callExplanationClass.defaultType
     val callExplanationConstructor = callExplanationClass.primaryConstructorOrError
     val function0CallExplanationType = irBuiltIns.functionN(0).typeWith(callExplanationType)
-    val toDefaultMessageFunction = finder.findFunctionOrError(callableId("toDefaultMessage"))
 
-    val argumentClass = finder.findClassOrError(argumentClassId)
+    private val argumentClass = finder.findClassOrError(CALL_EXPLANATION_ARGUMENT_CLASS_ID)
     val argumentType = argumentClass.defaultType
     val argumentConstructor = argumentClass.primaryConstructorOrError
 
-    val argumentKindClass = finder.findClassOrError(kindClassId)
+    val argumentKindClass = finder.findClassOrError(CALL_EXPLANATION_ARGUMENT_KIND_CLASS_ID)
     val argumentKindType = argumentKindClass.defaultType
+
+    val toDefaultMessageFunction = finder.findFunctionOrError(EXPLANATION_TO_DEFAULT_MESSAGE_CALLABLE_ID)
 
     // -----
 
