@@ -11,10 +11,12 @@ import org.jetbrains.kotlin.buildtools.tests.compilation.model.BtaVersionsOnlyCo
 import org.jetbrains.kotlin.buildtools.tests.compilation.util.btaClassloader
 import org.jetbrains.kotlin.tooling.core.KotlinToolingVersion
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 
 class BtaClassesClashTest {
+    @DisplayName("Number of BTA API class copies on classpath is correct for compiler version")
     @BtaVersionsOnlyCompilationTest
-    fun testNumberOfAvailableApiClasses() {
+    fun testNumberOfAvailableApiClasses(toolchain: KotlinToolchains) {
         val fqn = KotlinLogger::class.java.name // FQN of an API class added quite a long time ago
         val resourceName = fqn.replace('.', '/') + ".class"
 
@@ -22,14 +24,13 @@ class BtaClassesClashTest {
             .getResources(resourceName)
             .toList()
 
-        val kotlinToolchains = KotlinToolchains.loadImplementation(btaClassloader)
-        val expectedNumber = if (KotlinToolingVersion(kotlinToolchains.getCompilerVersion()) >= KotlinToolingVersion(2, 4, 0, "snapshot")) {
+        val expectedNumber = if (KotlinToolingVersion(toolchain.getCompilerVersion()) >= KotlinToolingVersion(2, 4, 0, "snapshot")) {
             1
         } else {
             2
         }
         assertEquals(expectedNumber, urls.size) {
-            "Expected exactly one $fqn on classpath, but found ${urls.size}: $urls"
+            "Expected $expectedNumber instance(s) of $fqn on classpath, but found ${urls.size}: $urls"
         }
     }
 }
