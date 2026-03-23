@@ -74,23 +74,6 @@ fun FirSessionConfigurator.registerExtraNativeCheckers() {
     registerDiagnosticContainers(FirNativeErrors)
 }
 
-private fun FirSessionConfigurator.registerWasmCheckers(target: WasmTarget) {
-    useCheckers(WasmBaseDeclarationCheckers)
-    useCheckers(WasmBaseExpressionCheckers)
-    useCheckers(WasmBaseTypeCheckers)
-    registerDiagnosticContainers(FirWebCommonErrors, FirWasmErrors)
-
-    when (target) {
-        WasmTarget.JS -> {
-            useCheckers(WasmJsDeclarationCheckers)
-            useCheckers(WasmJsExpressionCheckers)
-        }
-        WasmTarget.WASI -> {
-            useCheckers(WasmWasiDeclarationCheckers)
-        }
-    }
-}
-
 fun FirSessionConfigurator.registerWasmJsCheckers() {
     useCheckers(WasmBaseDeclarationCheckers)
     useCheckers(WasmBaseExpressionCheckers)
