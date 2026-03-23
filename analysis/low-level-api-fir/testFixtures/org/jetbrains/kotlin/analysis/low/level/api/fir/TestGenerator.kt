@@ -331,6 +331,14 @@ fun main(args: Array<String>) {
                     modelInit()
                 }
             }
+
+            testClass<AbstractSourceDesignationByPsiTest> {
+                model("designationByPsi", pattern = TestGeneratorUtil.KT)
+            }
+
+            testClass<AbstractScriptDesignationByPsiTest> {
+                model("designationByPsi", pattern = TestGeneratorUtil.KTS)
+            }
         }
 
         testGroup(testsRoot = "analysis/low-level-api-fir/tests-gen", testDataRoot = "analysis/analysis-api/testData") {
