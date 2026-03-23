@@ -5,6 +5,7 @@
 package org.jetbrains.kotlin.psi
 
 import com.intellij.lang.ASTNode
+import com.intellij.openapi.util.Key
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.KtStubBasedElementTypes
 import org.jetbrains.kotlin.name.FqName
@@ -59,4 +60,21 @@ open class KtScript : KtNamedDeclarationStub<KotlinScriptStub>, KtDeclarationCon
     override fun <R, D> accept(visitor: KtVisitor<R, D>, data: D): R {
         return visitor.visitScript(this, data)
     }
+
+    /**
+     * Determines whether a [KtScript] should be treated as a REPL snippet or not.
+     */
+    @KtExperimentalApi
+    val isReplSnippet: Boolean
+        get() = this.getUserData(REPL_SNIPPET_KEY) == true
+
+    /**
+     * Marks the [KtScript] as a REPL snippet, so it is treated by the compiler accordingly.
+     */
+    @KtNonPublicApi
+    fun markAsReplSnippet() {
+        putUserData(REPL_SNIPPET_KEY, true)
+    }
 }
+
+private val REPL_SNIPPET_KEY = Key.create<Boolean>("REPL_SNIPPET")

@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.psi.KtPsiFactoryKt;
 import org.jetbrains.kotlin.test.KtAssert;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
@@ -85,7 +84,7 @@ public class KtTestUtil {
         KtFile file = (KtFile) factory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
         Objects.requireNonNull(file, "PsiFileFactory.trySetupPsiForFile returned null");
         if (name.endsWith(".repl.kts")) {
-            KtPsiFactoryKt.markAsReplSnippet(Objects.requireNonNull(file.getScript()));
+            Objects.requireNonNull(file.getScript()).markAsReplSnippet();
         }
 
         return file;

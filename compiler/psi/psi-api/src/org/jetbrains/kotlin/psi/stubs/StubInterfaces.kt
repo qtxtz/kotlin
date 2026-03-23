@@ -296,7 +296,7 @@ interface KotlinScriptStub : KotlinStubWithFqName<KtScript> {
     /**
      * Whether the script is a REPL snippet.
      *
-     * @see org.jetbrains.kotlin.psi.isReplSnippet
+     * @see KtScript.isReplSnippet
      */
     @KtImplementationDetail
     val isReplSnippet: Boolean
