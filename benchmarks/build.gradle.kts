@@ -31,23 +31,27 @@ sourceSets {
 
 optInToK1Deprecation()
 
+val warmupsParam = project.findProperty("warmups")?.toString()
+val iterationsParam = project.findProperty("iterations")?.toString()
+val includePattern = project.findProperty("include")?.toString()
+val sizeParam = project.findProperty("size")?.toString()
+
 benchmark {
     configurations {
         named("main") {
-            warmups = 10
-            iterations = 10
-            iterationTime = 1
-            iterationTimeUnit = "sec"
-            param("size", 1000)
+            iterationTime = 1 // Required param
+            iterationTimeUnit = "sec" // Required param
 
-            include("CommonCallsBenchmark")
-            include("ControlFlowAnalysisBenchmark")
+            warmups = warmupsParam?.toInt() ?: 5 // `5` is currently default in JMH
+            iterations = iterationsParam?.toInt() ?: 5 // `5` is currently default in JMH
 
-            /*include("InferenceBaselineCallsBenchmark")
-            include("InferenceExplicitArgumentsCallsBenchmark")
-            include("InferenceForInApplicableCandidate")
-            include("InferenceFromArgumentCallsBenchmark")
-            include("InferenceFromReturnTypeCallsBenchmark")*/
+            include(includePattern ?: "*") // Benchmark everything if the pattern isn't specified
+
+            if (sizeParam != null) {
+                // Use size from annotation arguments if the param isn't specified
+                // CAUTION: large size might cause long execution time
+                param("size", sizeParam.toInt())
+            }
         }
     }
     targets {
