@@ -12,16 +12,13 @@ import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.SourceElementPositioningStrategies
 import org.jetbrains.kotlin.diagnostics.reportOn
-import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.FirSessionComponent
+import org.jetbrains.kotlin.fir.*
 import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors
 import org.jetbrains.kotlin.fir.analysis.getChild
 import org.jetbrains.kotlin.fir.declarations.utils.isInner
 import org.jetbrains.kotlin.fir.expressions.*
-import org.jetbrains.kotlin.fir.isEnabled
-import org.jetbrains.kotlin.fir.ownTypeArguments
 import org.jetbrains.kotlin.fir.references.toResolvedTypeParameterSymbol
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.resolve.toTypeParameterSymbol
@@ -83,7 +80,7 @@ object FirClassLiteralChecker : FirGetClassCallChecker(MppCheckerKind.Common) {
         }
 
         if (!argument.canBeDoubleColonLHSAsType &&
-            !LanguageFeature.ForbidClassLiteralWithPotentiallyNullableReifiedLhs.isEnabled() &&
+            LanguageFeature.ForbidClassLiteralWithPotentiallyNullableReifiedLhs.isDisabled() &&
             resolvedFullyExpandedType.toTypeParameterSymbol()?.isReified == true &&
             !resolvedFullyExpandedType.isMarkedNullable &&
             resolvedFullyExpandedType.canBeNull(context.session)

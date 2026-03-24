@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.fir.expressions.ExhaustivenessStatus
 import org.jetbrains.kotlin.fir.expressions.FirWhenExpression
 import org.jetbrains.kotlin.fir.expressions.impl.FirElseIfTrueCondition
 import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyExpressionBlock
-import org.jetbrains.kotlin.fir.isEnabled
+import org.jetbrains.kotlin.fir.isDisabled
 import org.jetbrains.kotlin.fir.isJavaNonAbstractSealed
 import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
 import org.jetbrains.kotlin.fir.resolve.toSymbol
@@ -99,7 +99,7 @@ object FirExhaustiveWhenChecker : FirWhenExpressionChecker(MppCheckerKind.Common
         val missingCases = whenExpression.missingCases
 
         if (missingCases.all { it is WhenMissingCase.IsTypeCheckIsMissing && it.classId.isJavaNonAbstractSealed() }
-            && !LanguageFeature.ProperExhaustivenessCheckForJavaOpenSealedClass.isEnabled()
+            && LanguageFeature.ProperExhaustivenessCheckForJavaOpenSealedClass.isDisabled()
         ) {
             reporter.reportOn(source, FirErrors.MISSING_BRANCH_FOR_NON_ABSTRACT_SEALED_CLASS, missingCases)
             return

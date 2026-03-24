@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.report
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.diagnostics.CliFrontendDiagnostics
-import org.jetbrains.kotlin.fir.isEnabled
+import org.jetbrains.kotlin.fir.isDisabled
 
 object FirContextParametersLanguageVersionSettingsChecker : FirLanguageVersionSettingsChecker() {
     val DIAGNOSTIC_MESSAGE: String = """
@@ -21,7 +21,7 @@ object FirContextParametersLanguageVersionSettingsChecker : FirLanguageVersionSe
 
     context(context: CheckerContext)
     override fun check(reporter: DiagnosticReporter) {
-        if (!LanguageFeature.ContextReceivers.isEnabled()) {
+        if (LanguageFeature.ContextReceivers.isDisabled()) {
             return
         }
 

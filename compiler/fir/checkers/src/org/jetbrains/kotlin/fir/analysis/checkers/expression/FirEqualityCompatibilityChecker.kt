@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.fir.expressions.FirEqualityOperatorCall
 import org.jetbrains.kotlin.fir.expressions.FirOperation
 import org.jetbrains.kotlin.fir.analysis.checkers.firPlatformSpecificEqualityChecker
 import org.jetbrains.kotlin.fir.expressions.FirSmartCastExpression
+import org.jetbrains.kotlin.fir.isDisabled
 import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.types.*
 
@@ -49,7 +50,7 @@ object FirEqualityCompatibilityChecker : FirEqualityOperatorCallChecker(MppCheck
             // account for them.
             val isCaseMissedByK1 = isCaseMissedByK1Intersector(l.originalTypeInfo, r.originalTypeInfo)
                     && isCaseMissedByAdditionalK1IncompatibleEnumsCheck(l.originalType, r.originalType, context.session)
-            val replicateK1Behavior = !LanguageFeature.ReportErrorsForComparisonOperators.isEnabled()
+            val replicateK1Behavior = LanguageFeature.ReportErrorsForComparisonOperators.isDisabled()
 
             return reporter.reportInapplicabilityDiagnostic(
                 expression, it, expression.operation, forceWarning = isCaseMissedByK1 && replicateK1Behavior,

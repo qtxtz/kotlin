@@ -139,7 +139,7 @@ object FirInlineDeclarationChecker : FirFunctionChecker(MppCheckerKind.Common) {
             accessedSymbol: FirBasedSymbol<*>,
             source: KtSourceElement,
         ): KtDiagnosticFactory2<FirBasedSymbol<*>, FirBasedSymbol<*>> {
-            if (!LanguageFeature.ProhibitPrivateOperatorCallInInline.isEnabled()) {
+            if (LanguageFeature.ProhibitPrivateOperatorCallInInline.isDisabled()) {
                 val isDelegatedPropertyAccessor = source.kind == KtFakeSourceElementKind.DelegatedPropertyAccessor
                 val isForLoopButNotIteratorCall = source.kind == KtFakeSourceElementKind.DesugaredForLoop &&
                         accessExpression.toReference(session)?.symbol?.memberDeclarationNameOrNull != OperatorNameConventions.ITERATOR

@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.fir.declarations.utils.isData
 import org.jetbrains.kotlin.fir.diagnostics.ConeDiagnostic
 import org.jetbrains.kotlin.fir.diagnostics.ConeSyntaxDiagnostic
 import org.jetbrains.kotlin.fir.expressions.*
+import org.jetbrains.kotlin.fir.isDisabled
 import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.references.isError
 import org.jetbrains.kotlin.fir.references.toResolvedVariableSymbol
@@ -213,7 +214,7 @@ object FirDestructuringDeclarationChecker : FirPropertyChecker(MppCheckerKind.Co
         componentIndex: Int,
         source: KtSourceElement,
     ) {
-        if (!LanguageFeature.DeprecateNameMismatchInShortDestructuringWithParentheses.isEnabled()
+        if (LanguageFeature.DeprecateNameMismatchInShortDestructuringWithParentheses.isDisabled()
             || LanguageFeature.EnableNameBasedDestructuringShortForm.isEnabled()
         ) {
             return

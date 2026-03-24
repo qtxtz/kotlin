@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors
 import org.jetbrains.kotlin.fir.analysis.diagnostics.createOn
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.analysis.checkers.firPlatformSpecificCastChecker
+import org.jetbrains.kotlin.fir.isDisabled
 import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.types.*
@@ -216,7 +217,7 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
         areBothTypesNullable: Boolean,
         expression: FirTypeOperatorCall,
     ) = when {
-        !LanguageFeature.EnableDfaWarningsInK2.isEnabled() -> null
+        LanguageFeature.EnableDfaWarningsInK2.isDisabled() -> null
         areBothTypesNullable -> when (expression.operation) {
             FirOperation.SAFE_AS -> FirErrors.SAFE_CAST_RELYING_ON_NULL
             else -> FirErrors.UNSAFE_CAST_RELYING_ON_NULL
@@ -226,7 +227,7 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
 
     context(context: CheckerContext)
     private fun getUselessCastDiagnostic() = when {
-        !LanguageFeature.EnableDfaWarningsInK2.isEnabled() -> null
+        LanguageFeature.EnableDfaWarningsInK2.isDisabled() -> null
         else -> FirErrors.USELESS_CAST
     }
 
