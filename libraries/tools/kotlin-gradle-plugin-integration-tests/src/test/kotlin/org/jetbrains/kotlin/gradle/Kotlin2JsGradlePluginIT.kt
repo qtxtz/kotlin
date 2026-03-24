@@ -1229,7 +1229,8 @@ class Kotlin2JsIrGradlePluginIT : KGPBaseTest() {
     fun testCorrectSourcesPathInPerFile(gradleVersion: GradleVersion) {
         project("js-per-file", gradleVersion) {
             build("jsDevelopmentExecutableCompileSync") {
-                val mainSourceMap = projectPath
+                // In the sub-project build
+                var mainSourceMap = projectPath
                     .resolve("build/compileSync/js/main/developmentExecutable/kotlin/$projectName/org/jetbrains/kotlin/testData/Main.mjs.map")
 
                 assertFileContains(
@@ -1238,11 +1239,33 @@ class Kotlin2JsIrGradlePluginIT : KGPBaseTest() {
                     "\"sourcesContent\":[null",
                 )
 
-                val someModuleSourceMap = projectPath
+                // In the root build
+                mainSourceMap = projectPath
+                    .resolve("build/js/packages/$projectName/kotlin/$projectName/org/jetbrains/kotlin/testData/Main.mjs.map")
+
+                assertFileContains(
+                    mainSourceMap,
+                    "\"../../../../../../../../../../src/jsMain/kotlin/Main.kt\"",
+                    "\"sourcesContent\":[null",
+                )
+
+                // In the sub-project build
+                var someModuleSourceMap = projectPath
                     .resolve("build/compileSync/js/main/developmentExecutable/kotlin/$projectName/SomeModule.mjs.map")
+
                 assertFileContains(
                     someModuleSourceMap,
                     "\"../../../../../../../src/jsMain/kotlin/SomeModule.kt\"",
+                    "\"sourcesContent\":[null",
+                )
+
+                // In the root build
+                someModuleSourceMap = projectPath
+                    .resolve("build/js/packages/$projectName/kotlin/$projectName/SomeModule.mjs.map")
+
+                assertFileContains(
+                    someModuleSourceMap,
+                    "\"../../../../../../src/jsMain/kotlin/SomeModule.kt\"",
                     "\"sourcesContent\":[null",
                 )
             }
