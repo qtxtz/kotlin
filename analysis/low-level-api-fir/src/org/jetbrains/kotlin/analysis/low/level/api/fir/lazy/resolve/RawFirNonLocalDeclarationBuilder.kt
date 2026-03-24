@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.fir.builder.BodyBuildingMode
 import org.jetbrains.kotlin.fir.builder.PsiRawFirBuilder
 import org.jetbrains.kotlin.fir.builder.buildDestructuringVariable
 import org.jetbrains.kotlin.fir.declarations.*
+import org.jetbrains.kotlin.fir.declarations.utils.isExpect
 import org.jetbrains.kotlin.fir.declarations.utils.isInner
 import org.jetbrains.kotlin.fir.expressions.FirMultiDelegatedConstructorCall
 import org.jetbrains.kotlin.fir.references.FirSuperReference
@@ -30,7 +31,6 @@ import org.jetbrains.kotlin.name.NameUtils
 import org.jetbrains.kotlin.psi
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.containingClassOrObject
-import org.jetbrains.kotlin.psi.psiUtil.hasExpectModifier
 import org.jetbrains.kotlin.util.PrivateForInline
 import org.jetbrains.kotlin.utils.exceptions.errorWithAttachment
 import org.jetbrains.kotlin.utils.exceptions.requireWithAttachment
@@ -316,18 +316,24 @@ internal class RawFirNonLocalDeclarationBuilder private constructor(
         val parent = iterator.next()
         if (parent !is FirRegularClass) return moveNext(iterator, containingDeclaration = parent)
 
-        val classOrObject = parent.psi
-        if (classOrObject !is KtClassOrObject) {
-            errorWithFirSpecificEntries("Expected KtClassOrObject is not found", fir = parent, psi = classOrObject)
+        val psi = parent.psi
+        val typeParameters = when (psi) {
+            is KtClassOrObject -> parent.typeParameters.subList(0, psi.typeParameters.size)
+            is KtScript -> emptyList()
+            else -> errorWithFirSpecificEntries(
+                message = "Expected ${KtClassOrObject::class.simpleName}/${KtScript::class.simpleName} is not found",
+                fir = parent,
+                psi = psi,
+            )
         }
 
-        withChildClassName(classOrObject.nameAsSafeName, isExpect = classOrObject.hasExpectModifier() || context.containerIsExpect) {
+        withChildClassName(parent.name, isExpect = parent.isExpect) {
             withCapturedTypeParameters(
-                parent.isInner,
+                status = parent.isInner,
                 declarationSource = null,
-                parent.typeParameters.subList(0, classOrObject.typeParameters.size)
+                currentFirTypeParameters = typeParameters,
             ) {
-                registerSelfType(classOrObject.toDelegatedSelfType(parent))
+                registerSelfType(psi.toDelegatedSelfType(parent))
                 return moveNext(iterator, parent)
             }
         }
