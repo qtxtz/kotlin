@@ -32,7 +32,10 @@ dependencies {
 }
 
 projectTests {
-    nativeTestTask("test") {
+    nativeTestTask(
+        "test",
+        allowUnsafe = true, // KT-85212
+    ) {
         dependsOn(":kotlin-native:distInvalidateStaleCaches")
     }
 }

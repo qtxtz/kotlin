@@ -67,14 +67,21 @@ projectTests {
         exclude("**/ObjCExportIntegrationTest.class")
     }
 
-    objCExportHeaderGeneratorTestTask("testAnalysisApi", testDisplayNameTag = "AA") {
+    objCExportHeaderGeneratorTestTask(
+        "testAnalysisApi",
+        testDisplayNameTag = "AA",
+        allowUnsafe = true, // KT-85212
+    ) {
         classpath += analysisApiRuntimeClasspath
         exclude("**/ObjCExportIntegrationTest.class")
     }
 }
 
 projectTests {
-    objCExportHeaderGeneratorTestTask("testIntegration") {
+    objCExportHeaderGeneratorTestTask(
+        "testIntegration",
+        allowUnsafe = true, // KT-85212
+    ) {
         classpath += k1TestRuntimeClasspath
         classpath += analysisApiRuntimeClasspath
         include("**/ObjCExportIntegrationTest.class")

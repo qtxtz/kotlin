@@ -26,6 +26,7 @@ fun ProjectTestsExtension.nativeTestTaskWithExternalDependencies(
     taskName: String,
     tag: String? = null,
     requirePlatformLibs: Boolean = false,
+    allowUnsafe: Boolean = false,
     configure: Test.() -> Unit = {}
 ) : TaskProvider<Test> {
     /* Configuration to resolve klibs for the current host */
@@ -87,6 +88,7 @@ fun ProjectTestsExtension.nativeTestTaskWithExternalDependencies(
         taskName = taskName,
         tag = tag,
         requirePlatformLibs = requirePlatformLibs,
+        allowUnsafe = allowUnsafe,
     ) {
         /**
          * Setup klib dependencies that can be used in tests:
@@ -119,9 +121,13 @@ fun ProjectTestsExtension.nativeTestTaskWithExternalDependencies(
 fun ProjectTestsExtension.objCExportHeaderGeneratorTestTask(
     taskName: String,
     testDisplayNameTag: String? = null,
+    allowUnsafe: Boolean = false,
     configure: Test.() -> Unit = {},
 ): TaskProvider<Test> {
-    return nativeTestTaskWithExternalDependencies(taskName = taskName) {
+    return nativeTestTaskWithExternalDependencies(
+        taskName = taskName,
+        allowUnsafe = allowUnsafe,
+    ) {
         useJUnitPlatform()
         enableJunit5ExtensionsAutodetection()
 

@@ -33,7 +33,11 @@ sourceSets {
 }
 
 projectTests {
-    nativeTestTaskWithExternalDependencies("test", requirePlatformLibs = true) {
+    nativeTestTaskWithExternalDependencies(
+        "test",
+        requirePlatformLibs = true,
+        allowUnsafe = true, // KT-85212
+    ) {
         dependsOn(":kotlin-native:distInvalidateStaleCaches")
     }
 }

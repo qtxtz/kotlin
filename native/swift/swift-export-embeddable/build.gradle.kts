@@ -218,7 +218,10 @@ val unarchivedStandaloneCoroutinesITClasses = tasks.register<Sync>("unarchivedSt
 }
 
 projectTests {
-    nativeTestTask("testSimpleITWithEmbeddable") {
+    nativeTestTask(
+        "testSimpleITWithEmbeddable",
+        allowUnsafe = true, // KT-85212
+    ) {
         classpath = files(
             // swift-export-embeddable and its runtime dependencies is what KGP will see in SwiftExportAction
             swiftExportEmbeddableJar,
@@ -232,7 +235,11 @@ projectTests {
         )
     }
 
-    nativeTestTaskWithExternalDependencies("testExternalITWithEmbeddable", requirePlatformLibs = true) {
+    nativeTestTaskWithExternalDependencies(
+        "testExternalITWithEmbeddable",
+        requirePlatformLibs = true,
+        allowUnsafe = true, // KT-85212
+    ) {
         classpath = files(
             // swift-export-embeddable and its runtime dependencies is what KGP will see in SwiftExportAction
             swiftExportEmbeddableJar,
@@ -246,7 +253,11 @@ projectTests {
         )
     }
 
-    nativeTestTaskWithExternalDependencies("testCoroutinesITWithEmbeddable", requirePlatformLibs = true) {
+    nativeTestTaskWithExternalDependencies(
+        "testCoroutinesITWithEmbeddable",
+        requirePlatformLibs = true,
+        allowUnsafe = true, // KT-85212
+    ) {
         classpath = files(
             // swift-export-embeddable and its runtime dependencies is what KGP will see in SwiftExportAction
             swiftExportEmbeddableJar,

@@ -289,6 +289,9 @@ private abstract class JdkVersionDependentFlagsProvider : CommandLineArgumentPro
     @get:Input
     abstract val jdkVersion: Property<JdkMajorVersion>
 
+    @get:Input
+    abstract val allowUnsafe: Property<Boolean>
+
     override fun asArguments() = buildList {
         val version = jdkVersion.get().majorVersion
         if (version >= 24) {
@@ -296,9 +299,17 @@ private abstract class JdkVersionDependentFlagsProvider : CommandLineArgumentPro
             // The same flag is needed for restricted FFM API (https://openjdk.org/jeps/454).
             add("--enable-native-access=ALL-UNNAMED")
 
-            // Allow `sun.misc.Unsafe` on JDK 24+ to suppress warnings (https://openjdk.org/jeps/498).
-            // This is to be changed in the scope of KT-83133.
-            add("--sun-misc-unsafe-memory-access=allow")
+            val unsafeMode = when {
+                // The test task still relies on `sun.misc.Unsafe`.
+                // Allow it to suppress warnings (https://openjdk.org/jeps/498).
+                allowUnsafe.get() -> "allow"
+                // `MemorySegmentMemoryAccess` is not used when running on versions earlier than JDK 25.
+                version < 25 -> "allow"
+                // `MemorySegmentMemoryAccess` is used. The task must not use `sun.misc.Unsafe`.
+                // Deny that to make sure it doesn't.
+                else -> "deny"
+            }
+            add("--sun-misc-unsafe-memory-access=$unsafeMode")
         }
     }
 }
@@ -328,6 +339,7 @@ fun ProjectTestsExtension.nativeTestTask(
     allowParallelExecution: Boolean = true,
     customCompilerDist: TaskProvider<Sync>? = null,
     maxMetaspaceSizeMb: Int = 512,
+    allowUnsafe: Boolean = false,
     defineJDKEnvVariables: List<JdkMajorVersion> = emptyList(),
     body: Test.() -> Unit = {},
 ): TaskProvider<Test> = testTask(
@@ -366,6 +378,7 @@ fun ProjectTestsExtension.nativeTestTask(
 
         jvmArgumentProviders.add(project.objects.newInstance<JdkVersionDependentFlagsProvider>().apply {
             this.jdkVersion.set(nativeTestJdkVersion)
+            this.allowUnsafe.set(allowUnsafe)
         })
 
         // Using JDK 11 instead of JDK 8 (project default) makes some tests take 15-25% more time.
