@@ -505,7 +505,7 @@ class FunctionCallTransformer(
                 buildSchema(name)
             }
 
-            val scopeId = ClassId(CallableId.PACKAGE_FQ_NAME_FOR_LOCAL, FqName("Scope${i++}"), true)
+            val scopeId = ClassId(CallableId.PACKAGE_FQ_NAME_FOR_LOCAL, FqName("DataFramePropertiesScope${i++}"), true)
             val scope = buildRegularClass {
                 moduleData = session.moduleData
                 source = call.source?.fakeElement(KtFakeSourceElementKind.PluginGenerated)
