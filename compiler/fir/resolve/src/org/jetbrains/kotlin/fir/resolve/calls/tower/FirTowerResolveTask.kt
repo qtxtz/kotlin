@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.KtFakeSourceElementKind
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fakeElement
+import org.jetbrains.kotlin.fir.SessionHolder
 import org.jetbrains.kotlin.fir.declarations.FirTowerDataContext
 import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
 import org.jetbrains.kotlin.fir.expressions.FirExpression
@@ -61,9 +62,7 @@ internal abstract class FirBaseTowerResolveTask(
     protected val towerDataElementsForName: TowerDataElementsForName,
     private val collector: CandidateCollector,
     private val candidateFactory: CandidateFactory
-) {
-    protected val session get() = components.session
-
+) : SessionHolder by components {
     private val handler: TowerLevelHandler = TowerLevelHandler()
 
     open fun interceptTowerGroup(towerGroup: TowerGroup) = towerGroup
@@ -259,7 +258,7 @@ internal open class FirTowerResolveTask(
         emptyScopes: MutableSet<FirScope>? = null,
         scopesWithoutCompanionExtensions: MutableSet<FirScope>? = null,
     ) {
-        if (resolvedQualifier.symbol?.fullyExpandedClass(components.session)?.classKind.let { it == null || it == ClassKind.OBJECT }) {
+        if (resolvedQualifier.symbol?.fullyExpandedClass()?.classKind.let { it == null || it == ClassKind.OBJECT }) {
             return
         }
 
