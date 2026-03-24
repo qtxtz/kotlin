@@ -179,7 +179,9 @@ internal class KotlinWrapperPre2_4_0(
         @Suppress("UNCHECKED_CAST", "CAST_NEVER_SUCCEEDS")
         override fun <V> get(key: CommonCompilerArguments.CommonCompilerArgument<V>): V {
             return when (key) {
-                CommonCompilerArguments.KOTLIN_HOME -> {
+                CommonCompilerArguments.KOTLIN_HOME,
+                CommonCompilerArguments.X_DUMP_DIRECTORY,
+                    -> {
                     if (delegate[key] == null) return null as V
 
                     val stringValue = delegate[key] as String
@@ -237,7 +239,9 @@ internal class KotlinWrapperPre2_4_0(
             value: V,
         ) {
             when (key) {
-                CommonCompilerArguments.KOTLIN_HOME -> {
+                CommonCompilerArguments.KOTLIN_HOME,
+                CommonCompilerArguments.X_DUMP_DIRECTORY,
+                    -> {
                     val pathValue = value as Path?
                     val stringValue = pathValue?.toFile()?.absolutePath
                     val stringKey = CommonCompilerArguments.CommonCompilerArgument<String?>(key.id, key.availableSinceVersion)

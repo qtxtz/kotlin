@@ -71,7 +71,9 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
     CommonCompilerArgumentValueAdapter {
     override fun <V, T> mapFrom(value: T, key: CommonCompilerArgument<V>): V =
         when (key) {
-            CommonCompilerArguments.KOTLIN_HOME -> {
+            CommonCompilerArguments.KOTLIN_HOME,
+            CommonCompilerArguments.X_DUMP_DIRECTORY,
+                -> {
                 if (value == null) return null as V
 
                 val pathValue = value as Path
@@ -121,7 +123,9 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
 
     override fun <T, V> mapTo(value: V, key: CommonCompilerArgument<V>): T =
         when (key) {
-            CommonCompilerArguments.KOTLIN_HOME -> {
+            CommonCompilerArguments.KOTLIN_HOME,
+            CommonCompilerArguments.X_DUMP_DIRECTORY,
+                -> {
                 if (value == null) return null as T
 
                 val stringValue = value as String

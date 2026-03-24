@@ -291,7 +291,7 @@ public interface CommonCompilerArguments : CommonToolArguments {
      */
     @JvmField
     @ExperimentalCompilerArgument
-    public val X_DUMP_DIRECTORY: CommonCompilerArgument<String?> =
+    public val X_DUMP_DIRECTORY: CommonCompilerArgument<Path?> =
         CommonCompilerArgument("X_DUMP_DIRECTORY", KotlinReleaseVersion(1, 3, 50))
 
     /**

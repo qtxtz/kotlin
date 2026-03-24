@@ -457,11 +457,13 @@ val actualCommonCompilerArguments by compilerArgumentsLevel(CompilerArgumentsLev
     }
 
 
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "Xdump-directory"
         description = "Dump the backend state into this directory.".asReleaseDependent()
         valueType = StringType.defaultNull
         affectsCompilationOutcome = false
+        argumentType = PathType.defaultNull
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_3_50,
