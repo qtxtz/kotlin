@@ -6,7 +6,7 @@
 package org.jetbrains.kotlin.analysis.low.level.api.fir
 
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.DiagnosticCheckerFilter
-import org.jetbrains.kotlin.analysis.low.level.api.fir.api.collectDiagnosticsForFile
+import org.jetbrains.kotlin.analysis.low.level.api.fir.api.diagnostics
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.getOrBuildFirFile
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.getResolutionFacade
 import org.jetbrains.kotlin.analysis.low.level.api.fir.compile.CodeFragmentCapturedValueAnalyzer
@@ -39,7 +39,8 @@ abstract class AbstractCodeFragmentCapturingTest : AbstractAnalysisApiBasedTest(
         val firCodeFragment = firFile.codeFragment
         firCodeFragment.lazyResolveToPhase(FirResolvePhase.BODY_RESOLVE)
 
-        val frontendDiagnostics = mainFile.collectDiagnosticsForFile(resolutionFacade, DiagnosticCheckerFilter.ONLY_DEFAULT_CHECKERS)
+        val frontendDiagnostics = mainFile.diagnostics(resolutionFacade, DiagnosticCheckerFilter.ONLY_DEFAULT_CHECKERS)
+            .toList()
         val frontendErrors = frontendDiagnostics.filter { it.severity == Severity.ERROR }
 
         require(frontendErrors.isEmpty()) {

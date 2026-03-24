@@ -120,10 +120,10 @@ class LLResolutionFacade internal constructor(
     }
 
     /**
-     * @see LLDiagnosticProvider.collectDiagnostics
+     * @see LLDiagnosticProvider.diagnostics
      */
-    internal fun collectDiagnosticsForFile(ktFile: KtFile, filter: DiagnosticCheckerFilter): Collection<KtPsiDiagnostic> {
-        return diagnosticProvider.collectDiagnostics(ktFile, filter)
+    internal fun diagnostics(ktFile: KtFile, filter: DiagnosticCheckerFilter): Sequence<KtPsiDiagnostic> {
+        return diagnosticProvider.diagnostics(ktFile, filter)
     }
 
     internal fun resolveToFirSymbol(ktDeclaration: KtDeclaration, phase: FirResolvePhase): FirBasedSymbol<*> {
@@ -251,3 +251,4 @@ class LLResolutionFacade internal constructor(
 fun LLResolutionFacade.getModule(element: PsiElement): KaModule {
     return KotlinProjectStructureProvider.getModule(project, element, useSiteModule)
 }
+
