@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.backend.jvm.lower
 
 import org.jetbrains.kotlin.backend.common.lower.UpgradeCallableReferences
 import org.jetbrains.kotlin.backend.jvm.JvmBackendContext
-import org.jetbrains.kotlin.ir.declarations.copyAttributesWithoutOwnerId
 import org.jetbrains.kotlin.ir.expressions.*
 
 internal class JvmUpgradeCallableReferences(context: JvmBackendContext) : UpgradeCallableReferences(
@@ -19,16 +18,4 @@ internal class JvmUpgradeCallableReferences(context: JvmBackendContext) : Upgrad
     upgradeExtractedAdaptedBlocks = true,
     castDispatchReceiver = false,
     generateFakeAccessorsForReflectionProperty = true,
-) {
-    override fun copyNecessaryAttributes(oldReference: IrFunctionReference, newReference: IrRichFunctionReference) {
-        newReference.copyAttributesWithoutOwnerId(oldReference)
-    }
-
-    override fun copyNecessaryAttributes(oldReference: IrLocalDelegatedPropertyReference, newReference: IrRichPropertyReference) {
-        newReference.copyAttributesWithoutOwnerId(oldReference)
-    }
-
-    override fun copyNecessaryAttributes(oldReference: IrPropertyReference, newReference: IrRichPropertyReference) {
-        newReference.copyAttributesWithoutOwnerId(oldReference)
-    }
-}
+)

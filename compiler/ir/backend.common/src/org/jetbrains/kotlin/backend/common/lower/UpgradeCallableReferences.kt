@@ -207,7 +207,6 @@ open class UpgradeCallableReferences(
                 isRestrictedSuspension = isRestrictedSuspension,
             ).apply {
                 boundValues.addAll(reference.arguments.filterNotNull())
-                copyNecessaryAttributes(reference, this)
             }.let {
                 if (samType != null) {
                     IrTypeOperatorCallImpl(
@@ -260,7 +259,6 @@ open class UpgradeCallableReferences(
                 isRestrictedSuspension = expression.symbol.owner.isRestrictedSuspensionFunction(),
             ).apply {
                 boundValues += arguments.map { it.expression }
-                copyNecessaryAttributes(expression, this)
             }
         }
 
@@ -321,7 +319,6 @@ open class UpgradeCallableReferences(
                 origin = expression.origin,
             ).apply {
                 this.boundValues.addAll(boundValues)
-                copyNecessaryAttributes(expression, this)
             }
         }
 
@@ -380,9 +377,7 @@ open class UpgradeCallableReferences(
                     expression.buildUnsupportedForLocalFunction(emptyList(), data, it.name, it.isSuspend, isPropertySetter = true)
                 },
                 origin = expression.origin
-            ).apply {
-                copyNecessaryAttributes(expression, this)
-            }
+            )
         }
 
         private fun IrCallableReference<*>.buildUnsupportedForLocalFunction(
@@ -568,10 +563,6 @@ open class UpgradeCallableReferences(
             }
         }
     }
-
-    protected open fun copyNecessaryAttributes(oldReference: IrFunctionReference, newReference: IrRichFunctionReference) {}
-    protected open fun copyNecessaryAttributes(oldReference: IrPropertyReference, newReference: IrRichPropertyReference) {}
-    protected open fun copyNecessaryAttributes(oldReference: IrLocalDelegatedPropertyReference, newReference: IrRichPropertyReference) {}
 }
 
 val LAMBDA_EXTENSION_RECEIVER by IrDeclarationOriginImpl.Regular
