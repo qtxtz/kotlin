@@ -1,11 +1,12 @@
 /*
- * Copyright 2010-2024 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.analysis.low.level.api.fir.lazy.resolve
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.KtPsiSourceFile
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.analysis.api.utils.errors.withPsiEntry
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.FirDesignation
@@ -263,6 +264,12 @@ internal class RawFirNonLocalDeclarationBuilder private constructor(
                 }
             }
             return null
+        }
+
+        override fun visitScript(script: KtScript, data: FirElement?): FirElement {
+            val sourceFile = KtPsiSourceFile(data?.psi?.containingFile as? KtFile ?: script.containingKtFile)
+            // TODO(KT-73847): looks like we may loose the implicit imports here, find out whether and how the file could be configured too
+            return convertScriptOrSnippets(declaration = script, sourceFile = sourceFile, fileBuilder = null)
         }
     }
 

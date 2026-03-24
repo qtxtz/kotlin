@@ -30,7 +30,6 @@ import org.jetbrains.kotlin.fir.diagnostics.*
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.builder.*
 import org.jetbrains.kotlin.fir.expressions.impl.FirSingleExpressionBlock
-import org.jetbrains.kotlin.fir.extensions.extensionService
 import org.jetbrains.kotlin.fir.references.buildErrorNamedReferenceWithNoName
 import org.jetbrains.kotlin.fir.references.builder.buildExplicitSuperReference
 import org.jetbrains.kotlin.fir.references.builder.buildExplicitThisReference
@@ -185,7 +184,7 @@ open class PsiRawFirBuilder(
     @OptIn(KtExperimentalApi::class)
     override fun isReplSnippet(
         script: PsiElement,
-        fileBuilder: FirFileBuilder,
+        sourceFile: KtSourceFile,
     ): Boolean {
         // TODO(KT-84387): reintroduce call to `FirReplSnippetConfiguratorExtension.isReplSnippetSource`?
         //  The lack of this call is a requirement from AA; make sure they agree with any redesign.
@@ -197,9 +196,12 @@ open class PsiRawFirBuilder(
         scriptSource: KtSourceElement,
         fileName: String,
         setup: FirScriptBuilder.() -> Unit,
-    ): FirScript {
-        return Visitor().convertScript(script as KtScript, scriptSource as KtPsiSourceElement, fileName, setup)
-    }
+    ): FirScript = Visitor().convertScript(
+        script = script as KtScript,
+        scriptSource = scriptSource as KtPsiSourceElement,
+        fileName = fileName,
+        setup = setup,
+    )
 
     override fun convertReplSnippet(
         script: PsiElement,
@@ -208,9 +210,14 @@ open class PsiRawFirBuilder(
         snippetSetup: FirReplSnippetBuilder.() -> Unit,
         functionBodySetup: FirBlockBuilder.() -> Unit,
         statementsSetup: MutableList<FirElement>.() -> Unit,
-    ): FirReplSnippet {
-        return Visitor().convertReplSnippet(script as KtScript, scriptSource as KtPsiSourceElement, fileName, snippetSetup, functionBodySetup, statementsSetup)
-    }
+    ): FirReplSnippet = Visitor().convertReplSnippet(
+        script = script as KtScript,
+        scriptSource = scriptSource as KtPsiSourceElement,
+        fileName = fileName,
+        snippetSetup = snippetSetup,
+        functionBodySetup = functionBodySetup,
+        statementsSetup = statementsSetup,
+    )
 
     protected open inner class Visitor : KtVisitor<FirElement, FirElement?>(), DestructuringContext<KtDestructuringDeclarationEntry> {
 
@@ -1289,12 +1296,14 @@ open class PsiRawFirBuilder(
                 BodyBuildingMode.NORMAL -> file.properPackageFqName
                 BodyBuildingMode.LAZY_BODIES -> file.stub?.getPackageFqName() ?: file.properPackageFqName
             }
+
+            val psiSourceFile = KtPsiSourceFile(file)
             return buildFile {
                 source = file.toFirSourceElement()
                 moduleData = baseModuleData
                 origin = FirDeclarationOrigin.Source
                 name = file.name
-                sourceFile = KtPsiSourceFile(file)
+                sourceFile = psiSourceFile
                 sourceFileLinesMapping = KtPsiSourceFileLinesMapping(file)
                 packageDirective = buildPackageDirective {
                     packageFqName = context.packageFqName
@@ -1324,7 +1333,7 @@ open class PsiRawFirBuilder(
                 } else {
                     for (declaration in file.declarations) {
                         declarations += when (declaration) {
-                            is KtScript -> convertScriptOrSnippets(declaration, this@buildFile)
+                            is KtScript -> convertScriptOrSnippets(declaration, psiSourceFile, this@buildFile)
                             is KtDestructuringDeclaration -> {
                                 val initializer = declaration.toInitializerExpression()
                                 buildErrorNonLocalDestructuringDeclaration(declaration.toFirSourceElement(), initializer)
@@ -1789,22 +1798,6 @@ open class PsiRawFirBuilder(
 
                         body = buildBlock()
                     }
-                }
-            }
-        }
-
-        override fun visitScript(script: KtScript, data: FirElement?): FirElement {
-            val ktFile = script.containingKtFile
-            val fileName = ktFile.name
-            val sourceFile = KtPsiSourceFile((data as? FirScript)?.psi?.containingFile as? KtFile ?: ktFile)
-            val scriptSource = script.toFirSourceElement()
-            val scriptConfigurator =
-                baseSession.extensionService.scriptConfigurators.firstOrNull { it.accepts(sourceFile, scriptSource) }
-            return convertScript(script, scriptSource, fileName) {
-                scriptConfigurator?.run {
-                    // TODO: looks like we may loose the implicit imports here, find out whether and how the file could be configured too (KT-73847)
-//                    configureContainingFile(fileBuilder)
-                    configure(sourceFile, context)
                 }
             }
         }

@@ -1340,67 +1340,73 @@ abstract class AbstractRawFirBuilder<T : Any>(val baseSession: FirSession, val c
         CONTEXT_PARAMETER(shouldExplicitParameterTypeBePresent = true, isAnnotationOwner = true),
     }
 
-    protected open fun isReplSnippet(script: T, fileBuilder: FirFileBuilder): Boolean {
+    protected open fun isReplSnippet(script: T, sourceFile: KtSourceFile): Boolean {
         val scriptSource = script.toFirSourceElement()
-        val sourceFile = fileBuilder.sourceFile!!
         return baseSession.extensionService.replSnippetConfigurators.any {
             it.isReplSnippetsSource(sourceFile, scriptSource)
         }
     }
 
-    protected fun convertScriptOrSnippets(declaration: T, fileBuilder: FirFileBuilder): FirDeclaration {
+    /**
+     * Converts the [declaration] to a [FirScript] or [FirReplSnippet] depending on the [sourceFile].
+     *
+     * If [fileBuilder] is provided, it will be used to configure the file containing the script or snippet.
+     */
+    protected fun convertScriptOrSnippets(declaration: T, sourceFile: KtSourceFile, fileBuilder: FirFileBuilder?): FirDeclaration {
         val scriptSource = declaration.toFirSourceElement()
-        val sourceFile = fileBuilder.sourceFile!!
 
-        return if (isReplSnippet(declaration, fileBuilder)) {
-            val repSnippetConfigurator =
-                baseSession.extensionService.replSnippetConfigurators.filter {
-                    it.isReplSnippetsSource(sourceFile, scriptSource)
-                }.let {
-                    requireWithAttachment(
-                        it.size <= 1,
-                        message = { "More than one REPL snippet configurator is found for the file" },
-                    ) {
-                        withEntry("fileName", sourceFile.name)
-                        withEntry("configurators", it.joinToString { "${it::class.java.name}" })
-                    }
-                    it.firstOrNull()
+        return if (isReplSnippet(declaration, sourceFile)) {
+            val repSnippetConfigurator = baseSession.extensionService.replSnippetConfigurators.filter {
+                it.isReplSnippetsSource(sourceFile, scriptSource)
+            }.let { snippetConfiguratorExtensions ->
+                requireWithAttachment(
+                    snippetConfiguratorExtensions.size <= 1,
+                    message = { "More than one REPL snippet configurator is found for the file" },
+                ) {
+                    withEntry("fileName", sourceFile.name)
+                    withEntry("configurators", snippetConfiguratorExtensions.joinToString { "${it::class.java.name}" })
                 }
 
+                snippetConfiguratorExtensions.firstOrNull()
+            }
+
             convertReplSnippet(
-                declaration, scriptSource, sourceFile.name,
+                script = declaration,
+                scriptSource = scriptSource,
+                fileName = sourceFile.name,
                 snippetSetup = {
                     if (repSnippetConfigurator != null) {
                         with(repSnippetConfigurator) {
-                            configureContainingFile(fileBuilder)
-                            configure(fileBuilder.sourceFile, context)
+                            fileBuilder?.let { configureContainingFile(it) }
+                            configure(sourceFile, context)
                         }
                     }
                 },
                 functionBodySetup = {
                     if (repSnippetConfigurator != null) {
                         with(repSnippetConfigurator) {
-                            configureEvalBody(fileBuilder.sourceFile, scriptSource, context)
+                            configureEvalBody(sourceFile, scriptSource, context)
                         }
                     }
                 },
                 statementsSetup = {
                     if (repSnippetConfigurator != null) {
                         with(repSnippetConfigurator) {
-                            configure(fileBuilder.sourceFile, scriptSource, context)
+                            configure(sourceFile, scriptSource, context)
                         }
                     }
                 },
             )
         } else {
-            val scriptConfigurator =
-                baseSession.extensionService.scriptConfigurators.firstOrNull { it.accepts(fileBuilder.sourceFile, scriptSource) }
+            val scriptConfigurator = baseSession.extensionService.scriptConfigurators.firstOrNull {
+                it.accepts(sourceFile, scriptSource)
+            }
 
-            convertScript(declaration, scriptSource, fileBuilder.name) {
+            convertScript(declaration, scriptSource, sourceFile.name) {
                 if (scriptConfigurator != null) {
                     with(scriptConfigurator) {
-                        configureContainingFile(fileBuilder)
-                        configure(fileBuilder.sourceFile, context)
+                        fileBuilder?.let { configureContainingFile(it) }
+                        configure(sourceFile, context)
                     }
                 }
             }
