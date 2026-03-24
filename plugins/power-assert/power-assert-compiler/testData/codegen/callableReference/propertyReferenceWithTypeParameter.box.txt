@@ -8,7 +8,7 @@ test2: ---
 assert(Int::property.name == "a")
        |             |    |
        |             |    false
-       |             property
+       |             "property"
        val T.property: T
 ---
 test3: ---

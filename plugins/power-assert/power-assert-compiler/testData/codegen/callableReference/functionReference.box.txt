@@ -1,7 +1,8 @@
 test1: ---
 assert(::foo.name == "bar")
        |     |    |
-       |     foo  false
+       |     |    false
+       |     "foo"
        fun foo(kotlin.Int): kotlin.Boolean
 ---
 test2: ---

@@ -6,17 +6,19 @@ assert(length == 5)
 test2: ---
 assert(this.length == 5)
        |    |      |
-       test 4      false
+       |    4      false
+       "test"
 ---
 test3: ---
 assert(substring(1, 3) == "TEST")
        |               |
-       es              false
+       "es"            false
 ---
 test4: ---
 assert(this.substring(1, 3) == "TEST")
        |    |               |
-       test es              false
+       |    "es"            false
+       "test"
 ---
 test5: ---
 assert(length == 5)
@@ -26,17 +28,19 @@ assert(length == 5)
 test6: ---
 assert(this.length == 5)
        |    |      |
-       test 4      false
+       |    4      false
+       "test"
 ---
 test7: ---
 assert(substring(1, 3) == "TEST")
        |               |
-       es              false
+       "es"            false
 ---
 test8: ---
 assert(this.substring(1, 3) == "TEST")
        |    |               |
-       test es              false
+       |    "es"            false
+       "test"
 ---
 Test.test9(): ---
 assert(length == 5)
@@ -46,27 +50,30 @@ assert(length == 5)
 Test.test10(): ---
 assert(this.length == 5)
        |    |      |
-       test 4      false
+       |    4      false
+       "test"
 ---
 Test.test11(): ---
 assert(substring(1, 3) == "TEST")
        |               |
-       es              false
+       "es"            false
 ---
 Test.test12(): ---
 assert(this.substring(1, 3) == "TEST")
        |    |               |
-       test es              false
+       |    "es"            false
+       "test"
 ---
 Test.test13(): ---
 assert(mutate() == "TEST")
        |        |
-       tset     false
+       "tset"   false
 ---
 Test.test14(): ---
 assert(this.mutate() == "TEST")
        |    |        |
-       test tset     false
+       |    "tset"   false
+       "test"
 ---
 Test.test15(): ---
 assert(length == 5)
@@ -76,25 +83,28 @@ assert(length == 5)
 Test.test16(): ---
 assert(this.length == 5)
        |    |      |
-       test 4      false
+       |    4      false
+       "test"
 ---
 Test.test17(): ---
 assert(substring(1, 3) == "TEST")
        |               |
-       es              false
+       "es"            false
 ---
 Test.test18(): ---
 assert(this.substring(1, 3) == "TEST")
        |    |               |
-       test es              false
+       |    "es"            false
+       "test"
 ---
 Test.test19(): ---
 assert(mutate() == "TEST")
        |        |
-       tset     false
+       "tset"   false
 ---
 Test.test20(): ---
 assert(this.mutate() == "TEST")
        |    |        |
-       test tset     false
+       |    "tset"   false
+       "test"
 ---

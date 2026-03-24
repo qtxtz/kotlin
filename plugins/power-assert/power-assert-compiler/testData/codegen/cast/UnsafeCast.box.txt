@@ -1,12 +1,12 @@
 test1: ---
 assert((a as String).length == 5)
         |            |      |
-        test         4      false
+        "test"       4      false
 ---
 test2: ---
 assert((a as String?)?.length == 5)
         |              |      |
-        test           4      false
+        "test"         4      false
 ---
 test3: ---
 assert((a as List<T>).isEmpty())
@@ -21,7 +21,7 @@ assert((a as List<*>).isEmpty())
 test5: ---
 assert((a as MyString).length == 5)
         |              |      |
-        test           4      false
+        "test"         4      false
 ---
 test6: ---
 assert(a as Nothing? == "null")

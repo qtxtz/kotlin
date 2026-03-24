@@ -45,7 +45,8 @@ assert(
     when {
         x == a.toInt() -> false
         | |  | |
-        2 |  2 2
+        2 |  | 2
+          |  "2"
           true
 
         else -> true

@@ -2,7 +2,7 @@
                     assert(
                 text
                 |
-                Hello
+                "Hello"
 
             == null || // Intentional blank line
             |
@@ -12,12 +12,12 @@
     text.length == 5 &&
     |    |      |
     |    5      true
-    Hello
+    "Hello"
 
 text.lowercase() == text
 |    |           |  |
-|    hello       |  Hello
-Hello            false
+|    "hello"     |  "Hello"
+"Hello"          false
 
     )
                     )

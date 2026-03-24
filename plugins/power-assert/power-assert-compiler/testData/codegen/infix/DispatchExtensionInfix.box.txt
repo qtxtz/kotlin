@@ -17,7 +17,7 @@ test4: ---
 test5: ---
 "hello".substring(1, 4).length mustEqual "world".length
         |               |                        |
-        ell             3                        5
+        "ell"           3                        5
 ---
 test6: ---Assertion failed---
 test7: ---
@@ -38,5 +38,5 @@ test9: ---
 test10: ---
 "hello".substring(1, 4).length.mustEqual("world".length)
         |               |                        |
-        ell             3                        5
+        "ell"           3                        5
 ---

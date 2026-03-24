@@ -10,7 +10,7 @@ assert(
 
         .first { it.startsWith("w") }
          |
-         world
+         "world"
 
         .length == 4
          |      |

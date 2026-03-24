@@ -1,31 +1,31 @@
 test1: ---
 assert(stringValue())
        |          |
-       true       false
+       "true"     false
 ---
 test2: ---
 assert(Callable()() == "World")
        |         |  |
        Callable  |  false
-                 Hello
+                 "Hello"
 ---
 test3: ---
 assert(Callable()(listOf(1,2,3)) == "World")
        |         ||              |
        Callable  |[1, 2, 3]      false
-                 Hello
+                 "Hello"
 ---
 test4: ---
 assert(Callable()(1, listOf(1,2,3)) == "World")
        |         |   |              |
        Callable  |   [1, 2, 3]      false
-                 Hello
+                 "Hello"
 ---
 test5: ---
 assert(listOf(NamedLambda("Hello") { "Hello" }, NamedLambda("World") { "World" })[1]() == "Hello")
        |      |                                 |                                |  |  |
        |      Lambda: Hello                     Lambda: World                    |  |  false
-       [Lambda: Hello, Lambda: World]                                            |  World
+       [Lambda: Hello, Lambda: World]                                            |  "World"
                                                                                  Lambda: World
 ---
 test6: ---

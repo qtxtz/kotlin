@@ -2,5 +2,5 @@
 Message:
 dbg(operation, 1 + 2 + 3, "Message:")
     |            |   |
-    sum          3   6
+    "sum"        3   6
 ---

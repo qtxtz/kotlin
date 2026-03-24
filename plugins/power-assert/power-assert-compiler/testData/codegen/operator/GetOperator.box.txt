@@ -2,12 +2,13 @@ test1: ---
 assert(listOf("Hello", "World")[1] == "Hello")
        |                       |   |
        [Hello, World]          |   false
-                               World
+                               "World"
 ---
 test2: ---
 assert(listOf("Hello", "World").get(1) == "Hello")
        |                        |      |
-       [Hello, World]           World  false
+       [Hello, World]           |      false
+                                "World"
 ---
 test3: ---
 assert(map["key3"] == 300)

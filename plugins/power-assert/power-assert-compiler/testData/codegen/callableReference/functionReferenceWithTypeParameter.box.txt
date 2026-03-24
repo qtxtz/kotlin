@@ -7,7 +7,8 @@ assert(ref())
 test2: ---
 assert(List<Int>::bar.name == "foo")
        |              |    |
-       |              bar  false
+       |              |    false
+       |              "bar"
        fun kotlin.collections.List<T>.bar(): kotlin.Boolean
 ---
 test3: ---

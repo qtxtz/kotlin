@@ -1,7 +1,7 @@
 "abc".test1: ---
 assert(this?.length == 5)
        |     |      |
-       abc   3      false
+       "abc" 3      false
 ---
 null.test1: ---
 assert(this?.length == 5)

@@ -8,7 +8,7 @@ test2: ---
 assert(::property.name == "a")
        |          |    |
        |          |    false
-       |          property
+       |          "property"
        val property: kotlin.Boolean
 ---
 test3: ---

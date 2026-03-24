@@ -7,12 +7,12 @@ test2: ---
 assert(a!!.length == 5)
        |   |      |
        |   4      false
-       test
+       "test"
 ---
 test3: ---
 assert(a.value!!.length == 5)
        | |       |      |
-       | Test    4      false
+       | "Test"  4      false
        Holder
 ---
 test4: ---

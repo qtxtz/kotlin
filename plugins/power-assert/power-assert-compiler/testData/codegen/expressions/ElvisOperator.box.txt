@@ -1,7 +1,8 @@
 ---
 assert((str?.lowercase()?.length ?: default) == 5)
         |    |            |                  |
-        TEST test         4                  false
+        |    "test"       4                  false
+        "TEST"
 ---
 ---
 assert((str?.lowercase()?.length ?: default) == 5)
@@ -11,12 +12,13 @@ assert((str?.lowercase()?.length ?: default) == 5)
 ---
 assert(((str?.lowercase() ?: fallback)?.length ?: default) == 5)
          |    |                         |                  |
-         TEST test                      4                  false
+         |    "test"                    4                  false
+         "TEST"
 ---
 ---
 assert(((str?.lowercase() ?: fallback)?.length ?: default) == 5)
          |    |              |          |                  |
-         null null           test       4                  false
+         null null           "test"     4                  false
 ---
 ---
 assert(((str?.lowercase() ?: fallback)?.length ?: default) == 5)
@@ -26,7 +28,8 @@ assert(((str?.lowercase() ?: fallback)?.length ?: default) == 5)
 ---
 assert((str?.lowercase()?.length ?: 0) == 5)
         |    |            |            |
-        TEST test         4            false
+        |    "test"       4            false
+        "TEST"
 ---
 ---
 assert((str?.lowercase()?.length ?: 0) == 5)

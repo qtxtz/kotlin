@@ -6,20 +6,20 @@ assert(listOf("Hello", "World").contains("Name"))
 test2: ---
 assert("Hello".contains(str))
                |        |
-               false    a
+               false    "a"
 ---
 test3: ---
 assert("Hello".contains(str, ignoreCase = true))
                |        |
-               false    a
+               false    "a"
 ---
 test4: ---
 assert("Hello".contains(char))
                |        |
-               false    a
+               false    'a'
 ---
 test5: ---
 assert("Hello".contains(char, ignoreCase = true))
                |        |
-               false    a
+               false    'a'
 ---

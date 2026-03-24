@@ -2,7 +2,7 @@ test1: ---
 assert((::Person)("Alice", true).name == "Kate")
         |        |               |    |
         |        |               |    false
-        |        |               Alice
+        |        |               "Alice"
         |        Person(name=Alice, isAlive=true)
         fun `<init>`(kotlin.String, kotlin.Boolean): Person
 ---

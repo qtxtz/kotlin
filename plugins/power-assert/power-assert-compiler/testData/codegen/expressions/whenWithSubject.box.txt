@@ -51,7 +51,8 @@ assert(
 
         a.toInt() -> false
         | |
-        2 2
+        | 2
+        "2"
 
         else -> true
     }

@@ -92,7 +92,7 @@ class DefaultMessageTest {
     }
 
     @Test
-    fun testMultiLineExpression() {
+    fun testMultiLineExpressionValue() {
         val explanation = explanation(
             source = """
                 assert(str.substring(0, 8).length == 0)
@@ -118,8 +118,11 @@ class DefaultMessageTest {
                 assert(str.substring(0, 8).length == 0)
                        |   |               |      |
                        |   |               8      false
+                       |   ""${'"'}
                        |   This
                        |    Is
+                       |   ""${'"'}
+                       ""${'"'}
                        This
                         Is
                          A
@@ -127,6 +130,45 @@ class DefaultMessageTest {
                          Multiple
                         Line
                        String
+                       ""${'"'}
+            """.trimIndent(),
+        )
+    }
+
+    @Test
+    fun testCharExpressionValue() {
+        val explanation = explanation(
+            source = """
+                assert(c == 'x')
+            """.trimIndent()
+        ) {
+            value("c", value = 'a')
+        }
+        assertEquals(
+            actual = explanation.toDefaultMessage().trim(),
+            expected = """
+                assert(c == 'x')
+                       |
+                       'a'
+            """.trimIndent(),
+        )
+    }
+
+    @Test
+    fun testStringExpressionValue() {
+        val explanation = explanation(
+            source = """
+                assert(str == "world")
+            """.trimIndent()
+        ) {
+            value("str", value = "hello")
+        }
+        assertEquals(
+            actual = explanation.toDefaultMessage().trim(),
+            expected = """
+                assert(str == "world")
+                       |
+                       "hello"
             """.trimIndent(),
         )
     }

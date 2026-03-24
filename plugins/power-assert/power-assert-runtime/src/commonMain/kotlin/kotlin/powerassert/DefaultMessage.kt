@@ -149,6 +149,18 @@ private fun Expression.valueToString(): String {
         is UShortArray -> value.contentToString()
         is UIntArray -> value.contentToString()
         is ULongArray -> value.contentToString()
+
+        is Char -> "'$value'"
+
+        is CharSequence -> {
+            val str = value.toString()
+            if ('\n' in str) {
+                "\"\"\"\n$str\n\"\"\""
+            } else {
+                "\"$str\""
+            }
+        }
+
         else -> value.toString()
     }
 }
