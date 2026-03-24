@@ -26,8 +26,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftexport.SwiftExportExten
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SwiftPMImportExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.uklibs.consumption.KmpResolutionStrategy
 import org.jetbrains.kotlin.gradle.plugin.mpp.uklibs.publication.KmpPublicationStrategy
-import org.jetbrains.kotlin.gradle.targets.native.tasks.artifact.KotlinArtifactsExtensionImpl
-import org.jetbrains.kotlin.gradle.targets.native.tasks.artifact.kotlinArtifactsExtension
+
+
 import org.jetbrains.kotlin.gradle.utils.getFile
 import org.jetbrains.kotlin.konan.target.XcodeVersion
 
@@ -120,11 +120,6 @@ fun Project.applyKotlinAndroidPlugin() {
 fun Project.kotlin(code: KotlinMultiplatformExtension.() -> Unit) {
     val kotlin = project.kotlinExtension as KotlinMultiplatformExtension
     kotlin.code()
-}
-
-fun Project.kotlinArtifacts(code: KotlinArtifactsExtensionImpl.() -> Unit) {
-    val kotlinArtifacts = project.kotlinArtifactsExtension as KotlinArtifactsExtensionImpl
-    kotlinArtifacts.code()
 }
 
 fun Project.androidLibrary(code: LibraryExtension.() -> Unit) {

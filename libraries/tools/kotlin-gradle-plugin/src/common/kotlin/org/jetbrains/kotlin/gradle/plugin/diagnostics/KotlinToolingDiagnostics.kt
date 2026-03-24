@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLI
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_MPP_APPLY_DEFAULT_HIERARCHY_TEMPLATE
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_NATIVE_ENABLE_KLIBS_CROSSCOMPILATION
 import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_NATIVE_IGNORE_DISABLED_TARGETS
-import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_NATIVE_SUPPRESS_EXPERIMENTAL_ARTIFACTS_DSL_WARNING
+
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics.CompilationDependenciesPair.Companion.toFormattedString
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.ToolingDiagnostic.Severity.*
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.checkers.UnresolvedKmpDependency.ResolvedVariant
@@ -1250,18 +1250,6 @@ internal object KotlinToolingDiagnostics {
         }
     }
 
-    object ExperimentalArtifactsDslUsed : ToolingDiagnosticFactory(WARNING, DiagnosticGroup.Kgp.Experimental) {
-        operator fun invoke() = build {
-            title("Using Experimental 'kotlinArtifacts' DSL")
-                .description {
-                    "'kotlinArtifacts' DSL is experimental and may be changed in the future."
-                }
-                .solution {
-                    "To suppress this warning add '$KOTLIN_NATIVE_SUPPRESS_EXPERIMENTAL_ARTIFACTS_DSL_WARNING=true' to your gradle.properties"
-                }
-        }
-    }
-
     object JvmWithJavaIsIncompatibleWithAndroid : ToolingDiagnosticFactory(FATAL, DiagnosticGroup.Kgp.Misconfiguration) {
         operator fun invoke(androidPluginId: String, trace: Throwable?) = build(throwable = trace) {
             title("`withJava()` in JVM Target Incompatible with Android Plugins")
@@ -1951,15 +1939,6 @@ internal object KotlinToolingDiagnostics {
                 .solution {
                     "Please update Kotlin language version in your build scripts at least to 2.0"
                 }
-        }
-    }
-
-    object KotlinNativeArtifactsDeprecation : ToolingDiagnosticFactory(WARNING, DiagnosticGroup.Kgp.Deprecation) {
-        operator fun invoke() = build {
-            title("kotlinArtifacts DSL is deprecated")
-                .description("kotlinArtifacts DSL is deprecated and will be removed in the future")
-                .solution("Please migrate to another way to create Kotlin/Native binaries")
-                .documentationLink(URI("https://kotl.in/kotlin-native-artifacts-gradle-dsl"))
         }
     }
 

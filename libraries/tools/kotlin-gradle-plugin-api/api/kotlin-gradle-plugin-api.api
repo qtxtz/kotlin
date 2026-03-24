@@ -176,34 +176,6 @@ public final class org/jetbrains/kotlin/gradle/dsl/KotlinAndroidExtension$Defaul
 	public static fun compilerOptions (Lorg/jetbrains/kotlin/gradle/dsl/KotlinAndroidExtension;Lorg/gradle/api/Action;)V
 }
 
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinArtifact : org/gradle/api/Named, org/gradle/api/plugins/ExtensionAware {
-	public abstract fun getArtifactName ()Ljava/lang/String;
-	public abstract fun getModules ()Ljava/util/Set;
-	public abstract fun getOutDir ()Ljava/lang/String;
-	public abstract fun getTaskName ()Ljava/lang/String;
-	public abstract fun registerAssembleTask (Lorg/gradle/api/Project;)V
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinArtifactConfig {
-	public abstract fun addModule (Ljava/lang/Object;)V
-	public abstract fun createArtifact (Lorg/gradle/api/plugins/ExtensionAware;)Lorg/jetbrains/kotlin/gradle/dsl/KotlinArtifact;
-	public abstract fun getArtifactName ()Ljava/lang/String;
-	public abstract fun getModules ()Ljava/util/Set;
-	public abstract fun setModules ([Ljava/lang/Object;)V
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinArtifactsExtension {
-	public static final field Companion Lorg/jetbrains/kotlin/gradle/dsl/KotlinArtifactsExtension$Companion;
-	public static final field KOTLIN_NATIVE_ARTIFACTS_DEPRECATION Ljava/lang/String;
-	public abstract fun getArtifactConfigs ()Lorg/gradle/api/DomainObjectSet;
-	public abstract fun getArtifacts ()Lorg/gradle/api/NamedDomainObjectSet;
-	public abstract fun getNative ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactDSL;
-}
-
-public final class org/jetbrains/kotlin/gradle/dsl/KotlinArtifactsExtension$Companion {
-	public static final field KOTLIN_NATIVE_ARTIFACTS_DEPRECATION Ljava/lang/String;
-}
-
 public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinBackwardsDeploymentDependencyCollector {
 	public abstract fun invoke (Ljava/lang/Object;)V
 	public abstract fun invoke (Ljava/lang/Object;Lorg/gradle/api/Action;)V
@@ -542,79 +514,8 @@ public final class org/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformSourceSetC
 	public static fun languageSettings (Lorg/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformSourceSetConventions;Lorg/gradle/api/NamedDomainObjectProvider;Lkotlin/jvm/functions/Function1;)V
 }
 
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifact : org/jetbrains/kotlin/gradle/dsl/KotlinArtifact {
-	public abstract fun getBinaryOptions ()Ljava/util/Map;
-	public abstract fun getKotlinOptionsFn ()Lkotlin/jvm/functions/Function1;
-	public abstract fun getLinkerOptions ()Ljava/util/List;
-	public abstract fun getModes ()Ljava/util/Set;
-	public abstract fun getToolOptionsConfigure ()Lkotlin/jvm/functions/Function1;
-	public abstract fun isStatic ()Z
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactConfig : org/jetbrains/kotlin/gradle/dsl/KotlinArtifactConfig {
-	public abstract fun binaryOption (Ljava/lang/String;Ljava/lang/String;)V
-	public abstract fun getLinkerOptions ()Ljava/util/List;
-	public abstract fun getModes ()Ljava/util/Set;
-	public abstract fun isStatic ()Z
-	public abstract fun kotlinOptions (Lorg/gradle/api/Action;)V
-	public abstract fun modes ([Lorg/jetbrains/kotlin/gradle/plugin/mpp/NativeBuildType;)V
-	public abstract fun setLinkerOptions (Ljava/util/List;)V
-	public abstract fun setModes (Ljava/util/Set;)V
-	public abstract fun setStatic (Z)V
-	public abstract fun toolOptions (Lorg/gradle/api/Action;)V
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactDSL {
-	public abstract fun FatFramework (Ljava/lang/String;Lorg/gradle/api/Action;)V
-	public abstract fun FatFramework (Lorg/gradle/api/Action;)V
-	public abstract fun Framework (Ljava/lang/String;Lorg/gradle/api/Action;)V
-	public abstract fun Framework (Lorg/gradle/api/Action;)V
-	public abstract fun Library (Ljava/lang/String;Lorg/gradle/api/Action;)V
-	public abstract fun Library (Lorg/gradle/api/Action;)V
-	public abstract fun XCFramework (Ljava/lang/String;Lorg/gradle/api/Action;)V
-	public abstract fun XCFramework (Lorg/gradle/api/Action;)V
-}
-
 public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeCompilerOptions : org/jetbrains/kotlin/gradle/dsl/KotlinCommonCompilerOptions {
 	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeFatFramework : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifact {
-	public abstract fun getTargets ()Ljava/util/Set;
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeFatFrameworkConfig : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactConfig {
-	public abstract fun getTargets ()Ljava/util/Set;
-	public abstract fun setTargets (Ljava/util/Set;)V
-	public abstract fun targets ([Lorg/jetbrains/kotlin/konan/target/KonanTarget;)V
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeFramework : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifact {
-	public abstract fun getTarget ()Lorg/jetbrains/kotlin/konan/target/KonanTarget;
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeFrameworkConfig : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactConfig {
-	public abstract fun getTarget ()Lorg/jetbrains/kotlin/konan/target/KonanTarget;
-	public abstract fun setTarget (Lorg/jetbrains/kotlin/konan/target/KonanTarget;)V
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeLibrary : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifact {
-	public abstract fun getTarget ()Lorg/jetbrains/kotlin/konan/target/KonanTarget;
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeLibraryConfig : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactConfig {
-	public abstract fun getTarget ()Lorg/jetbrains/kotlin/konan/target/KonanTarget;
-	public abstract fun setTarget (Lorg/jetbrains/kotlin/konan/target/KonanTarget;)V
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeXCFramework : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifact {
-	public abstract fun getTargets ()Ljava/util/Set;
-}
-
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinNativeXCFrameworkConfig : org/jetbrains/kotlin/gradle/dsl/KotlinNativeArtifactConfig {
-	public abstract fun getTargets ()Ljava/util/Set;
-	public abstract fun setTargets (Ljava/util/Set;)V
-	public abstract fun targets ([Lorg/jetbrains/kotlin/konan/target/KonanTarget;)V
 }
 
 public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinPublishingDsl {

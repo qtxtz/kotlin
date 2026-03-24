@@ -104,7 +104,11 @@ internal object GradleDeprecatedPropertyChecker : KotlinGradleProjectChecker {
         DeprecatedProperty(
             propertyName = "kotlin.mpp.androidSourceSetLayoutVersion",
             details = "Android Source Set Layout V2 is enabled by default and can't be changed. Leave your questions here https://youtrack.jetbrains.com/issue/KT-82265"
-        )
+        ),
+        DeprecatedProperty(
+            propertyName = "kotlin.native.suppressExperimentalArtifactsDslWarning",
+            details = "The kotlinArtifacts DSL has been removed. See https://kotl.in/kotlin-native-artifacts-gradle-dsl for migration details."
+        ),
     )
 
     private val errorDeprecatedProperties: List<DeprecatedProperty> = listOf(

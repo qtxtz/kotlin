@@ -49,7 +49,7 @@ import org.jetbrains.kotlin.gradle.targets.native.ConfigureFrameworkExportSideEf
 import org.jetbrains.kotlin.gradle.targets.native.KotlinNativeConfigureBinariesSideEffect
 import org.jetbrains.kotlin.gradle.targets.native.SetupEmbedAndSignAppleFrameworkTaskSideEffect
 import org.jetbrains.kotlin.gradle.targets.native.internal.*
-import org.jetbrains.kotlin.gradle.targets.native.tasks.artifact.KotlinArtifactsExtensionSetupAction
+
 import org.jetbrains.kotlin.gradle.targets.native.toolchain.NativeToolchainProjectSetupAction
 import org.jetbrains.kotlin.gradle.targets.wasm.WasmBinaryPreparationSetupAction
 import org.jetbrains.kotlin.gradle.targets.wasm.WasmBinaryTransformRegisteringSetupAction
@@ -86,7 +86,7 @@ internal fun Project.registerKotlinPluginExtensions() {
             register(project, KotlinMultiplatformSourceSetSetupAction)
             register(project, MultiplatformBuildStatsReportSetupAction)
             register(project, KotlinMetadataTargetSetupAction)
-            register(project, KotlinArtifactsExtensionSetupAction)
+
             register(project, MultiplatformPublishingSetupAction)
             register(project, LanguageSettingsSetupAction)
             register(project, IdeMultiplatformImportSetupAction)
