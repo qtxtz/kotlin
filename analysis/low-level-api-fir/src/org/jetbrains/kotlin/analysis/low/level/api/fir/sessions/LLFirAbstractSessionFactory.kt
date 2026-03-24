@@ -59,16 +59,23 @@ import org.jetbrains.kotlin.fir.session.*
 import org.jetbrains.kotlin.fir.symbols.FirLazyDeclarationResolver
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.platform.jvm.isJvm
+import org.jetbrains.kotlin.psi
 import org.jetbrains.kotlin.psi.KtCodeFragment
+import org.jetbrains.kotlin.psi.KtExperimentalApi
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtScript
 import org.jetbrains.kotlin.resolve.jvm.modules.JavaModuleResolver
+import org.jetbrains.kotlin.scripting.compiler.plugin.FirReplCompilerExtensionRegistrar
 import org.jetbrains.kotlin.scripting.compiler.plugin.FirScriptingSamWithReceiverExtensionRegistrar
 import org.jetbrains.kotlin.scripting.compiler.plugin.impl.makeScriptCompilerArguments
+import org.jetbrains.kotlin.scripting.compiler.plugin.services.isReplSnippetSource
 import org.jetbrains.kotlin.scripting.definitions.findScriptDefinition
 import org.jetbrains.kotlin.utils.exceptions.errorWithAttachment
 import org.jetbrains.kotlin.utils.exceptions.requireWithAttachment
 import org.jetbrains.kotlin.utils.exceptions.withPsiEntry
 import org.jetbrains.kotlin.utils.exceptions.withVirtualFileEntry
+import kotlin.script.experimental.api.repl
+import kotlin.script.experimental.host.with
 
 @OptIn(PrivateSessionConstructor::class, SessionConfiguration::class)
 internal abstract class LLFirAbstractSessionFactory(protected val project: Project) {
@@ -177,11 +184,12 @@ internal abstract class LLFirAbstractSessionFactory(protected val project: Proje
 
     @OptIn(ExperimentalCompilerApi::class)
     private fun FirSessionConfigurator.registerScriptExtensions(file: KtFile) {
-        val scriptDefinition = file.findScriptDefinition()
-            ?: errorWithAttachment("Cannot load script definition") {
-                withVirtualFileEntry("file", file.virtualFile)
-            }
+        val scriptDefinition = file.findScriptDefinition() ?: errorWithAttachment("Cannot load script definition") {
+            withVirtualFileEntry("file", file.virtualFile)
+        }
+
         val hostConfiguration = scriptDefinition.hostConfiguration
+        registerExtensions(FirReplCompilerExtensionIdeRegistrar(hostConfiguration).configure())
 
         val compilerArguments = makeScriptCompilerArguments(scriptDefinition.compilerOptions.toList())
         val commandLineProcessors = listOf(AssignmentCommandLineProcessor())

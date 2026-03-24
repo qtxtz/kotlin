@@ -9,4 +9,7 @@ FIR:
 
           public final fun $$eval(): <implicit> { LAZY_BLOCK }
 
+          public final val $$result: <implicit> = REPL_EXPRESSION_REF
+              public get(): <implicit>
+
       }
