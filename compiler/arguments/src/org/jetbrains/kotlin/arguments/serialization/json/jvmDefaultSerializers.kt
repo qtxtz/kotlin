@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.JvmDefaultMode
 import org.jetbrains.kotlin.arguments.dsl.types.JvmDefaultModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllJvmDefaultModeSerializer : AllNamedTypeSerializer<JvmDefaultMo
     typeFinder = JvmDefaultMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsJvmDefaultModeSerializer : SetTypeSerializer<JvmDefaultMode>(
     typeSerializer = AllJvmDefaultModeSerializer,
     valueTypeQualifiedNamed = JvmDefaultModeType::class.qualifiedName!!,

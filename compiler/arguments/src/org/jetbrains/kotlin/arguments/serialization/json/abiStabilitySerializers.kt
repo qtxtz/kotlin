@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.AbiStabilityMode
 import org.jetbrains.kotlin.arguments.dsl.types.AbiStabilityModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllAbiStabilityModeSerializer : AllNamedTypeSerializer<AbiStabili
     typeFinder = AbiStabilityMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsAbiStabilityModeSerializer : SetTypeSerializer<AbiStabilityMode>(
     typeSerializer = AllAbiStabilityModeSerializer,
     valueTypeQualifiedNamed = AbiStabilityModeType::class.qualifiedName!!,

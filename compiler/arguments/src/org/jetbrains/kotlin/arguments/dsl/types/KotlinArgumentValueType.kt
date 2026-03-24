@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.arguments.dsl.types
 
 import kotlinx.serialization.Serializable
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
 import org.jetbrains.kotlin.arguments.dsl.base.ReleaseDependent
 import java.nio.file.Path
@@ -167,6 +168,7 @@ sealed class EnumType<T : WithStringRepresentation>(
 /**
  * A value which accepts [Path] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class PathType : KotlinArgumentValueType<Path> {
     override val isNullable: ReleaseDependent<Boolean> = ReleaseDependent(true)
@@ -181,6 +183,7 @@ class PathType : KotlinArgumentValueType<Path> {
 /**
  * A value which accepts [JvmDefaultMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class JvmDefaultModeType : EnumType<JvmDefaultMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<JvmDefaultMode?> = ReleaseDependent(null)
@@ -189,6 +192,7 @@ class JvmDefaultModeType : EnumType<JvmDefaultMode>(ReleaseDependent(true)) {
 /**
  * A value which accepts [AbiStabilityMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class AbiStabilityModeType : EnumType<AbiStabilityMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<AbiStabilityMode?> = ReleaseDependent(null)
@@ -197,6 +201,7 @@ class AbiStabilityModeType : EnumType<AbiStabilityMode>(ReleaseDependent(true)) 
 /**
  * A value which accepts [AssertionsMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class AssertionsModeType : EnumType<AssertionsMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<AssertionsMode?> = ReleaseDependent(AssertionsMode.LEGACY)
@@ -205,6 +210,7 @@ class AssertionsModeType : EnumType<AssertionsMode>(ReleaseDependent(true)) {
 /**
  * A value which accepts [JspecifyAnnotationsMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class JspecifyAnnotationsModeType : EnumType<JspecifyAnnotationsMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<JspecifyAnnotationsMode?> = ReleaseDependent(null)
@@ -213,6 +219,7 @@ class JspecifyAnnotationsModeType : EnumType<JspecifyAnnotationsMode>(ReleaseDep
 /**
  * A value which accepts [LambdasMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class LambdasModeType : EnumType<LambdasMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<LambdasMode?> = ReleaseDependent(null)
@@ -221,6 +228,7 @@ class LambdasModeType : EnumType<LambdasMode>(ReleaseDependent(true)) {
 /**
  * A value which accepts [SamConversionsMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class SamConversionsModeType : EnumType<SamConversionsMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<SamConversionsMode?> = ReleaseDependent(null)
@@ -229,6 +237,7 @@ class SamConversionsModeType : EnumType<SamConversionsMode>(ReleaseDependent(tru
 /**
  * A value which accepts [StringConcatMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class StringConcatModeType : EnumType<StringConcatMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<StringConcatMode?> = ReleaseDependent(null)
@@ -237,6 +246,7 @@ class StringConcatModeType : EnumType<StringConcatMode>(ReleaseDependent(true)) 
 /**
  * A value which accepts [CompatqualAnnotationsMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class CompatqualAnnotationsModeType : EnumType<CompatqualAnnotationsMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<CompatqualAnnotationsMode?> = ReleaseDependent(null)
@@ -245,6 +255,7 @@ class CompatqualAnnotationsModeType : EnumType<CompatqualAnnotationsMode>(Releas
 /**
  * A value which accepts [WhenExpressionsMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class WhenExpressionsModeType : EnumType<WhenExpressionsMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<WhenExpressionsMode?> = ReleaseDependent(null)
@@ -253,6 +264,7 @@ class WhenExpressionsModeType : EnumType<WhenExpressionsMode>(ReleaseDependent(t
 /**
  * A value which accepts [JdkRelease] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class JdkReleaseType : EnumType<JdkRelease>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<JdkRelease?> = ReleaseDependent(null)
@@ -261,6 +273,7 @@ class JdkReleaseType : EnumType<JdkRelease>(ReleaseDependent(true)) {
 /**
  * A value which accepts a list of [String] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class StringListType(
     override val defaultValue: ReleaseDependent<List<String>?> = ReleaseDependent(emptyList()),
@@ -279,6 +292,7 @@ class StringListType(
  *
  * Example: `"/usr/bin:/usr/local/bin"` (Unix) or `"C:\bin;D:\bin"` (Windows)
  */
+@ExperimentalArgumentApi
 @Serializable
 class SearchPathType : KotlinArgumentValueType<List<Path>> {
     override val defaultValue: ReleaseDependent<List<Path>?> = ReleaseDependent(null)
@@ -294,6 +308,7 @@ class SearchPathType : KotlinArgumentValueType<List<Path>> {
 /**
  * A value type that accepts a list of [Path] elements.
  */
+@ExperimentalArgumentApi
 @Serializable
 class PathListType : KotlinArgumentValueType<List<Path>> {
     override val defaultValue: ReleaseDependent<List<Path>?> = ReleaseDependent(emptyList())
@@ -309,6 +324,7 @@ class PathListType : KotlinArgumentValueType<List<Path>> {
 /**
  * A value which accepts [AnnotationDefaultTargetMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class AnnotationDefaultTargetModeType : EnumType<AnnotationDefaultTargetMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<AnnotationDefaultTargetMode?> = ReleaseDependent(null)
@@ -317,6 +333,7 @@ class AnnotationDefaultTargetModeType : EnumType<AnnotationDefaultTargetMode>(Re
 /**
  * A value which accepts [NameBasedDestructuringMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class NameBasedDestructuringModeType : EnumType<NameBasedDestructuringMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<NameBasedDestructuringMode?> = ReleaseDependent(null)
@@ -325,6 +342,7 @@ class NameBasedDestructuringModeType : EnumType<NameBasedDestructuringMode>(Rele
 /**
  * A value which accepts [VerifyIrMode] type.
  */
+@ExperimentalArgumentApi
 @Serializable
 class VerifyIrModeType : EnumType<VerifyIrMode>(ReleaseDependent(true)) {
     override val defaultValue: ReleaseDependent<VerifyIrMode?> = ReleaseDependent(null)

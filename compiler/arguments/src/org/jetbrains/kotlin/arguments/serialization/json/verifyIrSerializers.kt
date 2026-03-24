@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.VerifyIrMode
 import org.jetbrains.kotlin.arguments.dsl.types.VerifyIrModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllVerifyIrModeSerializer : AllNamedTypeSerializer<VerifyIrMode>(
     typeFinder = VerifyIrMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsVerifyIrModeSerializer : SetTypeSerializer<VerifyIrMode>(
     typeSerializer = AllVerifyIrModeSerializer,
     valueTypeQualifiedNamed = VerifyIrModeType::class.qualifiedName!!,

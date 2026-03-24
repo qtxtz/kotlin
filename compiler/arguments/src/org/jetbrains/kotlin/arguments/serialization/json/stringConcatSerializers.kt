@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.StringConcatMode
 import org.jetbrains.kotlin.arguments.dsl.types.StringConcatModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllStringConcatModeSerializer : AllNamedTypeSerializer<StringConc
     typeFinder = StringConcatMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsStringConcatModeSerializer : SetTypeSerializer<StringConcatMode>(
     typeSerializer = AllStringConcatModeSerializer,
     valueTypeQualifiedNamed = StringConcatModeType::class.qualifiedName!!,

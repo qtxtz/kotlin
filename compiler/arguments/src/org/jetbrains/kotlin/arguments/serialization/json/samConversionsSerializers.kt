@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.SamConversionsMode
 import org.jetbrains.kotlin.arguments.dsl.types.SamConversionsModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllSamConversionsModeSerializer : AllNamedTypeSerializer<SamConve
     typeFinder = SamConversionsMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsSamConversionsModeSerializer : SetTypeSerializer<SamConversionsMode>(
     typeSerializer = AllSamConversionsModeSerializer,
     valueTypeQualifiedNamed = SamConversionsModeType::class.qualifiedName!!,

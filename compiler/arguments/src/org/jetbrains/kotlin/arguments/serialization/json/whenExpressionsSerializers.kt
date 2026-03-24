@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.WhenExpressionsMode
 import org.jetbrains.kotlin.arguments.dsl.types.WhenExpressionsModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllWhenExpressionsModeSerializer : AllNamedTypeSerializer<WhenExp
     typeFinder = WhenExpressionsMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsWhenExpressionsModeSerializer : SetTypeSerializer<WhenExpressionsMode>(
     typeSerializer = AllWhenExpressionsModeSerializer,
     valueTypeQualifiedNamed = WhenExpressionsModeType::class.qualifiedName!!,

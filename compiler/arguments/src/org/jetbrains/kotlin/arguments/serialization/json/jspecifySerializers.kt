@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.JspecifyAnnotationsMode
 import org.jetbrains.kotlin.arguments.dsl.types.JspecifyAnnotationsModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllJspecifyAnnotationsModeSerializer : AllNamedTypeSerializer<Jsp
     typeFinder = JspecifyAnnotationsMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsJspecifyAnnotationsModeSerializer : SetTypeSerializer<JspecifyAnnotationsMode>(
     typeSerializer = AllJspecifyAnnotationsModeSerializer,
     valueTypeQualifiedNamed = JspecifyAnnotationsModeType::class.qualifiedName!!,

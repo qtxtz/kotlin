@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.JdkRelease
 import org.jetbrains.kotlin.arguments.dsl.types.JdkReleaseType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllJdkReleaseSerializer : AllNamedTypeSerializer<JdkRelease>(
     typeFinder = JdkRelease::releaseName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsJdkReleaseSerializer : SetTypeSerializer<JdkRelease>(
     typeSerializer = AllJdkReleaseSerializer,
     valueTypeQualifiedNamed = JdkReleaseType::class.qualifiedName!!,

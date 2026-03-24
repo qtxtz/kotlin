@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.buildtools.options.generator
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgumentsLevel
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
 import org.jetbrains.kotlin.arguments.dsl.types.*
@@ -17,6 +18,7 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.reflect.KClass
 
+@OptIn(ExperimentalArgumentApi::class)
 internal class BtaImplGenerator(
     private val targetPackage: String,
     private val skipXX: Boolean,

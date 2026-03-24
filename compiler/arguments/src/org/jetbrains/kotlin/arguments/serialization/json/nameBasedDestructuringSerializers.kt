@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.NameBasedDestructuringMode
 import org.jetbrains.kotlin.arguments.dsl.types.NameBasedDestructuringModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllNameBasedDestructuringModeSerializer : AllNamedTypeSerializer<
     typeFinder = NameBasedDestructuringMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsNameBasedDestructuringModeSerializer : SetTypeSerializer<NameBasedDestructuringMode>(
     typeSerializer = AllNameBasedDestructuringModeSerializer,
     valueTypeQualifiedNamed = NameBasedDestructuringModeType::class.qualifiedName!!,

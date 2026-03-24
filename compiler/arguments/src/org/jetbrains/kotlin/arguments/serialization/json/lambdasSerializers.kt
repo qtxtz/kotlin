@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.LambdasMode
 import org.jetbrains.kotlin.arguments.dsl.types.LambdasModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllLambdasModeSerializer : AllNamedTypeSerializer<LambdasMode>(
     typeFinder = LambdasMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsLambdasModeSerializer : SetTypeSerializer<LambdasMode>(
     typeSerializer = AllLambdasModeSerializer,
     valueTypeQualifiedNamed = LambdasModeType::class.qualifiedName!!,

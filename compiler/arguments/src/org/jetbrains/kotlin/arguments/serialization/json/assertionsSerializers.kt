@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.AssertionsMode
 import org.jetbrains.kotlin.arguments.dsl.types.AssertionsModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllAssertionsModeSerializer : AllNamedTypeSerializer<AssertionsMo
     typeFinder = AssertionsMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsAssertionsModeSerializer : SetTypeSerializer<AssertionsMode>(
     typeSerializer = AllAssertionsModeSerializer,
     valueTypeQualifiedNamed = AssertionsModeType::class.qualifiedName!!,

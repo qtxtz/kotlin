@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.arguments.serialization.json
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.types.CompatqualAnnotationsMode
 import org.jetbrains.kotlin.arguments.dsl.types.CompatqualAnnotationsModeType
 import org.jetbrains.kotlin.arguments.serialization.json.base.AllNamedTypeSerializer
@@ -25,6 +26,7 @@ private object AllCompatqualAnnotationsModeSerializer : AllNamedTypeSerializer<C
     typeFinder = CompatqualAnnotationsMode::modeName.typeFinder()
 )
 
+@OptIn(ExperimentalArgumentApi::class)
 object AllDetailsCompatqualAnnotationsModeSerializer : SetTypeSerializer<CompatqualAnnotationsMode>(
     typeSerializer = AllCompatqualAnnotationsModeSerializer,
     valueTypeQualifiedNamed = CompatqualAnnotationsModeType::class.qualifiedName!!,

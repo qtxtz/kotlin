@@ -3,8 +3,11 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
+@file:OptIn(ExperimentalArgumentApi::class)
+
 package org.jetbrains.kotlin.arguments.dsl
 
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.base.asReleaseDependent
 import org.jetbrains.kotlin.arguments.dsl.types.*
 

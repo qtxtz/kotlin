@@ -5,6 +5,6 @@
 
 package org.jetbrains.kotlin.arguments.dsl.base
 
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
 @RequiresOptIn("Experimental API with no compatibility guarantees")
 annotation class ExperimentalArgumentApi
