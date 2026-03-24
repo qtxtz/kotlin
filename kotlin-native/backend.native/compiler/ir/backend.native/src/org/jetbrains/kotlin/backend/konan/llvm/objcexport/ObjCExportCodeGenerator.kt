@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.backend.konan.llvm.objcexport
 
 import llvm.*
 import org.jetbrains.kotlin.backend.common.lower.coroutines.getOrCreateFunctionWithContinuationStub
+import org.jetbrains.kotlin.backend.common.serialization.kotlinLibrary
 import org.jetbrains.kotlin.backend.konan.*
 import org.jetbrains.kotlin.backend.konan.ir.*
 import org.jetbrains.kotlin.backend.konan.ir.ClassLayoutBuilder
@@ -23,7 +24,6 @@ import org.jetbrains.kotlin.backend.konan.objcexport.*
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
-import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrClassReference
 import org.jetbrains.kotlin.ir.expressions.IrVararg
@@ -37,8 +37,8 @@ import org.jetbrains.kotlin.ir.types.isUnit
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.konan.target.AppleConfigurables
 import org.jetbrains.kotlin.konan.target.LinkerOutputKind
+import org.jetbrains.kotlin.library.isNativeStdlib
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.psi2ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.utils.DFS
 
 internal fun TypeBridge.makeNothing(llvm: CodegenLlvmHelpers) = when (this) {
@@ -660,24 +660,28 @@ private fun ObjCExportCodeGenerator.generateUnitContinuationToRetainedCompletion
     }
 }
 
-// TODO: find out what to use instead here and in the dependent code
-@OptIn(ObsoleteDescriptorBasedAPI::class)
-private val ObjCExportBlockCodeGenerator.mappedFunctionNClasses get() =
-    // failed attempt to migrate to descriptor-less IrBuiltIns
-    ((context.irBuiltIns as IrBuiltInsOverDescriptors).functionFactory as BuiltInFictitiousFunctionIrClassFactory).builtFunctionNClasses
-        .filter { it.descriptor.isMappedFunctionClass() }
+private val ObjCExportBlockCodeGenerator.mappedFunctionNClasses: List<IrClass>
+    get() {
+        val stdlibModule = context.irLinker.modules.values.firstOrNull { it.kotlinLibrary?.isNativeStdlib == true }
+                ?: error("stdlib module not found")
+        val functionFiles = stdlibModule.files.filter { it.isFunctionInterfaceFile }
+        val functionN = functionFiles.flatMap { it.declarations.filterIsInstance<IrClass>() }
+                .filter { it.isMappedFunctionClass() }
+        return functionN
+    }
 
 private fun ObjCExportBlockCodeGenerator.emitFunctionConverters() {
     require(generationState.shouldDefineFunctionClasses)
     mappedFunctionNClasses.forEach { functionClass ->
-        val convertToRetained = kotlinFunctionToRetainedBlockConverter(BlockPointerBridge(functionClass.arity, returnsVoid = false))
-        bindObjCExportConvertToRetained(functionClass.irClass, convertToRetained.toConstPointer())
+        val arity = functionClass.typeParameters.size - 1
+        val convertToRetained = kotlinFunctionToRetainedBlockConverter(BlockPointerBridge(arity, returnsVoid = false))
+        bindObjCExportConvertToRetained(functionClass, convertToRetained.toConstPointer())
     }
 }
 
 private fun ObjCExportBlockCodeGenerator.emitBlockToKotlinFunctionConverters() {
     require(generationState.shouldDefineFunctionClasses)
-    val functionClassesByArity = mappedFunctionNClasses.associateBy { it.arity }
+    val functionClassesByArity = mappedFunctionNClasses.associateBy { it.typeParameters.size - 1 }
 
     val arityLimit = (functionClassesByArity.keys.maxOrNull() ?: -1) + 1
 

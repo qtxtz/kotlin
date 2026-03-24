@@ -65,7 +65,7 @@ internal class BuiltInFictitiousFunctionIrClassFactory(
 //            builtClasses.forEach { it.addFakeOverrides() }
         }
 
-    class FunctionalInterface(val irClass: IrClass, val descriptor: FunctionClassDescriptor, val arity: Int)
+    class FunctionalInterface(val irClass: IrClass, val arity: Int)
 
     fun buildAllClasses() {
         val maxArity = 255 // See [BuiltInFictitiousFunctionClassFactory].
@@ -114,7 +114,7 @@ internal class BuiltInFictitiousFunctionIrClassFactory(
     val builtFunctionNClasses get() = builtClassesMap.entries.mapNotNull { (descriptor, irClass) ->
         with(descriptor) {
             if (functionTypeKind == FunctionTypeKind.Function)
-                FunctionalInterface(irClass, descriptor, arity)
+                FunctionalInterface(irClass, arity)
             else null
         }
     }
