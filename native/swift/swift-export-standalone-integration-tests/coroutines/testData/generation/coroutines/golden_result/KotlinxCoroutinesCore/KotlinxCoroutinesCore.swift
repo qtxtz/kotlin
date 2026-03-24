@@ -200,12 +200,12 @@ extension ExportedKotlinPackages.kotlinx.coroutines.flow {
             let originalBlock = function
             return { (arg0: Swift.UnsafeMutableRawPointer?, __continuationPtr: Swift.UnsafeMutableRawPointer, __exceptionPtr: Swift.UnsafeMutableRawPointer, __cancellationPtr: Swift.UnsafeMutableRawPointer) in
                 let __continuation: (Swift.Void) -> Swift.Void = {
-            let pointerToBlock = __continuationPtr
-            return { _1 in return { KotlinxCoroutinesCore_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Void__(pointerToBlock, { _1; return true }()); return () }() }
+            let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __continuationPtr, options: .asBestFittingWrapper)!
+            return { _1 in return { KotlinxCoroutinesCore_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Void__(pointerToBlock.__externalRCRef()!, { _1; return true }()); return () }() }
         }()
                 let __exception: (Swift.Error) -> Swift.Void = {
-            let pointerToBlock = __exceptionPtr
-            return { _1 in return { KotlinxCoroutinesCore_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock, _1); return () }() }
+            let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __exceptionPtr, options: .asBestFittingWrapper)!
+            return { _1 in return { KotlinxCoroutinesCore_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock.__externalRCRef()!, _1); return () }() }
         }()
                 let __cancellation: KotlinCoroutineSupport.KotlinTask = KotlinCoroutineSupport.KotlinTask.__createClassWrapper(externalRCRef: __cancellationPtr)
                         let __wrapped_arg0: Swift.Optional<any KotlinRuntimeSupport._KotlinBridgeable> = { switch arg0 { case nil: .none; case let res: KotlinRuntime.KotlinBase.__createBridgeable(externalRCRef: res); } }()

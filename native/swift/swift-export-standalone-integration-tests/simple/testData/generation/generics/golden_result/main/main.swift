@@ -330,8 +330,8 @@ public func produceBoxUpperBound(
 }
 public func returnBoxFun() -> main.BoxFun {
     return {
-        let pointerToBlock = __root___returnBoxFun()
-        return { return main.Box.__createClassWrapper(externalRCRef: main_internal_functional_type_caller_mainU2EBox__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock)) }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___returnBoxFun(), options: .asBestFittingWrapper)!
+        return { return main.Box.__createClassWrapper(externalRCRef: main_internal_functional_type_caller_mainU2EBox__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!)) }
     }()
 }
 public func takeBoxStarProjection(

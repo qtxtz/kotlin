@@ -1229,9 +1229,12 @@ internal sealed interface Bridge {
                         add("fatalError()")
                     }
                 }
+                val kotlinBaseName = typeNamer.swiftFqName(SirNominalType(KotlinRuntimeModule.kotlinBase))
+                val closureHolderRef = "${allArgs.first()}.__externalRCRef()!"
+                val invokeBody = swiftInvocation.joinToString(";").replace(allArgs.first(), closureHolderRef)
                 return """{
-                |    let ${allArgs.first()} = $valueExpression
-                |    return {$defineArgs ${swiftInvocation.joinToString(";")} }
+                |    let ${allArgs.first()} = $kotlinBaseName(__externalRCRefUnsafe: $valueExpression, options: .asBestFittingWrapper)!
+                |    return {$defineArgs $invokeBody }
                 |}()""".trimMargin()
             }
         }

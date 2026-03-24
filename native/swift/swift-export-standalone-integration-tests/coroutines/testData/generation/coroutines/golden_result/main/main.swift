@@ -38,12 +38,12 @@ public func accept_suspend_function_type(
         let originalBlock = block
         return { (__continuationPtr: Swift.UnsafeMutableRawPointer, __exceptionPtr: Swift.UnsafeMutableRawPointer, __cancellationPtr: Swift.UnsafeMutableRawPointer) in
             let __continuation: (Swift.Int32) -> Swift.Void = {
-        let pointerToBlock = __continuationPtr
-        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(pointerToBlock, _1); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __continuationPtr, options: .asBestFittingWrapper)!
+        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(pointerToBlock.__externalRCRef()!, _1); return () }() }
     }()
             let __exception: (Swift.Error) -> Swift.Void = {
-        let pointerToBlock = __exceptionPtr
-        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock, _1); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __exceptionPtr, options: .asBestFittingWrapper)!
+        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock.__externalRCRef()!, _1); return () }() }
     }()
             let __cancellation: KotlinCoroutineSupport.KotlinTask = KotlinCoroutineSupport.KotlinTask.__createClassWrapper(externalRCRef: __cancellationPtr)
 
@@ -122,12 +122,12 @@ public func functionalInterfaceWithSuspendFunction(
         let originalBlock = function
         return { (__continuationPtr: Swift.UnsafeMutableRawPointer, __exceptionPtr: Swift.UnsafeMutableRawPointer, __cancellationPtr: Swift.UnsafeMutableRawPointer) in
             let __continuation: (Swift.Void) -> Swift.Void = {
-        let pointerToBlock = __continuationPtr
-        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Void__(pointerToBlock, { _1; return true }()); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __continuationPtr, options: .asBestFittingWrapper)!
+        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Void__(pointerToBlock.__externalRCRef()!, { _1; return true }()); return () }() }
     }()
             let __exception: (Swift.Error) -> Swift.Void = {
-        let pointerToBlock = __exceptionPtr
-        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock, _1); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __exceptionPtr, options: .asBestFittingWrapper)!
+        return { _1 in return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(pointerToBlock.__externalRCRef()!, _1); return () }() }
     }()
             let __cancellation: KotlinCoroutineSupport.KotlinTask = KotlinCoroutineSupport.KotlinTask.__createClassWrapper(externalRCRef: __cancellationPtr)
 
@@ -158,7 +158,7 @@ public func produce_flow() -> any KotlinCoroutineSupport.KotlinTypedFlow<Swift.I
 }
 public func produce_function() -> (Swift.Int32) async throws -> Swift.Int32 {
     return {
-        let pointerToBlock = __root___produce_function()
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___produce_function(), options: .asBestFittingWrapper)!
         return { _1 in try await {
         try Task.checkCancellation()
         var cancellation: KotlinCoroutineSupport.KotlinTask! = nil
@@ -171,7 +171,7 @@ public func produce_function() -> (Swift.Int32) async throws -> Swift.Int32 {
                     }
                     cancellation = KotlinCoroutineSupport.KotlinTask(currentTask!)
 
-                    let _: Bool = main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(pointerToBlock, _1, {
+                    let _: Bool = main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(pointerToBlock.__externalRCRef()!, _1, {
                         let originalBlock = continuation
                         return { (arg0: Swift.Int32) in return { originalBlock(arg0); return true }() }
                     }(), {
@@ -202,8 +202,8 @@ public func produce_function_typealias() async throws -> main.AliasedFunctionTyp
                     let _: Bool = __root___produce_function_typealias({
                         let originalBlock = continuation
                         return { (arg0: Swift.UnsafeMutableRawPointer) in return { originalBlock({
-                        let pointerToBlock = arg0
-                        return { _1 in return main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Float__(pointerToBlock, _1) }
+                        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: arg0, options: .asBestFittingWrapper)!
+                        return { _1 in return main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Float__(pointerToBlock.__externalRCRef()!, _1) }
                     }()); return true }() }
                     }(), {
                         let originalBlock = exception
@@ -232,7 +232,7 @@ public func produce_suspend_function() async throws -> (Swift.Double) async thro
                     let _: Bool = __root___produce_suspend_function({
                         let originalBlock = continuation
                         return { (arg0: Swift.UnsafeMutableRawPointer) in return { originalBlock({
-                        let pointerToBlock = arg0
+                        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: arg0, options: .asBestFittingWrapper)!
                         return { _1 in try await {
                         try Task.checkCancellation()
                         var cancellation: KotlinCoroutineSupport.KotlinTask! = nil
@@ -245,7 +245,7 @@ public func produce_suspend_function() async throws -> (Swift.Double) async thro
                                     }
                                     cancellation = KotlinCoroutineSupport.KotlinTask(currentTask!)
 
-                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Double__(pointerToBlock, _1, {
+                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Double__(pointerToBlock.__externalRCRef()!, _1, {
                                         let originalBlock = continuation
                                         return { (arg0: Swift.Int32) in return { originalBlock(arg0); return true }() }
                                     }(), {
@@ -286,7 +286,7 @@ public func produce_suspend_function_typealias() async throws -> main.AliasedAsy
                     let _: Bool = __root___produce_suspend_function_typealias({
                         let originalBlock = continuation
                         return { (arg0: Swift.UnsafeMutableRawPointer) in return { originalBlock({
-                        let pointerToBlock = arg0
+                        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: arg0, options: .asBestFittingWrapper)!
                         return { _1 in try await {
                         try Task.checkCancellation()
                         var cancellation: KotlinCoroutineSupport.KotlinTask! = nil
@@ -299,7 +299,7 @@ public func produce_suspend_function_typealias() async throws -> main.AliasedAsy
                                     }
                                     cancellation = KotlinCoroutineSupport.KotlinTask(currentTask!)
 
-                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EInt64__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Float__(pointerToBlock, _1, {
+                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EInt64__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Float__(pointerToBlock.__externalRCRef()!, _1, {
                                         let originalBlock = continuation
                                         return { (arg0: Swift.Int64) in return { originalBlock(arg0); return true }() }
                                     }(), {
@@ -340,7 +340,7 @@ public func retunsListOfSuspend() async throws -> [() async throws -> Swift.Void
                     let _: Bool = __root___retunsListOfSuspend({
                         let originalBlock = continuation
                         return { (arg0: Any) in return { originalBlock((arg0 as! [Any]).map { __element in {
-                        let pointerToBlock = Swift.UnsafeMutableRawPointer(bitPattern: __element as! Swift.Int)!
+                        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: Swift.UnsafeMutableRawPointer(bitPattern: __element as! Swift.Int)!, options: .asBestFittingWrapper)!
                         return { try await {
                         try Task.checkCancellation()
                         var cancellation: KotlinCoroutineSupport.KotlinTask! = nil
@@ -353,7 +353,7 @@ public func retunsListOfSuspend() async throws -> [() async throws -> Swift.Void
                                     }
                                     cancellation = KotlinCoroutineSupport.KotlinTask(currentTask!)
 
-                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock, {
+                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!, {
                                         let originalBlock = continuation
                                         return { (arg0: Swift.Bool) in return { originalBlock({ arg0; return () }()); return true }() }
                                     }(), {
@@ -380,7 +380,7 @@ public func retunsListOfSuspend() async throws -> [() async throws -> Swift.Void
 }
 public func returnSuspendUnit() -> () async throws -> Swift.Void {
     return {
-        let pointerToBlock = __root___returnSuspendUnit()
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___returnSuspendUnit(), options: .asBestFittingWrapper)!
         return { try await {
         try Task.checkCancellation()
         var cancellation: KotlinCoroutineSupport.KotlinTask! = nil
@@ -393,7 +393,7 @@ public func returnSuspendUnit() -> () async throws -> Swift.Void {
                     }
                     cancellation = KotlinCoroutineSupport.KotlinTask(currentTask!)
 
-                    let _: Bool = main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock, {
+                    let _: Bool = main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!, {
                         let originalBlock = continuation
                         return { (arg0: Swift.Bool) in return { originalBlock({ arg0; return () }()); return true }() }
                     }(), {
@@ -478,7 +478,7 @@ public func returnsListOfSuspendNullables() async throws -> [(() async throws ->
                     let _: Bool = __root___returnsListOfSuspendNullables({
                         let originalBlock = continuation
                         return { (arg0: Any) in return { originalBlock((arg0 as! [Any]).map { __element in { let __v = __element as! Swift.Int; return __v == 0 ? nil : {
-                        let pointerToBlock = Swift.UnsafeMutableRawPointer(bitPattern: __v)!
+                        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: Swift.UnsafeMutableRawPointer(bitPattern: __v)!, options: .asBestFittingWrapper)!
                         return { try await {
                         try Task.checkCancellation()
                         var cancellation: KotlinCoroutineSupport.KotlinTask! = nil
@@ -491,7 +491,7 @@ public func returnsListOfSuspendNullables() async throws -> [(() async throws ->
                                     }
                                     cancellation = KotlinCoroutineSupport.KotlinTask(currentTask!)
 
-                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock, {
+                                    let _: Bool = main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!, {
                                         let originalBlock = continuation
                                         return { (arg0: Swift.Bool) in return { originalBlock({ arg0; return () }()); return true }() }
                                     }(), {

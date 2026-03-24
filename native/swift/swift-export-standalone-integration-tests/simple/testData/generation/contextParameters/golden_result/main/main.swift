@@ -146,8 +146,8 @@ public func contextBlockA(
 }
 public func contextBlockB() -> ((main.ContextB, main.ContextA), Swift.String, Swift.Int32) -> Swift.Void {
     return {
-        let pointerToBlock = __root___contextBlockB()
-        return { context, _3, _4 in let (ctx0, ctx1) = context;return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_main_ContextB_main_ContextA_Swift_String_Swift_Int32__(pointerToBlock, ctx0.__externalRCRef(), ctx1.__externalRCRef(), _3, _4); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___contextBlockB(), options: .asBestFittingWrapper)!
+        return { context, _3, _4 in let (ctx0, ctx1) = context;return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_main_ContextB_main_ContextA_Swift_String_Swift_Int32__(pointerToBlock.__externalRCRef()!, ctx0.__externalRCRef(), ctx1.__externalRCRef(), _3, _4); return () }() }
     }()
 }
 public func contextBlockC(
@@ -160,8 +160,8 @@ public func contextBlockC(
 }
 public func contextBlockD() -> (main.Context, Swift.Int32) -> Swift.Void {
     return {
-        let pointerToBlock = __root___contextBlockD()
-        return { context, _2 in let (ctx0) = context;return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_main_Context_Swift_Int32__(pointerToBlock, ctx0.__externalRCRef(), _2); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___contextBlockD(), options: .asBestFittingWrapper)!
+        return { context, _2 in let (ctx0) = context;return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_main_Context_Swift_Int32__(pointerToBlock.__externalRCRef()!, ctx0.__externalRCRef(), _2); return () }() }
     }()
 }
 public func foo(

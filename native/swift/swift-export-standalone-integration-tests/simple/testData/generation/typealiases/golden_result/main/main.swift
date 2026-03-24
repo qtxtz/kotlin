@@ -462,8 +462,8 @@ open class SEALED: KotlinRuntime.KotlinBase {
 public var block: main.closure {
     get {
         return {
-            let pointerToBlock = __root___block_get()
-            return { return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock); return () }() }
+            let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___block_get(), options: .asBestFittingWrapper)!
+            return { return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!); return () }() }
         }()
     }
     set {
@@ -485,11 +485,11 @@ public func deeper_closure_typealiase(
     block: @escaping main.deeper_closure_typealias
 ) -> main.deeper_closure_typealias {
     return {
-        let pointerToBlock = __root___deeper_closure_typealiase__TypesOfArguments__U2829202D_U20Swift_Void__({
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___deeper_closure_typealiase__TypesOfArguments__U2829202D_U20Swift_Void__({
         let originalBlock = block
         return { return { originalBlock(); return true }() }
-    }())
-        return { return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock); return () }() }
+    }()), options: .asBestFittingWrapper)!
+        return { return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!); return () }() }
     }()
 }
 public func increment(
@@ -499,8 +499,8 @@ public func increment(
 }
 public func produce_closure() -> main.closure {
     return {
-        let pointerToBlock = __root___produce_closure()
-        return { return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock); return () }() }
+        let pointerToBlock = KotlinRuntime.KotlinBase(__externalRCRefUnsafe: __root___produce_closure(), options: .asBestFittingWrapper)!
+        return { return { main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock.__externalRCRef()!); return () }() }
     }()
 }
 extension main.OUTSIDE_PROTO where Self : KotlinRuntimeSupport._KotlinBridgeable {
