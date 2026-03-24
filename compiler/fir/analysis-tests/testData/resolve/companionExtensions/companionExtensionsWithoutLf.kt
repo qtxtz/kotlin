@@ -4,8 +4,8 @@
 <!UNSUPPORTED_FEATURE, WRONG_MODIFIER_CONTAINING_DECLARATION!>companion<!> val String.bar get() = 1
 
 fun test() {
-    String.<!UNSUPPORTED_FEATURE!>foo<!>()
-    String.<!UNSUPPORTED_FEATURE!>bar<!>
+    String.<!UNRESOLVED_REFERENCE!>foo<!>()
+    String.<!UNRESOLVED_REFERENCE!>bar<!>
 }
 
 /* GENERATED_FIR_TAGS: funWithExtensionReceiver, functionDeclaration, getter, integerLiteral, propertyDeclaration,

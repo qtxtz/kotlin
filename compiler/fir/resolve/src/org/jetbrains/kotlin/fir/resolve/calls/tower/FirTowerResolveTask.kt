@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.fir.resolve.calls.tower
 
 import org.jetbrains.kotlin.KtFakeSourceElementKind
 import org.jetbrains.kotlin.KtSourceElement
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fakeElement
 import org.jetbrains.kotlin.fir.SessionHolder
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
 import org.jetbrains.kotlin.fir.expressions.builder.buildExpressionStub
+import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.resolve.BodyResolveComponents
 import org.jetbrains.kotlin.fir.resolve.DoubleColonLHS
 import org.jetbrains.kotlin.fir.resolve.calls.*
@@ -214,6 +216,8 @@ internal open class FirTowerResolveTask(
     candidateFactory,
 ) {
 
+    private val companionExtensionsEnabled = LanguageFeature.CompanionBlocksAndExtensions.isEnabled()
+
     suspend fun runResolverForQualifierReceiver(
         info: CallInfo,
         resolvedQualifier: FirResolvedQualifier
@@ -223,12 +227,16 @@ internal open class FirTowerResolveTask(
         processQualifierScopes(info, qualifierReceiver)
         processClassifierScope(info, qualifierReceiver)
 
-        enumerateTowerLevelsForCompanionExtensions(
-            info,
-            resolvedQualifier,
-            TowerGroup.QualifierOrClassifier,
-            explicitReceiverKind = ExplicitReceiverKind.EXTENSION_RECEIVER
-        )
+        // Searching for companion extensions triggers a bunch of resolution tasks.
+        // We skip them for performance reasons when the LF is disabled.
+        if (companionExtensionsEnabled) {
+            enumerateTowerLevelsForCompanionExtensions(
+                info,
+                resolvedQualifier,
+                TowerGroup.QualifierOrClassifier,
+                explicitReceiverKind = ExplicitReceiverKind.EXTENSION_RECEIVER
+            )
+        }
 
         if (resolvedQualifier.symbol != null) {
             if (info is CallableReferenceInfo && info.lhs is DoubleColonLHS.Type) {
@@ -391,13 +399,17 @@ internal open class FirTowerResolveTask(
                 }
             },
             onStaticScopeOwnerSymbol = { staticScopeOwnerSymbol, group ->
-                enumerateTowerLevelsForCompanionExtensionsForImplicitReceiver(
-                    info,
-                    staticScopeOwnerSymbol,
-                    group,
-                    emptyScopes,
-                    scopesWithoutCompanionExtensions,
-                )
+                // Searching for companion extensions triggers a bunch of resolution tasks.
+                // We skip them for performance reasons when the LF is disabled.
+                if (companionExtensionsEnabled) {
+                    enumerateTowerLevelsForCompanionExtensionsForImplicitReceiver(
+                        info,
+                        staticScopeOwnerSymbol,
+                        group,
+                        emptyScopes,
+                        scopesWithoutCompanionExtensions,
+                    )
+                }
             },
             onImplicitReceiver = { receiver, group ->
                 processCandidatesWithGivenImplicitReceiverAsValue(

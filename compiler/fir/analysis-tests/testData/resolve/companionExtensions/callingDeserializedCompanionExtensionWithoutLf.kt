@@ -14,8 +14,8 @@ companion val String.bar get() = 1
 // FILE: m2.kt
 
 fun test() {
-    String.<!UNSUPPORTED_FEATURE!>foo<!>()
-    String.<!UNSUPPORTED_FEATURE!>bar<!>
+    String.<!UNRESOLVED_REFERENCE!>foo<!>()
+    String.<!UNRESOLVED_REFERENCE!>bar<!>
 }
 
 /* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, integerLiteral, propertyDeclaration */
