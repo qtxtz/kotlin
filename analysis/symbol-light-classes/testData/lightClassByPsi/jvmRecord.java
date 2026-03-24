@@ -3,7 +3,7 @@ public abstract @interface Ann /* pkg.Ann*/ {
 }
 
 @kotlin.jvm.JvmRecord()
-public final class MyRec /* pkg.MyRec*/ {
+public final record MyRec /* pkg.MyRec*/() {
   @org.jetbrains.annotations.NotNull()
   private final @org.jetbrains.annotations.NotNull() java.lang.String gender;
 
