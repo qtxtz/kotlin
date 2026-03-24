@@ -68,8 +68,8 @@ interface FakeOverrideClassFilter {
 }
 
 interface FileLocalAwareLinker {
-    fun tryReferencingSimpleFunctionByLocalSignature(parent: IrDeclaration, idSignature: IdSignature): IrSimpleFunctionSymbol?
-    fun tryReferencingPropertyByLocalSignature(parent: IrDeclaration, idSignature: IdSignature): IrPropertySymbol?
+    fun tryReferencingSimpleFunctionByLocalSignature(file: IrFile, idSignature: IdSignature): IrSimpleFunctionSymbol?
+    fun tryReferencingPropertyByLocalSignature(file: IrFile, idSignature: IdSignature): IrPropertySymbol?
 }
 
 object DefaultFakeOverrideClassFilter : FakeOverrideClassFilter {
@@ -195,10 +195,10 @@ private class IrLinkerFakeOverrideBuilderStrategy(
         function: IrFunctionWithLateBinding,
         manglerCompatibleMode: Boolean
     ): Pair<IdSignature, IrSimpleFunctionSymbol> {
-        val parent = function.parentAsClass
+        val file = function.parentAsClass.file
 
         val signature = composeSignature(function, manglerCompatibleMode)
-        val symbol = linker.tryReferencingSimpleFunctionByLocalSignature(parent, signature)
+        val symbol = linker.tryReferencingSimpleFunctionByLocalSignature(file, signature)
             ?: symbolTable.referenceSimpleFunction(signature)
 
         if (!partialLinkageSupport.isEnabled
@@ -219,7 +219,7 @@ private class IrLinkerFakeOverrideBuilderStrategy(
         val disambiguatedSignature = composeSignature(functionWithDisambiguatedSignature, manglerCompatibleMode)
         assert(disambiguatedSignature != signature) { "Failed to compute disambiguated signature for fake override $function" }
 
-        val symbolWithDisambiguatedSignature = linker.tryReferencingSimpleFunctionByLocalSignature(parent, disambiguatedSignature)
+        val symbolWithDisambiguatedSignature = linker.tryReferencingSimpleFunctionByLocalSignature(file, disambiguatedSignature)
             ?: symbolTable.referenceSimpleFunction(disambiguatedSignature)
 
         return disambiguatedSignature to symbolWithDisambiguatedSignature
@@ -229,10 +229,10 @@ private class IrLinkerFakeOverrideBuilderStrategy(
         property: IrPropertyWithLateBinding,
         manglerCompatibleMode: Boolean
     ): Pair<IdSignature, IrPropertySymbol> {
-        val parent = property.parentAsClass
+        val file = property.parentAsClass.file
 
         val signature = composeSignature(property, manglerCompatibleMode)
-        val symbol = linker.tryReferencingPropertyByLocalSignature(parent, signature)
+        val symbol = linker.tryReferencingPropertyByLocalSignature(file, signature)
             ?: symbolTable.referenceProperty(signature)
 
         if (!partialLinkageSupport.isEnabled
@@ -254,7 +254,7 @@ private class IrLinkerFakeOverrideBuilderStrategy(
         val disambiguatedSignature = composeSignature(propertyWithDisambiguatedSignature, manglerCompatibleMode)
         assert(disambiguatedSignature != signature) { "Failed to compute disambiguated signature for fake override $property" }
 
-        val symbolWithDisambiguatedSignature = linker.tryReferencingPropertyByLocalSignature(parent, disambiguatedSignature)
+        val symbolWithDisambiguatedSignature = linker.tryReferencingPropertyByLocalSignature(file, disambiguatedSignature)
             ?: symbolTable.referenceProperty(disambiguatedSignature)
 
         return disambiguatedSignature to symbolWithDisambiguatedSignature
