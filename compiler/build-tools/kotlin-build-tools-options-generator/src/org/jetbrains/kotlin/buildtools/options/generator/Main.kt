@@ -87,7 +87,7 @@ fun main(args: Array<String>) {
             val output = generator.generateArgumentsForLevel(currentLevel.level, currentLevel.parentName)
             output.generatedFiles.forEach { (path, content) ->
                 val genFile = genDir.resolve(path)
-                GeneratorsFileUtil.writeFileIfContentChanged(genFile.toFile(), content, logNotChanged = false, forbidGenerationOnTeamcity = false)
+                GeneratorsFileUtil.writeFileIfContentChanged(genFile.toFile(), content, logNotChanged = false)
                 generatedFiles.add(genFile)
             }
             levelsToProcess += currentLevel.level.nestedLevels.map { LevelWithParent(it, output.argumentTypeName) }
@@ -95,7 +95,7 @@ fun main(args: Array<String>) {
     }
     genDir.walk().filter { it.isRegularFile() }.forEach {
         if (it !in generatedFiles) {
-            GeneratorsFileUtil.writeFileIfContentChanged(it.toFile(), "", logNotChanged = false, forbidGenerationOnTeamcity = false)
+            GeneratorsFileUtil.writeFileIfContentChanged(it.toFile(), "", logNotChanged = false)
             it.deleteExisting()
         }
     }
