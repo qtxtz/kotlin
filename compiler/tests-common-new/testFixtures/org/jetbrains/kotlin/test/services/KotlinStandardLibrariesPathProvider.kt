@@ -28,9 +28,6 @@ import java.io.File
 import java.lang.ref.SoftReference
 import java.net.URL
 import java.net.URLClassLoader
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 
 interface KotlinStandardLibrariesPathProvider : TestService {
     companion object {
@@ -194,7 +191,9 @@ interface KotlinStandardLibrariesPathProvider : TestService {
                 kotlinTestJarForTests()
             ).also { loader ->
                 reflectWithNewFakeOverridesJarClassLoader = SoftReference(loader)
-                loader.enableNewFakeOverridesImplementation()
+                val clazz = loader.loadClass("kotlin.reflect.jvm.internal.SystemPropertiesKt")
+                clazz.getDeclaredField("newFakeOverridesImplementation").apply { this.isAccessible = true }.set(null, true)
+                check(clazz.getMethod("getNewFakeOverridesImplementation").invoke(null) == true)
             }
         }
     }
@@ -340,10 +339,4 @@ fun CompilerConfiguration.configureStandardLibs(
         KotlinStandardLibrariesPathProvider::reflectJarForTests,
         arguments
     )
-}
-
-fun ClassLoader.enableNewFakeOverridesImplementation() {
-    val clazz = loadClass("kotlin.reflect.jvm.internal.SystemPropertiesKt")
-    clazz.getDeclaredField("newFakeOverridesImplementation").apply { isAccessible = true }.set(null, true)
-    check(clazz.getMethod("getNewFakeOverridesImplementation").invoke(null) == true)
 }
