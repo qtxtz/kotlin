@@ -323,34 +323,32 @@ fun main(args: Array<String>) {
             testClass<AbstractSourceTypeArgumentAnnotationCollectionTest> {
                 model("annotationPlacement", pattern = TestGeneratorUtil.KT)
             }
-        }
 
-        testGroup("analysis/low-level-api-fir/tests-gen", "analysis/analysis-api/testData") {
-            testClass<AbstractCodeFragmentCapturingTest> {
-                model("components/compilerFacility/compilation/codeFragments/capturing", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
-            }
-        }
+            run {
+                fun TestGroup.TestClass.modelInit() {
+                    model("compilerLikeAnalysis", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
+                }
 
-        testGroup(
-            "analysis/low-level-api-fir/tests-gen",
-            "analysis/low-level-api-fir/testData",
-        ) {
-            fun TestGroup.TestClass.modelInit() {
-                model("compilerLikeAnalysis", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME)
-            }
-
-            testClass<AbstractLLDiagnosticsTest> {
-                modelInit()
-            }
-            testClass<AbstractLLReversedDiagnosticsTest> {
-                modelInit()
-            }
-            testClass<AbstractLLPartialDiagnosticsTest> {
-                modelInit()
+                testClass<AbstractLLDiagnosticsTest> {
+                    modelInit()
+                }
+                testClass<AbstractLLReversedDiagnosticsTest> {
+                    modelInit()
+                }
+                testClass<AbstractLLPartialDiagnosticsTest> {
+                    modelInit()
+                }
             }
         }
 
         testGroup(testsRoot = "analysis/low-level-api-fir/tests-gen", testDataRoot = "analysis/analysis-api/testData") {
+            testClass<AbstractCodeFragmentCapturingTest> {
+                model(
+                    relativeRootPath = "components/compilerFacility/compilation/codeFragments/capturing",
+                    pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME,
+                )
+            }
+
             // Session invalidation test data is shared with analysis session invalidation tests.
             testClass<AbstractModuleStateModificationLLFirSessionInvalidationTest> {
                 model("sessions/sessionInvalidation", excludeDirsRecursively = AbstractSessionInvalidationTest.TEST_OUTPUT_DIRECTORY_NAMES)

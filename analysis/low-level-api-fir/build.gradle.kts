@@ -117,7 +117,11 @@ projectTests {
     testGenerator("org.jetbrains.kotlin.analysis.low.level.api.fir.TestGeneratorKt")
 
     testData(project.isolated, "testData")
-    testData(project(":analysis:analysis-api").isolated, "testData")
+
+    val analysisApiProject = project(":analysis:analysis-api").isolated
+    testData(analysisApiProject, "testData/components/compilerFacility/compilation/codeFragments/capturing")
+    testData(analysisApiProject, "testData/components/resolver")
+    testData(analysisApiProject, "testData/sessions/sessionInvalidation")
 
     withJvmStdlibAndReflect()
     withJvmStdlibSources()
