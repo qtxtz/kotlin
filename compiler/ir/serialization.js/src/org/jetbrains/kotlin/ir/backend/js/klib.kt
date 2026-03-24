@@ -201,14 +201,6 @@ fun loadIrForSingleModule(
     check(mainFragment != null)
     check(stdlibFragment != null)
 
-    irBuiltIns.functionFactory = IrDescriptorBasedFunctionFactory(
-        irBuiltIns = irBuiltIns,
-        symbolTable = symbolTable,
-        typeTranslator = typeTranslator,
-        getPackageFragment = FunctionTypeInterfacePackages.makePackageAccessor(stdlibFragment),
-        referenceFunctionsWhenKFunctionAreReferenced = true
-    )
-
     irLinker.init(null)
     ExternalDependenciesGenerator(symbolTable, listOf(irLinker)).generateUnboundSymbolsAsDependencies()
     irLinker.postProcess(inOrAfterLinkageStep = true)
@@ -277,13 +269,6 @@ private fun getIrModuleInfoForKlib(
         irLinker = irLinker,
         filesToLoad = configuration[JSConfigurationKeys.IC_FILES_TO_LOAD],
         mapping = mapping
-    )
-    irBuiltIns.functionFactory = IrDescriptorBasedFunctionFactory(
-        irBuiltIns,
-        symbolTable,
-        typeTranslator,
-        moduleDependencies.stdlib?.let { stdlibModule -> FunctionTypeInterfacePackages.makePackageAccessor(stdlibModule) },
-        true
     )
 
     irLinker.init(null)

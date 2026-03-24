@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.config.languageVersionSettings
 import org.jetbrains.kotlin.config.messageCollector
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.ir.InternalSymbolFinderAPI
 import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.KtDiagnosticReporterWithImplicitIrBasedContext
@@ -35,9 +36,9 @@ import org.jetbrains.kotlin.library.metadata.DeserializedKlibModuleOrigin
 import org.jetbrains.kotlin.library.metadata.KlibModuleOrigin
 import org.jetbrains.kotlin.library.metadata.impl.isForwardDeclarationModule
 import org.jetbrains.kotlin.library.uniqueName
+import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.psi2ir.Psi2IrConfiguration
 import org.jetbrains.kotlin.psi2ir.Psi2IrTranslator
-import org.jetbrains.kotlin.psi2ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.psi2ir.generators.DeclarationStubGeneratorImpl
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.descriptorUtil.module
@@ -113,9 +114,6 @@ internal fun LinkKlibsContext.linkKlibs(
             DescriptorByIdSignatureFinderImpl(moduleDescriptor, KonanManglerDesc),
             KonanStubGeneratorExtensions
     )
-    val irBuiltInsOverDescriptors = generatorContext.irBuiltIns as IrBuiltInsOverDescriptors
-    val functionIrClassFactory = BuiltInFictitiousFunctionIrClassFactory(symbolTable, irBuiltInsOverDescriptors, reflectionTypes)
-    irBuiltInsOverDescriptors.functionFactory = functionIrClassFactory
     val symbols = BackendNativeSymbols(
             this,
             generatorContext.irBuiltIns,
@@ -230,11 +228,16 @@ internal fun LinkKlibsContext.linkKlibs(
     modules.values.forEach { module -> module.files.sortBy { it.fileEntry.name } }
 
     // TODO: find out what should be done in the new builtins/symbols about it
+    @OptIn(InternalSymbolFinderAPI::class)
     if (stdlibIsBeingCached) {
-        functionIrClassFactory.buildAllClasses()
+        val maxArity = 255 // See [BuiltInFictitiousFunctionClassFactory].
+        (0..maxArity).forEach { arity ->
+            symbols.symbolFinder.findClass(StandardClassIds.FunctionN(arity))
+            symbols.symbolFinder.findClass(StandardClassIds.KFunctionN(arity))
+            symbols.symbolFinder.findClass(StandardClassIds.SuspendFunctionN(arity))
+            symbols.symbolFinder.findClass(StandardClassIds.KSuspendFunctionN(arity))
+        }
     }
-    functionIrClassFactory.module =
-            (modules.values + mainModule).single { it.descriptor == this.stdlibModule }
 
     mainModule.files.forEach { it.metadata = DescriptorMetadataSource.File(listOf(mainModule.descriptor)) }
     modules.values.forEach { module ->

@@ -136,16 +136,6 @@ class NativeDeserializerFacade(
 
         val moduleDependencies: IrModuleDependencies = deserializeDependencies(sortedDependencies, irLinker, mainModuleLib, mapping)
 
-        // TODO: If tests fail due to fictitious synthetic functions, consider passing an instance of
-        //  BuiltInFictitiousFunctionIrClassFactory here.
-        irBuiltIns.functionFactory = IrDescriptorBasedFunctionFactory(
-            irBuiltIns,
-            symbolTable,
-            typeTranslator,
-            getPackageFragment = null,
-            true
-        )
-
         irLinker.init(null)
         ExternalDependenciesGenerator(symbolTable, listOf(irLinker)).generateUnboundSymbolsAsDependencies()
         irLinker.postProcess(inOrAfterLinkageStep = true)
