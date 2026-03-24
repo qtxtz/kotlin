@@ -181,6 +181,7 @@ internal class KotlinWrapperPre2_4_0(
             return when (key) {
                 CommonCompilerArguments.KOTLIN_HOME,
                 CommonCompilerArguments.X_DUMP_DIRECTORY,
+                CommonCompilerArguments.X_DUMP_PERF,
                     -> {
                     if (delegate[key] == null) return null as V
 
@@ -241,6 +242,7 @@ internal class KotlinWrapperPre2_4_0(
             when (key) {
                 CommonCompilerArguments.KOTLIN_HOME,
                 CommonCompilerArguments.X_DUMP_DIRECTORY,
+                CommonCompilerArguments.X_DUMP_PERF,
                     -> {
                     val pathValue = value as Path?
                     val stringValue = pathValue?.toFile()?.absolutePath

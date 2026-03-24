@@ -313,7 +313,7 @@ public interface CommonCompilerArguments : CommonToolArguments {
      */
     @JvmField
     @ExperimentalCompilerArgument
-    public val X_DUMP_PERF: CommonCompilerArgument<String?> =
+    public val X_DUMP_PERF: CommonCompilerArgument<Path?> =
         CommonCompilerArgument("X_DUMP_PERF", KotlinReleaseVersion(1, 2, 50))
 
     /**

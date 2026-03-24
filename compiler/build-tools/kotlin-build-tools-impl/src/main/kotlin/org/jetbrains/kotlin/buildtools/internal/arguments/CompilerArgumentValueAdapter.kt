@@ -73,6 +73,7 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
         when (key) {
             CommonCompilerArguments.KOTLIN_HOME,
             CommonCompilerArguments.X_DUMP_DIRECTORY,
+            CommonCompilerArguments.X_DUMP_PERF,
                 -> {
                 if (value == null) return null as V
 
@@ -125,6 +126,7 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
         when (key) {
             CommonCompilerArguments.KOTLIN_HOME,
             CommonCompilerArguments.X_DUMP_DIRECTORY,
+            CommonCompilerArguments.X_DUMP_PERF,
                 -> {
                 if (value == null) return null as T
 
