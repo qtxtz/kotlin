@@ -2,7 +2,7 @@
 public abstract @interface Ann /* pkg.Ann*/ {
 }
 
-public final record MyRec /* pkg.MyRec*/() {
+public final record MyRec /* pkg.MyRec*/(java.lang.String name, @pkg.Ann() int age, java.lang.String gender) {
   @org.jetbrains.annotations.NotNull()
   public final java.lang.String component1();//  component1()
 
