@@ -1614,31 +1614,31 @@ open class PsiRawFirBuilder(
                     element.isConst -> element
                     statementDelegate != null -> {
                         element.replaceDelegate(buildReplExpressionReference {
-                            source = element.source
+                            source = statementDelegate.source?.fakeElement(KtFakeSourceElementKind.ReplEvalFunction)
                             expressionRef = FirExpressionRef<FirExpression>().apply { bind(statementDelegate) }
                         })
 
                         buildReplPropertyDelegate {
-                            source = element.source
+                            source = statementDelegate.source
                             propertySymbol = element.symbol
                             delegate = statementDelegate
                         }
                     }
                     statementInitializer != null -> {
                         element.replaceInitializer(buildReplExpressionReference {
-                            source = element.source
+                            source = statementInitializer.source?.fakeElement(KtFakeSourceElementKind.ReplEvalFunction)
                             expressionRef = FirExpressionRef<FirExpression>().apply { bind(statementInitializer) }
                         })
 
                         buildReplPropertyInitializer {
-                            source = element.source
+                            source = statementInitializer.source
                             propertySymbol = element.symbol
                             initializer = statementInitializer
                         }
                     }
                     else -> {
                         buildReplDeclarationReference {
-                            source = element.source
+                            source = element.source?.fakeElement(KtFakeSourceElementKind.ReplEvalFunction)
                             symbol = element.symbol
                         }
                     }
@@ -1650,7 +1650,7 @@ open class PsiRawFirBuilder(
             is FirTypeAlias,
                 -> {
                 buildReplDeclarationReference {
-                    source = element.source
+                    source = element.source?.fakeElement(KtFakeSourceElementKind.ReplEvalFunction)
                     symbol = element.symbol
                 }
             }
@@ -1676,11 +1676,7 @@ open class PsiRawFirBuilder(
                             isLocal = true,
                         )
 
-                        if (initializer.body is FirLazyBlock) {
-                            add(initializer)
-                        } else {
-                            addAll(initializer.body!!.statements)
-                        }
+                        add(initializer)
                     }
                     is KtDestructuringDeclaration -> {
                         val destructuringContainerVar = generateTemporaryVariable(

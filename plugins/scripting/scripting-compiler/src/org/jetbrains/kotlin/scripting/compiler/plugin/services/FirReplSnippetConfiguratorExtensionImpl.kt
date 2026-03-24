@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -15,8 +15,8 @@ import org.jetbrains.kotlin.fir.builder.buildLabel
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.builder.*
 import org.jetbrains.kotlin.fir.declarations.impl.FirDeclarationStatusImpl
-import org.jetbrains.kotlin.fir.declarations.impl.FirDefaultPropertyAccessor
 import org.jetbrains.kotlin.fir.declarations.impl.FirDefaultPropertyBackingField
+import org.jetbrains.kotlin.fir.declarations.impl.FirDefaultPropertyGetter
 import org.jetbrains.kotlin.fir.expressions.FirBlock
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirPropertyAccessExpression
@@ -179,15 +179,17 @@ class FirReplSnippetConfiguratorExtensionImpl(
 
         if (resultFieldName == null) return
 
-        val last = lastOrNull()
-        if (last == null || !last.isExpression()) return
+        val (lastScriptBlock, lastExpression) = findExpressionForResultProperty() ?: return
+        if (!lastExpression.isExpression()) {
+            return
+        }
 
         val callableId = CallableId(context.packageFqName, Name.identifier(resultFieldName))
         val propertySymbol = FirRegularPropertySymbol(callableId)
         val propertyReturnType = FirImplicitTypeRefImplWithoutSource
 
         val property = buildProperty {
-            source = last.source?.fakeElement(KtFakeSourceElementKind.ReplResultField)
+            source = lastScriptBlock.source
             moduleData = session.moduleData
             origin = FirDeclarationOrigin.ScriptCustomization.ResultProperty
             returnTypeRef = propertyReturnType
@@ -198,12 +200,12 @@ class FirReplSnippetConfiguratorExtensionImpl(
             dispatchReceiverType = context.dispatchReceiverTypesStack.lastOrNull()
             isLocal = false
 
-            initializer = last
+            initializer = lastExpression
 
             backingField = FirDefaultPropertyBackingField(
-                moduleData = session.moduleData,
+                moduleData = moduleData,
                 origin = origin,
-                source = null,
+                source = lastScriptBlock.source?.fakeElement(KtFakeSourceElementKind.DefaultAccessor),
                 annotations = annotations,
                 returnTypeRef = returnTypeRef.copyWithNewSourceKind(KtFakeSourceElementKind.DefaultAccessor),
                 isVar = isVar,
@@ -211,14 +213,14 @@ class FirReplSnippetConfiguratorExtensionImpl(
                 status = status,
             )
 
-            getter = FirDefaultPropertyAccessor.createGetterOrSetter(
-                source = null,
-                session.moduleData,
-                origin,
-                propertyReturnType.copyWithNewSourceKind(KtFakeSourceElementKind.ImplicitTypeRef),
-                status.visibility,
-                propertySymbol,
-                isGetter = true,
+            getter = FirDefaultPropertyGetter(
+                source = lastScriptBlock.source?.fakeElement(KtFakeSourceElementKind.DefaultAccessor),
+                moduleData = moduleData,
+                origin = origin,
+                propertyTypeRef = returnTypeRef.copyWithNewSourceKind(KtFakeSourceElementKind.ImplicitTypeRef),
+                visibility = status.visibility,
+                propertySymbol = symbol,
+                modality = status.modality,
             )
         }
 
