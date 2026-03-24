@@ -549,6 +549,39 @@ class IncrementalCompilationTest : AbstractNativeSimpleTest() {
     }
 
     @Test
+    @TestMetadata("makeOpenMethodFinal")
+    fun makeOpenMethodFinal() = withRootDir(File("$TEST_SUITE_PATH/makeOpenMethodFinal")) {
+        val lib = compileLibrary("lib") {
+            "lib/lib.file1.kt" copyTo "lib.file1.kt"
+            "lib/lib.file2.kt" copyTo "lib.file2.kt"
+        }
+        val main = compileToExecutable("main", lib) { "main/main.kt" copyTo "main.kt" }
+
+        // Check, <lib> has been compiled to cache.
+        assertTrue(main.executableFile.exists())
+        val libKtFile1CacheDir = getLibraryFileCache("lib", "lib/lib.file1.kt", "test")
+        val libKtFile2CacheDir = getLibraryFileCache("lib", "lib/lib.file2.kt", "test")
+        assertTrue(libKtFile1CacheDir.exists())
+        assertTrue(libKtFile2CacheDir.exists())
+        val modified1 = libKtFile1CacheDir.lastModified()
+        val modified2 = libKtFile2CacheDir.lastModified()
+        runExecutableAndVerify(main.testCase, main.testExecutable)
+
+        // Check, <lib.file2>'s cache won't be recompiled after changing lib/lib.file1.kt.
+        val lib11 = compileLibrary("lib") {
+            "lib/lib.file1.1.kt" copyTo "lib.file1.kt"
+            "lib/lib.file2.kt" copyTo "lib.file2.kt"
+        }
+        val main1 = compileToExecutable("main", lib11) { "main/main.1.kt" copyTo "main.kt" }
+        assertTrue(main1.executableFile.exists())
+        assertTrue(libKtFile1CacheDir.exists())
+        assertTrue(libKtFile2CacheDir.exists())
+        assertNotEquals(modified1, libKtFile1CacheDir.lastModified())
+        assertEquals(modified2, libKtFile2CacheDir.lastModified())
+        runExecutableAndVerify(main1.testCase, main1.testExecutable)
+    }
+
+    @Test
     @TestMetadata("internalMethodFakeOverrideInFriendModule")
     fun internalMethodFakeOverrideInFriendModule() {
         withRootDir(File("$TEST_SUITE_PATH/internalMethodFakeOverrideInFriendModule")) {
