@@ -97,6 +97,11 @@ public class K2JVMCompileMojo extends KotlinCompileMojoBase<K2JVMCompilerArgumen
     @Parameter(property = "kotlin.compiler.incremental.cache.root", defaultValue = "${project.build.directory}/kotlin-ic")
     public String incrementalCachesRoot;
 
+    // The handle is introduced to be able to disable it in case of some bugs,
+    // but overall there's no reason to disable this as it's basically required for correct IC results.
+    @Parameter(property = "kotlin.compiler.incremental.inputs.track", defaultValue = "true")
+    private boolean shouldTrackConfigurationInputs;
+
     @Parameter(property = "kotlin.compiler.javaParameters")
     protected boolean javaParameters;
 
@@ -413,13 +418,13 @@ public class K2JVMCompileMojo extends KotlinCompileMojoBase<K2JVMCompilerArgumen
             arguments.setClasspath(StringUtil.join(filteredClasspath, File.pathSeparator));
         }
 
-        JvmSnapshotBasedIncrementalCompilationConfiguration classpathSnapshotsConfig = compileOperation.snapshotBasedIcConfigurationBuilder(
+        JvmSnapshotBasedIncrementalCompilationConfiguration.Builder classpathSnapshotsConfig = compileOperation.snapshotBasedIcConfigurationBuilder(
                 cachesDir,
                 SourcesChanges.ToBeCalculated.INSTANCE,
-                Collections.EMPTY_LIST,
-                cachesDir.resolve("shrunk-classpath-snapshot.bin")
-        ).build();
-        compileOperation.set(JvmCompilationOperation.INCREMENTAL_COMPILATION, classpathSnapshotsConfig);
+                Collections.EMPTY_LIST
+        );
+        classpathSnapshotsConfig.set(JvmSnapshotBasedIncrementalCompilationConfiguration.TRACK_CONFIGURATION_INPUTS, shouldTrackConfigurationInputs);
+        compileOperation.set(JvmCompilationOperation.INCREMENTAL_COMPILATION, classpathSnapshotsConfig.build());
 
         return compilationResult -> {
             if (compilationResult == CompilationResult.COMPILATION_SUCCESS) {

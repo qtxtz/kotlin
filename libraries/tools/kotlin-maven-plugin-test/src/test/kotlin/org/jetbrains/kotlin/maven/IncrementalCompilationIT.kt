@@ -130,6 +130,31 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
         }
     }
 
+    @MavenTest
+    fun compilerArgumentsTracking(mavenVersion: TestVersions.Maven) {
+        testProject("kotlinSimple", mavenVersion) {
+            build("package")
+
+            build("package", "-X", "-Dkotlin.compiler.languageVersion=$AnotherSupportedLanguageVersion") {
+                assertFilesExist(*kotlinSimpleOutputPaths())
+                assertCompiledKotlin("src/main/kotlin/A.kt", "src/main/kotlin/Dummy.kt", "src/main/kotlin/useA.kt")
+            }
+        }
+    }
+
+    @MavenTest
+    fun compilerArgumentsTrackingCanBeDisabled(mavenVersion: TestVersions.Maven) {
+        testProject("kotlinSimple", mavenVersion) {
+            val disableTrackingArg = "-Dkotlin.compiler.incremental.inputs.track=false"
+            build("package", disableTrackingArg)
+
+            build("package", "-X", "-Dkotlin.compiler.languageVersion=$AnotherSupportedLanguageVersion", disableTrackingArg) {
+                assertFilesExist(*kotlinSimpleOutputPaths())
+                assertCompiledKotlin()
+            }
+        }
+    }
+
     private fun kotlinSimpleOutputPaths() = arrayOf(
         "target/classes/test.properties",
         "target/classes/A.class",
@@ -143,4 +168,8 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
         "target/classes/SomeMain.class",
         "target/test-classes/SomeTests.class"
     )
+
+    companion object {
+        private val AnotherSupportedLanguageVersion = org.jetbrains.kotlin.config.LanguageVersion.FIRST_SUPPORTED
+    }
 }
