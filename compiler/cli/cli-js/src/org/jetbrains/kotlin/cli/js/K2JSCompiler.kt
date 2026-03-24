@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants.RUNTIME_D
 import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants.RUNTIME_DIAGNOSTIC_LOG
 import org.jetbrains.kotlin.cli.common.arguments.KotlinWasmCompilerArguments
 import org.jetbrains.kotlin.cli.common.arguments.copyK2JSCompilerArguments
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.pipeline.web.CommonJsConfigurationUpdater
 import org.jetbrains.kotlin.cli.pipeline.web.JsCliPipeline
@@ -38,7 +39,11 @@ class K2JSCompiler : KotlinWebCompilerBase<K2JSCompilerArguments>() {
     ): ExitCode {
         @Suppress("DEPRECATION")
         return if (arguments.wasm) {
-            WasmCliPipeline(defaultPerformanceManager).execute(arguments.toWasmArguments(), services, basicMessageCollector)
+            WasmCliPipeline(defaultPerformanceManager).execute(
+                arguments.toWasmArguments(basicMessageCollector),
+                services,
+                basicMessageCollector,
+            )
         } else {
             JsCliPipeline(defaultPerformanceManager).execute(arguments, services, basicMessageCollector)
         }
@@ -47,7 +52,7 @@ class K2JSCompiler : KotlinWebCompilerBase<K2JSCompilerArguments>() {
     override fun setupPlatformSpecificArgumentsAndServices(
         configuration: CompilerConfiguration,
         arguments: K2JSCompilerArguments,
-        services: Services
+        services: Services,
     ) {
         CommonJsConfigurationUpdater.setupPlatformSpecificArgumentsAndServices(configuration, arguments, services)
     }
@@ -60,13 +65,17 @@ class K2JSCompiler : KotlinWebCompilerBase<K2JSCompilerArguments>() {
     }
 }
 
-private fun K2JSCompilerArguments.toWasmArguments(): KotlinWasmCompilerArguments {
+private fun K2JSCompilerArguments.toWasmArguments(diagnosticsCollector: MessageCollector): KotlinWasmCompilerArguments {
+    diagnosticsCollector.report(
+        CompilerMessageSeverity.WARNING,
+        "Use `KotlinWasmCompiler` when compiling to Wasm. Using Wasm related arguments with `K2JSCompiler` will become an error in a future compiler version."
+    )
     return copyK2JSCompilerArguments(this, KotlinWasmCompilerArguments())
 }
 
 fun RuntimeDiagnostic.Companion.resolve(
     value: String?,
-    configuration: CompilerConfiguration
+    configuration: CompilerConfiguration,
 ): RuntimeDiagnostic? = when (value?.lowercase()) {
     RUNTIME_DIAGNOSTIC_LOG -> RuntimeDiagnostic.LOG
     RUNTIME_DIAGNOSTIC_EXCEPTION -> RuntimeDiagnostic.EXCEPTION
