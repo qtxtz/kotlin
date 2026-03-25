@@ -105,12 +105,6 @@ fun <T> withMultiplatformLightClassSupport(block: () -> T): T {
 }
 
 private fun KaModule.isLightClassSupportAvailable(): Boolean {
-    // Prohibit for now. If strictly needed and if there are no sane alternatives,
-    // return to the discussion and design properly.
-    if (this is KaDanglingFileModule) {
-        return false
-    }
-
     return targetPlatform.has<JvmPlatform>() || isMultiplatformSupportAvailable
 }
 
@@ -316,6 +310,7 @@ internal class SymbolKotlinAsJavaSupport(project: Project) : KotlinAsJavaSupport
         return when (this) {
             is KaSourceModule -> true
             is KaLibraryModule -> true
+            is KaDanglingFileModule -> contextModule.isFromSourceOrLibraryBinary()
             else -> false
         }
     }
