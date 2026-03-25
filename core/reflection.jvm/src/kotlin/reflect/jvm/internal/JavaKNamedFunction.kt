@@ -71,8 +71,6 @@ internal class JavaKNamedFunction(
 
     override val callerWithDefaults: Caller<*>? get() = null
 
-    override fun replaceContainerForFakeOverride(
-        container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage,
-    ): ReflectKCallable<Any?> =
+    override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): ReflectKCallable<Any?> =
         JavaKNamedFunction(container, jMethod, rawBoundReceiver, overriddenStorage)
 }

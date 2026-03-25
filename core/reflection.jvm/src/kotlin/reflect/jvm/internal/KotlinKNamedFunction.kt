@@ -50,8 +50,6 @@ internal class KotlinKNamedFunction(
 
     override val isPrimaryConstructor: Boolean get() = false
 
-    override fun replaceContainerForFakeOverride(
-        container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage,
-    ): ReflectKCallable<Any?> =
+    override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): ReflectKCallable<Any?> =
         KotlinKNamedFunction(container, signature, rawBoundReceiver, kmFunction, overriddenStorage)
 }

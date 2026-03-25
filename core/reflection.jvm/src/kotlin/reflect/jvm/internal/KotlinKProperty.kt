@@ -123,7 +123,7 @@ internal abstract class KotlinKProperty<out V>(
         override val isInfix: Boolean get() = false
         override val isSuspend: Boolean get() = false
 
-        final override fun replaceContainerForFakeOverride(
+        final override fun shallowCopy(
             container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage,
         ): ReflectKCallable<ReturnType> =
             error("Property accessors can only be copied by copying the corresponding property")

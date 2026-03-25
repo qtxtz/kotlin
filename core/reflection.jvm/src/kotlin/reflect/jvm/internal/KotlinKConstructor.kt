@@ -43,8 +43,6 @@ internal class KotlinKConstructor(
 
     override val isPrimaryConstructor: Boolean get() = !kmConstructor.isSecondary
 
-    override fun replaceContainerForFakeOverride(
-        container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage,
-    ): ReflectKCallable<Any?> =
+    override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): ReflectKCallable<Any?> =
         error("Constructors cannot be copied: $this")
 }

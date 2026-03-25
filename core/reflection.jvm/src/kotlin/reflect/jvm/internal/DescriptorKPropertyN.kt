@@ -29,10 +29,7 @@ internal open class DescriptorKPropertyN<out V> : DescriptorKProperty<V> {
 
     override val getter: Getter<V> by lazy(PUBLICATION) { Getter(this) }
 
-    override fun replaceContainerForFakeOverride(
-        container: KDeclarationContainerImpl,
-        overriddenStorage: KCallableOverriddenStorage,
-    ): DescriptorKPropertyN<V> =
+    override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): DescriptorKPropertyN<V> =
         DescriptorKPropertyN<V>(container, descriptor, overriddenStorage)
 
     class Getter<out V>(override val property: DescriptorKPropertyN<V>) : DescriptorKProperty.Getter<V>()
@@ -47,7 +44,7 @@ internal class DescriptorKMutablePropertyN<V> : DescriptorKPropertyN<V>, KMutabl
 
     override val setter: Setter<V> by lazy(PUBLICATION) { Setter(this) }
 
-    override fun replaceContainerForFakeOverride(
+    override fun shallowCopy(
         container: KDeclarationContainerImpl,
         overriddenStorage: KCallableOverriddenStorage,
     ): DescriptorKMutablePropertyN<V> =

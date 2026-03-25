@@ -56,7 +56,7 @@ internal interface ReflectKCallable<out R> : KCallable<R>, KTypeParameterOwnerIm
 
     val isPackagePrivate: Boolean
 
-    fun replaceContainerForFakeOverride(
+    fun shallowCopy(
         container: KDeclarationContainerImpl,
         overriddenStorage: KCallableOverriddenStorage,
     ): ReflectKCallable<R>
