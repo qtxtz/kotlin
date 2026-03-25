@@ -192,13 +192,13 @@ internal class BtaApiGenerator(
 
     fun <T> generateEnumTypeBuilder(
         sourceEnum: Collection<T>,
-    ): TypeSpec.Builder where T : Enum<*>, T : WithStringRepresentation{
+    ): TypeSpec.Builder where T : Enum<*>, T : WithStringRepresentation {
         val className = sourceEnum.first()::class.toBtaEnumClassName()
         return TypeSpec.enumBuilder(className).apply {
             property<String>("stringValue") {
                 initializer("stringValue")
             }
-            addKdoc(KDOC_SINCE_2_3_0)
+            addKdoc("$KDOC_SINCE ${btaEnumVersionMap.getValue(className).releaseName}")
             primaryConstructor(FunSpec.constructorBuilder().addParameter("stringValue", String::class).build())
             val nameAccessor = WithStringRepresentation::stringRepresentation
             sourceEnum.forEach {
