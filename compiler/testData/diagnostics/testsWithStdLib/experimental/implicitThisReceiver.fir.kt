@@ -12,7 +12,7 @@ fun foo(f: <!OPT_IN_USAGE_ERROR!><!OPT_IN_USAGE_ERROR!>C<!>.() -> Unit<!>) {}
 
 fun test() {
     <!OPT_IN_USAGE_ERROR!>foo<!> {
-        <!OPT_IN_USAGE_ERROR!>member<!>()
+        member()
     }
 }
 

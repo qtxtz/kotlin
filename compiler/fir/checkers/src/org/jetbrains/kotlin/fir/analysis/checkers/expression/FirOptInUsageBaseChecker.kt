@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.primaryConstructorIfAny
 import org.jetbrains.kotlin.fir.declarations.utils.correspondingValueParameterFromPrimaryConstructor
 import org.jetbrains.kotlin.fir.declarations.utils.isData
-import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.expressions.FirAnnotation
 import org.jetbrains.kotlin.fir.expressions.FirAnnotationCall
 import org.jetbrains.kotlin.fir.expressions.FirStatement
@@ -178,7 +177,6 @@ object FirOptInUsageBaseChecker {
                 knownExperimentalities = null,
                 visited = visited,
                 fromSetter = false,
-                dispatchReceiverType = null,
                 fromSupertype = false,
             )
 
@@ -191,7 +189,6 @@ object FirOptInUsageBaseChecker {
             knownExperimentalities = allExperimentalities,
             visited = visited,
             fromSetter = false,
-            dispatchReceiverType = null,
             fromSupertype = false,
         )
 
@@ -199,11 +196,9 @@ object FirOptInUsageBaseChecker {
     }
 
     context(context: CheckerContext)
-    fun FirBasedSymbol<*>.loadExperimentalities(
-        fromSetter: Boolean, dispatchReceiverType: ConeKotlinType?,
-    ): Set<Experimentality> {
+    fun FirBasedSymbol<*>.loadExperimentalities(fromSetter: Boolean): Set<Experimentality> {
         return loadExperimentalities(
-            knownExperimentalities = null, visited = mutableSetOf(), fromSetter, dispatchReceiverType, fromSupertype = false
+            knownExperimentalities = null, visited = mutableSetOf(), fromSetter, fromSupertype = false
         )
     }
 
@@ -211,7 +206,7 @@ object FirOptInUsageBaseChecker {
     fun FirClassLikeSymbol<*>.loadExperimentalitiesFromSupertype(): Set<Experimentality> =
         loadExperimentalities(
             knownExperimentalities = null, visited = mutableSetOf(),
-            fromSetter = false, dispatchReceiverType = null, fromSupertype = true
+            fromSetter = false, fromSupertype = true
         )
 
     fun FirClassLikeSymbol<*>.isExperimentalMarker(session: FirSession): Boolean =
@@ -222,7 +217,6 @@ object FirOptInUsageBaseChecker {
         knownExperimentalities: SmartSet<Experimentality>?,
         visited: MutableSet<FirBasedSymbol<*>>,
         fromSetter: Boolean,
-        dispatchReceiverType: ConeKotlinType?,
         fromSupertype: Boolean,
     ): SmartSet<Experimentality> {
         if (!visited.add(this)) return SmartSet.create()
@@ -231,7 +225,7 @@ object FirOptInUsageBaseChecker {
         when (this) {
             is FirCallableSymbol<*> ->
                 loadCallableSpecificExperimentalities(
-                    visited, fromSetter, dispatchReceiverType, result
+                    visited, fromSetter, result
                 )
             is FirClassLikeSymbol<*> ->
                 loadClassLikeSpecificExperimentalities(visited, result)
@@ -259,7 +253,6 @@ object FirOptInUsageBaseChecker {
     private fun FirCallableSymbol<*>.loadCallableSpecificExperimentalities(
         visited: MutableSet<FirBasedSymbol<*>>,
         fromSetter: Boolean,
-        dispatchReceiverType: ConeKotlinType?,
         result: SmartSet<Experimentality>,
     ) {
         val parentClassSymbol = containingClassLookupTag()?.toRegularClassSymbol()
@@ -267,14 +260,11 @@ object FirOptInUsageBaseChecker {
             val ownerClassLikeSymbol = this.typeAliasConstructorInfo?.typeAliasSymbol ?: parentClassSymbol
             // For other callable we check dispatch receiver type instead
             ownerClassLikeSymbol?.loadExperimentalities(
-                result, visited, fromSetter = false, dispatchReceiverType = null, fromSupertype = false
+                result, visited, fromSetter = false, fromSupertype = false
             )
         } else {
             resolvedReturnType.abbreviatedTypeOrSelf.addExperimentalities(result, visited)
             receiverParameterSymbol?.resolvedType?.abbreviatedTypeOrSelf.addExperimentalities(result, visited)
-        }
-        if (!symbol.isStatic) {
-            dispatchReceiverType?.addExperimentalities(result, visited)
         }
         if (this is FirFunctionSymbol) {
             valueParameterSymbols.forEach {
@@ -288,13 +278,13 @@ object FirOptInUsageBaseChecker {
                 val valueParameter = valueParameters?.getOrNull(componentNIndex - 1)
                 val properties = parentClassSymbol.declaredProperties(context.session)
                 val property = properties.firstOrNull { it.name == valueParameter?.name }
-                property?.loadExperimentalities(result, visited, fromSetter = false, dispatchReceiverType, fromSupertype = false)
+                property?.loadExperimentalities(result, visited, fromSetter = false, fromSupertype = false)
             }
         }
 
         if (fromSetter && this is FirPropertySymbol) {
             setterSymbol?.loadExperimentalities(
-                result, visited, fromSetter = false, dispatchReceiverType, fromSupertype = false
+                result, visited, fromSetter = false, fromSupertype = false
             )
         }
     }
@@ -308,7 +298,7 @@ object FirOptInUsageBaseChecker {
             is FirRegularClassSymbol -> {
                 val parentClassSymbol = outerClassSymbol()
                 parentClassSymbol?.loadExperimentalities(
-                    result, visited, fromSetter = false, dispatchReceiverType = null, fromSupertype = false
+                    result, visited, fromSetter = false, fromSupertype = false
                 )
             }
 
@@ -324,7 +314,7 @@ object FirOptInUsageBaseChecker {
     ) {
         if (this !is ConeClassLikeType) return
         lookupTag.toSymbol()?.loadExperimentalities(
-            result, visited, fromSetter = false, dispatchReceiverType = null, fromSupertype = false
+            result, visited, fromSetter = false, fromSupertype = false
         )
         fullyExpandedType().typeArguments.forEach {
             if (!it.isStarProjection) it.type?.addExperimentalities(result, visited)

@@ -22,7 +22,6 @@ import org.jetbrains.kotlin.fir.references.toResolvedPropertySymbol
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.resolve.tryAccessExplicitFieldSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
-import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.resolvedType
 
 object FirOptInUsageAccessChecker : FirBasicExpressionChecker(MppCheckerKind.Common) {
@@ -40,22 +39,20 @@ object FirOptInUsageAccessChecker : FirBasicExpressionChecker(MppCheckerKind.Com
         with(FirOptInUsageBaseChecker) {
             when (expression) {
                 is FirVariableAssignment -> {
-                    val experimentalities = resolvedSymbol.loadExperimentalities(fromSetter = true, null) +
+                    val experimentalities = resolvedSymbol.loadExperimentalities(fromSetter = true) +
                             loadExperimentalitiesFromTypeArguments(emptyList())
                     reportNotAcceptedExperimentalities(experimentalities, expression.lValue)
                 }
                 is FirQualifiedAccessExpression -> {
-                    val dispatchReceiverType = expression.dispatchReceiver?.resolvedType?.fullyExpandedType()
-
-                    val experimentalities = resolvedSymbol.loadExperimentalities(fromSetter = false, dispatchReceiverType) +
+                    val experimentalities = resolvedSymbol.loadExperimentalities(fromSetter = false) +
                             loadExperimentalitiesFromTypeArguments(expression.typeArguments) +
-                            loadExperimentalitiesFromExplicitField(expression, dispatchReceiverType)
+                            loadExperimentalitiesFromExplicitField(expression)
                     val source = expression.source?.delegatedPropertySourceOrThis()
                     reportNotAcceptedExperimentalities(experimentalities, expression, source)
                 }
                 is FirDelegatedConstructorCall if resolvedSymbol is FirConstructorSymbol -> {
                     val experimentalities = if (resolvedSymbol.isFromEnumClass) {
-                        resolvedSymbol.loadExperimentalities(fromSetter = false, null)
+                        resolvedSymbol.loadExperimentalities(fromSetter = false)
                     } else {
                         // This is done to prevent double-reporting, as class experimentalities are reported in FirOptInUsageTypeRefChecker
                         resolvedSymbol.loadExperimentalitiesFromConstructor()
@@ -67,7 +64,7 @@ object FirOptInUsageAccessChecker : FirBasicExpressionChecker(MppCheckerKind.Com
     }
 
     context(context: CheckerContext)
-    fun loadExperimentalitiesFromExplicitField(expression: FirStatement, dispatchReceiver: ConeKotlinType?): Set<Experimentality> {
+    fun loadExperimentalitiesFromExplicitField(expression: FirStatement): Set<Experimentality> {
         if (expression !is FirPropertyAccessExpression) return emptySet()
         val reference = expression.calleeReference as? FirPropertyWithExplicitBackingFieldResolvedNamedReference ?: return emptySet()
         val property = reference.toResolvedPropertySymbol()?.takeIf { it.hasExplicitBackingField } ?: return emptySet()
@@ -75,7 +72,7 @@ object FirOptInUsageAccessChecker : FirBasicExpressionChecker(MppCheckerKind.Com
             ?: return emptySet()
 
         return when (property.backingFieldSymbol) {
-            field -> field.loadExperimentalities(fromSetter = false, dispatchReceiver)
+            field -> field.loadExperimentalities(fromSetter = false)
             else -> emptySet()
         }
     }
