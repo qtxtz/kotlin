@@ -6,7 +6,7 @@
   KDocName(44,60): 'Storage.setValue'
     KaSymbolResolutionSuccess:
       symbols = [
-        /Storage.setValue(<dispatch receiver>: Storage, value: kotlin.String!): kotlin.Unit
+        /Storage.setValue(<dispatch receiver>: Storage, p0: kotlin.String!): kotlin.Unit
       ]
 
 <caret_3>:

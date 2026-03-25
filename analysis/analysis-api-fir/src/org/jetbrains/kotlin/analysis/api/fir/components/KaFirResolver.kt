@@ -191,11 +191,11 @@ internal class KaFirResolver(
             is KaFirForLoopInReference,
             is KaFirPropertyDelegationMethodsReference,
             is KaFirSimpleNameReference,
+            is KaFirKDocReference,
                 -> tryResolveSymbolsForReferenceViaElement(reference)
 
             is KaFirDefaultAnnotationArgumentReference -> tryResolveSymbolsForDefaultAnnotationArgumentReference(reference)
             is KaFirInvokeFunctionReference -> tryResolveSymbolsForInvokeReference(reference)
-            is KaFirKDocReference -> tryResolveSymbolsForKDocReference(reference)
         }
     }
 
@@ -216,8 +216,26 @@ internal class KaFirResolver(
         }
     }
 
-    private fun resolveSymbol(psi: KtElement): KaSymbolResolutionAttempt? {
-        return psi.getOrBuildFirWithAdjustments()?.unwrapSafeCall()?.toKaSymbolResolutionAttempt(psi)
+    private fun resolveSymbol(psi: KtElement): KaSymbolResolutionAttempt? = when (psi) {
+        is KDocName -> resolveKDocName(psi)
+        else -> psi.getOrBuildFirWithAdjustments()?.unwrapSafeCall()?.toKaSymbolResolutionAttempt(psi)
+    }
+
+    private fun resolveKDocName(psi: KDocName): KaSymbolResolutionAttempt? {
+        val fullFqName = generateSequence(psi) { it.parent as? KDocName }.last().getQualifiedNameAsFqName()
+        val selectedFqName = psi.getQualifiedNameAsFqName()
+        val containedTagSectionIfSubject = psi.getTagIfSubject()?.knownTag
+
+        val symbols = KDocReferenceResolver.resolveKdocFqName(
+            analysisSession = analysisSession,
+            selectedFqName = selectedFqName,
+            fullFqName = fullFqName,
+            contextElement = psi,
+            containedTagSectionIfSubject = containedTagSectionIfSubject,
+        )
+
+        if (symbols.isEmpty()) return null
+        return KaBaseSymbolResolutionSuccess(backingSymbols = symbols.toList(), token = token)
     }
 
     private fun FirElement.toKaSymbolResolutionAttempt(psi: KtElement): KaSymbolResolutionAttempt? = when (this) {

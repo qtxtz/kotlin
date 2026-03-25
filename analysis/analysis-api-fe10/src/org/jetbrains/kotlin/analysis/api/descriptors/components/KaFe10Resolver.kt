@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.analysis.utils.printer.parentOfType
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.diagnostics.*
 import org.jetbrains.kotlin.idea.references.KDocReference
+import org.jetbrains.kotlin.kdoc.psi.impl.KDocName
 import org.jetbrains.kotlin.idea.references.KtReference
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
 import org.jetbrains.kotlin.lexer.KtTokens
@@ -107,6 +108,9 @@ internal class KaFe10Resolver(
     }
 
     override fun performSymbolResolution(psi: KtElement): KaSymbolResolutionAttempt? {
+        if (psi is KDocName) {
+            return tryResolveSymbolsForKDocReference(Fe10KDocReference(psi))
+        }
         val bindingContext = analysisContext.analyze(psi, AnalysisMode.PARTIAL_WITH_DIAGNOSTICS)
         val resolvedCall = when (val resolvedCall = psi.getResolvedCall(bindingContext)) {
             is VariableAsFunctionResolvedCall -> resolvedCall.variableCall
