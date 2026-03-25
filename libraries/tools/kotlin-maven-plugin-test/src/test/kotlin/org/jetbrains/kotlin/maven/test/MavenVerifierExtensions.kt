@@ -167,10 +167,18 @@ fun Verifier.assertCompiledKotlin(vararg expectedPaths: String) {
     Assertions.assertEquals(expectedSorted, actualSorted, "Compiled files differ")
 }
 
+fun Verifier.assertZipContains(relativePath: String, entryName: String) {
+    assertFileExists(relativePath)
+    val zipPath = Path(basedir).resolve(relativePath)
+    java.util.zip.ZipFile(zipPath.toFile()).use { zip ->
+        assertTrue(zip.getEntry(entryName) != null) { "ZIP $relativePath does not contain entry '$entryName'" }
+    }
+}
+
 fun Verifier.assertFilesExist(vararg paths: String) {
     val base = File(basedir)
     for (path in paths) {
         val file = base.resolve(path)
-        Assertions.assertTrue(file.exists()) { "$file does not exist" }
+        assertTrue(file.exists()) { "$file does not exist" }
     }
 }

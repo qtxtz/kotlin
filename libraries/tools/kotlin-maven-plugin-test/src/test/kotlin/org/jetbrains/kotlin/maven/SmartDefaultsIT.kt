@@ -132,4 +132,24 @@ class SmartDefaultsIT : KotlinMavenTestBase() {
             }
         }
     }
+
+    @MavenTest
+    @DisplayName("KT-85146: Auto-added stdlib has correct resolved artifact scope")
+    fun testSmartDefaultsStdlibResolvedScope(mavenVersion: TestVersions.Maven) {
+        testProject("test-smart-defaults-stdlib-scope", mavenVersion) {
+            build(
+                "dependency:tree",
+                "package",
+                expectedToFail = false
+            ) {
+                assertSmartDefaultsEnabled()
+                assertStdlibAutoAdded()
+                assertDependencyTreeContains("org.jetbrains.kotlin", "kotlin-stdlib", context.kotlinVersion)
+                assertZipContains(
+                    "target/test-smart-defaults-stdlib-scope-1.0-lambda.zip",
+                    "lib/kotlin-stdlib-${context.kotlinVersion}.jar"
+                )
+            }
+        }
+    }
 }

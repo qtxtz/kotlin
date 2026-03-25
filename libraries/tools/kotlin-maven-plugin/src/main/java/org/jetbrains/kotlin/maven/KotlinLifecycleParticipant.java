@@ -104,6 +104,7 @@ public class KotlinLifecycleParticipant extends AbstractMavenLifecycleParticipan
         stdlib.setGroupId(KOTLIN_MAVEN_PLUGIN_GROUP_ID);
         stdlib.setArtifactId(KOTLIN_STDLIB_ARTIFACT_ID);
         stdlib.setVersion(version);
+        stdlib.setScope("compile");
 
         project.getDependencies().add(stdlib);
         if (logger != null) {
