@@ -41,8 +41,7 @@ fun box(): String {
 
     check("extension receiver parameter") { (C::class.members.single { it.name == "x" } as KMutableProperty<*>).parameters[1] }
 
-    // TODO: depends on KT-13490
-    // check("property setter parameter") { (C::class.members.single { it.name == "x" } as KMutableProperty<*>).setter.parameters[2] }
+    check("property setter parameter") { (C::class.members.single { it.name == "x" } as KMutableProperty<*>).setter.parameters[2] }
 
     return "OK"
 }
