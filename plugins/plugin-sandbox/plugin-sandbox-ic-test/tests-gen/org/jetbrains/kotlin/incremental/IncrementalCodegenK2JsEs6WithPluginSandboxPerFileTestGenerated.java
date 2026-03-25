@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("plugins/plugin-sandbox/plugin-sandbox-ic-test/testData/js/pureKotlin")
 @TestDataPath("$PROJECT_ROOT")
-public class IncrementalK2JsWithPluginSandboxPerFileTestGenerated extends AbstractIncrementalK2JsWithPluginSandboxPerFileTest {
+public class IncrementalCodegenK2JsEs6WithPluginSandboxPerFileTestGenerated extends AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerFileTest {
   private void run(String fileName) {
     runTest("plugins/plugin-sandbox/plugin-sandbox-ic-test/testData/js/pureKotlin/" + fileName);
   }

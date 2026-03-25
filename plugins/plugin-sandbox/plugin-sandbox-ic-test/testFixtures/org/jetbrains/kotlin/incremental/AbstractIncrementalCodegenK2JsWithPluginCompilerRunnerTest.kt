@@ -5,44 +5,25 @@
 
 package org.jetbrains.kotlin.incremental
 
-import java.io.File
-import kotlin.io.extension
-import kotlin.test.assertTrue
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.cli.extensionsStorage
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.compiler.plugin.registerExtension
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
-import org.jetbrains.kotlin.incremental.js.IncrementalResultsConsumerImpl
+import org.jetbrains.kotlin.incremental.utils.findAnnotationsRuntimeKlib
 import org.jetbrains.kotlin.js.config.JsGenerationGranularity
 import org.jetbrains.kotlin.js.config.ModuleKind
-import org.jetbrains.kotlin.js.config.incrementalResultsConsumer
 import org.jetbrains.kotlin.plugin.sandbox.fir.FirPluginPrototypeExtensionRegistrar
 import org.jetbrains.kotlin.plugin.sandbox.ir.GeneratedDeclarationsIrBodyFiller
 import org.jetbrains.kotlin.test.TargetBackend
-import org.junit.jupiter.api.fail
 
-abstract class AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
     targetBackend: TargetBackend,
     granularity: JsGenerationGranularity,
     workingDirPath: String
 ) : JsAbstractInvalidationTest(targetBackend, granularity, workingDirPath) {
-    companion object {
-        private const val ANNOTATIONS_KLIB_DIR = "plugins/plugin-sandbox/plugin-annotations/build/libs/"
-        private const val ANNOTATIONS_KLIB_NAME = "plugin-annotations"
-
-        private fun findKlib(dir: String, name: String, taskName: String): String {
-            val failMessage = { "Jar $name does not exist. Please run $taskName" }
-            val libDir = File(dir)
-            assertTrue(libDir.exists() && libDir.isDirectory)
-            val jar = libDir.listFiles()?.firstOrNull { it.name.startsWith(name) && it.extension == "klib" } ?: fail(failMessage)
-            return jar.canonicalPath
-        }
-    }
-
-    private val annotationsKlib =
-        findKlib(ANNOTATIONS_KLIB_DIR, ANNOTATIONS_KLIB_NAME, ":plugins:plugin-sandbox:plugin-annotations:jsJar")
+    private val annotationsKlib = findAnnotationsRuntimeKlib()
 
     override val librariesToExcludeFromStats
         get() = super.librariesToExcludeFromStats + annotationsKlib
@@ -67,7 +48,6 @@ abstract class AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
             friendLibraries,
             includedLibrary
         )
-        copy.incrementalResultsConsumer = IncrementalResultsConsumerImpl()
         with(copy.extensionsStorage!!) {
             // Since the IC infrastructure is weird and duplicate emitting of extensions
             if (registeredExtensions.isEmpty()) {
@@ -79,29 +59,29 @@ abstract class AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
     }
 }
 
-abstract class AbstractIncrementalK2JsWithPluginSandboxPerModuleTest :
-    AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenK2JsWithPluginSandboxPerModuleTest :
+    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR,
         JsGenerationGranularity.PER_MODULE,
         "plugin-sandbox/incremental/perModule"
     )
 
-abstract class AbstractIncrementalK2JsEs6WithPluginSandboxPerModuleTest :
-    AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerModuleTest :
+    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR_ES6,
         JsGenerationGranularity.PER_MODULE,
         "plugin-sandbox/incremental/perModuleEs6"
     )
 
-abstract class AbstractIncrementalK2JsWithPluginSandboxPerFileTest :
-    AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenK2JsWithPluginSandboxPerFileTest :
+    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR,
         JsGenerationGranularity.PER_FILE,
         "plugin-sandbox/incremental/perFile"
     )
 
-abstract class AbstractIncrementalK2JsEs6WithPluginSandboxPerFileTest :
-    AbstractIncrementalK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerFileTest :
+    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR_ES6,
         JsGenerationGranularity.PER_FILE,
         "plugin-sandbox/incremental/perFileEs6"
