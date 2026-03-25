@@ -6,6 +6,7 @@
 package kotlin.reflect.jvm.internal
 
 import kotlin.LazyThreadSafetyMode.PUBLICATION
+import kotlin.jvm.internal.CallableReference
 import kotlin.metadata.KmProperty
 import kotlin.reflect.KMutableProperty
 
@@ -16,7 +17,7 @@ internal open class KotlinKPropertyN<out V>(
     override val getter: Getter<V> by lazy(PUBLICATION) { Getter(this) }
 
     override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): ReflectKCallable<V> =
-        KotlinKPropertyN(container, signature, rawBoundReceiver, kmProperty, overriddenStorage)
+        KotlinKPropertyN(container, signature, CallableReference.NO_RECEIVER, kmProperty, overriddenStorage)
 
     class Getter<out V>(override val property: KotlinKPropertyN<V>) : KotlinKProperty.Getter<V>()
 }
@@ -28,7 +29,7 @@ internal class KotlinKMutablePropertyN<V>(
     override val setter: Setter<V> by lazy(PUBLICATION) { Setter(this) }
 
     override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): ReflectKCallable<V> =
-        KotlinKMutablePropertyN(container, signature, rawBoundReceiver, kmProperty, overriddenStorage)
+        KotlinKMutablePropertyN(container, signature, CallableReference.NO_RECEIVER, kmProperty, overriddenStorage)
 
     class Setter<V>(override val property: KotlinKMutablePropertyN<V>) : KotlinKProperty.Setter<V>()
 }

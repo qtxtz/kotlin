@@ -6,6 +6,7 @@
 package kotlin.reflect.jvm.internal
 
 import kotlin.LazyThreadSafetyMode.PUBLICATION
+import kotlin.jvm.internal.CallableReference
 import kotlin.metadata.*
 import kotlin.metadata.jvm.JvmMethodSignature
 import kotlin.metadata.jvm.signature
@@ -51,5 +52,5 @@ internal class KotlinKNamedFunction(
     override val isPrimaryConstructor: Boolean get() = false
 
     override fun shallowCopy(container: KDeclarationContainerImpl, overriddenStorage: KCallableOverriddenStorage): ReflectKCallable<Any?> =
-        KotlinKNamedFunction(container, signature, rawBoundReceiver, kmFunction, overriddenStorage)
+        KotlinKNamedFunction(container, signature, CallableReference.NO_RECEIVER, kmFunction, overriddenStorage)
 }
