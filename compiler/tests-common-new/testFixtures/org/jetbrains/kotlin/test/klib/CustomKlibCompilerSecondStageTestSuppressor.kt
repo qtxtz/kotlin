@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.test.backend.handlers.NoFirCompilationErrorsHandler
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.directives.model.DirectivesContainer
 import org.jetbrains.kotlin.test.directives.model.StringDirective
+import org.jetbrains.kotlin.test.frontend.fir.handlers.FirDumpHandler
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestDirectives.IGNORE_KLIB_FRONTEND_ERRORS_WITH_CUSTOM_SECOND_STAGE
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestDirectives.IGNORE_KLIB_BACKEND_ERRORS_WITH_CUSTOM_SECOND_STAGE
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestDirectives.IGNORE_KLIB_RUNTIME_ERRORS_WITH_CUSTOM_SECOND_STAGE
@@ -55,6 +56,7 @@ class CustomKlibCompilerSecondStageTestSuppressor(
                         wrappedException,
                         IGNORE_KLIB_RUNTIME_ERRORS_WITH_CUSTOM_SECOND_STAGE
                     )
+                    is FirDumpHandler -> emptyList()
                     else -> listOf(wrappedException)
                 }
                 is WrappedException.FromFacade -> when (wrappedException.facade) {
