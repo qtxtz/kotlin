@@ -231,10 +231,10 @@ object FirOptInUsageBaseChecker {
         when (this) {
             is FirCallableSymbol<*> ->
                 loadCallableSpecificExperimentalities(
-                    this, visited, fromSetter, dispatchReceiverType, result
+                    visited, fromSetter, dispatchReceiverType, result
                 )
             is FirClassLikeSymbol<*> ->
-                loadClassLikeSpecificExperimentalities(this, visited, result)
+                loadClassLikeSpecificExperimentalities(visited, result)
             is FirAnonymousInitializerSymbol, is FirFileSymbol, is FirTypeParameterSymbol,
             is FirScriptSymbol, is FirReplSnippetSymbol, is FirCodeFragmentSymbol, is FirReceiverParameterSymbol,
                 -> {
@@ -257,7 +257,6 @@ object FirOptInUsageBaseChecker {
 
     context(context: CheckerContext)
     private fun FirCallableSymbol<*>.loadCallableSpecificExperimentalities(
-        symbol: FirCallableSymbol<*>,
         visited: MutableSet<FirBasedSymbol<*>>,
         fromSetter: Boolean,
         dispatchReceiverType: ConeKotlinType?,
@@ -293,8 +292,8 @@ object FirOptInUsageBaseChecker {
             }
         }
 
-        if (fromSetter && symbol is FirPropertySymbol) {
-            symbol.setterSymbol?.loadExperimentalities(
+        if (fromSetter && this is FirPropertySymbol) {
+            setterSymbol?.loadExperimentalities(
                 result, visited, fromSetter = false, dispatchReceiverType, fromSupertype = false
             )
         }
@@ -302,13 +301,12 @@ object FirOptInUsageBaseChecker {
 
     context(context: CheckerContext)
     private fun FirClassLikeSymbol<*>.loadClassLikeSpecificExperimentalities(
-        symbol: FirBasedSymbol<*>,
         visited: MutableSet<FirBasedSymbol<*>>,
         result: SmartSet<Experimentality>,
     ) {
         when (this) {
-            is FirRegularClassSymbol -> if (symbol is FirRegularClassSymbol) {
-                val parentClassSymbol = symbol.outerClassSymbol()
+            is FirRegularClassSymbol -> {
+                val parentClassSymbol = outerClassSymbol()
                 parentClassSymbol?.loadExperimentalities(
                     result, visited, fromSetter = false, dispatchReceiverType = null, fromSupertype = false
                 )
