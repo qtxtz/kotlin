@@ -248,6 +248,33 @@ public class Emulator {
         Assert.fail("Can't find booted emulator: " + execute.getOutput());
     }
 
+    public void waitForPackageManager() {
+        System.out.println("Waiting for Package Manager...");
+        GeneralCommandLine packageManagerCheckCommand = createAdbCommand();
+        packageManagerCheckCommand.addParameters("shell", "pm", "path", "android");
+
+        int counter = 0;
+        RunResult execute = RunUtils.execute(packageManagerCheckCommand);
+        while (counter < 20) {
+            String output = execute.getOutput();
+            if (execute.getStatus() && output.contains("package:")) {
+                System.out.println("Package Manager is ready!");
+                return;
+            }
+
+            System.out.println("Waiting for Package Manager (" + counter + ")...");
+            try {
+                Thread.sleep(10000);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            counter++;
+            execute = RunUtils.execute(packageManagerCheckCommand);
+        }
+        Assert.fail("Can't access Package Manager: " + execute.getOutput());
+    }
+
     public void stopEmulator() {
         System.out.println("Stopping emulator...");
 

@@ -55,6 +55,7 @@ class CodegenTestsOnAndroidRunner private constructor(private val pathManager: P
 
             try {
                 emulator.waitEmulatorStart()
+                emulator.waitForPackageManager()
 
                 for (flavor in flavorsToRun) {
                     gradleRunner.installAndroidDebugTest(flavor)
