@@ -1,5 +1,5 @@
  /*
- * Copyright 2010-2020 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -518,6 +518,7 @@ object ArrayOps : TemplateGroupBase() {
             if (covariant) {
                 returns("Array<T>")
                 inline(suppressWarning = true)
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body { """return this.asDynamic().concat(arrayOf(element))""" }
                 return@builder
             }
@@ -532,8 +533,7 @@ object ArrayOps : TemplateGroupBase() {
             }
             on(Platform.JS) {
                 inlineOnly()
-                deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                body { """return this.plusElement(element)""" }
+                body { """return this.asDynamic().concat(arrayOf(element))""" }
             }
         }
     }
@@ -554,6 +554,7 @@ object ArrayOps : TemplateGroupBase() {
             if (covariant) {
                 returns("Array<T>")
                 inline(suppressWarning = true)
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body { "return this.asDynamic().concat(arrayOf(element))" }
                 return@builderWith
             }
@@ -590,8 +591,7 @@ object ArrayOps : TemplateGroupBase() {
                     }
                     specialFor(InvariantArraysOfObjects) {
                         inlineOnly()
-                        deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                        body { "return this.plus(element)" }
+                        body { "return this.asDynamic().concat(arrayOf(element))" }
                     }
                 }
                 on(Platform.Native) {
@@ -624,6 +624,7 @@ object ArrayOps : TemplateGroupBase() {
 
             if (covariant) {
                 returns("Array<T>")
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body { "return arrayPlusCollection(this, elements)" }
                 return@builder
             }
@@ -666,9 +667,7 @@ object ArrayOps : TemplateGroupBase() {
                         """
                     }
                     specialFor(InvariantArraysOfObjects) {
-                        inlineOnly()
-                        deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                        body { "return this.plus(elements)" }
+                        body { "return arrayPlusCollection(this, elements)" }
                     }
                 }
                 on(Platform.Native) {
@@ -702,6 +701,7 @@ object ArrayOps : TemplateGroupBase() {
                 signature("plus(elements: Array<out T>)", notForSorting = true)
                 returns("Array<T>")
                 inline(suppressWarning = true)
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body { """return this.asDynamic().concat(elements)""" }
                 return@builder
             }
@@ -731,8 +731,7 @@ object ArrayOps : TemplateGroupBase() {
                     inline(suppressWarning = true)
                     specialFor(InvariantArraysOfObjects) {
                         inlineOnly()
-                        deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                        body { "return this.plus(elements)" }
+                        body { """return this.asDynamic().concat(elements)""" }
                     }
                     specialFor(ArraysOfPrimitives) {
                         body { """return primitiveArrayConcat(this, elements)""" }
@@ -884,6 +883,7 @@ object ArrayOps : TemplateGroupBase() {
             val rangeCheck = "AbstractList.checkRangeIndexes(fromIndex, toIndex, size)"
             if (covariant) {
                 returns("Array<T>")
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body { "return this.asDynamic().slice(fromIndex, toIndex)" }
                 body { rangeCheck + "\n" + body }
                 return@builderWith
@@ -903,9 +903,8 @@ object ArrayOps : TemplateGroupBase() {
                             body { "return longCopyOfRange(this, fromIndex, toIndex)" }
                         }
                         null -> {
-                            inlineOnly()
-                            deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                            body { "return this.copyOfRange(fromIndex, toIndex)" }
+                            body { "return this.asDynamic().slice(fromIndex, toIndex)" }
+                            body { rangeCheck + "\n" + body }
                             return@on
                         }
                         else -> {
@@ -997,6 +996,7 @@ object ArrayOps : TemplateGroupBase() {
             if (covariant) {
                 returns("Array<T>")
                 inline(suppressWarning = true)
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body { "return this.asDynamic().slice()" }
                 return@builder
             }
@@ -1014,8 +1014,7 @@ object ArrayOps : TemplateGroupBase() {
                     when (primitive) {
                         null -> {
                             inlineOnly()
-                            deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                            body { "return this.copyOf()" }
+                            body { "return this.asDynamic().slice()" }
                         }
                         PrimitiveType.Long -> {
                             annotation("@OptIn(JsIntrinsic::class)")
@@ -1060,6 +1059,7 @@ object ArrayOps : TemplateGroupBase() {
 
             if (covariant) {
                 returns("Array<T?>")
+                deprecate(Deprecation("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN))
                 body {
                     """
                     $newSizeCheck
@@ -1140,9 +1140,12 @@ object ArrayOps : TemplateGroupBase() {
                 sample("samples.collections.Arrays.CopyOfOperations.resizingCopyOf")
                 returns("Array<T?>")
                 on(Platform.JS) {
-                    inlineOnly()
-                    deprecate(Deprecation("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN))
-                    body { "return this.copyOf(newSize)" }
+                    body {
+                        """
+                        $newSizeCheck
+                        return arrayCopyResize(this, newSize, null)
+                        """
+                    }
                 }
                 on(Platform.Native) {
                     body { "return this.copyOfNulls(newSize)" }

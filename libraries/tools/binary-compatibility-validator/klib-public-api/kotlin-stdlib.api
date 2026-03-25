@@ -6490,7 +6490,10 @@ final fun <#A: kotlin/Any?> (kotlin.sequences/Sequence<#A>).kotlin.sequences/wit
 final fun <#A: kotlin/Any?> (kotlin.sequences/Sequence<#A>).kotlin.sequences/zipWithNext(): kotlin.sequences/Sequence<kotlin/Pair<#A, #A>> // kotlin.sequences/zipWithNext|zipWithNext@kotlin.sequences.Sequence<0:0>(){0§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?> (kotlin.sequences/Sequence<kotlin.collections/Iterable<#A>>).kotlin.sequences/flatten(): kotlin.sequences/Sequence<#A> // kotlin.sequences/flatten|flatten@kotlin.sequences.Sequence<kotlin.collections.Iterable<0:0>>(){0§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?> (kotlin.sequences/Sequence<kotlin.sequences/Sequence<#A>>).kotlin.sequences/flatten(): kotlin.sequences/Sequence<#A> // kotlin.sequences/flatten|flatten@kotlin.sequences.Sequence<kotlin.sequences.Sequence<0:0>>(){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOf(kotlin/Int): kotlin/Array<#A?> // kotlin.collections/copyOf|copyOf@kotlin.Array<0:0>(kotlin.Int){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOfRange(kotlin/Int, kotlin/Int): kotlin/Array<#A> // kotlin.collections/copyOfRange|copyOfRange@kotlin.Array<0:0>(kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/fill(#A, kotlin/Int = ..., kotlin/Int = ...) // kotlin.collections/fill|fill@kotlin.Array<0:0>(0:0;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(kotlin.collections/Collection<#A>): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(kotlin.collections.Collection<0:0>){0§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/reverse() // kotlin.collections/reverse|reverse@kotlin.Array<0:0>(){0§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/reverse(kotlin/Int, kotlin/Int) // kotlin.collections/reverse|reverse@kotlin.Array<0:0>(kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/reversedArray(): kotlin/Array<#A> // kotlin.collections/reversedArray|reversedArray@kotlin.Array<0:0>(){0§<kotlin.Any?>}[0]
@@ -9466,16 +9469,7 @@ final fun <#A: kotlin/Any?, #B: kotlin/Any?> kotlin.collections/linkedMapOf(kotl
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOf(): kotlin/Array<#A> // kotlin.collections/copyOf|copyOf@kotlin.Array<0:0>(){0§<kotlin.Any?>}[0]
 
 // Targets: [native, wasmJs, wasmWasi]
-final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOf(kotlin/Int): kotlin/Array<#A?> // kotlin.collections/copyOf|copyOf@kotlin.Array<0:0>(kotlin.Int){0§<kotlin.Any?>}[0]
-
-// Targets: [native, wasmJs, wasmWasi]
-final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOfRange(kotlin/Int, kotlin/Int): kotlin/Array<#A> // kotlin.collections/copyOfRange|copyOfRange@kotlin.Array<0:0>(kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
-
-// Targets: [native, wasmJs, wasmWasi]
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(#A): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(0:0){0§<kotlin.Any?>}[0]
-
-// Targets: [native, wasmJs, wasmWasi]
-final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(kotlin.collections/Collection<#A>): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(kotlin.collections.Collection<0:0>){0§<kotlin.Any?>}[0]
 
 // Targets: [native, wasmJs, wasmWasi]
 final fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(kotlin/Array<out #A>): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(kotlin.Array<out|0:0>){0§<kotlin.Any?>}[0]
@@ -15292,16 +15286,7 @@ final inline fun <#A: kotlin/Any?> (kotlin/Any?).kotlin.js/unsafeCast(): #A // k
 final inline fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOf(): kotlin/Array<#A> // kotlin.collections/copyOf|copyOf@kotlin.Array<0:0>(){0§<kotlin.Any?>}[0]
 
 // Targets: [js]
-final inline fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOf(kotlin/Int): kotlin/Array<#A?> // kotlin.collections/copyOf|copyOf@kotlin.Array<0:0>(kotlin.Int){0§<kotlin.Any?>}[0]
-
-// Targets: [js]
-final inline fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/copyOfRange(kotlin/Int, kotlin/Int): kotlin/Array<#A> // kotlin.collections/copyOfRange|copyOfRange@kotlin.Array<0:0>(kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
-
-// Targets: [js]
 final inline fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(#A): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(0:0){0§<kotlin.Any?>}[0]
-
-// Targets: [js]
-final inline fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(kotlin.collections/Collection<#A>): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(kotlin.collections.Collection<0:0>){0§<kotlin.Any?>}[0]
 
 // Targets: [js]
 final inline fun <#A: kotlin/Any?> (kotlin/Array<#A>).kotlin.collections/plus(kotlin/Array<out #A>): kotlin/Array<#A> // kotlin.collections/plus|plus@kotlin.Array<0:0>(kotlin.Array<out|0:0>){0§<kotlin.Any?>}[0]
