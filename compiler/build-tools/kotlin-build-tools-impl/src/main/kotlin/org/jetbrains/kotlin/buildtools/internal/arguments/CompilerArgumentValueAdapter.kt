@@ -87,7 +87,8 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
             CommonCompilerArguments.X_DISABLE_PHASES,
             CommonCompilerArguments.X_VERBOSE_PHASES,
             CommonCompilerArguments.X_SUPPRESS_WARNING,
-            CommonCompilerArguments.OPT_IN -> {
+            CommonCompilerArguments.OPT_IN,
+                -> {
                 if (value == null) return emptyArray<String>() as V
 
                 val listValue: List<String> = value as List<String>
@@ -136,7 +137,8 @@ private abstract class CommonCompilerArgumentPre2_4_0ValueAdapter : CommonToolAr
             CommonCompilerArguments.X_DISABLE_PHASES,
             CommonCompilerArguments.X_VERBOSE_PHASES,
             CommonCompilerArguments.X_SUPPRESS_WARNING,
-            CommonCompilerArguments.OPT_IN -> {
+            CommonCompilerArguments.OPT_IN,
+                -> {
                 if (value == null) return emptyList<String>() as T
 
                 val arrayValue = value as Array<String>
@@ -270,7 +272,8 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
 
         JvmCompilerArguments.CLASSPATH,
         JvmCompilerArguments.X_KLIB,
-        JvmCompilerArguments.X_MODULE_PATH -> {
+        JvmCompilerArguments.X_MODULE_PATH,
+            -> {
             if (value == null) return null as V
 
             val listValue = value as List<Path>
@@ -278,7 +281,8 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
         }
 
         JvmCompilerArguments.X_FRIEND_PATHS,
-        JvmCompilerArguments.X_JAVA_SOURCE_ROOTS -> {
+        JvmCompilerArguments.X_JAVA_SOURCE_ROOTS,
+            -> {
             if (value == null) return emptyArray<String>() as V
 
             val listValue = value as List<Path>
@@ -287,7 +291,8 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
 
         JvmCompilerArguments.X_ADD_MODULES,
         JvmCompilerArguments.SCRIPT_TEMPLATES,
-        JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT -> {
+        JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT,
+            -> {
             if (value == null) return emptyArray<String>() as V
 
             val listValue = value as List<String>
@@ -400,7 +405,8 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
 
             JvmCompilerArguments.CLASSPATH,
             JvmCompilerArguments.X_KLIB,
-            JvmCompilerArguments.X_MODULE_PATH -> {
+            JvmCompilerArguments.X_MODULE_PATH,
+                -> {
                 if (value == null) return null as T
 
                 val stringValue = value as String
@@ -408,7 +414,8 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
             }
 
             JvmCompilerArguments.X_FRIEND_PATHS,
-            JvmCompilerArguments.X_JAVA_SOURCE_ROOTS -> {
+            JvmCompilerArguments.X_JAVA_SOURCE_ROOTS,
+                -> {
                 if (value == null) return emptyList<Path>() as T
 
                 val arrayValue = value as Array<String>
@@ -417,7 +424,8 @@ private object JvmCompilerArgumentPre2_4_0ValueAdapter : CommonCompilerArgumentP
 
             JvmCompilerArguments.X_ADD_MODULES,
             JvmCompilerArguments.SCRIPT_TEMPLATES,
-            JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT -> {
+            JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT,
+                -> {
                 if (value == null) return emptyList<String>() as T
 
                 val arrayValue = value as Array<String>

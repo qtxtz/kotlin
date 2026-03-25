@@ -195,7 +195,8 @@ internal class KotlinWrapperPre2_4_0(
                 CommonCompilerArguments.X_DISABLE_PHASES,
                 CommonCompilerArguments.X_VERBOSE_PHASES,
                 CommonCompilerArguments.X_SUPPRESS_WARNING,
-                CommonCompilerArguments.OPT_IN -> {
+                CommonCompilerArguments.OPT_IN,
+                    -> {
                     @Suppress("SENSELESS_COMPARISON")
                     if (delegate[key] == null) return emptyList<String>() as V
 
@@ -253,10 +254,11 @@ internal class KotlinWrapperPre2_4_0(
                 CommonCompilerArguments.X_DISABLE_PHASES,
                 CommonCompilerArguments.X_VERBOSE_PHASES,
                 CommonCompilerArguments.X_SUPPRESS_WARNING,
-                CommonCompilerArguments.OPT_IN -> {
+                CommonCompilerArguments.OPT_IN,
+                    -> {
                     @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
+                    val listValue: List<String> = value as List<String>
+                    val arrayValue = listValue.toTypedArray()
                     val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
 
                     delegate[arrayKey] = arrayValue
@@ -394,7 +396,8 @@ internal class KotlinWrapperPre2_4_0(
 
                 JvmCompilerArguments.CLASSPATH,
                 JvmCompilerArguments.X_KLIB,
-                JvmCompilerArguments.X_MODULE_PATH -> {
+                JvmCompilerArguments.X_MODULE_PATH,
+                    -> {
                     if (delegate[key] == null) return null as V
 
                     val stringValue = delegate[key] as String
@@ -402,7 +405,8 @@ internal class KotlinWrapperPre2_4_0(
                 }
 
                 JvmCompilerArguments.X_FRIEND_PATHS,
-                JvmCompilerArguments.X_JAVA_SOURCE_ROOTS -> {
+                JvmCompilerArguments.X_JAVA_SOURCE_ROOTS,
+                    -> {
                     @Suppress("SENSELESS_COMPARISON")
                     if (delegate[key] == null) return emptyList<Path>() as V
 
@@ -413,7 +417,8 @@ internal class KotlinWrapperPre2_4_0(
                 JvmCompilerArguments.X_ADD_MODULES,
                 JvmCompilerArguments.SCRIPT_TEMPLATES,
                 JvmCompilerArguments.X_IGNORED_ANNOTATIONS_FOR_BRIDGES,
-                JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT -> {
+                JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT,
+                    -> {
                     @Suppress("SENSELESS_COMPARISON")
                     if (delegate[key] == null) return emptyList<String>() as V
 
@@ -527,9 +532,10 @@ internal class KotlinWrapperPre2_4_0(
 
                 JvmCompilerArguments.CLASSPATH,
                 JvmCompilerArguments.X_KLIB,
-                JvmCompilerArguments.X_MODULE_PATH -> {
+                JvmCompilerArguments.X_MODULE_PATH,
+                    -> {
                     @Suppress("UNCHECKED_CAST")
-                    val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
+                    val listValue = value as List<Path>?
                     val stringValue = listValue?.joinToString(File.pathSeparator) { it.toFile().absolutePath }
                     val stringKey = JvmCompilerArguments.JvmCompilerArgument<String?>(key.id, key.availableSinceVersion)
 
@@ -537,10 +543,11 @@ internal class KotlinWrapperPre2_4_0(
                 }
 
                 JvmCompilerArguments.X_FRIEND_PATHS,
-                JvmCompilerArguments.X_JAVA_SOURCE_ROOTS -> {
+                JvmCompilerArguments.X_JAVA_SOURCE_ROOTS,
+                    -> {
                     @Suppress("UNCHECKED_CAST")
-                    val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
-                    val arrayValue = listValue?.map { it.toFile().absolutePath }?.toTypedArray()
+                    val listValue = value as List<Path>
+                    val arrayValue = listValue.map { it.toFile().absolutePath }.toTypedArray()
                     val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
 
                     delegate[arrayKey] = arrayValue
@@ -549,10 +556,11 @@ internal class KotlinWrapperPre2_4_0(
                 JvmCompilerArguments.X_ADD_MODULES,
                 JvmCompilerArguments.SCRIPT_TEMPLATES,
                 JvmCompilerArguments.X_IGNORED_ANNOTATIONS_FOR_BRIDGES,
-                JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT -> {
+                JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT,
+                    -> {
                     @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
+                    val listValue = value as List<String>
+                    val arrayValue = listValue.toTypedArray()
                     val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
 
                     delegate[arrayKey] = arrayValue
