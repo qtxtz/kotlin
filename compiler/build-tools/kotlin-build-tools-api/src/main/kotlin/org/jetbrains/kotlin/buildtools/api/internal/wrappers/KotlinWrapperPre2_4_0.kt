@@ -186,78 +186,15 @@ internal class KotlinWrapperPre2_4_0(
                     Path(stringValue) as V
                 }
 
-                CommonCompilerArguments.X_PHASES_TO_DUMP -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_DUMP_BEFORE -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_DUMP_AFTER -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_VALIDATE -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_VALIDATE_BEFORE -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_VALIDATE_AFTER -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_DISABLE_PHASES -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_VERBOSE_PHASES -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                CommonCompilerArguments.X_SUPPRESS_WARNING -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
+                CommonCompilerArguments.X_PHASES_TO_DUMP,
+                CommonCompilerArguments.X_PHASES_TO_DUMP_BEFORE,
+                CommonCompilerArguments.X_PHASES_TO_DUMP_AFTER,
+                CommonCompilerArguments.X_PHASES_TO_VALIDATE,
+                CommonCompilerArguments.X_PHASES_TO_VALIDATE_BEFORE,
+                CommonCompilerArguments.X_PHASES_TO_VALIDATE_AFTER,
+                CommonCompilerArguments.X_DISABLE_PHASES,
+                CommonCompilerArguments.X_VERBOSE_PHASES,
+                CommonCompilerArguments.X_SUPPRESS_WARNING,
                 CommonCompilerArguments.OPT_IN -> {
                     @Suppress("SENSELESS_COMPARISON")
                     if (delegate[key] == null) return emptyList<String>() as V
@@ -307,87 +244,15 @@ internal class KotlinWrapperPre2_4_0(
                     delegate[stringKey] = stringValue
                 }
 
-                CommonCompilerArguments.X_PHASES_TO_DUMP -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_DUMP_BEFORE -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_DUMP_AFTER -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_VALIDATE -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_VALIDATE_BEFORE -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_DISABLE_PHASES -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_PHASES_TO_VALIDATE_AFTER -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_VERBOSE_PHASES -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                CommonCompilerArguments.X_SUPPRESS_WARNING -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = CommonCompilerArguments.CommonCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
+                CommonCompilerArguments.X_PHASES_TO_DUMP,
+                CommonCompilerArguments.X_PHASES_TO_DUMP_BEFORE,
+                CommonCompilerArguments.X_PHASES_TO_DUMP_AFTER,
+                CommonCompilerArguments.X_PHASES_TO_VALIDATE,
+                CommonCompilerArguments.X_PHASES_TO_VALIDATE_BEFORE,
+                CommonCompilerArguments.X_PHASES_TO_VALIDATE_AFTER,
+                CommonCompilerArguments.X_DISABLE_PHASES,
+                CommonCompilerArguments.X_VERBOSE_PHASES,
+                CommonCompilerArguments.X_SUPPRESS_WARNING,
                 CommonCompilerArguments.OPT_IN -> {
                     @Suppress("UNCHECKED_CAST")
                     val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
@@ -435,7 +300,7 @@ internal class KotlinWrapperPre2_4_0(
 
                     val stringValue = delegate[key] as String
                     val parts = stringValue.split(File.pathSeparator)
-                    require(parts.size == 3) { "Invalid async profiler settings format: $this" }
+                    require(parts.size == 3) { "Invalid -Xprofile format: $this" }
 
                     ProfileCompilerCommand(Path(parts[0]), parts[1], Path(parts[2])) as V
                 }
@@ -527,28 +392,8 @@ internal class KotlinWrapperPre2_4_0(
                         ?: throw CompilerArgumentsParseException("Unknown -Xjdk-release value: $stringValue")
                 }
 
-                JvmCompilerArguments.X_ADD_MODULES -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                JvmCompilerArguments.CLASSPATH -> {
-                    if (delegate[key] == null) return null as V
-
-                    val stringValue = delegate[key] as String
-                    stringValue.split(File.pathSeparator).map { Path(it) } as V
-                }
-
-                JvmCompilerArguments.X_KLIB -> {
-                    if (delegate[key] == null) return null as V
-
-                    val stringValue = delegate[key] as String
-                    stringValue.split(File.pathSeparator).map { Path(it) } as V
-                }
-
+                JvmCompilerArguments.CLASSPATH,
+                JvmCompilerArguments.X_KLIB,
                 JvmCompilerArguments.X_MODULE_PATH -> {
                     if (delegate[key] == null) return null as V
 
@@ -556,38 +401,18 @@ internal class KotlinWrapperPre2_4_0(
                     stringValue.split(File.pathSeparator).map { Path(it) } as V
                 }
 
-                JvmCompilerArguments.X_FRIEND_PATHS -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.map { Path(it) } as V
-                }
-
+                JvmCompilerArguments.X_FRIEND_PATHS,
                 JvmCompilerArguments.X_JAVA_SOURCE_ROOTS -> {
                     @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
+                    if (delegate[key] == null) return emptyList<Path>() as V
 
                     val arrayValue = delegate[key] as Array<String>
                     arrayValue.map { Path(it) } as V
                 }
 
-                JvmCompilerArguments.SCRIPT_TEMPLATES -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
-                JvmCompilerArguments.X_IGNORED_ANNOTATIONS_FOR_BRIDGES -> {
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (delegate[key] == null) return emptyList<String>() as V
-
-                    val arrayValue = delegate[key] as Array<String>
-                    arrayValue.toList() as V
-                }
-
+                JvmCompilerArguments.X_ADD_MODULES,
+                JvmCompilerArguments.SCRIPT_TEMPLATES,
+                JvmCompilerArguments.X_IGNORED_ANNOTATIONS_FOR_BRIDGES,
                 JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT -> {
                     @Suppress("SENSELESS_COMPARISON")
                     if (delegate[key] == null) return emptyList<String>() as V
@@ -700,33 +525,8 @@ internal class KotlinWrapperPre2_4_0(
                     delegate[stringKey] = stringValue
                 }
 
-                JvmCompilerArguments.X_ADD_MODULES -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                JvmCompilerArguments.CLASSPATH -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
-                    val stringValue = listValue?.joinToString(File.pathSeparator) { it.toFile().absolutePath }
-                    val stringKey = JvmCompilerArguments.JvmCompilerArgument<String?>(key.id, key.availableSinceVersion)
-
-                    delegate[stringKey] = stringValue
-                }
-
-                JvmCompilerArguments.X_KLIB -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
-                    val stringValue = listValue?.joinToString(File.pathSeparator) { it.toFile().absolutePath }
-                    val stringKey = JvmCompilerArguments.JvmCompilerArgument<String?>(key.id, key.availableSinceVersion)
-
-                    delegate[stringKey] = stringValue
-                }
-
+                JvmCompilerArguments.CLASSPATH,
+                JvmCompilerArguments.X_KLIB,
                 JvmCompilerArguments.X_MODULE_PATH -> {
                     @Suppress("UNCHECKED_CAST")
                     val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
@@ -736,15 +536,7 @@ internal class KotlinWrapperPre2_4_0(
                     delegate[stringKey] = stringValue
                 }
 
-                JvmCompilerArguments.X_FRIEND_PATHS -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
-                    val arrayValue = listValue?.map { it.toFile().absolutePath }?.toTypedArray()
-                    val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
+                JvmCompilerArguments.X_FRIEND_PATHS,
                 JvmCompilerArguments.X_JAVA_SOURCE_ROOTS -> {
                     @Suppress("UNCHECKED_CAST")
                     val listValue: List<Path>? = (value as? List<*>)?.takeIf { it.all { item -> item is Path } } as List<Path>?
@@ -754,24 +546,9 @@ internal class KotlinWrapperPre2_4_0(
                     delegate[arrayKey] = arrayValue
                 }
 
-                JvmCompilerArguments.SCRIPT_TEMPLATES -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
-                JvmCompilerArguments.X_IGNORED_ANNOTATIONS_FOR_BRIDGES -> {
-                    @Suppress("UNCHECKED_CAST")
-                    val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
-                    val arrayValue = listValue?.toTypedArray()
-                    val arrayKey = JvmCompilerArguments.JvmCompilerArgument<Array<String>?>(key.id, key.availableSinceVersion)
-
-                    delegate[arrayKey] = arrayValue
-                }
-
+                JvmCompilerArguments.X_ADD_MODULES,
+                JvmCompilerArguments.SCRIPT_TEMPLATES,
+                JvmCompilerArguments.X_IGNORED_ANNOTATIONS_FOR_BRIDGES,
                 JvmCompilerArguments.X_SCRIPT_RESOLVER_ENVIRONMENT -> {
                     @Suppress("UNCHECKED_CAST")
                     val listValue: List<String>? = (value as? List<*>)?.takeIf { it.all { item -> item is String } } as List<String>?
