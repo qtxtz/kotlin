@@ -5,30 +5,13 @@
 
 package org.jetbrains.kotlin.maven
 
-import org.jetbrains.kotlin.maven.test.KotlinMavenTestBase
-import org.jetbrains.kotlin.maven.test.MavenTest
-import org.jetbrains.kotlin.maven.test.TestVersions
-import org.jetbrains.kotlin.maven.test.assertBuildLogContains
-import org.jetbrains.kotlin.maven.test.assertCompiledKotlin
-import org.jetbrains.kotlin.maven.test.assertFilesExist
+import org.jetbrains.kotlin.maven.test.*
+import org.junit.jupiter.api.DisplayName
 
 class IncrementalCompilationIT : KotlinMavenTestBase() {
 
-    private fun kotlinSimpleOutputPaths() = arrayOf(
-        "target/classes/test.properties",
-        "target/classes/A.class",
-        "target/classes/UseAKt.class",
-        "target/classes/Dummy.class",
-        "target/classes/JavaUtil.class",
-        "target/classes/JavaAUser.class"
-    )
-
-    private fun withJavaOutputPaths() = arrayOf(
-        "target/classes/SomeMain.class",
-        "target/test-classes/SomeTests.class"
-    )
-
     @MavenTest
+    @DisplayName("Initial compilation compiles all Kotlin sources")
     fun testSimpleCompile(mavenVersion: TestVersions.Maven) {
         testProject("kotlinSimple", mavenVersion) {
             build("package", "-X") {
@@ -39,6 +22,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Second build with no changes recompiles nothing")
     fun testNoChanges(mavenVersion: TestVersions.Maven) {
         testProject("kotlinSimple", mavenVersion) {
             build("package")
@@ -50,6 +34,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Compile error and fix recompiles only affected files")
     fun testCompileError(mavenVersion: TestVersions.Maven) {
         testProject("kotlinSimple", mavenVersion) {
             build("package")
@@ -72,6 +57,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Visibility change recompiles dependent files")
     fun testFunctionVisibilityChanged(mavenVersion: TestVersions.Maven) {
         testProject("kotlinSimple", mavenVersion) {
             build("package")
@@ -87,6 +73,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Java file change triggers recompilation of dependent Kotlin files")
     fun testJavaChanged(mavenVersion: TestVersions.Maven) {
         testProject("kotlinSimple", mavenVersion) {
             build("package")
@@ -102,6 +89,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Second build with tests recompiles nothing when unchanged")
     fun secondRunWithTests(mavenVersion: TestVersions.Maven) {
         testProject("kotlinWithTests", mavenVersion) {
             build("package")
@@ -113,6 +101,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Removing used class fails and recompiles dependents")
     fun removeUsedClass(mavenVersion: TestVersions.Maven) {
         testProject("kotlinSimple", mavenVersion) {
             build("package")
@@ -127,6 +116,7 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
     }
 
     @MavenTest
+    @DisplayName("Renaming class in test source fails with unresolved reference")
     fun renameUsedClassInTest(mavenVersion: TestVersions.Maven) {
         testProject("kotlinWithTests", mavenVersion) {
             build("package")
@@ -139,4 +129,18 @@ class IncrementalCompilationIT : KotlinMavenTestBase() {
             }
         }
     }
+
+    private fun kotlinSimpleOutputPaths() = arrayOf(
+        "target/classes/test.properties",
+        "target/classes/A.class",
+        "target/classes/UseAKt.class",
+        "target/classes/Dummy.class",
+        "target/classes/JavaUtil.class",
+        "target/classes/JavaAUser.class"
+    )
+
+    private fun withJavaOutputPaths() = arrayOf(
+        "target/classes/SomeMain.class",
+        "target/test-classes/SomeTests.class"
+    )
 }
