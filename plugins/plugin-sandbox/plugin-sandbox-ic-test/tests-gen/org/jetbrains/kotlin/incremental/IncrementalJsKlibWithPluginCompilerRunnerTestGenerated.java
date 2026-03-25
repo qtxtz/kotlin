@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @TestMetadata("plugins/plugin-sandbox/plugin-sandbox-ic-test/testData/jvmAndKlib/pureKotlin")
 @TestDataPath("$PROJECT_ROOT")
 @RunWith(JUnit3RunnerWithInners.class)
-public class IncrementalK2JsKlibWithPluginCompilerRunnerTestGenerated extends AbstractIncrementalK2JsKlibWithPluginCompilerRunnerTest {
+public class IncrementalJsKlibWithPluginCompilerRunnerTestGenerated extends AbstractIncrementalJsKlibWithPluginCompilerRunnerTest {
   private void runTest(String testDataFilePath) {
     KotlinTestUtils.runTest(this::doTest, TargetBackend.JS_IR, testDataFilePath);
   }

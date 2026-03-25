@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.plugin.sandbox.fir.FirPluginPrototypeExtensionRegist
 import org.jetbrains.kotlin.plugin.sandbox.ir.GeneratedDeclarationsIrBodyFiller
 import org.jetbrains.kotlin.test.TargetBackend
 
-abstract class AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
     targetBackend: TargetBackend,
     granularity: JsGenerationGranularity,
     workingDirPath: String
@@ -59,29 +59,29 @@ abstract class AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
     }
 }
 
-abstract class AbstractIncrementalCodegenK2JsWithPluginSandboxPerModuleTest :
-    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenJsWithPluginSandboxPerModuleTest :
+    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR,
         JsGenerationGranularity.PER_MODULE,
         "plugin-sandbox/incremental/perModule"
     )
 
-abstract class AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerModuleTest :
-    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenJsEs6WithPluginSandboxPerModuleTest :
+    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR_ES6,
         JsGenerationGranularity.PER_MODULE,
         "plugin-sandbox/incremental/perModuleEs6"
     )
 
-abstract class AbstractIncrementalCodegenK2JsWithPluginSandboxPerFileTest :
-    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenJsWithPluginSandboxPerFileTest :
+    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR,
         JsGenerationGranularity.PER_FILE,
         "plugin-sandbox/incremental/perFile"
     )
 
-abstract class AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerFileTest :
-    AbstractIncrementalCodegenK2JsWithPluginCompilerRunnerTest(
+abstract class AbstractIncrementalCodegenJsEs6WithPluginSandboxPerFileTest :
+    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
         TargetBackend.JS_IR_ES6,
         JsGenerationGranularity.PER_FILE,
         "plugin-sandbox/incremental/perFileEs6"

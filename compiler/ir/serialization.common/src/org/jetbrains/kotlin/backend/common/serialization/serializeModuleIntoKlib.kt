@@ -116,7 +116,7 @@ fun <SourceFile> serializeModuleIntoKlib(
 
     val compiledKotlinFiles = buildList {
         addAll(cleanFiles)
-        metadataSerializer.forEachFile { i, sourceFile, ktSourceFile, packageFqName ->
+        metadataSerializer.forEachFile { i, ioFile, sourceFile, ktSourceFile, packageFqName ->
             val binaryFile = serializedFiles?.get(i)?.also {
                 assert(ktSourceFile == null || ktSourceFile.path == it.path) {
                     """The Kt and Ir files are put in different order
@@ -133,9 +133,7 @@ fun <SourceFile> serializeModuleIntoKlib(
                 KotlinFileSerializedData(metadata, binaryFile)
 
             if (processCompiledFileData != null) {
-                ktSourceFile?.toIoFileOrNull()?.let { ioFile ->
-                    processCompiledFileData(ioFile, compiledKotlinFile)
-                }
+                processCompiledFileData(ioFile, compiledKotlinFile)
             }
 
             add(compiledKotlinFile)

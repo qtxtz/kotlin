@@ -15,23 +15,23 @@ fun main(args: Array<String>) {
             testClass<AbstractIncrementalK2JvmWithPluginCompilerRunnerTest> {
                 model("pureKotlin", extension = null, recursive = false, targetBackend = TargetBackend.JVM_IR)
             }
-            testClass<AbstractIncrementalK2JsKlibWithPluginCompilerRunnerTest> {
+            testClass<AbstractIncrementalJsKlibWithPluginCompilerRunnerTest> {
                 model("pureKotlin", extension = null, recursive = false, targetBackend = TargetBackend.JS_IR)
             }
         }
     }
     generateTestGroupSuiteWithJUnit5(args) {
         testGroup("plugins/plugin-sandbox/plugin-sandbox-ic-test/tests-gen", "plugins/plugin-sandbox/plugin-sandbox-ic-test/testData/js") {
-            testClass<AbstractIncrementalCodegenK2JsWithPluginSandboxPerModuleTest> {
+            testClass<AbstractIncrementalCodegenJsWithPluginSandboxPerModuleTest> {
                 model("pureKotlin", recursive = false, pattern = "^([^_](.+))$")
             }
-            testClass<AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerModuleTest> {
+            testClass<AbstractIncrementalCodegenJsEs6WithPluginSandboxPerModuleTest> {
                 model("pureKotlin", recursive = false, pattern = "^([^_](.+))$")
             }
-            testClass<AbstractIncrementalCodegenK2JsWithPluginSandboxPerFileTest> {
+            testClass<AbstractIncrementalCodegenJsWithPluginSandboxPerFileTest> {
                 model("pureKotlin", recursive = false, pattern = "^([^_](.+))$")
             }
-            testClass<AbstractIncrementalCodegenK2JsEs6WithPluginSandboxPerFileTest> {
+            testClass<AbstractIncrementalCodegenJsEs6WithPluginSandboxPerFileTest> {
                 model("pureKotlin", recursive = false, pattern = "^([^_](.+))$")
             }
         }
