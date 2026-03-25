@@ -83,7 +83,8 @@ internal class TypeParameterTable private constructor(
             classLoader: ClassLoader,
         ): TypeParameterTable {
             val kTypeParameters = kmTypeParameters.map { km ->
-                KTypeParameterImpl(container, km.name, km.variance.toKVariance(), km.isReified)
+                val unbound = (container as? ReflectKCallable<*>)?.unbindAllReceivers() ?: container
+                KTypeParameterImpl(unbound, km.name, km.variance.toKVariance(), km.isReified)
             }
             val map = kmTypeParameters.withIndex().associate { (index, km) -> km.id to kTypeParameters[index] }
             return TypeParameterTable(kTypeParameters, map, parent).also { table ->
