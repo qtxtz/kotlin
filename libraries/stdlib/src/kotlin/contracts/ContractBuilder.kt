@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright 2010-2018 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
@@ -108,6 +108,7 @@ public interface ContractBuilder {
      */
     @ExperimentalExtendedContracts
     @ContractsDsl
+    @SinceKotlin("2.2") // Technically 2.2.20
     public infix fun Boolean.implies(value: ReturnsNotNull)
 
     /**
@@ -118,6 +119,7 @@ public interface ContractBuilder {
      */
     @ExperimentalExtendedContracts
     @ContractsDsl
+    @SinceKotlin("2.2") // Technically 2.2.20
     public infix fun <R> Boolean.holdsIn(lambda: Function<R>): HoldsIn
 
     /**
@@ -152,6 +154,7 @@ public interface ContractBuilder {
      * This contract is experimental, and it is allowed to use it only with the 'Return value checker' feature enabled.
      */
     @ContractsDsl
+    @SinceKotlin("2.4")
     public fun <R> returnsResultOf(lambda: Function<R>)
 }
 
