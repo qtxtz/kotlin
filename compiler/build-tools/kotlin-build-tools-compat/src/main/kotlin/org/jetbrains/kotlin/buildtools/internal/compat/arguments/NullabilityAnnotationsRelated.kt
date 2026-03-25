@@ -11,14 +11,14 @@ import org.jetbrains.kotlin.buildtools.api.arguments.NullabilityAnnotation
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 
 @OptIn(ExperimentalCompilerArgument::class)
-internal fun K2JVMCompilerArguments.applyNullabilityAnnotations(settings: List<NullabilityAnnotation>?) {
+internal fun K2JVMCompilerArguments.applyNullabilityAnnotations(settings: List<NullabilityAnnotation>) {
     this.nullabilityAnnotations =
-        settings?.map { item -> "${item.annotationFqName}:${item.mode.stringValue}" }?.toTypedArray() ?: emptyArray()
+        settings.map { item -> "${item.annotationFqName}:${item.mode.stringValue}" }.toTypedArray()
 }
 
 @OptIn(ExperimentalCompilerArgument::class)
 internal fun applyNullabilityAnnotations(
-    currentValue: List<NullabilityAnnotation>?,
+    currentValue: List<NullabilityAnnotation>,
     compilerArgs: K2JVMCompilerArguments,
 ): List<NullabilityAnnotation> =
     compilerArgs.nullabilityAnnotations.mapOrEmpty { item ->

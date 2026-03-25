@@ -236,9 +236,6 @@ internal class BtaImplGenerator(
                 }
 
                 is BtaCompilerArgument.CustomCompilerArgument -> {
-                    if (!(generateCompatLayer && wasIntroducedRecently)) {
-                        defaultsInitializer.addStatement("optionsMap[%S] = %L", name, argument.defaultValue)
-                    }
                     generateCustomRepresentation(
                         implClassName,
                         name,
@@ -293,7 +290,7 @@ internal class BtaImplGenerator(
         }
 
         applyCompilerArgumentsFun.addSafeMethodAccessStatement(CodeBlock.builder().apply {
-            add("this[%M] = %M(this[%M], arguments)", member, applier, member)
+            add("this[%M] = %M(if(%M in this) this[%M] else %L, arguments)", member, applier, member, member, argument.defaultValue)
         }.build(), failOnNoSuchMethod = false)
     }
 

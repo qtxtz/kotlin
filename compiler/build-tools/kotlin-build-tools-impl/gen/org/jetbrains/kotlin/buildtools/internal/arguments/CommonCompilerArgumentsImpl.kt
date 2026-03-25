@@ -145,11 +145,6 @@ internal abstract class CommonCompilerArgumentsImpl(
     ArgumentsCommonCompilerArguments.Builder {
   private val optionsMap: MutableMap<String, Any?> = mutableMapOf()
 
-  init {
-    optionsMap["COMPILER_PLUGINS"] = emptyList<CompilerPlugin>()
-    optionsMap["X_WARNING_LEVEL"] = emptyList<WarningLevel>()
-  }
-
   @Suppress("UNCHECKED_CAST")
   @UseFromImplModuleRestricted
   override operator fun <V> `get`(key: ArgumentsCommonCompilerArguments.CommonCompilerArgument<V>): V {
@@ -387,8 +382,8 @@ internal abstract class CommonCompilerArgumentsImpl(
     try { this[OPT_IN] = arguments.optIn.toListOrEmpty() } catch (_: NoSuchMethodError) {  }
     try { this[PROGRESSIVE] = arguments.progressiveMode } catch (_: NoSuchMethodError) {  }
     try { this[SCRIPT] = arguments.script } catch (_: NoSuchMethodError) {  }
-    try { this[COMPILER_PLUGINS] = applyCompilerPlugins(this[COMPILER_PLUGINS], arguments) } catch (_: NoSuchMethodError) {  }
-    try { this[X_WARNING_LEVEL] = applyWarningLevels(this[X_WARNING_LEVEL], arguments) } catch (_: NoSuchMethodError) {  }
+    try { this[COMPILER_PLUGINS] = applyCompilerPlugins(if(COMPILER_PLUGINS in this) this[COMPILER_PLUGINS] else emptyList<CompilerPlugin>(), arguments) } catch (_: NoSuchMethodError) {  }
+    try { this[X_WARNING_LEVEL] = applyWarningLevels(if(X_WARNING_LEVEL in this) this[X_WARNING_LEVEL] else emptyList<WarningLevel>(), arguments) } catch (_: NoSuchMethodError) {  }
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
   }
 

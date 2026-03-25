@@ -47,10 +47,9 @@ private fun validatePluginsConfiguration(plugins: List<CompilerPlugin>) {
 internal const val RAW_PLUGIN_ID = "___RAW_PLUGINS_APPLIED___"
 
 internal fun applyCompilerPlugins(
-    currentValue: List<CompilerPlugin>?,
+    currentValue: List<CompilerPlugin>,
     compilerArgs: CommonCompilerArguments,
 ): List<CompilerPlugin> {
-    val normalizedCurrentValue = currentValue ?: emptyList()
     val rawValue = if (compilerArgs.pluginClasspaths.isEmpty() && compilerArgs.pluginConfigurations.isEmpty()) {
         emptyList()
     } else {
@@ -63,5 +62,5 @@ internal fun applyCompilerPlugins(
             )
         )
     }
-    return normalizedCurrentValue + rawValue
+    return currentValue + rawValue
 }

@@ -137,12 +137,6 @@ internal class JvmCompilerArgumentsImpl(
     JvmCompilerArguments.Builder,
     DeepCopyable<JvmCompilerArgumentsImpl> {
   private val optionsMap: MutableMap<String, Any?> = mutableMapOf()
-
-  init {
-    optionsMap["X_PROFILE"] = null
-    optionsMap["X_NULLABILITY_ANNOTATIONS"] = emptyList<NullabilityAnnotation>()
-    optionsMap["X_JSR305"] = emptyList<NullabilityAnnotation>()
-  }
   init {
     applyCompilerArguments(K2JVMCompilerArguments())
   }
@@ -346,9 +340,9 @@ internal class JvmCompilerArgumentsImpl(
     try { this[NO_REFLECT] = arguments.noReflect } catch (_: NoSuchMethodError) {  }
     try { this[NO_STDLIB] = arguments.noStdlib } catch (_: NoSuchMethodError) {  }
     try { this[SCRIPT_TEMPLATES] = arguments.scriptTemplates.toListOrEmpty() } catch (_: NoSuchMethodError) {  }
-    try { this[X_PROFILE] = applyProfileCompilerCommand(this[X_PROFILE], arguments) } catch (_: NoSuchMethodError) {  }
-    try { this[X_NULLABILITY_ANNOTATIONS] = applyNullabilityAnnotations(this[X_NULLABILITY_ANNOTATIONS], arguments) } catch (_: NoSuchMethodError) {  }
-    try { this[X_JSR305] = applyJsr305(this[X_JSR305], arguments) } catch (_: NoSuchMethodError) {  }
+    try { this[X_PROFILE] = applyProfileCompilerCommand(if(X_PROFILE in this) this[X_PROFILE] else null, arguments) } catch (_: NoSuchMethodError) {  }
+    try { this[X_NULLABILITY_ANNOTATIONS] = applyNullabilityAnnotations(if(X_NULLABILITY_ANNOTATIONS in this) this[X_NULLABILITY_ANNOTATIONS] else emptyList<NullabilityAnnotation>(), arguments) } catch (_: NoSuchMethodError) {  }
+    try { this[X_JSR305] = applyJsr305(if(X_JSR305 in this) this[X_JSR305] else emptyList<Jsr305>(), arguments) } catch (_: NoSuchMethodError) {  }
     internalArguments.addAll(arguments.internalArguments.map { it.stringRepresentation })
   }
 
