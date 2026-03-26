@@ -14,6 +14,10 @@ plugins {
 
 description = "Kotlin Power-Assert Runtime"
 
+val emptyJavadocJar by tasks.registering(Jar::class) {
+    archiveClassifier = "javadoc"
+}
+
 kotlin {
     explicitApi()
 
@@ -29,6 +33,8 @@ kotlin {
     targets.all {
         configureSbomForTarget()
         mavenPublication {
+            // Maven Central requires a Javadoc classified artifact for every non-'pom` publication.
+            artifact(emptyJavadocJar)
             configureKotlinPomAttributes(
                 project = project,
                 explicitDescription = provider { project.description },
@@ -120,6 +126,8 @@ configureDefaultPublishing()
 publishing {
     publications.configureEach {
         if (this is MavenPublication && name == "kotlinMultiplatform") {
+            // Maven Central requires a Javadoc classified artifact for every non-'pom` publication.
+            artifact(emptyJavadocJar)
             project.configureSbomForTarget(kotlin.targets["metadata"], this)
             configureKotlinPomAttributes(
                 project = project,
