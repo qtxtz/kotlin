@@ -56,6 +56,10 @@ object FirJvmExposeBoxedChecker : FirBasicDeclarationChecker(MppCheckerKind.Comm
             if (value != null && !Name.isValidIdentifier(value)) {
                 reporter.reportOn(name.source, FirJvmErrors.ILLEGAL_JVM_NAME)
             }
+
+            if (declaration is FirFunction && declaration.nameOrSpecialName.asString() == value) {
+                reporter.reportOn(name.source, FirJvmErrors.JVM_EXPOSE_BOXED_CANNOT_BE_THE_SAME)
+            }
         }
 
         if (declaration is FirClass && declaration.isInterface) {
@@ -110,10 +114,6 @@ object FirJvmExposeBoxedChecker : FirBasicDeclarationChecker(MppCheckerKind.Comm
                 name.source,
                 FirJvmErrors.JVM_EXPOSE_BOXED_CANNOT_BE_THE_SAME_AS_JVM_NAME
             )
-        }
-
-        if (declaration is FirFunction && declaration.nameOrSpecialName.asString() == value) {
-            reporter.reportOn(name.source, FirJvmErrors.JVM_EXPOSE_BOXED_CANNOT_BE_THE_SAME)
         }
     }
 
