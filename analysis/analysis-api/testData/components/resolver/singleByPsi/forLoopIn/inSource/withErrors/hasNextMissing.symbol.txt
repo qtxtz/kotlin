@@ -1,4 +1,7 @@
 KtForExpression(23,37): 'for(i in f) {}'
   KaSymbolResolutionError:
-    candidateSymbols = []
+    candidateSymbols = [
+      /Foo.iterator(<dispatch receiver>: Foo): Iterator,
+      /Iterator.next(<dispatch receiver>: Iterator): kotlin.Any
+    ]
     diagnostic = ERROR<UNRESOLVED_REFERENCE: Unresolved reference 'hasNext'.>

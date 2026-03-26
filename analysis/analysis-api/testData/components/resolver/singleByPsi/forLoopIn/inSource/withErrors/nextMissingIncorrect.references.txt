@@ -13,8 +13,10 @@ KtForExpression(23,37): 'for(i in f) {}'
       Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
     fun String.next(): Any>
     symbols:
-      0: (in ROOT) operator fun kotlin.Int.next(): kotlin.Any
-      1: (in ROOT) operator fun kotlin.String.next(): kotlin.Any
+      0: (in Foo) operator fun iterator(): Iterator
+      1: (in Iterator) operator fun hasNext(): kotlin.Boolean
+      2: (in ROOT) operator fun kotlin.Int.next(): kotlin.Any
+      3: (in ROOT) operator fun kotlin.String.next(): kotlin.Any
     resolveToSymbols:
       0: (in Foo) operator fun iterator(): Iterator
       1: (in Iterator) operator fun hasNext(): kotlin.Boolean

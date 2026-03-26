@@ -5,6 +5,4 @@ KtPropertyDelegate(74,109): 'by GenericDelegate<String>("hello")'
     attempt: KaSymbolResolutionError
     diagnostic: ERROR<UNRESOLVED_REFERENCE: Unresolved reference 'getValue'.>
     symbols:
-      Nothing (Unresolved reference)
-    resolveToSymbols:
       (in myPack.GenericDelegate) operator fun setValue(thisRef: kotlin.Any?, property: kotlin.reflect.KProperty<*>, newValue: T)

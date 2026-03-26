@@ -128,6 +128,17 @@ internal fun stringRepresentation(any: Any?): String = with(any) {
             append(className)
 
             val klass = this@with::class
+            val multiCallResolutionAttemptCallValue: Any? = if (klass.isSubclassOf(KaMultiCallResolutionAttempt::class)) {
+                klass.memberProperties
+                    .firstOrNull { it.name == "call" }
+                    ?.let {
+                        @Suppress("UNCHECKED_CAST")
+                        (it as KProperty1<Any, *>).get(this@with)
+                    }
+            } else {
+                null
+            }
+
             klass.memberProperties
                 .filter { property ->
                     property.visibility == KVisibility.PUBLIC &&
@@ -138,7 +149,14 @@ internal fun stringRepresentation(any: Any?): String = with(any) {
                             /** The call is already covered as a part of [KaCompoundOperation.operationCall] */
                             !(klass.isSubclassOf(KaCompoundAccessCall::class) && property.name == KaCompoundAccessCall::operationCall.name) &&
                             /** This is already covered by [KaFunctionCall.valueArgumentMapping] and [KaFunctionCall.contextArguments] */
-                            !(klass.isSubclassOf(KaFunctionCall::class) && property.name == KaFunctionCall<*>::combinedArgumentMapping.name)
+                            !(klass.isSubclassOf(KaFunctionCall::class) && property.name == KaFunctionCall<*>::combinedArgumentMapping.name) &&
+                            // The multi-call resolution attempt already renders all attempts via individual named properties
+                            !(klass.isSubclassOf(KaMultiCallResolutionAttempt::class) && property.name == KaMultiCallResolutionAttempt::attempts.name) &&
+                            // If call is present, skip individual attempt properties (they're redundant with the call)
+                            !(klass.isSubclassOf(KaMultiCallResolutionAttempt::class) && multiCallResolutionAttemptCallValue != null &&
+                                    property.name.endsWith("Attempt")) &&
+                            // If call is null, skip the call property itself
+                            !(klass.isSubclassOf(KaMultiCallResolutionAttempt::class) && multiCallResolutionAttemptCallValue == null && property.name == "call")
                 }.ifNotEmpty {
                     joinTo(this@buildString, separator = "\n  ", prefix = ":\n  ") { property ->
                         val name = property.name
@@ -349,6 +367,24 @@ internal fun assertStableResult(
                 firstDiagnostic = callResolutionAttempt.diagnostic,
                 secondDiagnostic = symbolResolutionAttempt.diagnostic,
             )
+        }
+
+        is KaMultiCallResolutionAttempt -> {
+            val hasErrors = callResolutionAttempt.attempts.any { it is KaCallResolutionError }
+            if (hasErrors) {
+                if (symbolResolutionAttempt !is KaSymbolResolutionError) {
+                    testServices.assertions.fail {
+                        "${KaSymbolResolutionError::class.simpleName} is expected, but ${symbolResolutionAttempt?.let { it::class.simpleName }} is found"
+                    }
+                }
+
+                val firstErrorAttempt = callResolutionAttempt.attempts.filterIsInstance<KaCallResolutionError>().first()
+                assertStableResult(
+                    testServices = testServices,
+                    firstDiagnostic = firstErrorAttempt.diagnostic,
+                    secondDiagnostic = symbolResolutionAttempt.diagnostic,
+                )
+            }
         }
 
         else -> {}

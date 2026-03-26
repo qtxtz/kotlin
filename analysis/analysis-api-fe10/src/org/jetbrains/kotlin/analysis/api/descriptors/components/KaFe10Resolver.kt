@@ -330,7 +330,7 @@ internal class KaFe10Resolver(
             candidateKtCallInfo.toKaCallCandidates(bestCandidateDescriptors)
         }
 
-        return if (resolvedCall is KaCallResolutionSuccess) {
+        return if (resolvedCall is KaCallResolutionSuccess || (resolvedCall is KaMultiCallResolutionAttempt && resolvedCall.attempts.all { it is KaCallResolutionSuccess })) {
             resolvedCall.toKaCallCandidates() + candidateInfos.filterNot(KaCallCandidate::isInBestCandidates)
         } else {
             candidateInfos
@@ -361,6 +361,11 @@ internal class KaFe10Resolver(
                 backingDiagnostic = diagnostic,
             )
         }
+
+        is KaMultiCallResolutionAttempt -> fold(
+            onSuccess = { listOf(KaBaseApplicableCallCandidate(backingCandidate = it, backingIsInBestCandidates = true)) },
+            onFailure = { attempts -> attempts.flatMap { it.toKaCallCandidates() } },
+        )
     }
 
     private fun KaCallResolutionAttempt?.toKaCallCandidates(bestCandidateDescriptors: Set<CallableDescriptor>): List<KaCallCandidate> {
@@ -393,6 +398,17 @@ internal class KaFe10Resolver(
                 )
             }
 
+            is KaMultiCallResolutionAttempt -> fold(
+                onSuccess = {
+                    listOf(
+                        KaBaseApplicableCallCandidate(
+                            backingCandidate = it,
+                            backingIsInBestCandidates = (it as KaCall).isInBestCandidates(),
+                        ),
+                    )
+                },
+                onFailure = { attempts -> attempts.flatMap { it.toKaCallCandidates(bestCandidateDescriptors) } },
+            )
             null -> emptyList()
         }
     }
@@ -911,7 +927,11 @@ internal class KaFe10Resolver(
         val provideDelegateCall = provideDelegateResolvedCall
             ?.toPartiallyAppliedFunctionSymbol<KaNamedFunctionSymbol>(bindingContext)?.asSimpleFunctionCall
 
-        return KaBaseCallResolutionSuccess(KaBaseDelegatedPropertyCall(valueGetterCall, valueSetterCall, provideDelegateCall))
+        return KaBaseDelegatedPropertyCallResolutionAttempt(
+            backingValueGetterCallAttempt = KaBaseCallResolutionSuccess(valueGetterCall),
+            backingValueSetterCallAttempt = valueSetterCall?.let { KaBaseCallResolutionSuccess(it) },
+            backingProvideDelegateCallAttempt = provideDelegateCall?.let { KaBaseCallResolutionSuccess(it) },
+        )
     }
 
     private data class Fe10ForLoopResolvedCalls(
@@ -943,7 +963,11 @@ internal class KaFe10Resolver(
         val nextCall = nextResolvedCall
             .toPartiallyAppliedFunctionSymbol<KaNamedFunctionSymbol>(bindingContext)?.asSimpleFunctionCall ?: return null
 
-        return KaBaseCallResolutionSuccess(KaBaseForLoopCall(iteratorCall, hasNextCall, nextCall))
+        return KaBaseForLoopCallResolutionAttempt(
+            backingIteratorCallAttempt = KaBaseCallResolutionSuccess(iteratorCall),
+            backingHasNextCallAttempt = KaBaseCallResolutionSuccess(hasNextCall),
+            backingNextCallAttempt = KaBaseCallResolutionSuccess(nextCall),
+        )
     }
 
     private companion object {

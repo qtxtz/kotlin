@@ -1107,6 +1107,10 @@ KtOperationReferenceExpression(1368,1370): '++'
     attempt: KaSymbolResolutionError
     diagnostic: ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
     symbols:
+      0: (in <local>: withoutContext) var a: A
+      1: (in ROOT) context(a@A)
+      operator fun A.inc(): A
+    resolveToSymbols:
       (in ROOT) context(a@A)
       operator fun A.inc(): A
 
@@ -1116,6 +1120,10 @@ KtOperationReferenceExpression(1368,1370): '++'
     attempt: KaSymbolResolutionError
     diagnostic: ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
     symbols:
+      0: (in <local>: withoutContext) var a: A
+      1: (in ROOT) context(a@A)
+      operator fun A.inc(): A
+    resolveToSymbols:
       (in ROOT) context(a@A)
       operator fun A.inc(): A
 
@@ -1275,6 +1283,10 @@ KtOperationReferenceExpression(1437,1439): '++'
     attempt: KaSymbolResolutionError
     diagnostic: ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
     symbols:
+      0: (in <local>: withoutContext) var b: SimpleOperators
+      1: (in SimpleOperators) context(a@A)
+      operator fun inc(): SimpleOperators
+    resolveToSymbols:
       (in SimpleOperators) context(a@A)
       operator fun inc(): SimpleOperators
 
@@ -1284,5 +1296,9 @@ KtOperationReferenceExpression(1437,1439): '++'
     attempt: KaSymbolResolutionError
     diagnostic: ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
     symbols:
+      0: (in <local>: withoutContext) var b: SimpleOperators
+      1: (in SimpleOperators) context(a@A)
+      operator fun inc(): SimpleOperators
+    resolveToSymbols:
       (in SimpleOperators) context(a@A)
       operator fun inc(): SimpleOperators

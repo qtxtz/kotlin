@@ -1,6 +1,8 @@
 KtForExpression(23,37): 'for(i in f) {}'
   KaSymbolResolutionError:
     candidateSymbols = [
+      /Foo.iterator(<dispatch receiver>: Foo): Iterator,
+      /Iterator.hasNext(<dispatch receiver>: Iterator): kotlin.Boolean,
       /next(<extension receiver>: kotlin.Int): kotlin.Any,
       /next(<extension receiver>: kotlin.String): kotlin.Any
     ]
