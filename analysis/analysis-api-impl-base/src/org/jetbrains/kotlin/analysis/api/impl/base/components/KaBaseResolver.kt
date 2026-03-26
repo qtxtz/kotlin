@@ -248,6 +248,13 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
     final override fun KtQualifiedExpression.resolveCall(): KaSingleCall<*, *>? = resolveCallSafe()
     final override fun KtForExpression.resolveCall(): KaForLoopCall? = resolveCallSafe()
     final override fun KtPropertyDelegate.resolveCall(): KaDelegatedPropertyCall? = resolveCallSafe()
+
+    final override fun KtForExpression.tryResolveCall(): KaForLoopCallResolutionAttempt? =
+        tryResolveCallImpl() as? KaForLoopCallResolutionAttempt
+
+    final override fun KtPropertyDelegate.tryResolveCall(): KaDelegatedPropertyCallResolutionAttempt? =
+        tryResolveCallImpl() as? KaDelegatedPropertyCallResolutionAttempt
+
     final override fun KtConstructorCalleeExpression.resolveCall(): KaFunctionCall<KaConstructorSymbol>? = resolveSingleCallSafe()
     final override fun KtNameReferenceExpression.resolveCall(): KaSingleCall<*, *>? = resolveCallSafe()
 

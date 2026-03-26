@@ -103,5 +103,25 @@ abstract class AbstractResolveCallTest : AbstractResolveByElementTest() {
                 )
             }
         }
+
+        for (kFunction in KaResolver::class.findSpecializedResolveFunctions("tryResolveCall", elementClass)) {
+            val specificAttempt = kFunction.call(session, element) as? KaCallResolutionAttempt
+
+            when (val genericAttempt = element.tryResolveCall()) {
+                null -> assertions.assertEquals(expected = null, actual = specificAttempt)
+                is KaMultiCallResolutionAttempt -> {
+                    assertions.assertNotNull(specificAttempt) {
+                        "Specialized tryResolveCall returned null, but generic returned ${genericAttempt::class.simpleName}"
+                    }
+
+                    assertions.assertEquals(genericAttempt::class, specificAttempt!!::class) {
+                        "Specialized tryResolveCall returned ${specificAttempt::class.simpleName}, " +
+                                "but generic returned ${genericAttempt::class.simpleName}"
+                    }
+                }
+
+                else -> {}
+            }
+        }
     }
 }
