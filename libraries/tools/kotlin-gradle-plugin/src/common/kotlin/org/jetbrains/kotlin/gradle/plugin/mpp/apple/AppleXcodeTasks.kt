@@ -309,9 +309,7 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
             )
         }
 
-        val syntheticLinkageImportProjectCheck = checkSyntheticImportProjectIsCorrectlyIntegrated(
-            expectLinkagePackageProductInCopyingPhase = provider { !framework.isStatic }
-        )
+        val syntheticLinkageImportProjectCheck = checkSyntheticImportProjectIsCorrectlyIntegrated()
         regenerateSyntheticLinkageProject.dependsOn(syntheticLinkageImportProjectCheck)
         assembleTask.taskProvider.dependsOn(regenerateSyntheticLinkageProject)
         framework.linkTaskProvider.dependsOn(regenerateSyntheticLinkageProject)
@@ -428,7 +426,6 @@ internal fun checkIfTheLinkageProjectIsConnectedToTheXcodeProject(
     gradleProjectPath: String,
     xcodeProjectThatCalledEmbedAndSign: File,
     rootProjectDir: File,
-    expectLinkagePackageProductInCopyingPhase: Boolean,
 ) {
     val xcodeProject = deserializeXcodeProject(xcodeProjectThatCalledEmbedAndSign.resolve("project.pbxproj"), execOperations)
     val linkageProducts = linkageProductsReferencedInPBXObjects(xcodeProject)
@@ -449,41 +446,6 @@ internal fun checkIfTheLinkageProjectIsConnectedToTheXcodeProject(
             println("error: $it")
         }
         error(messageLines.joinToString("\n"))
-    }
-
-    val productReferencesToPackageProducts = xcodeProject.objects.entries
-        .filter { (_, pbxObject) ->
-            if (pbxObject !is PbxBuildFile) return@filter false
-            pbxObject.productRef?.let { it in linkageProducts } ?: false
-        }.map { it.key }.toSet()
-
-    val hasCopyPhaseReferencingSyntheticProject = xcodeProject.objects.values.any {
-        (it is PbxCopyFilesBuildPhase) && (it.files?.any { it in productReferencesToPackageProducts } ?: false)
-    }
-
-    if (expectLinkagePackageProductInCopyingPhase && !hasCopyPhaseReferencingSyntheticProject) {
-        val messageLines = listOf(
-            "Please specify \"Embed & Sign\" under \"Embed\"",
-            "for library named \"${SYNTHETIC_IMPORT_TARGET_MAGIC_NAME}\"",
-            "in the \"General -> Framework, Libraries, and Embedded Content\" tab",
-        )
-        messageLines.forEach {
-            println("error: $it")
-        }
-        error(messageLines.joinToString(" "))
-    }
-
-    if (!expectLinkagePackageProductInCopyingPhase && hasCopyPhaseReferencingSyntheticProject) {
-        val messageLines = listOf(
-            "Please specify \"Do Not Embed\" under \"Embed\"",
-            "for library named \"${SYNTHETIC_IMPORT_TARGET_MAGIC_NAME}\"",
-            "in the \"General -> Framework, Libraries, and Embedded Content\" tab",
-            "and make sure the library is not present in \"Build Phases -> Embed Frameworks\" "
-        )
-        messageLines.forEach {
-            println("error: $it")
-        }
-        error(messageLines.joinToString(" "))
     }
 }
 
@@ -520,9 +482,7 @@ private fun Project.checkSandboxAndWriteProtectionTask(
         task.userScriptSandboxingEnabled.set(userScriptSandboxingEnabled)
     }
 
-private fun Project.checkSyntheticImportProjectIsCorrectlyIntegrated(
-    expectLinkagePackageProductInCopyingPhase: Provider<Boolean>,
-): TaskProvider<*> {
+private fun Project.checkSyntheticImportProjectIsCorrectlyIntegrated(): TaskProvider<*> {
     val hasDirectOrTransitiveSwiftPMDependencies = hasDirectOrTransitiveSwiftPMDependencies()
 
     val xcodeProjectPathForKmpIJPlugin = locateOrRegisterSwiftPMDependenciesExtension().xcodeProjectPathForKmpIJPlugin
@@ -548,7 +508,6 @@ private fun Project.checkSyntheticImportProjectIsCorrectlyIntegrated(
                 gradleProjectPath,
                 File(projectPath.get()),
                 rootProjectDir,
-                expectLinkagePackageProductInCopyingPhase = expectLinkagePackageProductInCopyingPhase.get()
             )
         }
     }
