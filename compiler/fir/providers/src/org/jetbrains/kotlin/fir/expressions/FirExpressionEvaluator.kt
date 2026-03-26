@@ -325,7 +325,7 @@ object FirExpressionEvaluator {
                     }
                 }
                 is FirEnumEntrySymbol -> propertyAccessExpression.wrap()
-                else -> error("FIR symbol \"${propertySymbol::class}\" is not supported in constant evaluation")
+                else -> NotEvaluated
             }
         }
 
