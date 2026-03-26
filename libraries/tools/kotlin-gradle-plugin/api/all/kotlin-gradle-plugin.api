@@ -2237,17 +2237,6 @@ public final class org/jetbrains/kotlin/gradle/report/BuildReportsService$Compan
 	public final fun getStartParameters (Lorg/gradle/api/Project;)Lorg/jetbrains/kotlin/build/report/statistics/BuildStartParameters;
 }
 
-public final class org/jetbrains/kotlin/gradle/report/BuildScanExtensionHolder : java/io/Serializable, org/jetbrains/kotlin/gradle/internal/report/BuildScanApi {
-	public static final field Companion Lorg/jetbrains/kotlin/gradle/report/BuildScanExtensionHolder$Companion;
-	public fun <init> (Lcom/gradle/scan/plugin/BuildScanExtension;)V
-	public fun buildFinished (Lkotlin/jvm/functions/Function0;)V
-	public fun tag (Ljava/lang/String;)V
-	public fun value (Ljava/lang/String;Ljava/lang/String;)V
-}
-
-public final class org/jetbrains/kotlin/gradle/report/BuildScanExtensionHolder$Companion {
-}
-
 public final class org/jetbrains/kotlin/gradle/report/BuildScanSettings : java/io/Serializable {
 	public static final field Companion Lorg/jetbrains/kotlin/gradle/report/BuildScanSettings$Companion;
 	public static final field serialVersionUID J
@@ -2264,17 +2253,6 @@ public final class org/jetbrains/kotlin/gradle/report/BuildScanSettings : java/i
 }
 
 public final class org/jetbrains/kotlin/gradle/report/BuildScanSettings$Companion {
-}
-
-public final class org/jetbrains/kotlin/gradle/report/DevelocityPluginBuildScanWrapper : java/io/Serializable, org/jetbrains/kotlin/gradle/internal/report/BuildScanApi {
-	public static final field Companion Lorg/jetbrains/kotlin/gradle/report/DevelocityPluginBuildScanWrapper$Companion;
-	public fun <init> (Lcom/gradle/develocity/agent/gradle/scan/BuildScanConfiguration;)V
-	public fun buildFinished (Lkotlin/jvm/functions/Function0;)V
-	public fun tag (Ljava/lang/String;)V
-	public fun value (Ljava/lang/String;Ljava/lang/String;)V
-}
-
-public final class org/jetbrains/kotlin/gradle/report/DevelocityPluginBuildScanWrapper$Companion {
 }
 
 public final class org/jetbrains/kotlin/gradle/report/GradleBuildMetricsReporter : org/jetbrains/kotlin/build/report/metrics/BuildMetricsReporterImpl {
