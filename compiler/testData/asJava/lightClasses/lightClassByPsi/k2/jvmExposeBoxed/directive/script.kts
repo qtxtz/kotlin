@@ -1,5 +1,5 @@
 // WITH_STDLIB
-// LANGUAGE: +ImplicitJvmExposeBoxed
+// JVM_EXPOSE_BOXED
 
 @JvmInline
 value class StringWrapper(val s: String)

@@ -1,5 +1,5 @@
 // WITH_STDLIB
-// LANGUAGE: +ImplicitJvmExposeBoxed
+// JVM_EXPOSE_BOXED
 
 class TopLevelClass {
     fun UInt.foo(): UInt = this

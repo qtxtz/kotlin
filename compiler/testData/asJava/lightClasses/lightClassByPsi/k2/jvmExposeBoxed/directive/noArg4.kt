@@ -1,6 +1,6 @@
 // WITH_STDLIB
 // LIBRARY_PLATFORMS: JVM
-// LANGUAGE: +ImplicitJvmExposeBoxed
+// JVM_EXPOSE_BOXED
 
 @JvmInline
 value class IntWrapper constructor(val i: Int = 0)

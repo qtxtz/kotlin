@@ -1,5 +1,5 @@
 // WITH_STDLIB
-// LANGUAGE: +ImplicitJvmExposeBoxed
+// JVM_EXPOSE_BOXED
 package test
 
 abstract class SCollection : Collection<UInt>

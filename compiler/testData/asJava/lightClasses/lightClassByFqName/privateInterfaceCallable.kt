@@ -2,7 +2,7 @@
 // SKIP_IDE_TEST
 // WITH_STDLIB
 // LIBRARY_PLATFORMS: JVM
-// LANGUAGE: +ImplicitJvmExposeBoxed
+// JVM_EXPOSE_BOXED
 
 @JvmInline
 value class StringWrapper(val s: String)

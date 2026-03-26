@@ -1,6 +1,7 @@
 // WITH_STDLIB
 // LIBRARY_PLATFORMS: JVM
-// LANGUAGE: +ContextParameters +ImplicitJvmExposeBoxed
+// LANGUAGE: +ContextParameters
+// JVM_EXPOSE_BOXED
 @JvmInline
 value class Z(val value: String)
 
