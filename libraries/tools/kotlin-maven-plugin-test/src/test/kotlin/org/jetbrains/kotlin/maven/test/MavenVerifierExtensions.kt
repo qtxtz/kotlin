@@ -6,8 +6,13 @@
 package org.jetbrains.kotlin.maven.test
 
 import org.apache.maven.shared.verifier.Verifier
+import org.jetbrains.org.objectweb.asm.ClassReader
+import org.jetbrains.org.objectweb.asm.ClassVisitor
+import org.jetbrains.org.objectweb.asm.Opcodes
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import java.io.File
 import java.util.jar.JarFile
 import kotlin.io.path.Path
@@ -238,5 +243,38 @@ private fun goalNotFoundMessage(plugin: String, goalFilter: String?, allGoalLine
     } else {
         "No build plan entry matching plugin '$plugin'${goalFilter?.let { " and goal filter '$it'" } ?: ""} found.\n" +
                 "All entries in build plan:\n${allGoalLines.joinToString("\n")}"
+    }
+}
+
+fun Verifier.assertClassFileMajorVersion(relativePath: String, expectedMajorVersion: Int) {
+    val classFile = File(basedir).resolve(relativePath)
+    assertTrue(classFile.exists()) { "Class file not found: $classFile" }
+    var majorVersion = -1
+    ClassReader(classFile.readBytes()).accept(object : ClassVisitor(Opcodes.API_VERSION) {
+        override fun visit(version: Int, access: Int, name: String, signature: String?, superName: String?, interfaces: Array<String>?) {
+            majorVersion = version and 0xFFFF  // low 16 bits = major version
+        }
+    }, ClassReader.SKIP_CODE or ClassReader.SKIP_DEBUG or ClassReader.SKIP_FRAMES)
+    assertEquals(expectedMajorVersion, majorVersion) {
+        "Expected major version $expectedMajorVersion but got $majorVersion for $relativePath"
+    }
+}
+
+fun Verifier.assertClassFinal(className: String, isFinal: Boolean) {
+    val classFile = File(basedir).resolve("target/classes/${className.replace('.', '/')}.class")
+    assertTrue(classFile.exists()) { "Class file not found: $classFile" }
+    var accessFlags = 0
+    ClassReader(classFile.readBytes()).accept(object : ClassVisitor(Opcodes.API_VERSION) {
+        override fun visit(
+            version: Int, access: Int, name: String,
+            signature: String?, superName: String?, interfaces: Array<String>?,
+        ) {
+            accessFlags = access
+        }
+    }, ClassReader.SKIP_CODE or ClassReader.SKIP_DEBUG or ClassReader.SKIP_FRAMES)
+    if (isFinal) {
+        assertTrue(accessFlags and Opcodes.ACC_FINAL != 0) { "Expected $className to be final" }
+    } else {
+        assertFalse(accessFlags and Opcodes.ACC_FINAL != 0) { "Expected $className to be open (not final)" }
     }
 }
