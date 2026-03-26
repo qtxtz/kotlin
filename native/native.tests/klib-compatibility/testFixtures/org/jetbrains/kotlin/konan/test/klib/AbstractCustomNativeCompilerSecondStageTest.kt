@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.test.builders.klibArtifactsHandlersStep
 import org.jetbrains.kotlin.test.builders.nativeArtifactsHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
+import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.DISABLE_FIR_DUMP_HANDLER
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_MULTIPLE_API_VERSIONS_SETTING
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.API_VERSION
@@ -50,6 +51,7 @@ open class AbstractCustomNativeCompilerSecondStageTest : AbstractNativeCoreTest(
         )
         defaultDirectives {
             FirDiagnosticsDirectives.FIR_PARSER with FirParser.LightTree
+            +DISABLE_FIR_DUMP_HANDLER
             if (customNativeCompilerSettings.defaultLanguageVersion < LanguageVersion.LATEST_STABLE) {
                 +ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
                 LANGUAGE_VERSION with customNativeCompilerSettings.defaultLanguageVersion
