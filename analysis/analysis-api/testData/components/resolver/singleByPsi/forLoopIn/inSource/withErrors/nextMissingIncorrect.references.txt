@@ -17,6 +17,3 @@ KtForExpression(23,37): 'for(i in f) {}'
       1: (in Iterator) operator fun hasNext(): kotlin.Boolean
       2: (in ROOT) operator fun kotlin.Int.next(): kotlin.Any
       3: (in ROOT) operator fun kotlin.String.next(): kotlin.Any
-    resolveToSymbols:
-      0: (in Foo) operator fun iterator(): Iterator
-      1: (in Iterator) operator fun hasNext(): kotlin.Boolean
