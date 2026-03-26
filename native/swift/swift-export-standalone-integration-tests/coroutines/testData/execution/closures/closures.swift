@@ -276,29 +276,53 @@ func testWithTwoClosures() async throws {
     try #require(result == 25) // (10 * 2) + 5
 }
 
-//@Test
-//func testWithClosureChain() async throws {
-//    let result = withClosureChain(
-//        initial: 1,
-//        closures: [
-//            { arg in await Task.yield(); return arg + 1 },
-//            { arg in await Task.yield(); return arg * 2 },
-//            { arg in await Task.yield(); return arg + 10 }
-//        ]
-//    )
-//
-//    try #require(result == 14) // ((1 + 1) * 2) + 10
-//}
+@Test
+func testWithClosureChain() async throws {
+    let result = withClosureChain(
+        initial: 1,
+        closures: [
+            { arg in await Task.yield(); return arg + 1 },
+            { arg in await Task.yield(); return arg * 2 },
+            { arg in await Task.yield(); return arg + 10 }
+        ]
+    )
 
-//@Test
-//func testWithClosureChainEmpty() async throws {
-//    let result = withClosureChain(
-//        initial: 42,
-//        closures: []
-//    )
-//
-//    try #require(result == 42) // No transformations
-//}
+    try #require(result == 14) // ((1 + 1) * 2) + 10
+}
+
+@Test
+func testWithClosureChainEmpty() async throws {
+    let result = withClosureChain(
+        initial: 42,
+        closures: []
+    )
+
+    try #require(result == 42) // No transformations
+}
+
+@Test
+func testProduceClosureList() async throws {
+    let closures = produceClosureList()
+    try #require(closures.count == 3)
+
+    var result: Int32 = 1
+    for closure in closures {
+        result = try await closure(result)
+    }
+    try #require(result == 14) // ((1 + 1) * 2) + 10
+}
+
+@Test
+func testProduceNullableClosureList() async throws {
+    let closures = produceNullableClosureList()
+    try #require(closures.count == 2)
+
+    var result: Int32 = 42
+    for case .some(let closure) in closures {
+        result = try await closure(result)
+    }
+    try #require(result == 42)
+}
 
 // MARK: - Nested/recursive calls tests
 

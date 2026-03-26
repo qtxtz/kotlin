@@ -26,10 +26,10 @@ extension ExportedKotlinPackages.kotlinx.coroutines.flow.FlowCollector where Sel
 
                         let _: Bool = kotlinx_coroutines_flow_FlowCollector_emit__TypesOfArguments__Swift_Optional_anyU20KotlinRuntimeSupport__KotlinBridgeable___(self.__externalRCRef(), value.map { it in it.__externalRCRef() } ?? nil, {
                             let originalBlock = continuation
-                            return { arg0 in return { originalBlock({ arg0; return () }()); return true }() }
+                            return { (arg0: Swift.Bool) in return { originalBlock({ arg0; return () }()); return true }() }
                         }(), {
                             let originalBlock = exception
-                            return { arg0 in return { originalBlock({ switch arg0 { case nil: .none; case let res: KotlinRuntime.KotlinBase.__createClassWrapper(externalRCRef: res); } }()); return true }() }
+                            return { (arg0: Swift.UnsafeMutableRawPointer?) in return { originalBlock({ switch arg0 { case nil: .none; case let res: KotlinRuntime.KotlinBase.__createClassWrapper(externalRCRef: res); } }()); return true }() }
                         }(), cancellation.__externalRCRef())
                     }
                 }
@@ -64,10 +64,10 @@ extension ExportedKotlinPackages.kotlinx.coroutines.flow.MutableSharedFlow where
 
                         let _: Bool = kotlinx_coroutines_flow_MutableSharedFlow_emit__TypesOfArguments__Swift_Optional_anyU20KotlinRuntimeSupport__KotlinBridgeable___(self.__externalRCRef(), value.map { it in it.__externalRCRef() } ?? nil, {
                             let originalBlock = continuation
-                            return { arg0 in return { originalBlock({ arg0; return () }()); return true }() }
+                            return { (arg0: Swift.Bool) in return { originalBlock({ arg0; return () }()); return true }() }
                         }(), {
                             let originalBlock = exception
-                            return { arg0 in return { originalBlock({ switch arg0 { case nil: .none; case let res: KotlinRuntime.KotlinBase.__createClassWrapper(externalRCRef: res); } }()); return true }() }
+                            return { (arg0: Swift.UnsafeMutableRawPointer?) in return { originalBlock({ switch arg0 { case nil: .none; case let res: KotlinRuntime.KotlinBase.__createClassWrapper(externalRCRef: res); } }()); return true }() }
                         }(), cancellation.__externalRCRef())
                     }
                 }
@@ -198,7 +198,7 @@ extension ExportedKotlinPackages.kotlinx.coroutines.flow {
     ) -> any ExportedKotlinPackages.kotlinx.coroutines.flow.FlowCollector {
         return KotlinRuntime.KotlinBase.__createProtocolWrapper(externalRCRef: kotlinx_coroutines_flow_FlowCollector__TypesOfArguments__U28Swift_Optional_anyU20KotlinRuntimeSupport__KotlinBridgeable_U2920asyncU20throwsU202D_U20Swift_Void__({
             let originalBlock = function
-            return { arg0, __continuationPtr, __exceptionPtr, __cancellationPtr in
+            return { (arg0: Swift.UnsafeMutableRawPointer?, __continuationPtr: Swift.UnsafeMutableRawPointer, __exceptionPtr: Swift.UnsafeMutableRawPointer, __cancellationPtr: Swift.UnsafeMutableRawPointer) in
                 let __continuation: (Swift.Void) -> Swift.Void = {
             let pointerToBlock = __continuationPtr
             return { _1 in return { KotlinxCoroutinesCore_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Void__(pointerToBlock, { _1; return true }()); return () }() }

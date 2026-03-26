@@ -7,7 +7,7 @@ public func consume_consuming_opt_closure(
 ) -> Swift.Void {
     return { __root___consume_consuming_opt_closure__TypesOfArguments__Swift_Optional_U28Swift_Optional_U2829202D_U20Swift_String_U29202D_U20Swift_Void___(arg.map { it in {
         let originalBlock = it
-        return { arg0 in return { originalBlock(arg0.map { it in {
+        return { (arg0: Swift.UnsafeMutableRawPointer?) in return { originalBlock(arg0.map { it in {
         let pointerToBlock = it
         return { return optional_closure_internal_functional_type_caller_SwiftU2EString__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock) }
     }() }); return true }() }

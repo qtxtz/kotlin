@@ -131,15 +131,33 @@ fun withTwoClosures(a: Int, first: suspend (Int) -> Int, second: suspend (Int) -
     }
 }
 
-//fun withClosureChain(initial: Int, closures: List<suspend (Int) -> Int>): Int {
-//    return runBlocking {
-//        var result = initial
-//        for (closure in closures) {
-//            result = closure(result)
-//        }
-//        result
-//    }
-//}
+fun withClosureChain(initial: Int, closures: List<suspend (Int) -> Int>): Int {
+    return runBlocking {
+        var result = initial
+        for (closure in closures) {
+            result = closure(result)
+        }
+        result
+    }
+}
+
+
+
+fun produceClosureList(): List<suspend (Int) -> Int> {
+    return listOf(
+        { it + 1 },
+        { it * 2 },
+        { it + 10 },
+    )
+}
+
+fun produceNullableClosureList(): List<(suspend (Int) -> Int)?> {
+    return listOf(
+        null,
+        { it }
+    )
+}
+
 
 // ========== Nested calls tests ==========
 

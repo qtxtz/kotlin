@@ -47,6 +47,18 @@ fun flowOfNullableUnit(): Flow<Unit?> = TODO()
 
 fun mutableStateFlowOfUnit(): MutableStateFlow<Unit> = TODO()
 
+// FILE: coroutines_extra.kt
+
+suspend fun returnsList(): List<String> = emptyList()
+
+suspend fun retunsListOfSuspend(): List<suspend () -> Unit> = emptyList()
+
+suspend fun returnsListOfSuspendNullables(): List<(suspend () -> Unit)?> = emptyList()
+
+public fun interface FunctionalInterfaceWithSuspendFunction {
+    public suspend fun emit()
+}
+
 // MODULE: flow_overrides
 // FILE: flow_overrides.kt
 package namespace

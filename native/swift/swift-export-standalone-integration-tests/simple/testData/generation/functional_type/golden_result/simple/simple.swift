@@ -27,7 +27,7 @@ public func foo_consume_consuming(
 ) -> Swift.Void {
     return { __root___foo_consume_consuming__TypesOfArguments__U2840escapingU2028Swift_UInt32_U20Swift_UInt32U29202D_U20Swift_ClosedRange_Swift_Int32_U29202D_U20Swift_Void__({
         let originalBlock = block
-        return { arg0 in return { originalBlock({
+        return { (arg0: Swift.UnsafeMutableRawPointer) in return { originalBlock({
         let pointerToBlock = arg0
         return { _1, _2 in let _result = simple_internal_functional_type_caller_SwiftU2EClosedRangeU3CSwiftU2EInt32U3E__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_UInt32_Swift_UInt32__(pointerToBlock, _1, _2);return kotlin_ranges_intRange_getStart_int_simple(_result) ... kotlin_ranges_intRange_getEndInclusive_int_simple(_result) }
     }()); return true }() }
@@ -38,7 +38,7 @@ public func foo_consume_consuming_2(
 ) -> Swift.Void {
     return { __root___foo_consume_consuming_2__TypesOfArguments__U2840escapingU2028Swift_UInt32_U20Swift_UInt32U29202D_U20Swift_ClosedRange_Swift_Int32_U29202D_U20Swift_Void__({
         let originalBlock = block
-        return { arg0 in return { originalBlock({
+        return { (arg0: Swift.UnsafeMutableRawPointer) in return { originalBlock({
         let pointerToBlock = arg0
         return { _1, _2 in let _result = simple_internal_functional_type_caller_SwiftU2EClosedRangeU3CSwiftU2EInt32U3E__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_UInt32_Swift_UInt32__(pointerToBlock, _1, _2);return kotlin_ranges_intRange_getStart_int_simple(_result) ... kotlin_ranges_intRange_getEndInclusive_int_simple(_result) }
     }()); return true }() }

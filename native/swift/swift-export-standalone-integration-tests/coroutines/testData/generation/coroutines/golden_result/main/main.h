@@ -3,9 +3,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+_Bool FunctionalInterfaceWithSuspendFunction_emit(void * self, _Bool (^continuation)(_Bool), _Bool (^exception)(void * _Nullable ), void * cancellation);
+
 void * __root___Foo_init_allocate();
 
 _Bool __root___Foo_init_initialize__TypesOfArguments__Swift_UnsafeMutableRawPointer__(void * __kt);
+
+void * __root___FunctionalInterfaceWithSuspendFunction__TypesOfArguments__U282920asyncU20throwsU202D_U20Swift_Void__(void (^function)(void *, void *, void *));
 
 _Bool __root___accept_suspend_function_type__TypesOfArguments__U282920asyncU20throwsU202D_U20Swift_Int32__(void (^block)(void *, void *, void *));
 
@@ -35,9 +39,15 @@ _Bool __root___produce_suspend_function(_Bool (^continuation)(void *), _Bool (^e
 
 _Bool __root___produce_suspend_function_typealias(_Bool (^continuation)(void *), _Bool (^exception)(void * _Nullable ), void * cancellation);
 
+_Bool __root___retunsListOfSuspend(_Bool (^continuation)(NSArray<id> *), _Bool (^exception)(void * _Nullable ), void * cancellation);
+
 void * __root___returnSuspendUnit();
 
 _Bool __root___returnUnit(_Bool (^continuation)(_Bool), _Bool (^exception)(void * _Nullable ), void * cancellation);
+
+_Bool __root___returnsList(_Bool (^continuation)(NSArray<NSString *> *), _Bool (^exception)(void * _Nullable ), void * cancellation);
+
+_Bool __root___returnsListOfSuspendNullables(_Bool (^continuation)(NSArray<id> *), _Bool (^exception)(void * _Nullable ), void * cancellation);
 
 _Bool main_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32__(void * pointerToBlock, int32_t _1, _Bool (^continuation)(int32_t), _Bool (^exception)(void * _Nullable ), void * cancellation);
 
@@ -52,5 +62,7 @@ _Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift
 _Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Error__(void * pointerToBlock, NSError * _1);
 
 _Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer__(void * pointerToBlock, _Bool (^continuation)(_Bool), _Bool (^exception)(void * _Nullable ), void * cancellation);
+
+_Bool main_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Void__(void * pointerToBlock, _Bool _1);
 
 NS_ASSUME_NONNULL_END

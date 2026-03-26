@@ -10,7 +10,7 @@ public func foo_flow_with_callback(
     return {
         let pointerToBlock = __root___foo_flow_with_callback__TypesOfArguments__U2840escapingU202829202D_U20Swift_Int32U29202D_U20Swift_Int32__({
         let originalBlock = callback
-        return { arg0 in return originalBlock({
+        return { (arg0: Swift.UnsafeMutableRawPointer) in return originalBlock({
         let pointerToBlock = arg0
         return { return typealias_to_closure_internal_functional_type_caller_SwiftU2EInt32__TypesOfArguments__Swift_UnsafeMutableRawPointer__(pointerToBlock) }
     }()) }
@@ -27,7 +27,7 @@ public func typealias_demo(
     return {
         let pointerToBlock = __root___typealias_demo__TypesOfArguments__U28Swift_Int32_U20Swift_Int32U29202D_U20Swift_Void__({
         let originalBlock = input
-        return { arg0, arg1 in return { originalBlock(arg0, arg1); return true }() }
+        return { (arg0: Swift.Int32, arg1: Swift.Int32) in return { originalBlock(arg0, arg1); return true }() }
     }())
         return { _1, _2 in return { typealias_to_closure_internal_functional_type_caller_SwiftU2EVoid__TypesOfArguments__Swift_UnsafeMutableRawPointer_Swift_Int32_Swift_Int32__(pointerToBlock, _1, _2); return () }() }
     }()

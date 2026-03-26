@@ -141,7 +141,7 @@ public func contextBlockA(
 ) -> Swift.Void {
     return { __root___contextBlockA__TypesOfArguments__U28Swift_Int32_U20Swift_StringU29202D_U20Swift_Void__({
         let originalBlock = block
-        return { ctx0, ctx1, arg0, arg1 in return { originalBlock((main.ContextA.__createClassWrapper(externalRCRef: ctx0),main.ContextB.__createClassWrapper(externalRCRef: ctx1)), arg0, arg1); return true }() }
+        return { (ctx0: Swift.UnsafeMutableRawPointer, ctx1: Swift.UnsafeMutableRawPointer, arg0: Swift.Int32, arg1: Swift.String) in return { originalBlock((main.ContextA.__createClassWrapper(externalRCRef: ctx0),main.ContextB.__createClassWrapper(externalRCRef: ctx1)), arg0, arg1); return true }() }
     }()); return () }()
 }
 public func contextBlockB() -> ((main.ContextB, main.ContextA), Swift.String, Swift.Int32) -> Swift.Void {
@@ -155,7 +155,7 @@ public func contextBlockC(
 ) -> Swift.Void {
     return { __root___contextBlockC__TypesOfArguments__U28Swift_StringU29202D_U20Swift_Void__({
         let originalBlock = block
-        return { ctx0, arg0 in return { originalBlock((main.Context.__createClassWrapper(externalRCRef: ctx0)), arg0); return true }() }
+        return { (ctx0: Swift.UnsafeMutableRawPointer, arg0: Swift.String) in return { originalBlock((main.Context.__createClassWrapper(externalRCRef: ctx0)), arg0); return true }() }
     }()); return () }()
 }
 public func contextBlockD() -> (main.Context, Swift.Int32) -> Swift.Void {

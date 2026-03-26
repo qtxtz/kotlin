@@ -74,7 +74,7 @@ public func nothingClosureParam(
 ) -> Swift.String {
     return __root___nothingClosureParam__TypesOfArguments__U28Swift_NeverU29202D_U20Swift_String__({
         let originalBlock = block
-        return { arg0 in return originalBlock({ arg0; fatalError() }()) }
+        return { (arg0: Swift.Bool) in return originalBlock({ arg0; fatalError() }()) }
     }())
 }
 public func nothingFunctional() -> () -> Swift.Never {
@@ -102,7 +102,7 @@ public func nothingOptClosureParam(
 ) -> Swift.String {
     return __root___nothingOptClosureParam__TypesOfArguments__U28Swift_Optional_Swift_Never_U29202D_U20Swift_String__({
         let originalBlock = block
-        return { arg0 in return originalBlock({ arg0; return nil }()) }
+        return { (arg0: Swift.Bool) in return originalBlock({ arg0; return nil }()) }
     }())
 }
 public func nothingOptFunctional() -> () -> Swift.Never? {
