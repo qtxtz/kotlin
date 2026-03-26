@@ -113,20 +113,14 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
             }
 
             is KaMultiCallResolutionAttempt -> when (callAttempt) {
-                is KaCompoundArrayAccessCallResolutionAttempt -> callAttempt.call?.let { call ->
-                    KaBaseSymbolResolutionSuccess(
-                        backingSymbols = listOf(call.operationCall.signature.symbol, call.setterCall.signature.symbol),
-                        token = call.token,
+                is KaCompoundArrayAccessCallResolutionAttempt -> mergeSymbolAttempts(
+                    listOf(
+                        callAttempt.operationCallAttempt.toSingleSymbolResolutionAttempt(),
+                        callAttempt.setterCallAttempt.toSingleSymbolResolutionAttempt(),
                     )
-                } ?: callAttempt.toSymbolResolutionAttempt()
+                )
 
-                is KaCompoundVariableAccessCallResolutionAttempt -> callAttempt.call?.let { call ->
-                    KaBaseSymbolResolutionSuccess(
-                        backingSymbols = listOf(call.operationCall.signature.symbol),
-                        token = call.token,
-                    )
-                } ?: callAttempt.toSymbolResolutionAttempt()
-
+                is KaCompoundVariableAccessCallResolutionAttempt -> callAttempt.operationCallAttempt.toSingleSymbolResolutionAttempt()
                 else -> callAttempt.toSymbolResolutionAttempt()
             }
 
@@ -145,10 +139,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
     }
 
     final override fun KtResolvable.resolveSymbols(): Collection<KaSymbol> = withValidityAssertion {
-        when (val attempt = tryResolveSymbols()) {
-            is KaSymbolResolutionSuccess -> attempt.symbols
-            is KaSymbolResolutionError, null -> emptyList()
-        }
+        tryResolveSymbols()?.successfulSymbols ?: emptyList()
     }
 
     final override fun KtResolvable.resolveSymbol(): KaSymbol? = withValidityAssertion {
@@ -406,25 +397,53 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
         },
     )
 
-    private fun KaMultiCallResolutionAttempt.toSymbolResolutionAttempt(): KaSymbolResolutionAttempt = fold(
-        onSuccess = {
-            KaBaseSymbolResolutionSuccess(
-                backingSymbols = it.symbols,
-                token = token,
-            )
-        },
-        onFailure = { attempts ->
-            val errorAttempts = attempts.filterIsInstance<KaCallResolutionError>()
-            val firstDiagnostic = errorAttempts.first().diagnostic
-            // Collect symbols from all sub-calls: successful ones contribute their resolved symbol,
-            // error ones contribute their candidate symbols
-            val allSymbols = attempts.flatMap { attempt -> attempt.calls.flatMap(KaSingleOrMultiCall::symbols) }
-            KaBaseSymbolResolutionError(
-                backingDiagnostic = firstDiagnostic,
-                backingCandidateSymbols = allSymbols,
-            )
-        },
-    )
+    private fun KaMultiCallResolutionAttempt.toSymbolResolutionAttempt(): KaSymbolResolutionAttempt =
+        mergeSymbolAttempts(attempts.map { it.toSingleSymbolResolutionAttempt() })
+
+    private fun KaSingleCallResolutionAttempt.toSingleSymbolResolutionAttempt(): KaSingleSymbolResolutionAttempt = when (this) {
+        is KaCallResolutionSuccess -> KaBaseSymbolResolutionSuccess(
+            backingSymbols = call.symbols,
+            token = token,
+        )
+
+        is KaCallResolutionError -> KaBaseSymbolResolutionError(
+            backingDiagnostic = diagnostic,
+            backingCandidateSymbols = candidateCalls.flatMap(KaSingleOrMultiCall::symbols),
+        )
+    }
+
+    /**
+     * Merges individual symbol resolution attempts into a single result, satisfying the
+     * [KaMultiSymbolResolutionAttempt] contract: at most one [KaSymbolResolutionSuccess]
+     * (combining all successful symbols) and at least one [KaSymbolResolutionError].
+     */
+    private fun mergeSymbolAttempts(symbolAttempts: List<KaSingleSymbolResolutionAttempt>): KaSymbolResolutionAttempt {
+        val successSymbols = mutableListOf<KaSymbol>()
+        val errors = mutableListOf<KaSymbolResolutionError>()
+
+        for (attempt in symbolAttempts) when (attempt) {
+            is KaSymbolResolutionSuccess -> successSymbols.addAll(attempt.symbols)
+            is KaSymbolResolutionError -> errors.add(attempt)
+        }
+
+        if (errors.isEmpty()) {
+            return KaBaseSymbolResolutionSuccess(successSymbols, token)
+        }
+
+        if (symbolAttempts.size == 1) {
+            return errors.single()
+        }
+
+        val merged = buildList {
+            if (successSymbols.isNotEmpty()) {
+                add(KaBaseSymbolResolutionSuccess(successSymbols, token))
+            }
+
+            addAll(errors)
+        }
+
+        return KaBaseMultiSymbolResolutionAttempt(backingAttempts = merged)
+    }
 
     protected companion object {
         private val nonCallBinaryOperator: TokenSet = TokenSet.create(

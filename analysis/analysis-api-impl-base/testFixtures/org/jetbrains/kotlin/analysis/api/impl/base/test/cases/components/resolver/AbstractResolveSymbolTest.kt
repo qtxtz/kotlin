@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.analysis.api.components.KaResolver
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.components.assertStableResult
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.components.findSpecializedResolveFunctions
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.components.stringRepresentation
+import org.jetbrains.kotlin.analysis.api.resolution.KaMultiSymbolResolutionAttempt
 import org.jetbrains.kotlin.analysis.api.resolution.KaSymbolResolutionAttempt
 import org.jetbrains.kotlin.analysis.api.resolution.KaSymbolResolutionError
 import org.jetbrains.kotlin.analysis.api.resolution.KaSymbolResolutionSuccess
@@ -85,6 +86,10 @@ internal fun assertSpecificResolutionApi(
             is KaSymbolResolutionSuccess -> {
                 // Only non-compound cases can be checked
                 assertions.assertEquals(expected = attempt.symbols.singleOrNull(), actual = specificCall)
+            }
+            is KaMultiSymbolResolutionAttempt -> {
+                // Multi-symbol resolution: specialized resolveSymbol returns null for compound cases
+                assertions.assertEquals(expected = null, actual = specificCall)
             }
         }
     }

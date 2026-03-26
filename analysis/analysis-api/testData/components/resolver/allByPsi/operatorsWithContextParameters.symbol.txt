@@ -1509,12 +1509,18 @@ KtConstantExpression(1361,1362): '1'
   null
 
 KtPostfixExpression(1367,1370): 'a++'
-  KaSymbolResolutionError:
-    candidateSymbols = [
-      /inc(<extension receiver>: A): A,
-      var a: A
+  KaMultiSymbolResolutionAttempt:
+    attempts = [
+      KaSymbolResolutionSuccess:
+        symbols = [
+          var a: A
+        ],
+      KaSymbolResolutionError:
+        candidateSymbols = [
+          /inc(<extension receiver>: A): A
+        ]
+        diagnostic = ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
     ]
-    diagnostic = ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
 
 KtNameReferenceExpression(1367,1368): 'a'
   KaSymbolResolutionSuccess:
@@ -1525,8 +1531,7 @@ KtNameReferenceExpression(1367,1368): 'a'
 KtOperationReferenceExpression(1368,1370): '++'
   KaSymbolResolutionError:
     candidateSymbols = [
-      /inc(<extension receiver>: A): A,
-      var a: A
+      /inc(<extension receiver>: A): A
     ]
     diagnostic = ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
 
@@ -1680,12 +1685,18 @@ KtConstantExpression(1430,1431): '1'
   null
 
 KtPostfixExpression(1436,1439): 'b++'
-  KaSymbolResolutionError:
-    candidateSymbols = [
-      /SimpleOperators.inc(<dispatch receiver>: SimpleOperators): SimpleOperators,
-      var b: SimpleOperators
+  KaMultiSymbolResolutionAttempt:
+    attempts = [
+      KaSymbolResolutionSuccess:
+        symbols = [
+          var b: SimpleOperators
+        ],
+      KaSymbolResolutionError:
+        candidateSymbols = [
+          /SimpleOperators.inc(<dispatch receiver>: SimpleOperators): SimpleOperators
+        ]
+        diagnostic = ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
     ]
-    diagnostic = ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>
 
 KtNameReferenceExpression(1436,1437): 'b'
   KaSymbolResolutionSuccess:
@@ -1696,7 +1707,6 @@ KtNameReferenceExpression(1436,1437): 'b'
 KtOperationReferenceExpression(1437,1439): '++'
   KaSymbolResolutionError:
     candidateSymbols = [
-      /SimpleOperators.inc(<dispatch receiver>: SimpleOperators): SimpleOperators,
-      var b: SimpleOperators
+      /SimpleOperators.inc(<dispatch receiver>: SimpleOperators): SimpleOperators
     ]
     diagnostic = ERROR<NO_CONTEXT_ARGUMENT: No context argument for 'a: A' found.>

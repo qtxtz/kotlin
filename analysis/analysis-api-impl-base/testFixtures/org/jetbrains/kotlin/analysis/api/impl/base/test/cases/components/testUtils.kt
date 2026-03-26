@@ -369,20 +369,18 @@ internal fun assertStableResult(
             )
         }
 
-        is KaMultiCallResolutionAttempt -> {
-            val hasErrors = callResolutionAttempt.attempts.any { it is KaCallResolutionError }
-            if (hasErrors) {
-                if (symbolResolutionAttempt !is KaSymbolResolutionError) {
-                    testServices.assertions.fail {
-                        "${KaSymbolResolutionError::class.simpleName} is expected, but ${symbolResolutionAttempt?.let { it::class.simpleName }} is found"
-                    }
-                }
+        is KaMultiCallResolutionAttempt -> if (symbolResolutionAttempt is KaMultiSymbolResolutionAttempt) {
+            val callErrors = callResolutionAttempt.attempts.filterIsInstance<KaCallResolutionError>()
+            val symbolErrors = symbolResolutionAttempt.attempts.filterIsInstance<KaSymbolResolutionError>()
+            assertions.assertEquals(callErrors.size, symbolErrors.size) {
+                "Number of error attempts differs between call and symbol resolution"
+            }
 
-                val firstErrorAttempt = callResolutionAttempt.attempts.filterIsInstance<KaCallResolutionError>().first()
+            for ((callError, symbolError) in callErrors.zip(symbolErrors)) {
                 assertStableResult(
                     testServices = testServices,
-                    firstDiagnostic = firstErrorAttempt.diagnostic,
-                    secondDiagnostic = symbolResolutionAttempt.diagnostic,
+                    firstDiagnostic = callError.diagnostic,
+                    secondDiagnostic = symbolError.diagnostic,
                 )
             }
         }
