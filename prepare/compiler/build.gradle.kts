@@ -99,7 +99,8 @@ val distLibraryProjects = listOfNotNull(
     ":kotlin-scripting-compiler-impl",
     ":kotlin-scripting-jvm",
     ":libraries:tools:mutability-annotations-compat",
-    ":plugins:jvm-abi-gen"
+    ":plugins:jvm-abi-gen",
+    ":kotlin-jklib-compiler"
 )
 
 val distCompilerPluginProjects = listOf(

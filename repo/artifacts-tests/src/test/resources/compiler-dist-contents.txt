@@ -15,6 +15,7 @@ lib/allopen-compiler-plugin.jar
 lib/annotations-13.0.jar
 lib/assignment-compiler-plugin.jar
 lib/compose-compiler-plugin.jar
+lib/jklib-compiler.jar
 lib/jvm-abi-gen.jar
 lib/kotlin-annotation-processing-cli.jar
 lib/kotlin-annotation-processing-runtime.jar
