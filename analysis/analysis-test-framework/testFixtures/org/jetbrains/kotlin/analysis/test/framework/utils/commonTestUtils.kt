@@ -138,7 +138,7 @@ fun <T, R> Collection<T>.singleOrZeroValue(
     }
 }
 
-private val snapshotVersionRegex: Regex = """-2\.\d\.\d+-(\w+-\d+|SNAPSHOT|RC\d*)""".toRegex()
+private val snapshotVersionRegex: Regex = """-2\.\d\.\d+-(\w+(-\d+)?|SNAPSHOT|RC\d*)""".toRegex()
 
 /**
  * Removes version suffix from kotlin libraries, like stdlib or kotlin-reflect:
