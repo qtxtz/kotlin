@@ -900,6 +900,12 @@ public class FirOutOfContentRootLazyDeclarationResolveTestGenerated extends Abst
     }
 
     @Test
+    @TestMetadata("intrinsicConstOnIncorrectProperty.kt")
+    public void testIntrinsicConstOnIncorrectProperty() {
+      run("intrinsicConstOnIncorrectProperty.kt");
+    }
+
+    @Test
     @TestMetadata("variable_all.kt")
     public void testVariable_all() {
       run("variable_all.kt");
