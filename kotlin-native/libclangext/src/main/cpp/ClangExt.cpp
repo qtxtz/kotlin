@@ -236,4 +236,39 @@ extern "C" {
     return nullCString();
   }
 
+  unsigned clang_visitObjectLikeMacroDefinitions(
+    CXTranslationUnit translationUnit,
+    bool excludeSystemHeaders,
+    MacroVisitor visitor,
+    CXClientData client_data
+    ) {
+    struct VisitMacro {
+      bool excludeSystemHeaders;
+      MacroVisitor visitor;
+      CXClientData clientData;
+    };
+
+    auto parent = clang_getTranslationUnitCursor(translationUnit);
+    auto data = VisitMacro { excludeSystemHeaders, visitor, client_data };
+    return clang_visitChildren(parent, [](CXCursor cursor, CXCursor parent, CXClientData data) {
+      if (cursor.kind != CXCursor_MacroDefinition || clang_Cursor_isMacroFunctionLike(cursor)) {
+        return CXChildVisit_Continue;
+      }
+      auto* visitMacroData = reinterpret_cast<VisitMacro*>(data);
+      auto location = clang_getCursorLocation(cursor);
+      if (visitMacroData->excludeSystemHeaders && clang_Location_isInSystemHeader(location)) {
+        return CXChildVisit_Continue;
+      }
+      CXFile file;
+      clang_getFileLocation(location, &file, nullptr, nullptr, nullptr);
+      if (!file) {
+        return CXChildVisit_Continue;
+      }
+      auto spelling = clang_getCursorSpelling(cursor);
+      auto spellingCStr = clang_getCString(spelling);
+      visitMacroData->visitor(visitMacroData->clientData, spellingCStr, location, file);
+      clang_disposeString(spelling);
+      return CXChildVisit_Continue;
+    }, &data);
+  }
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
+
 #include <clang-c/Index.h>
 
 // TODO: the API declared below should eventually be refined and contributed to libclang.
@@ -38,6 +40,9 @@ enum CXNullabilityKind {
 typedef struct {
   char* data;
 } CString;
+
+// `spelling` is owned by the producer and shouldn't be freed by the client and valid only during callback invocation.
+typedef void (*MacroVisitor)(CXClientData clientData, const char* spelling, CXSourceLocation location, CXFile file);
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,6 +69,13 @@ CString clang_Cursor_getSwiftName(CXCursor cursor);
 void clang_disposeCString(CString str);
 
 CString clang_Cursor_getObjCProtocolRuntimeName(CXCursor cursor);
+
+unsigned clang_visitObjectLikeMacroDefinitions(
+  CXTranslationUnit translationUnit,
+  bool excludeSystemHeaders,
+  MacroVisitor visitor,
+  CXClientData client_data
+);
 
 #ifdef __cplusplus
 }

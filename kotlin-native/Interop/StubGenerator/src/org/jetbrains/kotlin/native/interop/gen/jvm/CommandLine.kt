@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.native.interop.tool
 import kotlinx.cli.*
 import org.jetbrains.kotlin.config.KlibAbiCompatibilityLevel
 import org.jetbrains.kotlin.native.interop.gen.jvm.CCallMode
+import org.jetbrains.kotlin.native.interop.indexer.MacroNamesCollectingMode
 
 const val HEADER_FILTER_ADDITIONAL_SEARCH_PREFIX = "headerFilterAdditionalSearchPrefix"
 const val NODEFAULTLIBS_DEPRECATED = "nodefaultlibs"
@@ -37,6 +38,7 @@ const val USER_SETUP_HINT = "Xuser-setup-hint"
 const val KONAN_DATA_DIR = "Xkonan-data-dir"
 const val CCALL_MODE = "Xccall-mode"
 const val KLIB_ABI_COMPATIBILITY_LEVEL = "Xklib-abi-compatibility-level"
+const val MACRO_COLLECTION_IMPL = "Xmacro-collection-impl"
 
 // TODO: unify camel and snake cases.
 // Possible solution is to accept both cases
@@ -148,6 +150,15 @@ open class CInteropArguments(argParser: ArgParser =
                     "${CCallMode.INDIRECT.name.lowercase()} - generate only @CCall, " +
                     "${CCallMode.BOTH.name.lowercase()} - generate both (default)"
     ).default(CCallMode.BOTH)
+
+    val macroCollectionImpl by argParser.option(
+            ArgType.Choice<MacroNamesCollectingMode>(),
+            MACRO_COLLECTION_IMPL,
+            description = "Macro collection implementation: " +
+                    "${MacroNamesCollectingMode.LEGACY.name.lowercase()} - legacy cursor traversal (default), " +
+                    "${MacroNamesCollectingMode.LIBCLANGEXT.name.lowercase()} - libclangext cursor traversal (faster, experimental), " +
+                    "${MacroNamesCollectingMode.LIBCLANGEXT_PARALLEL.name.lowercase()} - libclangext cursor traversal with parallelization (faster, experimental)"
+    ).default(MacroNamesCollectingMode.LEGACY)
 
     val klibAbiCompatibilityLevel by argParser.option(
             type = ArgType.Choice(

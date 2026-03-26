@@ -1223,17 +1223,30 @@ public open class NativeIndexImpl(val library: NativeLibrary, val verbose: Boole
 
 }
 
-fun buildNativeIndexImpl(library: NativeLibrary, verbose: Boolean, allowPrecompiledHeaders: Boolean): IndexerResult {
+fun buildNativeIndexImpl(
+        library: NativeLibrary,
+        verbose: Boolean,
+        allowPrecompiledHeaders: Boolean,
+        macroNamesCollectingMode: MacroNamesCollectingMode,
+): IndexerResult {
     val result = NativeIndexImpl(library, verbose)
-    return buildNativeIndexImpl(result, allowPrecompiledHeaders)
+    return buildNativeIndexImpl(result, allowPrecompiledHeaders, macroNamesCollectingMode)
 }
 
-fun buildNativeIndexImpl(index: NativeIndexImpl, allowPrecompiledHeaders: Boolean): IndexerResult {
-    val compilation = indexDeclarations(index, allowPrecompiledHeaders)
+fun buildNativeIndexImpl(
+        index: NativeIndexImpl,
+        allowPrecompiledHeaders: Boolean,
+        macroNamesCollectingMode: MacroNamesCollectingMode,
+): IndexerResult {
+    val compilation = indexDeclarations(index, allowPrecompiledHeaders, macroNamesCollectingMode)
     return IndexerResult(index, compilation)
 }
 
-private fun indexDeclarations(nativeIndex: NativeIndexImpl, allowPrecompiledHeaders: Boolean): Compilation {
+private fun indexDeclarations(
+        nativeIndex: NativeIndexImpl,
+        allowPrecompiledHeaders: Boolean,
+        macroNamesCollectingMode: MacroNamesCollectingMode,
+): Compilation {
     // Below, declarations from PCH should be excluded to restrict `visitChildren` to visit local declarations only
     withIndex(excludeDeclarationsFromPCH = true) { index ->
         val errors = mutableListOf<Diagnostic>()
@@ -1286,7 +1299,7 @@ private fun indexDeclarations(nativeIndex: NativeIndexImpl, allowPrecompiledHead
                     compilation as CompilationWithPCH
                 else
                     compilation.withPrecompiledHeader(translationUnit)
-                findMacros(nativeIndex, compilationWithPCH, unitsToProcess, ownHeaders)
+                findMacros(nativeIndex, compilationWithPCH, unitsToProcess, ownHeaders, macroNamesCollectingMode)
 
                 return compilation
             }

@@ -22,6 +22,12 @@ enum class Language(val sourceFileExtension: String, val clangLanguageName: Stri
     OBJECTIVE_C("m", "objective-c")
 }
 
+enum class MacroNamesCollectingMode {
+    LEGACY,
+    LIBCLANGEXT,
+    LIBCLANGEXT_PARALLEL,
+}
+
 interface HeaderInclusionPolicy {
     /**
      * Whether unused declarations from given header should be excluded.
@@ -132,7 +138,8 @@ fun buildNativeIndex(
         library: NativeLibrary,
         verbose: Boolean,
         allowPrecompiledHeaders: Boolean = true,
-): IndexerResult = buildNativeIndexImpl(library, verbose, allowPrecompiledHeaders)
+        macroNamesCollectingMode: MacroNamesCollectingMode = MacroNamesCollectingMode.LEGACY,
+): IndexerResult = buildNativeIndexImpl(library, verbose, allowPrecompiledHeaders, macroNamesCollectingMode)
 
 /**
  * This class describes the IR of definitions from C header file(s).

@@ -103,6 +103,20 @@ fun main(args: Array<String>) {
             ) {
                 model("experimental/cases", pattern = "^([^_](.+))$", recursive = false)
             }
+
+            val macroCollectionVariants = listOf(
+                "Legacy" to AbstractNativeCInteropNoFModulesLegacyMacroCollectionTest::class.java,
+                "Libclangext" to AbstractNativeCInteropNoFModulesLibclangextMacroCollectionTest::class.java,
+                "LibclangextParallel" to AbstractNativeCInteropNoFModulesLibclangextParallelMacroCollectionTest::class.java,
+            )
+            macroCollectionVariants.forEach { (variantName, testKClass) ->
+                testClass(
+                    testKClass = testKClass,
+                    suiteTestClassName = "CInteropNoFModules${variantName}MacroCollectionTestGenerated",
+                ) {
+                    model("framework.macros/macrosDefs", pattern = "^([^_](.+))$", recursive = false)
+                }
+            }
         }
 
         // ObjCExport tests.
