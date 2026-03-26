@@ -319,6 +319,10 @@ internal fun jsGenerateInterfaceSymbol(): dynamic =
 
 @JsIntrinsic
 @UsedFromCompilerGeneratedCode
+internal fun signatureId(signatureString: String): dynamic
+
+@JsIntrinsic
+@UsedFromCompilerGeneratedCode
 internal fun jsMethodReference(dispatchReceiver: Any, rawFunctionRef: dynamic): dynamic
 
 /**

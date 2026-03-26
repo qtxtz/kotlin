@@ -607,14 +607,18 @@ class InteropCallableReferenceLowering(val context: JsIrBackendContext) : BodyLo
                             } ?: compilationException("'arity' is expected to be passed to a parent constructor", superCall)
                         )
                     )
+                    val providerIdConst = id?.shallowCopy()?.apply {
+                        startOffset = UNDEFINED_OFFSET
+                        endOffset = UNDEFINED_OFFSET
+                    } ?: compilationException("'id' is expected to be passed to a parent constructor", superCall)
+
                     statements.add(
                         setDynamicProperty(
                             tmpVar.symbol,
                             Namer.KCALLABLE_ID,
-                            id?.shallowCopy()?.apply {
-                                startOffset = UNDEFINED_OFFSET
-                                endOffset = UNDEFINED_OFFSET
-                            } ?: compilationException("'id' is expected to be passed to a parent constructor", superCall)
+                            JsIrBuilder.buildCall(context.symbols.signatureIdSymbol).apply {
+                                arguments[0] = providerIdConst
+                            },
                         )
                     )
                     if (factoryFunction.parameters.any()) {

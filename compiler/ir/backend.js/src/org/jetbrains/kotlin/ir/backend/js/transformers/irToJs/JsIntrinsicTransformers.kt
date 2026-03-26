@@ -351,6 +351,19 @@ class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
                 val backingField = context.getNameForField(symbols.void.owner.backingField!!)
                 JsNameRef(backingField)
             }
+
+            add(symbols.signatureIdSymbol) { call, _ ->
+                val signatureString = call.arguments[0] as? IrConst ?: compilationException(
+                    "Call of the signatureId doesn't contain first argument representing a signature string literal",
+                    call
+                )
+
+                if (backendContext.incrementalCacheEnabled) {
+                    JsStringLiteral(signatureString.value as String)
+                } else {
+                    JsIntLiteral(backendContext.signaturesPool.getSignatureId(signatureString.value as String))
+                }
+            }
         }
     }
 

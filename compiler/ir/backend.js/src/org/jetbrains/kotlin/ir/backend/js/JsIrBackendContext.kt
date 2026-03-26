@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.ir.backend.js.lower.JsInnerClassesSupport
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.JsPolyfills
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.translateJsCodeIntoStatementList
 import org.jetbrains.kotlin.ir.backend.js.utils.JsInlineClassesUtils
+import org.jetbrains.kotlin.ir.backend.js.utils.JsSignaturesPool
 import org.jetbrains.kotlin.ir.backend.js.utils.Keeper
 import org.jetbrains.kotlin.ir.backend.js.utils.MinimizedNameGenerator
 import org.jetbrains.kotlin.ir.backend.js.utils.OperatorNames
@@ -102,6 +103,7 @@ class JsIrBackendContext(
 
     val packageLevelJsModules = hashSetOf<IrFile>()
 
+    val signaturesPool = JsSignaturesPool()
     val testFunsPerFile = hashMapOf<IrFile, IrSimpleFunction>()
 
     override val inlineClassesUtils = JsInlineClassesUtils(this)

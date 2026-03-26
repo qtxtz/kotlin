@@ -496,6 +496,8 @@ class BackendJsSymbols(
     val klocalDelegateBuilder = CallableIds.getLocalDelegateReference.functionSymbol()
 
     val eagerInitialization: IrClassSymbol = ClassIds.EagerInitialization.classSymbol()
+
+    val signatureIdSymbol = CallableIds.signatureIdIntrinsic.functionSymbol()
 }
 
 private object ClassIds {
@@ -673,6 +675,7 @@ private object CallableIds {
     val setPropertiesToThrowableInstance = "setPropertiesToThrowableInstance".jsCallableId
     val getPropertyCallableRef = "getPropertyCallableRef".jsCallableId
     val getLocalDelegateReference = "getLocalDelegateReference".jsCallableId
+    val signatureIdIntrinsic = "signatureId".jsCallableId
 
     // JS Long functions
     private val String.jsBoxedLongId get() = CallableId(JsStandardClassIds.BOXED_LONG_PACKAGE, Name.identifier(this))
