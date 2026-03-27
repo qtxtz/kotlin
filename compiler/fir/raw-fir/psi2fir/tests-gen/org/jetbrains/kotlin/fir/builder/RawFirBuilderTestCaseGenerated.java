@@ -51,6 +51,11 @@ public class RawFirBuilderTestCaseGenerated extends AbstractRawFirBuilderTestCas
       runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/declarations/annotationArguments.kt");
     }
 
+    @TestMetadata("annotationArgumentsRepl.repl.kts")
+    public void testAnnotationArgumentsRepl_repl() {
+      runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/declarations/annotationArgumentsRepl.repl.kts");
+    }
+
     @TestMetadata("annotationOnContextParameters.kt")
     public void testAnnotationOnContextParameters() {
       runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/declarations/annotationOnContextParameters.kt");
@@ -99,6 +104,11 @@ public class RawFirBuilderTestCaseGenerated extends AbstractRawFirBuilderTestCas
     @TestMetadata("annotationOnTypeParameterInWhereClause.kt")
     public void testAnnotationOnTypeParameterInWhereClause() {
       runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/declarations/annotationOnTypeParameterInWhereClause.kt");
+    }
+
+    @TestMetadata("annotationRepl.repl.kts")
+    public void testAnnotationRepl_repl() {
+      runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/declarations/annotationRepl.repl.kts");
     }
 
     @TestMetadata("annotationsOnNullableParenthesizedTypes.kt")
