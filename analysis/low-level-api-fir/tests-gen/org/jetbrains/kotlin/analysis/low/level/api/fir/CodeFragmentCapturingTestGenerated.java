@@ -304,6 +304,12 @@ public class CodeFragmentCapturingTestGenerated extends AbstractCodeFragmentCapt
   }
 
   @Test
+  @TestMetadata("scriptImplicitReceiver.kt")
+  public void testScriptImplicitReceiver() {
+    run("scriptImplicitReceiver.kt");
+  }
+
+  @Test
   @TestMetadata("smartCastExtensionReceiver.kt")
   public void testSmartCastExtensionReceiver() {
     run("smartCastExtensionReceiver.kt");

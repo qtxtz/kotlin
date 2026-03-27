@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.*
+import org.jetbrains.kotlin.fir.declarations.utils.SCRIPT_RECEIVER_NAME_PREFIX
 import org.jetbrains.kotlin.fir.declarations.utils.isInline
 import org.jetbrains.kotlin.fir.declarations.utils.isLocal
 import org.jetbrains.kotlin.fir.expressions.*
@@ -32,12 +33,8 @@ import org.jetbrains.kotlin.fir.resolve.toSymbol
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.symbols.lazyResolveToPhase
-import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.FirTypeRef
+import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.forEachType
-import org.jetbrains.kotlin.fir.types.resolvedType
-import org.jetbrains.kotlin.fir.types.toRegularClassSymbol
 import org.jetbrains.kotlin.fir.visitors.FirDefaultVisitorVoid
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
@@ -187,13 +184,37 @@ private class CodeFragmentCapturedValueVisitor(
                         is FirReceiverParameterSymbol -> {
                             if (symbol.captureValueInAnalyze) {
                                 val receiverParameter = symbol.fir
-                                val labelName = element.labelName
-                                    ?: (receiverParameter.containingDeclarationSymbol as? FirAnonymousFunctionSymbol)?.label?.name
-                                    ?: (receiverParameter.containingDeclarationSymbol as FirCallableSymbol).name.asString()
-
-                                val typeRef = receiverParameter.typeRef
+                                val containingSymbol = receiverParameter.containingDeclarationSymbol
                                 val isCrossingInlineBounds = isCrossingInlineBounds(element, symbol)
-                                val capturedValue = KaCodeFragmentCapturedValue.ExtensionReceiver(labelName, isCrossingInlineBounds, depth)
+                                val typeRef = receiverParameter.typeRef
+
+                                val scriptReceiverParam = receiverParameter as? FirScriptReceiverParameter
+                                val capturedValue =
+                                    if (scriptReceiverParam != null && !scriptReceiverParam.isBaseClassReceiver
+                                        && containingSymbol is FirScriptSymbol
+                                    ) {
+                                        // Script implicit receivers are compiled as JVM constructor parameters named "$script_receiver_N"
+                                        // where N is the receiver's index in FirScript.receivers.
+                                        val receiverIndex = containingSymbol.fir.receivers.indexOfFirst { it === scriptReceiverParam }
+                                        KaCodeFragmentCapturedValue.Local(
+                                            Name.identifier("${SCRIPT_RECEIVER_NAME_PREFIX}_$receiverIndex"),
+                                            isMutated = false,
+                                            isCrossingInlineBounds,
+                                            depth,
+                                        )
+                                    } else {
+                                        val labelName = element.labelName
+                                            ?: (containingSymbol as? FirAnonymousFunctionSymbol)?.label?.name
+                                            ?: (containingSymbol as? FirCallableSymbol)?.name?.asString()
+                                            ?: errorWithFirSpecificEntries(
+                                                "Unexpected containing declaration for receiver parameter: ${containingSymbol::class.simpleName}",
+                                                fir = receiverParameter,
+                                            )
+                                        KaCodeFragmentCapturedValue.ExtensionReceiver(
+                                            labelName, isCrossingInlineBounds, depth
+                                        )
+                                    }
+
                                 register(
                                     CodeFragmentCapturedSymbol(capturedValue, receiverParameter.symbol, typeRef)
                                 )
