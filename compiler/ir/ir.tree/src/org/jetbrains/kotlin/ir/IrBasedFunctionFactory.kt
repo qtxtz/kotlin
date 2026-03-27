@@ -97,6 +97,8 @@ abstract class IrAbstractFunctionFactory {
     }
 }
 
+private var IrFile.isSyntheticForFunctionInterfaceFile: Boolean? by irAttribute(copyByDefault = true)
+
 class IrBasedFunctionFactory(
     private val stdlibModule: IrModuleFragment,
     private val functionClass: IrClassSymbol,
@@ -109,6 +111,16 @@ class IrBasedFunctionFactory(
     companion object {
         private const val FUNCTION_TYPE_INTERFACE_DIR = "function-type-interface"
         private const val FUNCTION_TYPE_INTERFACE_FILE = "[K][Suspend]Functions"
+
+        @OptIn(ObsoleteDescriptorBasedAPI::class)
+        val IrPackageFragment.isFunctionInterfaceFile: Boolean
+            get() {
+                return when {
+                    symbol.hasDescriptor && packageFragmentDescriptor is FunctionInterfacePackageFragment -> true
+                    this is IrFile && this.isSyntheticForFunctionInterfaceFile == true -> true
+                    else -> false
+                }
+            }
     }
 
     public var typeSystem: IrTypeSystemContext? = null
@@ -138,7 +150,8 @@ class IrBasedFunctionFactory(
         }
 
         val fileWithRequiredPackage = "${packageFqName.asString().replace('.', '-')}-package.kt"
-        return findFileInStdlib(fileWithRequiredPackage) ?: createNewFile()
+        return (findFileInStdlib(fileWithRequiredPackage) ?: createNewFile())
+            .also { it.isSyntheticForFunctionInterfaceFile = true }
     }
 
     private val functionNMap = mutableMapOf<Int, IrClass>()

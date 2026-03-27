@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.backend.common.serialization.SerializedKlibFingerpri
 import org.jetbrains.kotlin.backend.konan.DECLARATION_ORIGIN_FUNCTION_CLASS
 import org.jetbrains.kotlin.backend.konan.KonanFqNames
 import org.jetbrains.kotlin.backend.konan.NativeGenerationState
-import org.jetbrains.kotlin.backend.konan.isFunctionInterfaceFile
 import org.jetbrains.kotlin.backend.konan.serialization.InlineFunctionSerializer
 import org.jetbrains.kotlin.backend.konan.isCalledFromExportedInlineFunction
 import org.jetbrains.kotlin.backend.konan.isConstructedFromExportedInlineFunctions
@@ -19,6 +18,7 @@ import org.jetbrains.kotlin.backend.konan.serialization.KonanPartialModuleDeseri
 import org.jetbrains.kotlin.backend.konan.serialization.SerializedEagerInitializedFile
 import org.jetbrains.kotlin.backend.konan.serialization.SerializedFileReference
 import org.jetbrains.kotlin.backend.konan.serialization.buildSerializedClassFields
+import org.jetbrains.kotlin.ir.IrBasedFunctionFactory.Companion.isFunctionInterfaceFile
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*

@@ -36,9 +36,6 @@ import org.jetbrains.kotlin.util.OperatorNameConventions
 internal val DECLARATION_ORIGIN_FUNCTION_CLASS by IrDeclarationOriginImpl.Regular
 
 @OptIn(ObsoleteDescriptorBasedAPI::class)
-val IrPackageFragment.isFunctionInterfaceFile get() = packageFragmentDescriptor is FunctionInterfacePackageFragment
-
-@OptIn(ObsoleteDescriptorBasedAPI::class)
 internal class BuiltInFictitiousFunctionIrClassFactory(
         private val symbolTable: SymbolTable,
         private val irBuiltIns: IrBuiltInsOverDescriptors,
