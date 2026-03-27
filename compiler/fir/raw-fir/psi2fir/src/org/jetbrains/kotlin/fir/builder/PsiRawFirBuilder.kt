@@ -1669,7 +1669,7 @@ open class PsiRawFirBuilder(
 
         private fun extractReplElements(
             script: KtScript,
-            containingDeclarationSymbol: FirBasedSymbol<*>,
+            containingDeclarationSymbol: FirRegularClassSymbol,
             copiedDelegatedProperties: MutableMap<FirPropertySymbol, FirProperty>,
         ): List<FirElement> = buildList {
             val iter = script.declarations.iterator()
@@ -1713,14 +1713,14 @@ open class PsiRawFirBuilder(
                     }
                     is KtProperty -> {
                         val firProperty = declaration.toFirProperty(
-                            ownerRegularOrAnonymousObjectSymbol = null,
+                            ownerRegularOrAnonymousObjectSymbol = containingDeclarationSymbol,
                             context,
                         )
 
                         // See documentation on `replSnippetDelegatedPropertyCopies` attribute for why this is needed.
                         if (firProperty.delegate != null) {
                             val firPropertyCopy = declaration.toFirProperty(
-                                ownerRegularOrAnonymousObjectSymbol = null,
+                                ownerRegularOrAnonymousObjectSymbol = containingDeclarationSymbol,
                                 context,
                             )
                             copiedDelegatedProperties[firProperty.symbol] = firPropertyCopy
