@@ -51,6 +51,7 @@ import org.jetbrains.kotlin.test.services.configuration.klibEnvironmentConfigura
 
 class NativeDeserializerFacade(
     testServices: TestServices,
+    private val partialLinkageLogLevel: PartialLinkageLogLevel = PartialLinkageLogLevel.ERROR, // Use the ERROR log level by default to fail any tests where PL detected any incompatibilities.
 ) : DeserializerFacade<BinaryArtifacts.KLib, IrBackendInput>(testServices, ArtifactKinds.KLib, BackendKinds.IrBackend) {
 
     override val additionalServices: List<ServiceRegistrationData>
@@ -125,7 +126,7 @@ class NativeDeserializerFacade(
             cInteropModuleDeserializerFactory = CInteropModuleDeserializerFactoryMock,
             exportedDependencies = emptyList(),
             partialLinkageSupport = createPartialLinkageSupportForLinker(
-                partialLinkageConfig = PartialLinkageConfig(PartialLinkageLogLevel.ERROR),
+                partialLinkageConfig = PartialLinkageConfig(partialLinkageLogLevel),
                 builtIns = irBuiltIns,
                 diagnosticReporter = irDiagnosticReporter,
             ),
