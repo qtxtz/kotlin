@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 open class AnalysisApiFirSourceTestConfigurator(
     analyseInDependentSession: Boolean,
     override val defaultTargetPlatform: TargetPlatform = defaultTargetPlatformValue
-) : AnalysisApiFirSourceLikeTestConfigurator(analyseInDependentSession) {
+) : LLSourceLikeBaseTestConfigurator(analyseInDependentSession) {
     override fun configureTest(builder: TestConfigurationBuilder, disposable: Disposable) {
         super.configureTest(builder, disposable)
 
