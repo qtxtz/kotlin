@@ -182,3 +182,61 @@ fun Verifier.assertFilesExist(vararg paths: String) {
         assertTrue(file.exists()) { "$file does not exist" }
     }
 }
+
+/**
+ * Asserts that a goal matching [executedFirst] appears before a goal matching [executedSecond]
+ * in the Maven build plan logged with `-X` (debug mode).
+ *
+ * Debug mode logs `[DEBUG] Goal:` lines in execution order, e.g.:
+ * ```
+ * [DEBUG] Goal:          org.jetbrains.kotlin:kotlin-maven-plugin:VERSION:compile (default-compile)
+ * [DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:VERSION:compile (default-compile)
+ * ```
+ *
+ * Use [goalFirst] and [goalSecond] to additionally filter each goal by its name,
+ * e.g. `":compile"` or `":test-compile"`. This is useful when different plugins
+ * use different goal names for the same phase (e.g. `:test-compile` vs `:testCompile`).
+ *
+ */
+fun Verifier.assertGoalOrderInBuildPlan(
+    executedFirst: String,
+    executedSecond: String,
+    goalFirst: String? = null,
+    goalSecond: String? = null,
+) {
+    val allGoalLines = mutableListOf<String>()
+    forEachBuildLogLine { line ->
+        if ("[DEBUG] Goal:" in line) {
+            allGoalLines.add(line.substringAfter("[DEBUG] Goal:").trim())
+        }
+    }
+
+    assertTrue(allGoalLines.isNotEmpty()) {
+        "No '[DEBUG] Goal:' lines found in build log. Was the build run with -X?"
+    }
+
+    val firstIndex = allGoalLines.indexOfFirst { executedFirst in it && (goalFirst == null || goalFirst in it) }
+    val secondIndex = allGoalLines.indexOfFirst { executedSecond in it && (goalSecond == null || goalSecond in it) }
+
+    assertTrue(firstIndex >= 0) {
+        goalNotFoundMessage(executedFirst, goalFirst, allGoalLines)
+    }
+    assertTrue(secondIndex >= 0) {
+        goalNotFoundMessage(executedSecond, goalSecond, allGoalLines)
+    }
+    assertTrue(firstIndex < secondIndex) {
+        "'$executedFirst' (position $firstIndex) was expected before '$executedSecond' (position $secondIndex) in build plan.\n" +
+                "Actual order:\n${allGoalLines.joinToString("\n")}"
+    }
+}
+
+private fun goalNotFoundMessage(plugin: String, goalFilter: String?, allGoalLines: List<String>): String {
+    val pluginLines = allGoalLines.filter { plugin in it }
+    return if (pluginLines.isNotEmpty() && goalFilter != null) {
+        "Plugin '$plugin' found in build plan but no entry matches goal filter '$goalFilter'.\n" +
+                "Goals for '$plugin':\n${pluginLines.joinToString("\n")}"
+    } else {
+        "No build plan entry matching plugin '$plugin'${goalFilter?.let { " and goal filter '$it'" } ?: ""} found.\n" +
+                "All entries in build plan:\n${allGoalLines.joinToString("\n")}"
+    }
+}

@@ -152,4 +152,26 @@ class SmartDefaultsIT : KotlinMavenTestBase() {
             }
         }
     }
+
+    @MavenTest
+    @DisplayName("Check order of auto-bound goals in Kotlin+Java project")
+    fun testSmartDefaultsAutoBindOrder(mavenVersion: TestVersions.Maven) {
+        testProject("test-smart-defaults-auto-bind-order", mavenVersion) {
+            build(
+                "package", "-X",
+                expectedToFail = false
+            ) {
+                assertSmartDefaultsEnabled()
+                assertGoalOrderInBuildPlan(
+                    executedFirst = "org.jetbrains.kotlin:kotlin-maven-plugin", goalFirst = ":compile",
+                    executedSecond = "org.apache.maven.plugins:maven-compiler-plugin", goalSecond = ":compile",
+                )
+                assertGoalOrderInBuildPlan(
+                    executedFirst = "org.jetbrains.kotlin:kotlin-maven-plugin", goalFirst = ":test-compile",
+                    executedSecond = "org.apache.maven.plugins:maven-compiler-plugin", goalSecond = ":testCompile",
+                )
+                assertTestsPassed(2)
+            }
+        }
+    }
 }
