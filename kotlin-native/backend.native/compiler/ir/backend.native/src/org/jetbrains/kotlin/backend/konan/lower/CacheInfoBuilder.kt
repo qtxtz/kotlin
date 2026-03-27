@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.backend.konan.lower
 
 import org.jetbrains.kotlin.backend.common.serialization.SerializedIrFileFingerprint
 import org.jetbrains.kotlin.backend.common.serialization.SerializedKlibFingerprint
-import org.jetbrains.kotlin.backend.konan.DECLARATION_ORIGIN_FUNCTION_CLASS
 import org.jetbrains.kotlin.backend.konan.KonanFqNames
 import org.jetbrains.kotlin.backend.konan.NativeGenerationState
 import org.jetbrains.kotlin.backend.konan.serialization.InlineFunctionSerializer
@@ -18,6 +17,7 @@ import org.jetbrains.kotlin.backend.konan.serialization.KonanPartialModuleDeseri
 import org.jetbrains.kotlin.backend.konan.serialization.SerializedEagerInitializedFile
 import org.jetbrains.kotlin.backend.konan.serialization.SerializedFileReference
 import org.jetbrains.kotlin.backend.konan.serialization.buildSerializedClassFields
+import org.jetbrains.kotlin.ir.IrAbstractFunctionFactory
 import org.jetbrains.kotlin.ir.IrBasedFunctionFactory.Companion.isFunctionInterfaceFile
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.*
@@ -48,7 +48,7 @@ internal class CacheInfoBuilder(
                     declaration.acceptChildrenVoid(this)
 
                     if (!declaration.isInterface && !declaration.isOriginallyLocal
-                            && declaration.isExported && declaration.origin != DECLARATION_ORIGIN_FUNCTION_CLASS
+                            && declaration.isExported && declaration.origin != IrAbstractFunctionFactory.classOrigin
                     ) {
                         val declaredFields = generationState.context.getLayoutBuilder(declaration).getDeclaredFields(generationState.llvm)
                         generationState.classFields.add(buildSerializedClassFields(declaration, declaredFields, moduleDeserializer))
