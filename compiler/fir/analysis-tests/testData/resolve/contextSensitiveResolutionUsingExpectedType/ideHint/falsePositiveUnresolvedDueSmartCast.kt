@@ -1,4 +1,4 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // FULL_JDK
 // IDE_MODE
@@ -18,9 +18,9 @@ fun test() {
 
         val x: String? = Properties.property
 
-        id(Properties.<!UNRESOLVED_REFERENCE!>property<!>)
+        id(Properties.property)
         Properties.property.myProp
-        Properties.<!UNRESOLVED_REFERENCE!>property<!>!!
+        Properties.property!!
     }
 }
 
