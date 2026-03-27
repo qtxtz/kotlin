@@ -12,13 +12,11 @@ import org.jetbrains.kotlin.konan.test.NativePreSerializationLoweringCliFacade
 import org.jetbrains.kotlin.konan.test.converters.NativeDeserializerFacade
 import org.jetbrains.kotlin.platform.konan.NativePlatforms
 import org.jetbrains.kotlin.test.Constructor
-import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
-import org.jetbrains.kotlin.test.directives.configureFirParser
 import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
 import org.jetbrains.kotlin.test.model.*
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
@@ -27,8 +25,6 @@ import org.jetbrains.kotlin.test.services.configuration.NativeFirstStageEnvironm
 
 // Base class for IR dump synthetic accessors test, configured with FIR frontend, in Native-specific way.
 open class AbstractNativeKlibSyntheticAccessorTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.NATIVE) {
-    val targetFrontend = FrontendKinds.FIR
-    val parser = FirParser.LightTree
     val frontendFacade: Constructor<FrontendFacade<FirOutputArtifact>>
         get() = ::FirCliNativeFacade
     val frontendToIrConverter: Constructor<Frontend2BackendConverter<FirOutputArtifact, IrBackendInput>>
@@ -42,7 +38,6 @@ open class AbstractNativeKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
 
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         commonConfigurationForDumpSyntheticAccessorsTest(
-            targetFrontend,
             frontendFacade,
             frontendToIrConverter,
             irInliningFacade,
@@ -57,6 +52,5 @@ open class AbstractNativeKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
             ::CommonEnvironmentConfigurator,
             ::NativeFirstStageEnvironmentConfigurator,
         )
-        configureFirParser(parser)
     }
 }

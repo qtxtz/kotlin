@@ -8,13 +8,11 @@ package org.jetbrains.kotlin.wasm.test
 import org.jetbrains.kotlin.platform.wasm.WasmPlatforms
 import org.jetbrains.kotlin.platform.wasm.WasmTarget
 import org.jetbrains.kotlin.test.Constructor
-import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
-import org.jetbrains.kotlin.test.directives.configureFirParser
 import org.jetbrains.kotlin.test.frontend.fir.Fir2IrResultsConverter
 import org.jetbrains.kotlin.test.frontend.fir.FirFrontendFacade
 import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
@@ -28,8 +26,6 @@ import org.jetbrains.kotlin.wasm.test.converters.WasmDeserializerFacade
 import org.jetbrains.kotlin.wasm.test.converters.WasmPreSerializationLoweringFacade
 
 open class AbstractWasmJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.WASM) {
-    val targetFrontend = FrontendKinds.FIR
-    val parser = FirParser.LightTree
     val frontendFacade: Constructor<FrontendFacade<FirOutputArtifact>>
         get() = ::FirFrontendFacade // TODO Change for ::FirCliWebFacade in scope of KT-74671
     val frontendToIrConverter: Constructor<Frontend2BackendConverter<FirOutputArtifact, IrBackendInput>>
@@ -43,7 +39,6 @@ open class AbstractWasmJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
 
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         commonConfigurationForDumpSyntheticAccessorsTest(
-            targetFrontend,
             frontendFacade,
             frontendToIrConverter,
             irInliningFacade,
@@ -58,7 +53,6 @@ open class AbstractWasmJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
             ::WasmFirstStageEnvironmentConfigurator.bind(WasmTarget.JS),
             ::WasmSecondStageEnvironmentConfigurator.bind(WasmTarget.JS),
         )
-        configureFirParser(parser)
     }
 }
 

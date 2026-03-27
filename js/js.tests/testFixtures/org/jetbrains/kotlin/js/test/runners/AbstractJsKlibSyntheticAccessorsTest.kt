@@ -8,13 +8,11 @@ package org.jetbrains.kotlin.js.test.runners
 import org.jetbrains.kotlin.js.test.converters.*
 import org.jetbrains.kotlin.platform.js.JsPlatforms
 import org.jetbrains.kotlin.test.Constructor
-import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
-import org.jetbrains.kotlin.test.directives.configureFirParser
 import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
 import org.jetbrains.kotlin.test.model.*
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
@@ -22,8 +20,6 @@ import org.jetbrains.kotlin.test.services.configuration.JsFirstStageEnvironmentC
 import org.jetbrains.kotlin.test.services.configuration.JsSecondStageEnvironmentConfigurator
 
 abstract class AbstractJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.JS_IR) {
-    val targetFrontend = FrontendKinds.FIR
-    val parser = FirParser.LightTree
     val frontendFacade: Constructor<FrontendFacade<FirOutputArtifact>>
         get() = ::FirCliWebFacade
     val frontendToIrConverter: Constructor<Frontend2BackendConverter<FirOutputArtifact, IrBackendInput>>
@@ -37,7 +33,6 @@ abstract class AbstractJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
 
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         commonConfigurationForDumpSyntheticAccessorsTest(
-            targetFrontend,
             frontendFacade,
             frontendToIrConverter,
             irInliningFacade,
@@ -52,6 +47,5 @@ abstract class AbstractJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
             ::JsFirstStageEnvironmentConfigurator,
             ::JsSecondStageEnvironmentConfigurator,
         )
-        configureFirParser(parser)
     }
 }
