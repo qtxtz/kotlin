@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.generators.tests
 
 import org.jetbrains.kotlin.asJava.AbstractCompilerLightClassTest
 import org.jetbrains.kotlin.codegen.fir.*
-import org.jetbrains.kotlin.codegen.ir.AbstractIrScriptCodegenTest
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil.KT_OR_KTS_WITHOUT_DOTS_IN_NAME
@@ -20,7 +19,6 @@ import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
 import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
 import org.jetbrains.kotlin.modules.xml.AbstractModuleXmlParserTest
 import org.jetbrains.kotlin.test.TargetBackend
-import org.jetbrains.kotlin.test.utils.CUSTOM_TEST_DATA_EXTENSION_PATTERN
 
 fun main(args: Array<String>) {
     val mainClassName = TestGeneratorUtil.getMainClassName()
@@ -143,10 +141,6 @@ fun main(args: Array<String>) {
 
             testClass<AbstractFirLightTreeWriteSignatureTest> {
                 model("writeSignature", targetBackend = TargetBackend.JVM_IR)
-            }
-
-            testClass<AbstractIrScriptCodegenTest> {
-                model("codegen/script", extension = "kts", targetBackend = TargetBackend.JVM_IR, excludedPattern = CUSTOM_TEST_DATA_EXTENSION_PATTERN)
             }
         }
     }
