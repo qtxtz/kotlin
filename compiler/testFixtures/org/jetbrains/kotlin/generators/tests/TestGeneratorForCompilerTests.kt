@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.generators.tests
 
 import org.jetbrains.kotlin.asJava.AbstractCompilerLightClassTest
 import org.jetbrains.kotlin.codegen.fir.*
-import org.jetbrains.kotlin.codegen.ir.AbstractIrCheckLocalVariablesTableTest
 import org.jetbrains.kotlin.codegen.ir.AbstractIrScriptCodegenTest
 import org.jetbrains.kotlin.codegen.ir.AbstractIrWriteFlagsTest
 import org.jetbrains.kotlin.codegen.ir.AbstractIrWriteSignatureTest
@@ -122,10 +121,6 @@ fun main(args: Array<String>) {
                     testMethod = "doTestWithJavac",
                     targetBackend = TargetBackend.JVM_IR
                 )
-            }
-
-            testClass<AbstractIrCheckLocalVariablesTableTest> {
-                model("checkLocalVariablesTable", targetBackend = TargetBackend.JVM_IR)
             }
 
             testClass<AbstractIrWriteFlagsTest> {
