@@ -7,16 +7,12 @@ package org.jetbrains.kotlin.wasm.test
 
 import org.jetbrains.kotlin.platform.wasm.WasmPlatforms
 import org.jetbrains.kotlin.platform.wasm.WasmTarget
-import org.jetbrains.kotlin.test.Constructor
 import org.jetbrains.kotlin.test.TargetBackend
-import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
 import org.jetbrains.kotlin.test.frontend.fir.Fir2IrResultsConverter
 import org.jetbrains.kotlin.test.frontend.fir.FirFrontendFacade
-import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
-import org.jetbrains.kotlin.test.model.*
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
 import org.jetbrains.kotlin.test.services.configuration.WasmFirstStageEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.WasmSecondStageEnvironmentConfigurator
@@ -26,25 +22,14 @@ import org.jetbrains.kotlin.wasm.test.converters.WasmDeserializerFacade
 import org.jetbrains.kotlin.wasm.test.converters.WasmPreSerializationLoweringFacade
 
 open class AbstractWasmJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.WASM) {
-    val frontendFacade: Constructor<FrontendFacade<FirOutputArtifact>>
-        get() = ::FirFrontendFacade // TODO Change for ::FirCliWebFacade in scope of KT-74671
-    val frontendToIrConverter: Constructor<Frontend2BackendConverter<FirOutputArtifact, IrBackendInput>>
-        get() = ::Fir2IrResultsConverter // TODO Change for ::Fir2IrCliWebFacade in scope of KT-74671
-    val irInliningFacade: Constructor<IrPreSerializationLoweringFacade<IrBackendInput>>
-        get() = ::WasmPreSerializationLoweringFacade
-    val serializerFacade: Constructor<BackendFacade<IrBackendInput, BinaryArtifacts.KLib>>
-        get() = ::FirWasmKlibSerializerFacade // TODO Change for ::FirKlibSerializerCliWebFacade in scope of KT-74671
-    val deserializerFacade: Constructor<org.jetbrains.kotlin.test.model.DeserializerFacade<BinaryArtifacts.KLib, IrBackendInput>>
-        get() = ::WasmDeserializerFacade
-
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         commonConfigurationForDumpSyntheticAccessorsTest(
-            frontendFacade,
-            frontendToIrConverter,
-            irInliningFacade,
-            serializerFacade,
-            deserializerFacade,
-            KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
+            frontendFacade = ::FirFrontendFacade, // TODO Change for ::FirCliWebFacade in scope of KT-74671
+            frontendToIrConverter = ::Fir2IrResultsConverter, // TODO Change for ::Fir2IrCliWebFacade in scope of KT-74671
+            irInliningFacade = ::WasmPreSerializationLoweringFacade,
+            serializerFacade = ::FirWasmKlibSerializerFacade, // TODO Change for ::FirKlibSerializerCliWebFacade in scope of KT-74671
+            deserializerFacade = ::WasmDeserializerFacade,
+            customIgnoreDirective = KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
         )
         globalDefaults {
             targetPlatform = WasmPlatforms.wasmJs

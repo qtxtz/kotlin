@@ -11,39 +11,24 @@ import org.jetbrains.kotlin.konan.test.KlibSerializerNativeCliFacade
 import org.jetbrains.kotlin.konan.test.NativePreSerializationLoweringCliFacade
 import org.jetbrains.kotlin.konan.test.converters.NativeDeserializerFacade
 import org.jetbrains.kotlin.platform.konan.NativePlatforms
-import org.jetbrains.kotlin.test.Constructor
 import org.jetbrains.kotlin.test.TargetBackend
-import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
-import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
-import org.jetbrains.kotlin.test.model.*
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.NativeFirstStageEnvironmentConfigurator
 
 // Base class for IR dump synthetic accessors test, configured with FIR frontend, in Native-specific way.
 open class AbstractNativeKlibSyntheticAccessorTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.NATIVE) {
-    val frontendFacade: Constructor<FrontendFacade<FirOutputArtifact>>
-        get() = ::FirCliNativeFacade
-    val frontendToIrConverter: Constructor<Frontend2BackendConverter<FirOutputArtifact, IrBackendInput>>
-        get() = ::Fir2IrCliNativeFacade
-    val irInliningFacade: Constructor<IrPreSerializationLoweringFacade<IrBackendInput>>
-        get() = ::NativePreSerializationLoweringCliFacade
-    val serializerFacade: Constructor<BackendFacade<IrBackendInput, BinaryArtifacts.KLib>>
-        get() = ::KlibSerializerNativeCliFacade
-    val deserializerFacade: Constructor<DeserializerFacade<BinaryArtifacts.KLib, IrBackendInput>>
-        get() = ::NativeDeserializerFacade
-
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         commonConfigurationForDumpSyntheticAccessorsTest(
-            frontendFacade,
-            frontendToIrConverter,
-            irInliningFacade,
-            serializerFacade,
-            deserializerFacade,
-            KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
+            frontendFacade = ::FirCliNativeFacade,
+            frontendToIrConverter = ::Fir2IrCliNativeFacade,
+            irInliningFacade = ::NativePreSerializationLoweringCliFacade,
+            serializerFacade = ::KlibSerializerNativeCliFacade,
+            deserializerFacade = ::NativeDeserializerFacade,
+            customIgnoreDirective = KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
         )
         globalDefaults {
             targetPlatform = NativePlatforms.unspecifiedNativePlatform

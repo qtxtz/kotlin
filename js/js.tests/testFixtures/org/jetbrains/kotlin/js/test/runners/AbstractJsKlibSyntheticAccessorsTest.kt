@@ -7,38 +7,23 @@ package org.jetbrains.kotlin.js.test.runners
 
 import org.jetbrains.kotlin.js.test.converters.*
 import org.jetbrains.kotlin.platform.js.JsPlatforms
-import org.jetbrains.kotlin.test.Constructor
 import org.jetbrains.kotlin.test.TargetBackend
-import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
-import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
-import org.jetbrains.kotlin.test.model.*
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
 import org.jetbrains.kotlin.test.services.configuration.JsFirstStageEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.JsSecondStageEnvironmentConfigurator
 
 abstract class AbstractJsKlibSyntheticAccessorTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.JS_IR) {
-    val frontendFacade: Constructor<FrontendFacade<FirOutputArtifact>>
-        get() = ::FirCliWebFacade
-    val frontendToIrConverter: Constructor<Frontend2BackendConverter<FirOutputArtifact, IrBackendInput>>
-        get() = ::Fir2IrCliWebFacade
-    val irInliningFacade: Constructor<IrPreSerializationLoweringFacade<IrBackendInput>>
-        get() = ::JsIrPreSerializationLoweringFacade
-    val serializerFacade: Constructor<BackendFacade<IrBackendInput, BinaryArtifacts.KLib>>
-        get() = ::FirKlibSerializerCliWebFacade
-    val deserializerFacade: Constructor<org.jetbrains.kotlin.test.model.DeserializerFacade<BinaryArtifacts.KLib, IrBackendInput>>
-        get() = ::JsIrDeserializerFacade
-
     override fun configure(builder: TestConfigurationBuilder) = with(builder) {
         commonConfigurationForDumpSyntheticAccessorsTest(
-            frontendFacade,
-            frontendToIrConverter,
-            irInliningFacade,
-            serializerFacade,
-            deserializerFacade,
-            KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
+            frontendFacade = ::FirCliWebFacade,
+            frontendToIrConverter = ::Fir2IrCliWebFacade,
+            irInliningFacade = ::JsIrPreSerializationLoweringFacade,
+            serializerFacade = ::FirKlibSerializerCliWebFacade,
+            deserializerFacade = ::JsIrDeserializerFacade,
+            customIgnoreDirective = KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
         )
         globalDefaults {
             targetPlatform = JsPlatforms.defaultJsPlatform
