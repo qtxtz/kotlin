@@ -30,10 +30,6 @@ fun main(args: Array<String>) {
             "plugins/kotlinx-serialization/testData"
         ) {
             // ------------------------------- diagnostics -------------------------------
-            testClass<AbstractSerializationPluginDiagnosticTest>() {
-                model("diagnostics", excludedPattern = excludedFirTestdataPattern)
-            }
-
             testClass<AbstractSerializationFirPsiDiagnosticTest> {
                 model("diagnostics", excludedPattern = excludedFirTestdataPattern)
                 model("firMembers")
@@ -41,35 +37,19 @@ fun main(args: Array<String>) {
 
             // ------------------------------- asm instructions -------------------------------
 
-            testClass<AbstractSerializationIrAsmLikeInstructionsListingTest> {
-                model("codegen")
-            }
-
             testClass<AbstractSerializationFirLightTreeAsmLikeInstructionsListingTest> {
                 model("codegen")
             }
 
             // ------------------------------- box -------------------------------
 
-            testClass<AbstractSerializationIrBoxTest> {
-                model("boxIr")
-            }
-
             testClass<AbstractSerializationFirLightTreeBlackBoxTest> {
                 model("boxIr")
                 model("firMembers")
             }
 
-            testClass<AbstractSerializationJdk11IrBoxTest> {
-                model("jdk11BoxIr")
-            }
-
             testClass<AbstractSerializationJdk11FirLightTreeBoxTest> {
                 model("jdk11BoxIr")
-            }
-
-            testClass<AbstractSerializationWithoutRuntimeIrBoxTest> {
-                model("boxWithoutRuntime")
             }
 
             testClass<AbstractSerializationWithoutRuntimeFirLightTreeBoxTest> {
