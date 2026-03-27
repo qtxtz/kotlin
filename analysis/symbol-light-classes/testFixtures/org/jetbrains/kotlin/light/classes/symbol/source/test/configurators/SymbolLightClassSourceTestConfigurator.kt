@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 abstract class SymbolLightClassSourceTestConfigurator(
     override val defaultTargetPlatform: TargetPlatform,
     override val testPrefixes: List<String>,
-) : AnalysisApiFirSourceTestConfigurator(analyseInDependentSession = false)
+) : AnalysisApiFirSourceTestConfigurator()
 
 object SymbolLightClassSourceJvmTestConfigurator : SymbolLightClassSourceTestConfigurator(
     JvmPlatforms.defaultJvmPlatform,
