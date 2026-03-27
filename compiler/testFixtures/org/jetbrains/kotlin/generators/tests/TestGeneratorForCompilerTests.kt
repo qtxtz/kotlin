@@ -5,11 +5,9 @@
 
 package org.jetbrains.kotlin.generators.tests
 
-import org.jetbrains.kotlin.asJava.AbstractCompilerLightClassTest
 import org.jetbrains.kotlin.codegen.fir.*
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
-import org.jetbrains.kotlin.generators.util.TestGeneratorUtil.KT_OR_KTS_WITHOUT_DOTS_IN_NAME
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava17Test
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJavaTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
@@ -71,14 +69,6 @@ fun main(args: Array<String>) {
 
             testClass<AbstractModuleXmlParserTest> {
                 model("modules.xml", extension = "xml")
-            }
-
-            testClass<AbstractCompilerLightClassTest> {
-                model(
-                    "asJava/lightClasses/lightClassByFqName",
-                    excludeDirs = listOf("local", "ideRegression"),
-                    pattern = KT_OR_KTS_WITHOUT_DOTS_IN_NAME,
-                )
             }
 
             testClass<AbstractKDocLexerTest> {
