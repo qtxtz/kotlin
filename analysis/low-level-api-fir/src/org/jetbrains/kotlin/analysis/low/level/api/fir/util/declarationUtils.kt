@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -241,6 +241,10 @@ internal inline fun FirFile.forEachDeclaration(action: (FirDeclaration) -> Unit)
     declarations.forEach(action)
 }
 
+internal inline fun FirReplSnippet.forEachDeclaration(action: (FirDeclaration) -> Unit) {
+    action(snippetClass)
+}
+
 internal val FirDeclaration.isDeclarationContainer: Boolean get() = this is FirRegularClass || this is FirScript || this is FirFile
 
 internal inline fun FirDeclaration.forEachDeclaration(action: (FirDeclaration) -> Unit) {
@@ -248,6 +252,7 @@ internal inline fun FirDeclaration.forEachDeclaration(action: (FirDeclaration) -
         is FirRegularClass -> forEachDeclaration(action)
         is FirScript -> forEachDeclaration(action)
         is FirFile -> forEachDeclaration(action)
+        is FirReplSnippet -> forEachDeclaration(action)
         else -> errorWithFirSpecificEntries("Unsupported declarations container", fir = this)
     }
 }
