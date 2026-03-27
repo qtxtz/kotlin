@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUni
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava8Test
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava8WithPsiClassReadingTest
 import org.jetbrains.kotlin.jvm.compiler.javac.AbstractLoadJava8UsingJavacTest
-import org.jetbrains.kotlin.resolve.calls.AbstractEnhancedSignaturesResolvedCallsTest
 
 fun main(args: Array<String>) {
     val testsRoot = args[0]
@@ -55,10 +54,6 @@ fun main(args: Array<String>) {
                     testMethod = "doTestCompiledJava",
                     excludeDirs = listOf("typeUseAnnotations", "typeParameterAnnotations")
                 )
-            }
-
-            testClass<AbstractEnhancedSignaturesResolvedCallsTest> {
-                model("resolvedCalls/enhancedSignatures")
             }
         }
     }

@@ -26,8 +26,6 @@ import org.jetbrains.kotlin.jvm.compiler.javac.AbstractLoadJavaUsingJavacTest
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
 import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
 import org.jetbrains.kotlin.modules.xml.AbstractModuleXmlParserTest
-import org.jetbrains.kotlin.resolve.calls.AbstractResolvedCallsTest
-import org.jetbrains.kotlin.resolve.calls.AbstractResolvedConstructorDelegationCallsTests
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.utils.CUSTOM_TEST_DATA_EXTENSION_PATTERN
 import org.jetbrains.kotlin.types.AbstractTypeBindingTest
@@ -36,14 +34,6 @@ fun main(args: Array<String>) {
     val mainClassName = TestGeneratorUtil.getMainClassName()
     generateTestGroupSuiteWithJUnit4(args, mainClassName) {
         testGroup("compiler/tests-gen", "compiler/testData") {
-            testClass<AbstractResolvedCallsTest> {
-                model("resolvedCalls", excludeDirs = listOf("enhancedSignatures"))
-            }
-
-            testClass<AbstractResolvedConstructorDelegationCallsTests> {
-                model("resolveConstructorDelegationCalls")
-            }
-
             testClass<AbstractLoadJavaTest> {
                 model("loadJava/compiledJava", extension = "java", testMethod = "doTestCompiledJava")
                 model("loadJava/compiledJavaAndKotlin", extension = "txt", testMethod = "doTestCompiledJavaAndKotlin")
