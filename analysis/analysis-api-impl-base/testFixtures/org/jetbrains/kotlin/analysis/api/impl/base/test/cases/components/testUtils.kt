@@ -334,6 +334,10 @@ internal fun assertStableResult(
         )
     }
 
+    if (firstAttempt is KaMultiSymbolResolutionAttempt) {
+        assertMultiSymbolConsistency(testServices, firstAttempt)
+    }
+
     val firstSymbols = sortedSymbols(firstAttempt.symbols)
     val secondSymbols = sortedSymbols(secondAttempt.symbols)
     assertions.assertEquals(firstSymbols.size, secondSymbols.size)
@@ -480,6 +484,29 @@ private fun assertMultiCallConsistency(testServices: TestServices, attempt: KaMu
         assertions.assertTrue(attempt.attempts.any { it is KaCallResolutionError }) {
             "Multi-call has null call, but no error attempts found"
         }
+    }
+}
+
+/**
+ * The function forces [KaMultiSymbolResolutionAttempt] guarantees.
+ */
+context(_: KaSession)
+private fun assertMultiSymbolConsistency(testServices: TestServices, attempt: KaMultiSymbolResolutionAttempt) {
+    val assertions = testServices.assertions
+    val attempts = attempt.attempts
+    // At least one attempt must be an error
+    assertions.assertTrue(attempts.any { it is KaSymbolResolutionError }) {
+        "Multi-call has no error attempts found"
+    }
+
+    // At most one attempt must be successful
+    assertions.assertTrue(attempts.count { it is KaSymbolResolutionSuccess } <= 1) {
+        "Multi-call has more than one successful attempts found"
+    }
+
+    // At least two elements must be present
+    assertions.assertTrue(attempts.size >= 2) {
+        "Multi-call has less than two attempts found"
     }
 }
 
