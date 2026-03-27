@@ -12,14 +12,8 @@ fun main(args: Array<String>) {
     val testsRoot = args[0]
     generateTestGroupSuiteWithJUnit5(args) {
         testGroup(testsRoot, "plugins/allopen/testData") {
-            testClass<AbstractIrBytecodeListingTestForAllOpen> {
-                model("bytecodeListing", excludedPattern = TestGeneratorUtil.KT_OR_KTS_WITH_FIR_PREFIX)
-            }
             testClass<AbstractFirPsiBytecodeListingTestForAllOpen> {
                 model("bytecodeListing", excludedPattern = TestGeneratorUtil.KT_OR_KTS_WITH_FIR_PREFIX)
-            }
-            testClass<AbstractDiagnosticTestForAllOpenBase> {
-                model("diagnostics", excludedPattern = TestGeneratorUtil.KT_OR_KTS_WITH_FIR_PREFIX)
             }
             testClass<AbstractFirLightTreeDiagnosticTestForAllOpen> {
                 model("diagnostics", excludedPattern = TestGeneratorUtil.KT_OR_KTS_WITH_FIR_PREFIX)
