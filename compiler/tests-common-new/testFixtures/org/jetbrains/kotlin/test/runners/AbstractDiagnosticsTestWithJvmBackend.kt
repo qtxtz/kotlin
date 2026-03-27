@@ -20,9 +20,6 @@ import org.jetbrains.kotlin.test.configuration.configurationForClassicAndFirTest
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.directives.configureFirParser
-import org.jetbrains.kotlin.test.frontend.classic.ClassicFrontend2IrConverter
-import org.jetbrains.kotlin.test.frontend.classic.ClassicFrontendFacade
-import org.jetbrains.kotlin.test.frontend.classic.ClassicFrontendOutputArtifact
 import org.jetbrains.kotlin.test.frontend.classic.handlers.ClassicDiagnosticsHandler
 import org.jetbrains.kotlin.test.frontend.classic.handlers.FirTestDataConsistencyHandler
 import org.jetbrains.kotlin.test.frontend.classic.handlers.OldNewInferenceMetaInfoProcessor
@@ -111,17 +108,6 @@ abstract class AbstractDiagnosticsTestWithConverter<R : ResultingArtifact.Fronte
     }
 }
 
-abstract class AbstractClassicDiagnosticsTestWithConverter : AbstractDiagnosticsTestWithConverter<ClassicFrontendOutputArtifact>() {
-    override val targetFrontend: FrontendKind<ClassicFrontendOutputArtifact>
-        get() = FrontendKinds.ClassicFrontend
-
-    override val frontend: Constructor<FrontendFacade<ClassicFrontendOutputArtifact>>
-        get() = ::ClassicFrontendFacade
-
-    override val converter: Constructor<Frontend2BackendConverter<ClassicFrontendOutputArtifact, IrBackendInput>>
-        get() = ::ClassicFrontend2IrConverter
-}
-
 // TODO: Unify this runner with phased ones (KT-73848)
 abstract class AbstractFirDiagnosticsTestWithConverterBase(
     val parser: FirParser
@@ -159,17 +145,6 @@ abstract class AbstractDiagnosticsTestWithJvmBackend<R : ResultingArtifact.Front
             }
         }
     }
-}
-
-abstract class AbstractDiagnosticsTestWithJvmIrBackend : AbstractDiagnosticsTestWithJvmBackend<ClassicFrontendOutputArtifact>() {
-    override val targetFrontend: FrontendKind<ClassicFrontendOutputArtifact>
-        get() = FrontendKinds.ClassicFrontend
-
-    override val frontend: Constructor<FrontendFacade<ClassicFrontendOutputArtifact>>
-        get() = ::ClassicFrontendFacade
-
-    override val converter: Constructor<Frontend2BackendConverter<ClassicFrontendOutputArtifact, IrBackendInput>>
-        get() = ::ClassicFrontend2IrConverter
 }
 
 abstract class AbstractFirDiagnosticsTestWithJvmIrBackendBase(
