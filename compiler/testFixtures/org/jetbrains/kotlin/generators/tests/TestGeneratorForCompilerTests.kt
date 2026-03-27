@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava17Test
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJavaTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirPsiCompileJavaAgainstKotlinTest
-import org.jetbrains.kotlin.jvm.compiler.javac.AbstractLoadJavaUsingJavacTest
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
 import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
 import org.jetbrains.kotlin.modules.xml.AbstractModuleXmlParserTest
@@ -23,26 +22,6 @@ fun main(args: Array<String>) {
     generateTestGroupSuiteWithJUnit4(args, mainClassName) {
         testGroup("compiler/tests-gen", "compiler/testData") {
             testClass<AbstractLoadJavaTest> {
-                model("loadJava/compiledJava", extension = "java", testMethod = "doTestCompiledJava")
-                model("loadJava/compiledJavaAndKotlin", extension = "txt", testMethod = "doTestCompiledJavaAndKotlin")
-                model(
-                    "loadJava/compiledJavaIncludeObjectMethods",
-                    extension = "java",
-                    testMethod = "doTestCompiledJavaIncludeObjectMethods"
-                )
-                model("loadJava/compiledKotlin", testMethod = "doTestCompiledKotlin")
-                model("loadJava/compiledKotlinWithStdlib", testMethod = "doTestCompiledKotlinWithStdlib")
-                model("loadJava/javaAgainstKotlin", extension = "txt", testMethod = "doTestJavaAgainstKotlin")
-                model(
-                    "loadJava/kotlinAgainstCompiledJavaWithKotlin",
-                    extension = "kt",
-                    testMethod = "doTestKotlinAgainstCompiledJavaWithKotlin",
-                    recursive = false
-                )
-                model("loadJava/sourceJava", extension = "java", testMethod = "doTestSourceJava")
-            }
-
-            testClass<AbstractLoadJavaUsingJavacTest> {
                 model("loadJava/compiledJava", extension = "java", testMethod = "doTestCompiledJava")
                 model("loadJava/compiledJavaAndKotlin", extension = "txt", testMethod = "doTestCompiledJavaAndKotlin")
                 model(

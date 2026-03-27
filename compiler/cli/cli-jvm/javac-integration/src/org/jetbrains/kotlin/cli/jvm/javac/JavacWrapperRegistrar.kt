@@ -81,6 +81,7 @@ private val VirtualFile.javaFiles: List<VirtualFile>
         }
     }
 
+@JvmOverloads
 fun KotlinCoreEnvironment.registerJavac(
     javaFiles: List<File> = allJavaFiles,
     kotlinFiles: List<KtFile> = getSourceFiles(),
