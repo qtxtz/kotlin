@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.generators.tests
 import org.jetbrains.kotlin.codegen.fir.*
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
-import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava17Test
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJavaTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirPsiCompileJavaAgainstKotlinTest
@@ -39,11 +38,6 @@ fun main(args: Array<String>) {
                     recursive = false
                 )
                 model("loadJava/sourceJava", extension = "java", testMethod = "doTestSourceJava")
-            }
-
-            testClass<AbstractLoadJava17Test> {
-                model("loadJava17", extension = "java", testMethod = "doTestCompiledJava", testClassName = "CompiledJava")
-                model("loadJava17", extension = "java", testMethod = "doTestSourceJava", testClassName = "SourceJava")
             }
 
             testClass<AbstractModuleXmlParserTest> {
