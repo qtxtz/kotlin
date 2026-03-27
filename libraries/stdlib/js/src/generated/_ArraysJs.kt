@@ -833,7 +833,6 @@ public actual inline fun CharArray.copyInto(destination: CharArray, destinationO
  * 
  * @sample samples.collections.Arrays.CopyOfOperations.copyOf
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <T> Array<out T>.copyOf(): Array<T> {
     return this.asDynamic().slice()
@@ -844,9 +843,10 @@ public inline fun <T> Array<out T>.copyOf(): Array<T> {
  * 
  * @sample samples.collections.Arrays.CopyOfOperations.copyOf
  */
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
 @kotlin.internal.InlineOnly
 public actual inline fun <T> Array<T>.copyOf(): Array<T> {
-    return this.asDynamic().slice()
+    return this.copyOf()
 }
 
 /**
@@ -934,7 +934,6 @@ public actual fun CharArray.copyOf(): CharArray {
  * - If [newSize] is less than the size of the original array, the copy array is truncated to the [newSize].
  * - If [newSize] is greater than the size of the original array, the extra elements in the copy array are filled with `null` values.
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 public fun <T> Array<out T>.copyOf(newSize: Int): Array<T?> {
     require(newSize >= 0) { "Invalid new array size: $newSize." }
     return arrayCopyResize(this, newSize, null)
@@ -1113,9 +1112,10 @@ public actual fun CharArray.copyOf(newSize: Int): CharArray {
  * 
  * @sample samples.collections.Arrays.CopyOfOperations.resizingCopyOf
  */
-public actual fun <T> Array<T>.copyOf(newSize: Int): Array<T?> {
-    require(newSize >= 0) { "Invalid new array size: $newSize." }
-    return arrayCopyResize(this, newSize, null)
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
+@kotlin.internal.InlineOnly
+public actual inline fun <T> Array<T>.copyOf(newSize: Int): Array<T?> {
+    return this.copyOf(newSize)
 }
 
 /**
@@ -1127,7 +1127,6 @@ public actual fun <T> Array<T>.copyOf(newSize: Int): Array<T?> {
  * @throws IndexOutOfBoundsException if [fromIndex] is less than zero or [toIndex] is greater than the size of this array.
  * @throws IllegalArgumentException if [fromIndex] is greater than [toIndex].
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 public fun <T> Array<out T>.copyOfRange(fromIndex: Int, toIndex: Int): Array<T> {
     AbstractList.checkRangeIndexes(fromIndex, toIndex, size)
     return this.asDynamic().slice(fromIndex, toIndex)
@@ -1142,9 +1141,10 @@ public fun <T> Array<out T>.copyOfRange(fromIndex: Int, toIndex: Int): Array<T> 
  * @throws IndexOutOfBoundsException if [fromIndex] is less than zero or [toIndex] is greater than the size of this array.
  * @throws IllegalArgumentException if [fromIndex] is greater than [toIndex].
  */
-public actual fun <T> Array<T>.copyOfRange(fromIndex: Int, toIndex: Int): Array<T> {
-    AbstractList.checkRangeIndexes(fromIndex, toIndex, size)
-    return this.asDynamic().slice(fromIndex, toIndex)
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
+@kotlin.internal.InlineOnly
+public actual inline fun <T> Array<T>.copyOfRange(fromIndex: Int, toIndex: Int): Array<T> {
+    return this.copyOfRange(fromIndex, toIndex)
 }
 
 /**
@@ -1408,7 +1408,6 @@ public actual fun CharArray.fill(element: Char, fromIndex: Int = 0, toIndex: Int
 /**
  * Returns an array containing all elements of the original array and then the given [element].
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 @Suppress("NOTHING_TO_INLINE")
 public inline operator fun <T> Array<out T>.plus(element: T): Array<T> {
     return this.asDynamic().concat(arrayOf(element))
@@ -1417,9 +1416,10 @@ public inline operator fun <T> Array<out T>.plus(element: T): Array<T> {
 /**
  * Returns an array containing all elements of the original array and then the given [element].
  */
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
 @kotlin.internal.InlineOnly
 public actual inline operator fun <T> Array<T>.plus(element: T): Array<T> {
-    return this.asDynamic().concat(arrayOf(element))
+    return this.plus(element)
 }
 
 /**
@@ -1489,7 +1489,6 @@ public actual inline operator fun CharArray.plus(element: Char): CharArray {
 /**
  * Returns an array containing all elements of the original array and then all elements of the given [elements] collection.
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 public operator fun <T> Array<out T>.plus(elements: Collection<T>): Array<T> {
     return arrayPlusCollection(this, elements)
 }
@@ -1497,8 +1496,10 @@ public operator fun <T> Array<out T>.plus(elements: Collection<T>): Array<T> {
 /**
  * Returns an array containing all elements of the original array and then all elements of the given [elements] collection.
  */
-public actual operator fun <T> Array<T>.plus(elements: Collection<T>): Array<T> {
-    return arrayPlusCollection(this, elements)
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
+@kotlin.internal.InlineOnly
+public actual inline operator fun <T> Array<T>.plus(elements: Collection<T>): Array<T> {
+    return this.plus(elements)
 }
 
 /**
@@ -1584,7 +1585,6 @@ public actual operator fun CharArray.plus(elements: Collection<Char>): CharArray
 /**
  * Returns an array containing all elements of the original array and then all elements of the given [elements] array.
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 @Suppress("NOTHING_TO_INLINE")
 public inline operator fun <T> Array<out T>.plus(elements: Array<out T>): Array<T> {
     return this.asDynamic().concat(elements)
@@ -1593,9 +1593,10 @@ public inline operator fun <T> Array<out T>.plus(elements: Array<out T>): Array<
 /**
  * Returns an array containing all elements of the original array and then all elements of the given [elements] array.
  */
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
 @kotlin.internal.InlineOnly
 public actual inline operator fun <T> Array<T>.plus(elements: Array<out T>): Array<T> {
-    return this.asDynamic().concat(elements)
+    return this.plus(elements)
 }
 
 /**
@@ -1665,7 +1666,6 @@ public actual inline operator fun CharArray.plus(elements: CharArray): CharArray
 /**
  * Returns an array containing all elements of the original array and then the given [element].
  */
-@Deprecated("Provided for binary-compatibility matching", level = DeprecationLevel.HIDDEN)
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <T> Array<out T>.plusElement(element: T): Array<T> {
     return this.asDynamic().concat(arrayOf(element))
@@ -1674,9 +1674,10 @@ public inline fun <T> Array<out T>.plusElement(element: T): Array<T> {
 /**
  * Returns an array containing all elements of the original array and then the given [element].
  */
+@Deprecated("Provided for expect-actual matching", level = DeprecationLevel.HIDDEN)
 @kotlin.internal.InlineOnly
 public actual inline fun <T> Array<T>.plusElement(element: T): Array<T> {
-    return this.asDynamic().concat(arrayOf(element))
+    return this.plusElement(element)
 }
 
 /**
