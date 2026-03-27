@@ -69,11 +69,18 @@ abstract class AbstractResolveCallTest : AbstractResolveByElementTest() {
 
     private fun Any.asCallResolutionAttempt(): KaCallResolutionAttempt = when (this) {
         is KaCallResolutionAttempt -> this
-        is KaSuccessCallInfo -> KaBaseCallResolutionSuccess(call as KaSingleOrMultiCall)
+        is KaSuccessCallInfo -> {
+            val singleCall = (call as KaSingleOrMultiCall).calls.first()
+            KaBaseCallResolutionSuccess(singleCall)
+        }
+
         is KaErrorCallInfo -> KaBaseCallResolutionError(
             backedDiagnostic = diagnostic,
-            backingCandidateCalls = candidateCalls.map { it as KaSingleOrMultiCall },
+            backingCandidateCalls = candidateCalls.flatMap {
+                (it as KaSingleOrMultiCall).calls
+            },
         )
+
         else -> error("Unknown type: ${this::class.simpleName}")
     }
 

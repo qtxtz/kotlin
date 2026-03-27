@@ -30,8 +30,10 @@ import kotlin.contracts.contract
 public sealed interface KaCallResolutionAttempt : KaLifetimeOwner
 
 /**
- * Represents an attempt to resolve a single call, which is either a [success][KaCallResolutionSuccess]
- * or an [error][KaCallResolutionError].
+ * Represents an attempt to resolve a single call (as opposed to a [multi-call][KaMultiCallResolutionAttempt]),
+ * which is either a [success][KaCallResolutionSuccess] or an [error][KaCallResolutionError].
+ *
+ * Both [KaCallResolutionSuccess.call] and [KaCallResolutionError.candidateCalls] always contain [KaSingleCall]s.
  */
 @KaExperimentalApi
 public sealed interface KaSingleCallResolutionAttempt : KaCallResolutionAttempt
@@ -67,13 +69,13 @@ public interface KaCallResolutionError : KaSingleCallResolutionAttempt {
     /**
      * The list of candidate calls that were considered during the resolution. Can be empty
      */
-    public val candidateCalls: List<KaSingleOrMultiCall>
+    public val candidateCalls: List<KaSingleCall<*, *>>
 }
 
 /**
- * Represents a successful resolution of a [KtResolvableCall].
+ * Represents a successful resolution of a single [KtResolvableCall].
  *
- * Use the [call] property to access the resolved [KaSingleOrMultiCall].
+ * For compound calls (e.g., `i += 1`, `for (x in list)`), see [KaMultiCallResolutionAttempt] instead.
  *
  * @see KaResolver.tryResolveCall
  * @see KaResolver.resolveCall
@@ -82,17 +84,17 @@ public interface KaCallResolutionError : KaSingleCallResolutionAttempt {
 @SubclassOptInRequired(KaImplementationDetail::class)
 public interface KaCallResolutionSuccess : KaSingleCallResolutionAttempt {
     /**
-     * The resolved call, which can be either a [KaSingleCall] or a [KaMultiCall].
+     * The resolved [KaSingleCall].
      */
-    public val call: KaSingleOrMultiCall
+    public val call: KaSingleCall<*, *>
 }
 
 /**
  * Represents an attempt to resolve a compound (multi) call, such as a for-loop, delegated property access,
- * or compound assignment. Contains individual [KaSingleCallResolutionAttempt]s for each sub-call.
+ * or compound assignment. The assembled [call] is always a [KaMultiCall].
  *
- * Unlike [KaSingleCallResolutionAttempt], this type preserves resolution results for each sub-call independently,
- * so that even if one sub-call fails, the results of other sub-calls are still available.
+ * Contains individual [KaSingleCallResolutionAttempt]s for each sub-call, preserving resolution results
+ * independently — even if one sub-call fails, the results of other sub-calls are still available.
  */
 @KaExperimentalApi
 public sealed interface KaMultiCallResolutionAttempt : KaCallResolutionAttempt {
@@ -101,7 +103,7 @@ public sealed interface KaMultiCallResolutionAttempt : KaCallResolutionAttempt {
      *
      * Overridden in concrete subtypes with a more precise return type.
      */
-    public val call: KaSingleOrMultiCall?
+    public val call: KaMultiCall?
 
     /**
      * The list of individual resolution attempts for each sub-call.
@@ -268,12 +270,12 @@ public interface KaCompoundArrayAccessCallResolutionAttempt : KaMultiCallResolut
 private interface KaMultiUnknownCallResolutionAttempt : KaMultiCallResolutionAttempt
 
 /**
- * The list of [KaSingleOrMultiCall]s.
+ * The flattened list of resolved calls.
  *
- * - If [this] is an instance of [KaCallResolutionSuccess], the list will contain only [KaCallResolutionSuccess.call]
- * - If [this] is an instance of [KaCallResolutionError], the list will contain [KaCallResolutionError.candidateCalls]
- * - If [this] is an instance of [KaMultiCallResolutionAttempt], the list will contain the overall call if all sub-calls
- *   succeeded, or the combined calls from individual attempts otherwise
+ * - [KaCallResolutionSuccess]: the resolved [call][KaCallResolutionSuccess.call] as a single-element list.
+ * - [KaCallResolutionError]: the [candidate calls][KaCallResolutionError.candidateCalls].
+ * - [KaMultiCallResolutionAttempt]: the assembled [call][KaMultiCallResolutionAttempt.call] if all sub-calls
+ *   succeeded, or the combined calls from individual [attempts][KaMultiCallResolutionAttempt.attempts] otherwise.
  */
 @KaExperimentalApi
 public val KaCallResolutionAttempt.calls: List<KaSingleOrMultiCall>

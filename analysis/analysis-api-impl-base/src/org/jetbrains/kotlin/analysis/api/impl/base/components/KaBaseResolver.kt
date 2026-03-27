@@ -59,16 +59,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
      */
     private fun KtResolvableCall.tryResolveSymbolsForResolvableCall(): KaSymbolResolutionAttempt? {
         return when (val callAttempt = tryResolveCall()) {
-            is KaCallResolutionError -> KaBaseSymbolResolutionError(
-                backingDiagnostic = callAttempt.diagnostic,
-                backingCandidateSymbols = callAttempt.candidateCalls.flatMap(KaSingleOrMultiCall::symbols)
-            )
-
-            is KaCallResolutionSuccess -> KaBaseSymbolResolutionSuccess(
-                backingSymbols = callAttempt.call.symbols,
-                token = callAttempt.token,
-            )
-
+            is KaSingleCallResolutionAttempt -> callAttempt.toSingleSymbolResolutionAttempt()
             is KaMultiCallResolutionAttempt -> callAttempt.toSymbolResolutionAttempt()
 
             null -> when (this) {
@@ -88,30 +79,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
     private fun KtOperationReferenceExpression.tryResolveSymbolsForOperationReference(): KaSymbolResolutionAttempt? {
         val resolvableCall = parent as? KtResolvableCall ?: return null
         return when (val callAttempt = resolvableCall.tryResolveCall()) {
-            is KaCallResolutionError -> KaBaseSymbolResolutionError(
-                backingDiagnostic = callAttempt.diagnostic,
-                backingCandidateSymbols = callAttempt.candidateCalls.flatMap(KaSingleOrMultiCall::symbols)
-            )
-
-            is KaCallResolutionSuccess -> when (val call = callAttempt.call) {
-                is KaCompoundArrayAccessCall -> KaBaseSymbolResolutionSuccess(
-                    backingSymbols = listOf(call.operationCall.signature.symbol, call.setterCall.signature.symbol),
-                    token = call.token,
-                )
-
-                is KaCompoundVariableAccessCall -> KaBaseSymbolResolutionSuccess(
-                    backingSymbols = listOf(call.operationCall.signature.symbol),
-                    token = call.token,
-                )
-
-                is KaSingleCall<*, *> -> KaBaseSymbolResolutionSuccess(
-                    backingSymbols = listOf(call.signature.symbol),
-                    token = call.token,
-                )
-
-                else -> null
-            }
-
+            is KaSingleCallResolutionAttempt -> callAttempt.toSingleSymbolResolutionAttempt()
             is KaMultiCallResolutionAttempt -> when (callAttempt) {
                 is KaCompoundArrayAccessCallResolutionAttempt -> mergeSymbolAttempts(
                     listOf(
@@ -401,14 +369,10 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
         mergeSymbolAttempts(attempts.map { it.toSingleSymbolResolutionAttempt() })
 
     private fun KaSingleCallResolutionAttempt.toSingleSymbolResolutionAttempt(): KaSingleSymbolResolutionAttempt = when (this) {
-        is KaCallResolutionSuccess -> KaBaseSymbolResolutionSuccess(
-            backingSymbols = call.symbols,
-            token = token,
-        )
-
+        is KaCallResolutionSuccess -> KaBaseSymbolResolutionSuccess(backingSymbol = call.signature.symbol)
         is KaCallResolutionError -> KaBaseSymbolResolutionError(
             backingDiagnostic = diagnostic,
-            backingCandidateSymbols = candidateCalls.flatMap(KaSingleOrMultiCall::symbols),
+            backingCandidateSymbols = candidateCalls.map { it.signature.symbol },
         )
     }
 

@@ -33,9 +33,9 @@ import org.jetbrains.kotlin.analysis.utils.printer.parentOfType
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.diagnostics.*
 import org.jetbrains.kotlin.idea.references.KDocReference
-import org.jetbrains.kotlin.kdoc.psi.impl.KDocName
 import org.jetbrains.kotlin.idea.references.KtReference
 import org.jetbrains.kotlin.idea.references.KtSimpleNameReference
+import org.jetbrains.kotlin.kdoc.psi.impl.KDocName
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.parentsWithSelf
@@ -776,15 +776,36 @@ internal class KaFe10Resolver(
         resolvedCalls: List<ResolvedCall<*>>,
         diagnostics: Diagnostics = context.diagnostics,
     ): KaCallResolutionAttempt {
-        kaCall as KaSingleOrMultiCall
-        val failedResolveCall = resolvedCalls.firstOrNull { !it.status.isSuccess } ?: return KaBaseCallResolutionSuccess(kaCall)
+        val failedResolveCall = resolvedCalls.firstOrNull { !it.status.isSuccess }
 
-        val diagnostic = getDiagnosticToReport(context, psi, kaCall as KaCall, diagnostics)?.let { KaFe10Diagnostic(it, token) }
+        // Successful compound calls should be wrapped into KaMultiCallResolutionAttempt
+        if (failedResolveCall == null) when (kaCall) {
+            is KaCompoundVariableAccessCall -> return KaBaseCompoundVariableAccessCallResolutionAttempt(
+                backingCompoundOperation = kaCall.compoundOperation,
+                backingVariableCallAttempt = KaBaseCallResolutionSuccess(kaCall.variableCall),
+                backingOperationCallAttempt = KaBaseCallResolutionSuccess(kaCall.operationCall),
+            )
+            is KaCompoundArrayAccessCall -> return KaBaseCompoundArrayAccessCallResolutionAttempt(
+                backingCompoundOperation = kaCall.compoundOperation,
+                backingIndexArguments = kaCall.indexArguments,
+                backingGetterCallAttempt = KaBaseCallResolutionSuccess(kaCall.getterCall),
+                backingOperationCallAttempt = KaBaseCallResolutionSuccess(kaCall.operationCall),
+                backingSetterCallAttempt = KaBaseCallResolutionSuccess(kaCall.setterCall),
+            )
+
+            else -> {}
+        }
+
+        // For compound calls with errors, extract individual sub-calls as candidates
+        val candidateCalls = (kaCall as KaSingleOrMultiCall).calls
+        if (failedResolveCall == null) return KaBaseCallResolutionSuccess(candidateCalls.single())
+
+        val diagnostic = getDiagnosticToReport(context, psi, kaCall, diagnostics)?.let { KaFe10Diagnostic(it, token) }
             ?: failedResolveCall.nonBoundErrorDiagnostic
 
         return KaBaseCallResolutionError(
             backedDiagnostic = diagnostic,
-            backingCandidateCalls = listOf(kaCall),
+            backingCandidateCalls = candidateCalls,
         )
     }
 

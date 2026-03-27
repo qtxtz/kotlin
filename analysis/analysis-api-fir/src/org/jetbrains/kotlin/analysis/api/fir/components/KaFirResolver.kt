@@ -573,6 +573,7 @@ internal class KaFirResolver(
                             psi = psi,
                             fir = this,
                             calleeReference = calleeReference,
+                            candidate = null,
                             resolveFragmentOfCall = resolveFragmentOfCall,
                         )
 
@@ -704,13 +705,13 @@ internal class KaFirResolver(
         fir: FirResolvable,
         candidate: Candidate?,
         resolveFragmentOfCall: Boolean,
-    ): KaSingleOrMultiCall? = createKaCall(
+    ): KaSingleOrMultiCall? = createKaCallResolutionAttempt(
         psi = psi,
         fir = fir,
         calleeReference = fir.calleeReference,
         candidate = candidate,
         resolveFragmentOfCall = resolveFragmentOfCall,
-    )
+    )?.successfulCall
 
     private fun Candidate.toFirTypeArgumentsMapping(symbol: FirCallableSymbol<*>): Map<FirTypeParameterSymbol, ConeKotlinType> {
         val typeParameters = symbol.typeParameterSymbols.ifEmpty { return emptyMap() }
@@ -769,10 +770,23 @@ internal class KaFirResolver(
     private fun createKaCallResolutionAttempt(
         psi: KtElement,
         fir: FirElement,
-        calleeReference: FirReference,
+        calleeReference: FirReference?,
+        candidate: Candidate?,
         resolveFragmentOfCall: Boolean,
     ): KaCallResolutionAttempt? {
-        val mappingResult = computeTypeArgumentsMapping(fir, calleeReference, null) ?: return null
+        if (fir is FirSmartCastExpression) {
+            return (fir.originalExpression as? FirResolvable)?.let {
+                createKaCallResolutionAttempt(
+                    psi = psi,
+                    fir = it,
+                    calleeReference = calleeReference,
+                    candidate = candidate,
+                    resolveFragmentOfCall = resolveFragmentOfCall,
+                )
+            }
+        }
+
+        val mappingResult = computeTypeArgumentsMapping(fir, calleeReference, candidate) ?: return null
         return handleCompoundAccessCall(
             psi = psi,
             fir = fir,
@@ -782,23 +796,9 @@ internal class KaFirResolver(
             psi = psi,
             fir = fir,
             calleeReference = calleeReference,
-            candidate = null,
-            resolveFragmentOfCall = resolveFragmentOfCall,
+            candidate = candidate,
             mappingResult = mappingResult,
         )?.let(::KaBaseCallResolutionSuccess)
-    }
-
-    private fun createKaCall(
-        psi: KtElement,
-        fir: FirElement,
-        calleeReference: FirReference?,
-        candidate: Candidate?,
-        resolveFragmentOfCall: Boolean,
-    ): KaSingleOrMultiCall? {
-        val mappingResult = computeTypeArgumentsMapping(fir, calleeReference, candidate) ?: return null
-        return handleCompoundAccessCall(psi, fir, resolveFragmentOfCall, mappingResult.typeArgumentsMapping)
-            ?.successfulCall
-            ?: buildKaCall(psi, fir, calleeReference, candidate, resolveFragmentOfCall, mappingResult)
     }
 
     /**
@@ -809,9 +809,8 @@ internal class KaFirResolver(
         fir: FirElement,
         calleeReference: FirReference?,
         candidate: Candidate?,
-        resolveFragmentOfCall: Boolean,
         mappingResult: TypeArgumentsMappingResult,
-    ): KaSingleOrMultiCall? {
+    ): KaSingleCall<*, *>? {
         val targetSymbol = mappingResult.targetSymbol
         val firTypeArgumentsMapping = mappingResult.firTypeArgumentsMapping
         val typeArgumentsMapping = mappingResult.typeArgumentsMapping
@@ -1095,15 +1094,6 @@ internal class KaFirResolver(
                 }
             }
 
-            is FirSmartCastExpression -> (fir.originalExpression as? FirResolvable)?.let {
-                createKaCall(
-                    psi = psi,
-                    fir = it,
-                    candidate = candidate,
-                    resolveFragmentOfCall = resolveFragmentOfCall,
-                )
-            }
-
             else -> null
         }
     }
@@ -1223,14 +1213,29 @@ internal class KaFirResolver(
         val candidateCalls = if (diagnostic is ConeDiagnosticWithCandidates) {
             diagnostic.candidates.mapNotNull {
                 if (it is Candidate) {
-                    createKaCall(psi, call, calleeReference, it, resolveFragmentOfCall)
+                    val attempt = createKaCallResolutionAttempt(
+                        psi = psi,
+                        fir = call,
+                        calleeReference = calleeReference,
+                        candidate = it,
+                        resolveFragmentOfCall = resolveFragmentOfCall,
+                    ) as? KaCallResolutionSuccess
+
+                    attempt?.call
                 } else {
                     null
                 }
             }
         } else {
-            val call = createKaCall(psi, call, calleeReference, null, resolveFragmentOfCall)
-            listOfNotNull(call)
+            val attempt = createKaCallResolutionAttempt(
+                psi = psi,
+                fir = call,
+                calleeReference = calleeReference,
+                candidate = null,
+                resolveFragmentOfCall = resolveFragmentOfCall
+            ) as? KaCallResolutionSuccess
+
+            listOfNotNull(attempt?.call)
         }
 
         return KaBaseCallResolutionError(

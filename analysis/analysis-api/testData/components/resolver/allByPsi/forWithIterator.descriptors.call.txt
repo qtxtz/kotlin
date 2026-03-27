@@ -326,7 +326,7 @@ KtNameReferenceExpression(250,253): 'Int'
   null
 
 KtPostfixExpression(256,265): 'current++'
-  KaCallResolutionSuccess:
+  KaCompoundVariableAccessCallResolutionAttempt:
     call = KaCompoundVariableAccessCall:
       compoundOperation = KaCompoundUnaryOperation:
         kind = INC
