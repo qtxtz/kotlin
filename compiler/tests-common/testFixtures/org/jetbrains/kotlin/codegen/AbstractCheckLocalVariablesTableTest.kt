@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.codegen
 
 import com.intellij.openapi.util.text.StringUtil
 import org.jetbrains.kotlin.backend.common.output.OutputFileCollection
+import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.org.objectweb.asm.*
 import org.junit.Assert
 import java.io.File
@@ -17,6 +18,12 @@ import java.util.regex.Pattern
  * Test correctness of written local variables in class file for specified method
  */
 abstract class AbstractCheckLocalVariablesTableTest : CodegenTestCase() {
+    override val useFir: Boolean
+        get() = true
+
+    override val firParser: FirParser
+        get() = FirParser.LightTree
+
     private inline fun <T> loggingExceptions(wholeFile: File, body: () -> T): T = try {
         body()
     } catch (e: Throwable) {

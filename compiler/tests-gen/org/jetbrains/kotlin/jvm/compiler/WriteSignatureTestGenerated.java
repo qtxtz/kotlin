@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.codegen.fir;
+package org.jetbrains.kotlin.jvm.compiler;
 
 import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.JUnit3RunnerWithInners;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @TestMetadata("compiler/testData/writeSignature")
 @TestDataPath("$PROJECT_ROOT")
 @RunWith(JUnit3RunnerWithInners.class)
-public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTreeWriteSignatureTest {
+public class WriteSignatureTestGenerated extends AbstractWriteSignatureTest {
   private void runTest(String testDataFilePath) {
     KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
   }
@@ -138,7 +138,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/annotations")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class Annotations extends AbstractFirLightTreeWriteSignatureTest {
+  public static class Annotations extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -176,7 +176,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/callableReference")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class CallableReference extends AbstractFirLightTreeWriteSignatureTest {
+  public static class CallableReference extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -209,7 +209,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/constructor")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class Constructor extends AbstractFirLightTreeWriteSignatureTest {
+  public static class Constructor extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -242,7 +242,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/declarationSiteVariance")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class DeclarationSiteVariance extends AbstractFirLightTreeWriteSignatureTest {
+  public static class DeclarationSiteVariance extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -389,7 +389,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
     @TestMetadata("compiler/testData/writeSignature/declarationSiteVariance/jvmWildcardAnnotations")
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)
-    public static class JvmWildcardAnnotations extends AbstractFirLightTreeWriteSignatureTest {
+    public static class JvmWildcardAnnotations extends AbstractWriteSignatureTest {
       private void runTest(String testDataFilePath) {
         KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
       }
@@ -417,7 +417,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
     @TestMetadata("compiler/testData/writeSignature/declarationSiteVariance/wildcardOptimization")
     @TestDataPath("$PROJECT_ROOT")
     @RunWith(JUnit3RunnerWithInners.class)
-    public static class WildcardOptimization extends AbstractFirLightTreeWriteSignatureTest {
+    public static class WildcardOptimization extends AbstractWriteSignatureTest {
       private void runTest(String testDataFilePath) {
         KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
       }
@@ -486,7 +486,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/defaultImpls")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class DefaultImpls extends AbstractFirLightTreeWriteSignatureTest {
+  public static class DefaultImpls extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -514,7 +514,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/inlineClasses")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class InlineClasses extends AbstractFirLightTreeWriteSignatureTest {
+  public static class InlineClasses extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -577,7 +577,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/java8")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class Java8 extends AbstractFirLightTreeWriteSignatureTest {
+  public static class Java8 extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -595,7 +595,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/nothing")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class Nothing extends AbstractFirLightTreeWriteSignatureTest {
+  public static class Nothing extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -618,7 +618,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/parameterlessMain")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class ParameterlessMain extends AbstractFirLightTreeWriteSignatureTest {
+  public static class ParameterlessMain extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
@@ -656,7 +656,7 @@ public class FirLightTreeWriteSignatureTestGenerated extends AbstractFirLightTre
   @TestMetadata("compiler/testData/writeSignature/suspendMain")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class SuspendMain extends AbstractFirLightTreeWriteSignatureTest {
+  public static class SuspendMain extends AbstractWriteSignatureTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }

@@ -34,10 +34,12 @@ import org.jetbrains.kotlin.renderer.DescriptorRendererModifier
 import org.jetbrains.kotlin.renderer.ParameterNameRenderingPolicy
 import org.jetbrains.kotlin.resolve.lazy.JvmResolveUtil
 import org.jetbrains.kotlin.test.ConfigurationKind
+import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.JavaCompilationResult
 import org.jetbrains.kotlin.test.KotlinTestUtils
 import org.jetbrains.kotlin.test.KotlinTestUtils.createEnvironmentWithMockJdkAndIdeaAnnotations
 import org.jetbrains.kotlin.test.KotlinTestUtils.newConfiguration
+import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.TestCaseWithTmpdir
 import org.jetbrains.kotlin.test.TestJdkKind
 import org.jetbrains.kotlin.test.testFramework.FrontendBackendConfiguration
@@ -50,6 +52,14 @@ import java.io.IOException
 import java.lang.annotation.Retention
 
 abstract class AbstractCompileJavaAgainstKotlinTest : TestCaseWithTmpdir(), FrontendBackendConfiguration {
+    override val useFir: Boolean
+        get() = true
+
+    override val firParser: FirParser
+        get() = FirParser.LightTree
+
+    override val backend: TargetBackend
+        get() = TargetBackend.JVM_IR
 
     protected fun doTestWithJavac(ktFilePath: String) {
         doTest(ktFilePath, true)

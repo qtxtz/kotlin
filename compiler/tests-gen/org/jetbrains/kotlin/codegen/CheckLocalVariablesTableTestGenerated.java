@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.codegen.fir;
+package org.jetbrains.kotlin.codegen;
 
 import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.JUnit3RunnerWithInners;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @TestMetadata("compiler/testData/checkLocalVariablesTable")
 @TestDataPath("$PROJECT_ROOT")
 @RunWith(JUnit3RunnerWithInners.class)
-public class FirLightTreeCheckLocalVariablesTableTestGenerated extends AbstractFirLightTreeCheckLocalVariablesTableTest {
+public class CheckLocalVariablesTableTestGenerated extends AbstractCheckLocalVariablesTableTest {
   private void runTest(String testDataFilePath) {
     KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
   }
@@ -123,7 +123,7 @@ public class FirLightTreeCheckLocalVariablesTableTestGenerated extends AbstractF
   @TestMetadata("compiler/testData/checkLocalVariablesTable/parametersInSuspendLambda")
   @TestDataPath("$PROJECT_ROOT")
   @RunWith(JUnit3RunnerWithInners.class)
-  public static class ParametersInSuspendLambda extends AbstractFirLightTreeCheckLocalVariablesTableTest {
+  public static class ParametersInSuspendLambda extends AbstractCheckLocalVariablesTableTest {
     private void runTest(String testDataFilePath) {
       KotlinTestUtils.runTest(this::doTest, TargetBackend.JVM_IR, testDataFilePath);
     }
