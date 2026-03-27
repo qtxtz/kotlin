@@ -88,6 +88,12 @@ public class SourceDesignationByPsiTestGenerated extends AbstractSourceDesignati
   }
 
   @Test
+  @TestMetadata("topLevelFunctionWithPackage.kt")
+  public void testTopLevelFunctionWithPackage() {
+    run("topLevelFunctionWithPackage.kt");
+  }
+
+  @Test
   @TestMetadata("topLevelProperty.kt")
   public void testTopLevelProperty() {
     run("topLevelProperty.kt");

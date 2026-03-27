@@ -196,6 +196,18 @@ public class ScriptDesignationByPsiTestGenerated extends AbstractScriptDesignati
   }
 
   @Test
+  @TestMetadata("topLevelFunctionWithPackageRepl.repl.kts")
+  public void testTopLevelFunctionWithPackageRepl_repl() {
+    run("topLevelFunctionWithPackageRepl.repl.kts");
+  }
+
+  @Test
+  @TestMetadata("topLevelFunctionWithPackageScript.kts")
+  public void testTopLevelFunctionWithPackageScript() {
+    run("topLevelFunctionWithPackageScript.kts");
+  }
+
+  @Test
   @TestMetadata("topLevelPropertyRepl.repl.kts")
   public void testTopLevelPropertyRepl_repl() {
     run("topLevelPropertyRepl.repl.kts");

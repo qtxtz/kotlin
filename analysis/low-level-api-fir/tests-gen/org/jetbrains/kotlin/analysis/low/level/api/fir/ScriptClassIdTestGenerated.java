@@ -40,6 +40,18 @@ public class ScriptClassIdTestGenerated extends AbstractScriptClassIdTest {
   }
 
   @Test
+  @TestMetadata("classWithPackageRepl.repl.kts")
+  public void testClassWithPackageRepl_repl() {
+    run("classWithPackageRepl.repl.kts");
+  }
+
+  @Test
+  @TestMetadata("classWithPackageScript.kts")
+  public void testClassWithPackageScript() {
+    run("classWithPackageScript.kts");
+  }
+
+  @Test
   @TestMetadata("enum.kts")
   public void testEnum() {
     run("enum.kts");

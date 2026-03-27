@@ -34,6 +34,12 @@ public class SourceClassIdTestGenerated extends AbstractSourceClassIdTest {
   }
 
   @Test
+  @TestMetadata("classWithPackage.kt")
+  public void testClassWithPackage() {
+    run("classWithPackage.kt");
+  }
+
+  @Test
   @TestMetadata("enum.kt")
   public void testEnum() {
     run("enum.kt");
