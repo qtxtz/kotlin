@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.codegen.fir.*
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
-import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirPsiCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
 import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
 import org.jetbrains.kotlin.modules.xml.AbstractModuleXmlParserTest
@@ -44,33 +43,6 @@ fun main(args: Array<String>) {
                     testMethod = "doTestWithJavac",
                     targetBackend = TargetBackend.JVM_IR
                 )
-            }
-
-            testClass<AbstractFirPsiCompileJavaAgainstKotlinTest> {
-                model(
-                    "compileJavaAgainstKotlin",
-                    testClassName = "WithoutJavac",
-                    testMethod = "doTestWithoutJavac",
-                    targetBackend = TargetBackend.JVM_IR
-                )
-                model(
-                    "compileJavaAgainstKotlin",
-                    testClassName = "WithJavac",
-                    testMethod = "doTestWithJavac",
-                    targetBackend = TargetBackend.JVM_IR
-                )
-            }
-
-            testClass<AbstractFirPsiCheckLocalVariablesTableTest> {
-                model("checkLocalVariablesTable", targetBackend = TargetBackend.JVM_IR)
-            }
-
-            testClass<AbstractFirPsiWriteFlagsTest> {
-                model("writeFlags", targetBackend = TargetBackend.JVM_IR)
-            }
-
-            testClass<AbstractFirPsiWriteSignatureTest> {
-                model("writeSignature", targetBackend = TargetBackend.JVM_IR)
             }
 
             testClass<AbstractFirLightTreeWriteFlagsTest> {
