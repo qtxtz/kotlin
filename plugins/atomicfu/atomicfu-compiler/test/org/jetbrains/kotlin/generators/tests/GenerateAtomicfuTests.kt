@@ -66,10 +66,6 @@ fun main(args: Array<String>) {
                 model("diagnostics/")
             }
 
-            testClass<AbstractAtomicfuJvmIrTest> {
-                model("box/", excludeDirs = listOf("context_parameters"))
-            }
-
             testClass<AbstractAtomicfuJvmFirLightTreeTest> {
                 model("box/")
             }
