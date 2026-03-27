@@ -5,12 +5,17 @@
 
 package org.jetbrains.kotlin.fir.java
 
+import com.intellij.openapi.fileEditor.impl.LoadTextUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Condition
 import com.intellij.openapi.util.Conditions
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementFinder
+import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.impl.compiled.ClsClassImpl
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.testFramework.LightVirtualFile
+import junit.framework.TestCase
 import org.jetbrains.kotlin.KtInMemoryTextSourceFile
 import org.jetbrains.kotlin.ObsoleteTestInfrastructure
 import org.jetbrains.kotlin.analyzer.ModuleInfo
@@ -104,7 +109,7 @@ abstract class AbstractFirOldFrontendLightClassesTest :
     override fun createTestModule(
         name: String,
         dependencies: List<String>,
-        friends: List<String>
+        friends: List<String>,
     ): TestModule =
         TestModule(name, dependencies, friends)
 
@@ -338,7 +343,7 @@ abstract class AbstractFirOldFrontendLightClassesTest :
         val module: TestModule?,
         val fileName: String,
         textWithMarkers: String,
-        directives: Directives
+        directives: Directives,
     ) : KotlinBaseTest.TestFile(fileName, textWithMarkers, directives) {
         val diagnosedRanges: MutableList<DiagnosedRange> = mutableListOf()
         val diagnosedRangesToDiagnosticNames: MutableMap<IntRange, MutableSet<String>> = mutableMapOf()
@@ -374,7 +379,7 @@ abstract class AbstractFirOldFrontendLightClassesTest :
                 this.expectedText = textWithMarkers
                 this.clearText =
                     CheckerTestUtil.parseDiagnosedRanges(addExtras(expectedText), diagnosedRanges, diagnosedRangesToDiagnosticNames)
-                this.createKtFile = lazy { TestCheckerUtil.createCheckAndReturnPsiFile(fileName, clearText, project) }
+                this.createKtFile = lazy { createCheckAndReturnPsiFile(fileName, clearText, project) }
             }
             this.renderDiagnosticMessages = RENDER_DIAGNOSTIC_ARGUMENTS in directives
             this.renderDiagnosticsFullText = RENDER_DIAGNOSTICS_FULL_TEXT in directives
@@ -464,7 +469,7 @@ abstract class AbstractFirOldFrontendLightClassesTest :
 
         fun parseDiagnosticFilterDirective(
             directiveMap: Directives,
-            allowUnderscoreUsage: Boolean
+            allowUnderscoreUsage: Boolean,
         ): Condition<Diagnostic> {
             val directives = directiveMap[DIAGNOSTICS_DIRECTIVE]
             val initialCondition =
@@ -532,6 +537,25 @@ abstract class AbstractFirOldFrontendLightClassesTest :
                 condition,
                 Condition { diagnostic -> diagnostic.factory in DIAGNOSTICS_TO_INCLUDE_ANYWAY }
             )
+        }
+
+        private fun createCheckAndReturnPsiFile(fileName: String, text: String, project: Project): KtFile {
+            val myFile = KtTestUtil.createFile(fileName, text, project)
+            // ensure parsed
+            myFile.accept(object : PsiElementVisitor() {
+                override fun visitElement(element: PsiElement) {
+                    element.acceptChildren(this)
+                }
+            })
+            TestCase.assertEquals(
+                "light virtual file text mismatch",
+                text,
+                (myFile.getVirtualFile() as LightVirtualFile).getContent().toString()
+            )
+            assertEquals("virtual file text mismatch", text, LoadTextUtil.loadText(myFile.getVirtualFile()))
+            TestCase.assertEquals("doc text mismatch", text, myFile.getViewProvider().getDocument().getText())
+            TestCase.assertEquals("psi text mismatch", text, myFile.getText())
+            return myFile
         }
     }
 
