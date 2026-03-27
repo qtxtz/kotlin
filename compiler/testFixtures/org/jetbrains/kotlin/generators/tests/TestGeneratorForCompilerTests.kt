@@ -6,9 +6,6 @@
 package org.jetbrains.kotlin.generators.tests
 
 import org.jetbrains.kotlin.asJava.AbstractCompilerLightClassTest
-import org.jetbrains.kotlin.cfg.AbstractControlFlowTest
-import org.jetbrains.kotlin.cfg.AbstractDataFlowTest
-import org.jetbrains.kotlin.cfg.AbstractPseudoValueTest
 import org.jetbrains.kotlin.codegen.fir.*
 import org.jetbrains.kotlin.codegen.ir.AbstractIrCheckLocalVariablesTableTest
 import org.jetbrains.kotlin.codegen.ir.AbstractIrScriptCodegenTest
@@ -17,7 +14,8 @@ import org.jetbrains.kotlin.codegen.ir.AbstractIrWriteSignatureTest
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil.KT_OR_KTS_WITHOUT_DOTS_IN_NAME
-import org.jetbrains.kotlin.jvm.compiler.*
+import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava17Test
+import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJavaTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirPsiCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.jvm.compiler.ir.AbstractIrCompileJavaAgainstKotlinTest
@@ -81,23 +79,6 @@ fun main(args: Array<String>) {
 
             testClass<AbstractModuleXmlParserTest> {
                 model("modules.xml", extension = "xml")
-            }
-
-            testClass<AbstractControlFlowTest> {
-                model("cfg")
-                model("cfgWithStdLib", testMethod = "doTestWithStdLib")
-            }
-
-            testClass<AbstractDataFlowTest> {
-                model("cfg-variables")
-                model("cfgVariablesWithStdLib", testMethod = "doTestWithStdLib")
-            }
-
-            testClass<AbstractPseudoValueTest> {
-                model("cfg")
-                model("cfgWithStdLib", testMethod = "doTestWithStdLib")
-                model("cfg-variables")
-                model("cfgVariablesWithStdLib", testMethod = "doTestWithStdLib")
             }
 
             testClass<AbstractCompilerLightClassTest> {
