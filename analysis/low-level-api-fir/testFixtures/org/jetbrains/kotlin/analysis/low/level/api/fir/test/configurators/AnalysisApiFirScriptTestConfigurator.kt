@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators
 import com.intellij.openapi.Disposable
 import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtScriptTestModuleFactory
 import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtTestModuleFactory
+import org.jetbrains.kotlin.analysis.test.framework.test.configurators.AnalysisApiTestConfigurator.Companion.defaultTargetPlatformValue
 import org.jetbrains.kotlin.platform.TargetPlatform
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 
