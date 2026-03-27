@@ -138,6 +138,7 @@ val businessLogicTestSuits = setOf(
     "testKotlinLogger",
     "testDefaultOptions",
     "testDaemonOptions",
+    "testInternalInputsTracker",
 )
 
 fun JvmTestSuite.addSnapshotBuildToolsImpl() {
@@ -278,6 +279,12 @@ testing {
         named<JvmTestSuite>("testInputChangesTracking") {
             dependencies {
                 implementation(project(":compiler:build-tools:kotlin-build-statistics"))
+            }
+        }
+
+        named<JvmTestSuite>("testInternalInputsTracker") {
+            dependencies {
+                implementation(project(":compiler:build-tools:kotlin-build-tools-impl"))
             }
         }
 

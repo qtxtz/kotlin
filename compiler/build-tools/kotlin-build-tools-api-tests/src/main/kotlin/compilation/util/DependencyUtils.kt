@@ -12,7 +12,7 @@ import kotlin.io.path.toPath
 
 private const val COMPILER_CLASSPATH_PROPERTY = "kotlin.build-tools-api.test.compilerClasspath"
 
-private fun initializeBtaClassloader(): URLClassLoader {
+fun initializeBtaClassloader(customParent: ClassLoader? = null): URLClassLoader {
     val classpath = System.getProperty(COMPILER_CLASSPATH_PROPERTY)
         ?: error("$COMPILER_CLASSPATH_PROPERTY is not set")
 
@@ -21,7 +21,7 @@ private fun initializeBtaClassloader(): URLClassLoader {
             .map { File(it).toURI().toURL() }
 
     println("Loading classes from classpath: $urls")
-    return URLClassLoader(urls.toTypedArray(), SharedApiClassesClassLoader())
+    return URLClassLoader(urls.toTypedArray(), customParent ?: SharedApiClassesClassLoader())
 }
 
 val btaClassloader = initializeBtaClassloader()
