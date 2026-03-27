@@ -296,6 +296,46 @@ class SwiftPMImportXcodeIntegrationIT : KGPBaseTest() {
     }
 
     @GradleTest
+    fun `integrateLinkagePackage passes id repository into synthetic manifest`(version: GradleVersion) {
+        project("emptyxcode", version) {
+            plugins {
+                kotlin("multiplatform")
+            }
+            buildScriptInjection {
+                project.applyMultiplatform {
+                    iosArm64()
+
+                    swiftPMDependencies {
+                        swiftPackage(
+                            repository = id("mona.LinkedList"),
+                            version = from("1.0.0"),
+                            products = listOf(),
+                            packageName = "LinkedList",
+                        )
+                    }
+                }
+            }
+
+            build(
+                "integrateLinkagePackage",
+                environmentVariables = EnvironmentalVariables(
+                    "XCODEPROJ_PATH" to "iosApp/iosApp.xcodeproj",
+                )
+            ) {
+                val manifestFileDir = projectPath.resolve("iosApp/$SYNTHETIC_IMPORT_TARGET_MAGIC_NAME")
+                val dependencies = describeSwiftPackage(manifestFileDir).dependencies
+
+                assertEquals(listOf("registry"), dependencies.map { it.type }, "id-based dependency type should be 'registry'")
+                assertEquals(
+                    listOf("mona.LinkedList"),
+                    dependencies.map { it.identity },
+                    "id-based dependency identity should be 'mona.LinkedList'"
+                )
+            }
+        }
+    }
+
+    @GradleTest
     fun `integrateLinkagePackage passes product platform constraints into synthetic manifest`(version: GradleVersion) {
         project("emptyxcode", version) {
             plugins {
