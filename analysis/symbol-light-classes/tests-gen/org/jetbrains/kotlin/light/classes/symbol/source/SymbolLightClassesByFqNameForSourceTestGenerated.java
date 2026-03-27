@@ -25,7 +25,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
   @Test
   public void testAllFilesPresentInLightClassByFqName() {
-    KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+    KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
   }
 
   @Test
@@ -620,7 +620,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInCompilationErrors() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/compilationErrors"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/compilationErrors"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Test
@@ -820,7 +820,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInDelegation() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/delegation"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/delegation"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Test
@@ -852,7 +852,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInFacades() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/facades"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/facades"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Test
@@ -938,7 +938,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInIdeRegression() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/ideRegression"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/ideRegression"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Test
@@ -1000,7 +1000,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInK2() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/k2"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/k2"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Nested
@@ -1013,7 +1013,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
       @Test
       public void testAllFilesPresentInAnnotations() {
-        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/k2/annotations"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/k2/annotations"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
       }
 
       @Test
@@ -1058,7 +1058,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInNullabilityAnnotations() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/nullabilityAnnotations"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/nullabilityAnnotations"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Test
@@ -1198,7 +1198,19 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInScript() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/script"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/script"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("HelloWorld.kts")
+    public void testHelloWorld() {
+      run("HelloWorld.kts");
+    }
+
+    @Test
+    @TestMetadata("InnerClasses.kts")
+    public void testInnerClasses() {
+      run("InnerClasses.kts");
     }
   }
 
@@ -1212,7 +1224,7 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
 
     @Test
     public void testAllFilesPresentInWithTestCompilerPluginEnabled() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/withTestCompilerPluginEnabled"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/withTestCompilerPluginEnabled"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
     }
 
     @Test

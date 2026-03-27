@@ -5,22 +5,22 @@
 
 package org.jetbrains.kotlin.light.classes.symbol.base
 
-import org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators.AnalysisApiFirSourceTestConfigurator
+import org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators.LLSourceLikeTestConfigurator
 import org.jetbrains.kotlin.platform.TargetPlatform
 import org.jetbrains.kotlin.platform.js.JsPlatforms
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 
-abstract class SymbolLightClassSourceTestConfigurator(
+abstract class SymbolLightClassSourceLikeTestConfigurator(
     override val defaultTargetPlatform: TargetPlatform,
     override val testPrefixes: List<String>,
-) : AnalysisApiFirSourceTestConfigurator()
+) : LLSourceLikeTestConfigurator()
 
-object SymbolLightClassSourceJvmTestConfigurator : SymbolLightClassSourceTestConfigurator(
+object SymbolLightClassSourceJvmTestConfigurator : SymbolLightClassSourceLikeTestConfigurator(
     JvmPlatforms.defaultJvmPlatform,
     emptyList(),
 )
 
-object SymbolLightClassSourceJsTestConfigurator : SymbolLightClassSourceTestConfigurator(
+object SymbolLightClassSourceJsTestConfigurator : SymbolLightClassSourceLikeTestConfigurator(
     JsPlatforms.defaultJsPlatform,
     listOf("kmp"),
 )

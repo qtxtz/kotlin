@@ -82,32 +82,27 @@ private fun TestGroupSuite.generateCompilerTestDataBasedLightClassesTests() {
 private fun lightClassesTestsInit(
     path: String,
     isLibrary: Boolean,
-    isScript: Boolean,
 ): TestGroup.TestClass.() -> Unit = {
     model(
         relativeRootPath = path,
         excludeDirs = if (isLibrary) listOf("compilationErrors") else emptyList(),
-        pattern = if (isScript) TestGeneratorUtil.KTS else TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME,
+        pattern = if (isLibrary) TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME else TestGeneratorUtil.KT_OR_KTS_WITHOUT_DOTS_IN_NAME,
     )
 }
 
 private fun lightClassesByPsiTestsInit(
-    isLibrary: Boolean = false,
-    isScript: Boolean = false,
+    isLibrary: Boolean,
 ): TestGroup.TestClass.() -> Unit = lightClassesTestsInit(
     path = "asJava/lightClasses/lightClassByPsi",
     isLibrary = isLibrary,
-    isScript = isScript,
 )
 
 private fun TestGroup.lightClassesByPsiTests() {
-    val sourceModelInit = lightClassesByPsiTestsInit()
+    val sourceModelInit = lightClassesByPsiTestsInit(isLibrary = false)
     val libraryModelInit = lightClassesByPsiTestsInit(isLibrary = true)
-    val scriptModelInit = lightClassesByPsiTestsInit(isScript = true)
 
     testClass<AbstractSymbolLightClassesByPsiForSourceTest>(init = sourceModelInit)
     testClass<AbstractJsSymbolLightClassesByPsiForSourceTest>(init = sourceModelInit)
-    testClass<AbstractScriptSymbolLightClassesByPsiForSourceTest>(init = scriptModelInit)
 
     testClass<AbstractSymbolLightClassesByPsiForLibraryTest>(init = libraryModelInit)
     testClass<AbstractJsSymbolLightClassesByPsiForLibraryTest>(init = libraryModelInit)
@@ -116,39 +111,31 @@ private fun TestGroup.lightClassesByPsiTests() {
 
     testClass<AbstractSymbolLightClassesParentingByPsiForSourceTest>(init = sourceModelInit)
     testClass<AbstractSymbolLightClassesParentingByPsiForLibraryTest>(init = libraryModelInit)
-    testClass<AbstractScriptSymbolLightClassesParentingByPsiForSourceTest>(init = scriptModelInit)
 
     testClass<AbstractSymbolLightClassesEqualityByPsiForSourceTest>(init = sourceModelInit)
     testClass<AbstractSymbolLightClassesEqualityByPsiForLibraryTest>(init = libraryModelInit)
-    testClass<AbstractScriptSymbolLightClassesEqualityByPsiForSourceTest>(init = scriptModelInit)
 }
 
 private fun lightClassesByFqNameTestsInit(
-    isLibrary: Boolean = false,
-    isScript: Boolean = false,
+    isLibrary: Boolean,
 ): TestGroup.TestClass.() -> Unit = lightClassesTestsInit(
     path = "asJava/lightClasses/lightClassByFqName",
     isLibrary = isLibrary,
-    isScript = isScript,
 )
 
 private fun TestGroup.lightClassesByFqNameTests() {
-    val sourceModelInit = lightClassesByFqNameTestsInit()
+    val sourceModelInit = lightClassesByFqNameTestsInit(isLibrary = false)
     val libraryModelInit = lightClassesByFqNameTestsInit(isLibrary = true)
-    val scriptModelInit = lightClassesByFqNameTestsInit(isScript = true)
 
     testClass<AbstractSymbolLightClassesByFqNameForSourceTest>(init = sourceModelInit)
     testClass<AbstractJsSymbolLightClassesByFqNameForSourceTest>(init = sourceModelInit)
-    testClass<AbstractScriptSymbolLightClassesByFqNameForSourceTest>(init = scriptModelInit)
 
     testClass<AbstractSymbolLightClassesByFqNameForLibraryTest>(init = libraryModelInit)
     testClass<AbstractJsSymbolLightClassesByFqNameForLibraryTest>(init = libraryModelInit)
 
     testClass<AbstractSymbolLightClassesParentingByFqNameForSourceTest>(init = sourceModelInit)
     testClass<AbstractSymbolLightClassesParentingByFqNameForLibraryTest>(init = libraryModelInit)
-    testClass<AbstractScriptSymbolLightClassesParentingByFqNameForSourceTest>(init = scriptModelInit)
 
     testClass<AbstractSymbolLightClassesEqualityByFqNameForSourceTest>(init = sourceModelInit)
     testClass<AbstractSymbolLightClassesEqualityByFqNameForLibraryTest>(init = libraryModelInit)
-    testClass<AbstractScriptSymbolLightClassesEqualityByFqNameForSourceTest>(init = scriptModelInit)
 }
