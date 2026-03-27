@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -14,6 +14,13 @@ import org.jetbrains.kotlin.platform.TargetPlatform
 import org.jetbrains.kotlin.test.TestInfrastructureInternals
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 
+/**
+ * Test configurator for FIR-based source tests.
+ *
+ * Consider using [LLSourceLikeTestConfigurator] once not only source tests are expected.
+ *
+ * @see LLSourceLikeTestConfigurator
+ */
 open class AnalysisApiFirSourceTestConfigurator(
     analyseInDependentSession: Boolean,
     override val defaultTargetPlatform: TargetPlatform = defaultTargetPlatformValue
@@ -21,9 +28,12 @@ open class AnalysisApiFirSourceTestConfigurator(
     override fun configureTest(builder: TestConfigurationBuilder, disposable: Disposable) {
         super.configureTest(builder, disposable)
 
-        builder.apply {
-            useAdditionalService<KtTestModuleFactory> { KtSourceTestModuleFactory }
+        builder.useAdditionalService<KtTestModuleFactory> { KtSourceTestModuleFactory }
+        configureTest(builder)
+    }
 
+    companion object {
+        fun configureTest(builder: TestConfigurationBuilder): Unit = with(builder) {
             @OptIn(TestInfrastructureInternals::class)
             useModuleStructureTransformers(DependencyKindModuleStructureTransformer)
 

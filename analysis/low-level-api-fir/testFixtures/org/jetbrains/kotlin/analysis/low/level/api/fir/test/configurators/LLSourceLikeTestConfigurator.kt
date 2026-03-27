@@ -6,25 +6,27 @@
 package org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators
 
 import com.intellij.openapi.Disposable
-import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtScriptTestModuleFactory
+import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtSourceLikeTestModuleFactory
 import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtTestModuleFactory
 import org.jetbrains.kotlin.platform.TargetPlatform
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 
 /**
- * Test configurator for FIR-based script tests.
+ * A universal test configurator for source-like tests that use FIR.
  *
- * Consider using [LLSourceLikeTestConfigurator] for non-script specific tests.
+ * It covers [AnalysisApiFirSourceTestConfigurator] and [AnalysisApiFirScriptTestConfigurator].
  *
- * @see LLSourceLikeTestConfigurator
+ * @see AnalysisApiFirSourceTestConfigurator
+ * @see AnalysisApiFirScriptTestConfigurator
  */
-open class AnalysisApiFirScriptTestConfigurator(
-    analyseInDependentSession: Boolean,
+open class LLSourceLikeTestConfigurator(
+    analyseInDependentSession: Boolean = false,
     override val defaultTargetPlatform: TargetPlatform = defaultTargetPlatformValue,
 ) : LLSourceLikeBaseTestConfigurator(analyseInDependentSession) {
     override fun configureTest(builder: TestConfigurationBuilder, disposable: Disposable) {
         super.configureTest(builder, disposable)
 
-        builder.useAdditionalService<KtTestModuleFactory> { KtScriptTestModuleFactory }
+        builder.useAdditionalService<KtTestModuleFactory> { KtSourceLikeTestModuleFactory }
+        AnalysisApiFirSourceTestConfigurator.configureTest(builder)
     }
 }
