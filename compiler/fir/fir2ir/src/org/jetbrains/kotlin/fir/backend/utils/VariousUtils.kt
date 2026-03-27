@@ -160,14 +160,6 @@ fun IrType.getArrayElementType(builtins: Fir2IrBuiltinSymbolsContainer): IrType 
     }
 }
 
-val IrClassSymbol.defaultTypeWithoutArguments: IrSimpleType
-    get() = IrSimpleTypeImpl(
-        classifier = this,
-        nullability = SimpleTypeNullability.DEFINITELY_NOT_NULL,
-        arguments = emptyList(),
-        annotations = emptyList()
-    )
-
 val FirCallableSymbol<*>.isInlineClassProperty: Boolean
     get() {
         if (this !is FirPropertySymbol || dispatchReceiverType == null || receiverParameterSymbol != null || hasContextParameters) return false

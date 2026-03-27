@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.fir.backend
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.fir.backend.utils.ConversionTypeOrigin
-import org.jetbrains.kotlin.fir.backend.utils.defaultTypeWithoutArguments
 import org.jetbrains.kotlin.fir.backend.utils.toIrSymbol
 import org.jetbrains.kotlin.fir.backend.utils.unsubstitutedScope
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase

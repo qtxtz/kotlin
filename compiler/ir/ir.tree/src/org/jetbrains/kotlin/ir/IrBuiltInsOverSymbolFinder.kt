@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.SimpleTypeNullability
+import org.jetbrains.kotlin.ir.types.defaultTypeWithoutArguments
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.name.CallableId
@@ -22,14 +23,6 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.resolve.ArrayFqNames
 import org.jetbrains.kotlin.util.OperatorNameConventions
-
-private val IrClassSymbol.defaultTypeWithoutArguments: IrSimpleType
-    get() = IrSimpleTypeImpl(
-        classifier = this,
-        nullability = SimpleTypeNullability.DEFINITELY_NOT_NULL,
-        arguments = emptyList(),
-        annotations = emptyList()
-    )
 
 /**
  * Symbols for builtins that are available without any context and are not specific to any backend
