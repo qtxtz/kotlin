@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.generators.tests
 import org.jetbrains.kotlin.asJava.AbstractCompilerLightClassTest
 import org.jetbrains.kotlin.codegen.fir.*
 import org.jetbrains.kotlin.codegen.ir.AbstractIrScriptCodegenTest
-import org.jetbrains.kotlin.codegen.ir.AbstractIrWriteSignatureTest
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil.KT_OR_KTS_WITHOUT_DOTS_IN_NAME
@@ -120,10 +119,6 @@ fun main(args: Array<String>) {
                     testMethod = "doTestWithJavac",
                     targetBackend = TargetBackend.JVM_IR
                 )
-            }
-
-            testClass<AbstractIrWriteSignatureTest> {
-                model("writeSignature", targetBackend = TargetBackend.JVM_IR)
             }
 
             testClass<AbstractFirPsiCheckLocalVariablesTableTest> {
