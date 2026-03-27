@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.ir.declarations.DescriptorMetadataSource
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.objcinterop.IrObjCOverridabilityCondition
 import org.jetbrains.kotlin.ir.util.DeclarationStubGenerator
+import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.ir.util.ReferenceSymbolTable
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.konan.config.fakeOverrideValidator
@@ -36,6 +37,7 @@ import org.jetbrains.kotlin.library.metadata.DeserializedKlibModuleOrigin
 import org.jetbrains.kotlin.library.metadata.KlibModuleOrigin
 import org.jetbrains.kotlin.library.metadata.impl.isForwardDeclarationModule
 import org.jetbrains.kotlin.library.uniqueName
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.psi2ir.Psi2IrConfiguration
 import org.jetbrains.kotlin.psi2ir.Psi2IrTranslator
@@ -146,7 +148,6 @@ internal fun LinkKlibsContext.linkKlibs(
                 config.languageVersionSettings,
         )
 
-
         KonanIrLinker(
                 currentModule = moduleDescriptor,
                 messageCollector = messageCollector,
@@ -227,15 +228,13 @@ internal fun LinkKlibsContext.linkKlibs(
     // where the files are being initialized in order one by one.
     modules.values.forEach { module -> module.files.sortBy { it.fileEntry.name } }
 
-    // TODO: find out what should be done in the new builtins/symbols about it
-    @OptIn(InternalSymbolFinderAPI::class)
     if (stdlibIsBeingCached) {
         val maxArity = 255 // See [BuiltInFictitiousFunctionClassFactory].
         (0..maxArity).forEach { arity ->
-            symbols.symbolFinder.findClass(StandardClassIds.FunctionN(arity))
-            symbols.symbolFinder.findClass(StandardClassIds.KFunctionN(arity))
-            symbols.symbolFinder.findClass(StandardClassIds.SuspendFunctionN(arity))
-            symbols.symbolFinder.findClass(StandardClassIds.KSuspendFunctionN(arity))
+            irDeserializer.builtIns.functionN(arity)
+            irDeserializer.builtIns.suspendFunctionN(arity)
+            irDeserializer.builtIns.kFunctionN(arity)
+            irDeserializer.builtIns.kSuspendFunctionN(arity)
         }
     }
 
