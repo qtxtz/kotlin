@@ -87,6 +87,11 @@ public fun __root___foo_consume_simple__TypesOfArguments__U2829202D_U20Swift_Voi
     return run { _result; true }
 }
 
+@ExportedBridge("kotlin_ranges_intRange_create_int_simple")
+fun kotlin_ranges_intRange_create_int_simple(start: Int, end: Int): kotlin.native.internal.NativePtr {
+    return kotlin.native.internal.ref.createRetainedExternalRCRef(start .. end)
+}
+
 @ExportedBridge("kotlin_ranges_intRange_getEndInclusive_int_simple")
 fun kotlin_ranges_intRange_getEndInclusive_int_simple(nativePtr: kotlin.native.internal.NativePtr): Int {
     val intRange = kotlin.native.internal.ref.dereferenceExternalRCRef(nativePtr) as IntRange

@@ -1114,50 +1114,42 @@ extension ExportedKotlinPackages.kotlin {
         public func rangeTo(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Byte_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public override func toByte() -> Swift.Int8 {
             return kotlin_Byte_toByte(self.__externalRCRef())
@@ -1771,50 +1763,42 @@ extension ExportedKotlinPackages.kotlin {
         public func rangeTo(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Short_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public override func toByte() -> Swift.Int8 {
             return kotlin_Short_toByte(self.__externalRCRef())
@@ -2428,50 +2412,42 @@ extension ExportedKotlinPackages.kotlin {
         public func rangeTo(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int32> {
-            let _result = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_result) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_intRange_getStart_int_KotlinStdlib(_ref) ... kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Int_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func shl(
             bitCount: Swift.Int32
@@ -3117,50 +3093,42 @@ extension ExportedKotlinPackages.kotlin {
         public func rangeTo(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeTo(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeTo__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int8
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int8__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int16
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int16__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int32
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int32__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func rangeUntil(
             other: Swift.Int64
         ) -> Swift.ClosedRange<Swift.Int64> {
-            let _result = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other)
-            return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_result) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_result)
+            return { let _ref = kotlin_Long_rangeUntil__TypesOfArguments__Swift_Int64__(self.__externalRCRef(), other); return kotlin_ranges_longRange_getStart_long_KotlinStdlib(_ref) ... kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(_ref) }()
         }
         public func shl(
             bitCount: Swift.Int32

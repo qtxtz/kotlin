@@ -1579,9 +1579,13 @@ uint64_t kotlin_ranges_ULongRange_start_get(void * self);
 
 NSString * kotlin_ranges_ULongRange_toString(void * self);
 
+void * kotlin_ranges_intRange_create_int_KotlinStdlib(int32_t start, int32_t end);
+
 int32_t kotlin_ranges_intRange_getEndInclusive_int_KotlinStdlib(void * nativePtr);
 
 int32_t kotlin_ranges_intRange_getStart_int_KotlinStdlib(void * nativePtr);
+
+void * kotlin_ranges_longRange_create_long_KotlinStdlib(int64_t start, int64_t end);
 
 int64_t kotlin_ranges_longRange_getEndInclusive_long_KotlinStdlib(void * nativePtr);
 

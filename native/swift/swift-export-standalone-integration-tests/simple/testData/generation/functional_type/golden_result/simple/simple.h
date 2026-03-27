@@ -17,6 +17,8 @@ _Bool __root___foo_consume_producing__TypesOfArguments__U2829202D_U202829202D_U2
 
 _Bool __root___foo_consume_simple__TypesOfArguments__U2829202D_U20Swift_Void__(_Bool (^block)(void));
 
+void * kotlin_ranges_intRange_create_int_simple(int32_t start, int32_t end);
+
 int32_t kotlin_ranges_intRange_getEndInclusive_int_simple(void * nativePtr);
 
 int32_t kotlin_ranges_intRange_getStart_int_simple(void * nativePtr);

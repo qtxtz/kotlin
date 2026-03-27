@@ -47,6 +47,7 @@ import org.jetbrains.kotlin.sir.SirType
 import org.jetbrains.kotlin.sir.providers.SirCustomTypeTranslator
 import org.jetbrains.kotlin.sir.providers.SirSession
 import org.jetbrains.kotlin.sir.providers.SirTypeNamer
+import org.jetbrains.kotlin.sir.SirBridge
 import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge.AsNSArray
 import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge.AsNSDictionary
 import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge.AsNSSet
@@ -202,15 +203,14 @@ public class SirCustomTypeTranslatorImpl(
     }
 
     internal class RangeBridge private constructor(
-        swiftType: SirNominalType,
+        override val swiftType: SirNominalType,
         val uniqueModuleName: String,
         val kotlinRangeClassId: ClassId,
         val kotlinRangeElementClassId: ClassId,
         val inclusive: Boolean,
-    ) : Bridge(
-        swiftType,
-        typeList = List(2) { classIdToWrapperMap[kotlinRangeElementClassId]!! },
-    ) {
+    ) : BidirectionalBridge {
+        override val kotlinType = KotlinType.KotlinObject
+        override val cType = CType.Object
 
         companion object {
             context(session: SirSession)
@@ -228,18 +228,29 @@ public class SirCustomTypeTranslatorImpl(
             )
         }
 
+        private val elementTypes = classIdToWrapperMap[kotlinRangeElementClassId]!!
+
         val pairedParameterKotlinType: KotlinType
-            get() = typeList.first().kotlinType
+            get() = elementTypes.first
 
         val pairedParameterCType: CType
-            get() = typeList.first().cType
+            get() = elementTypes.second
+
+        private val kotlinRangeTypeName = kotlinRangeClassId.shortClassName.asString()
+        private val kotlinRangeNameDecapitalized = kotlinRangeTypeName.replaceFirstChar(Char::lowercase)
+        private val kotlinRangeElementNameDecapitalized = pairedParameterKotlinType.repr.replaceFirstChar(Char::lowercase)
+
+        private val kotlinRangeTypeDescription = when (kotlinRangeClassId) {
+            StandardClassIds.IntRange, StandardClassIds.LongRange -> kotlinRangeTypeName
+            else -> "$kotlinRangeTypeName<${pairedParameterKotlinType.repr}>"
+        }
 
         override val inKotlinSources = object : ValueConversion {
             context(session: SirSession)
-            override fun swiftToKotlin(typeNamer: SirTypeNamer, valueExpression: String): String {
-                val operator = if (inclusive) ".." else "..<"
-                return "${valueExpression}_1 $operator ${valueExpression}_2"
-            }
+            override fun swiftToKotlin(typeNamer: SirTypeNamer, valueExpression: String): String =
+                "kotlin.native.internal.ref.dereferenceExternalRCRef($valueExpression) as ${
+                    typeNamer.kotlinFqName(swiftType, SirTypeNamer.KotlinNameType.PARAMETRIZED)
+                }"
 
             context(session: SirSession)
             override fun kotlinToSwift(typeNamer: SirTypeNamer, valueExpression: String): String =
@@ -249,53 +260,66 @@ public class SirCustomTypeTranslatorImpl(
         override val inSwiftSources = object : ValueConversion {
             context(session: SirSession)
             override fun swiftToKotlin(typeNamer: SirTypeNamer, valueExpression: String): String =
-                "$valueExpression.lowerBound, $valueExpression.upperBound"
+                "${constructorBridge().name}($valueExpression.lowerBound, $valueExpression.upperBound)"
 
             context(session: SirSession)
             override fun kotlinToSwift(typeNamer: SirTypeNamer, valueExpression: String): String {
-                val startBridge = nativePointerToMultipleObjCBridge(0)
-                val endBridge = nativePointerToMultipleObjCBridge(1)
+                val startBridge = getterBridge(0)
+                val endBridge = getterBridge(1)
                 val operator = if (inclusive) "..." else "..<"
-                return "${startBridge.name}($valueExpression) $operator ${endBridge.name}($valueExpression)"
+                return "{ let _ref = $valueExpression; return ${startBridge.name}(_ref) $operator ${endBridge.name}(_ref) }()"
             }
         }
 
-        override fun nativePointerToMultipleObjCBridge(index: Int): SirFunctionBridge {
-            when (index) {
-                0, 1 -> {
-                    val propertyName = if (index == 0) "start" else "end${if (inclusive) "Inclusive" else "Exclusive"}"
-                    val propertyNameCapitalized = propertyName.replaceFirstChar(Char::uppercase)
-                    val kotlinRangeTypeName = kotlinRangeClassId.shortClassName.asString()
-                    val kotlinRangeNameDecapitalized = kotlinRangeTypeName.replaceFirstChar(Char::lowercase)
-                    val kotlinRangeElementNameDecapitalized = pairedParameterKotlinType.repr.replaceFirstChar(Char::lowercase)
-                    val cRangeElementName = pairedParameterCType.render("")
-                    val name = "kotlin_ranges_${kotlinRangeNameDecapitalized}_get${propertyNameCapitalized}_${kotlinRangeElementNameDecapitalized}_$uniqueModuleName"
-                    val kotlinRangeTypeDescription = when (kotlinRangeClassId) {
-                        StandardClassIds.IntRange, StandardClassIds.LongRange -> kotlinRangeTypeName
-                        else -> "$kotlinRangeTypeName<${pairedParameterKotlinType.repr}>"
-                    }
+        context(sir: SirSession)
+        override fun helperBridges(typeNamer: SirTypeNamer): List<SirBridge> =
+            listOf(constructorBridge(), getterBridge(0), getterBridge(1))
 
-                    return SirFunctionBridge(
-                        name,
-                        KotlinFunctionBridge(
-                            lines = listOf(
-                                "@${exportAnnotationFqName.substringAfterLast('.')}(\"$name\")",
-                                "fun $name(nativePtr: kotlin.native.internal.NativePtr): ${pairedParameterKotlinType.repr} {",
-                                "    val $kotlinRangeNameDecapitalized = kotlin.native.internal.ref.dereferenceExternalRCRef(nativePtr) as $kotlinRangeTypeDescription",
-                                "    return $kotlinRangeNameDecapitalized.$propertyName",
-                                "}",
-                            ),
-                            packageDependencies = listOf()
-                        ),
-                        CFunctionBridge(
-                            listOf("$cRangeElementName $name(void * nativePtr);"),
-                            listOf()
-                        )
-                    )
-                }
+        private fun constructorBridge(): SirFunctionBridge {
+            val operator = if (inclusive) ".." else "..<"
+            val cRangeElementName = pairedParameterCType.render("")
+            val name = "kotlin_ranges_${kotlinRangeNameDecapitalized}_create_${kotlinRangeElementNameDecapitalized}_$uniqueModuleName"
+            return SirFunctionBridge(
+                name,
+                KotlinFunctionBridge(
+                    lines = listOf(
+                        "@${exportAnnotationFqName.substringAfterLast('.')}(\"$name\")",
+                        "fun $name(start: ${pairedParameterKotlinType.repr}, end: ${pairedParameterKotlinType.repr}): kotlin.native.internal.NativePtr {",
+                        "    return kotlin.native.internal.ref.createRetainedExternalRCRef(start $operator end)",
+                        "}",
+                    ),
+                    packageDependencies = listOf()
+                ),
+                CFunctionBridge(
+                    listOf("void * $name($cRangeElementName start, $cRangeElementName end);"),
+                    listOf()
+                )
+            )
+        }
 
-                else -> throw NoSuchElementException()
-            }
+        private fun getterBridge(index: Int): SirFunctionBridge {
+            val propertyName = if (index == 0) "start" else "end${if (inclusive) "Inclusive" else "Exclusive"}"
+            val propertyNameCapitalized = propertyName.replaceFirstChar(Char::uppercase)
+            val cRangeElementName = pairedParameterCType.render("")
+            val name = "kotlin_ranges_${kotlinRangeNameDecapitalized}_get${propertyNameCapitalized}_${kotlinRangeElementNameDecapitalized}_$uniqueModuleName"
+
+            return SirFunctionBridge(
+                name,
+                KotlinFunctionBridge(
+                    lines = listOf(
+                        "@${exportAnnotationFqName.substringAfterLast('.')}(\"$name\")",
+                        "fun $name(nativePtr: kotlin.native.internal.NativePtr): ${pairedParameterKotlinType.repr} {",
+                        "    val $kotlinRangeNameDecapitalized = kotlin.native.internal.ref.dereferenceExternalRCRef(nativePtr) as $kotlinRangeTypeDescription",
+                        "    return $kotlinRangeNameDecapitalized.$propertyName",
+                        "}",
+                    ),
+                    packageDependencies = listOf()
+                ),
+                CFunctionBridge(
+                    listOf("$cRangeElementName $name(void * nativePtr);"),
+                    listOf()
+                )
+            )
         }
     }
 
@@ -332,39 +356,39 @@ public class SirCustomTypeTranslatorImpl(
 
         private val primitiveTypeToWrapperMap: Map<SirNominalType, SirCustomTypeTranslator.BridgeWrapper> = buildMap {
             for ((declaration, kctype) in mapOf(
-                SirSwiftModule.utf16CodeUnit to AnyBridge.TypePair(KotlinType.Char, CType.UInt16),
+                SirSwiftModule.utf16CodeUnit to Pair(KotlinType.Char, CType.UInt16),
 
-                SirSwiftModule.int8 to AnyBridge.TypePair(KotlinType.Byte, CType.Int8),
-                SirSwiftModule.int16 to AnyBridge.TypePair(KotlinType.Short, CType.Int16),
-                SirSwiftModule.int32 to AnyBridge.TypePair(KotlinType.Int, CType.Int32),
-                SirSwiftModule.int64 to AnyBridge.TypePair(KotlinType.Long, CType.Int64),
+                SirSwiftModule.int8 to Pair(KotlinType.Byte, CType.Int8),
+                SirSwiftModule.int16 to Pair(KotlinType.Short, CType.Int16),
+                SirSwiftModule.int32 to Pair(KotlinType.Int, CType.Int32),
+                SirSwiftModule.int64 to Pair(KotlinType.Long, CType.Int64),
 
-                SirSwiftModule.uint8 to AnyBridge.TypePair(KotlinType.UByte, CType.UInt8),
-                SirSwiftModule.uint16 to AnyBridge.TypePair(KotlinType.UShort, CType.UInt16),
-                SirSwiftModule.uint32 to AnyBridge.TypePair(KotlinType.UInt, CType.UInt32),
-                SirSwiftModule.uint64 to AnyBridge.TypePair(KotlinType.ULong, CType.UInt64),
+                SirSwiftModule.uint8 to Pair(KotlinType.UByte, CType.UInt8),
+                SirSwiftModule.uint16 to Pair(KotlinType.UShort, CType.UInt16),
+                SirSwiftModule.uint32 to Pair(KotlinType.UInt, CType.UInt32),
+                SirSwiftModule.uint64 to Pair(KotlinType.ULong, CType.UInt64),
 
-                SirSwiftModule.bool to AnyBridge.TypePair(KotlinType.Boolean, CType.Bool),
+                SirSwiftModule.bool to Pair(KotlinType.Boolean, CType.Bool),
 
-                SirSwiftModule.double to AnyBridge.TypePair(KotlinType.Double, CType.Double),
-                SirSwiftModule.float to AnyBridge.TypePair(KotlinType.Float, CType.Float),
+                SirSwiftModule.double to Pair(KotlinType.Double, CType.Double),
+                SirSwiftModule.float to Pair(KotlinType.Float, CType.Float),
             )) {
-                put(SirNominalType(declaration), Bridge.AsIs(declaration, kctype.kotlinType, kctype.cType).wrapper())
+                put(SirNominalType(declaration), Bridge.AsIs(declaration, kctype.first, kctype.second).wrapper())
             }
             put(SirNominalType(SirSwiftModule.void), Bridge.AsVoid.wrapper())
         }
 
         private val classIdToWrapperMap = hashMapOf(
-            LONG to AnyBridge.TypePair(KotlinType.Long, CType.Int64),
-            INT to AnyBridge.TypePair(KotlinType.Int, CType.Int32),
-            SHORT to AnyBridge.TypePair(KotlinType.Short, CType.Int16),
-            BYTE to AnyBridge.TypePair(KotlinType.Byte, CType.Int8),
-            ClassId.fromString("kotlin/ULong") to AnyBridge.TypePair(KotlinType.ULong, CType.UInt64),
-            ClassId.fromString("kotlin/UInt") to AnyBridge.TypePair(KotlinType.UInt, CType.UInt32),
-            ClassId.fromString("kotlin/UShort") to AnyBridge.TypePair(KotlinType.UShort, CType.UInt16),
-            ClassId.fromString("kotlin/UByte") to AnyBridge.TypePair(KotlinType.UByte, CType.UInt8),
+            LONG to Pair(KotlinType.Long, CType.Int64),
+            INT to Pair(KotlinType.Int, CType.Int32),
+            SHORT to Pair(KotlinType.Short, CType.Int16),
+            BYTE to Pair(KotlinType.Byte, CType.Int8),
+            ClassId.fromString("kotlin/ULong") to Pair(KotlinType.ULong, CType.UInt64),
+            ClassId.fromString("kotlin/UInt") to Pair(KotlinType.UInt, CType.UInt32),
+            ClassId.fromString("kotlin/UShort") to Pair(KotlinType.UShort, CType.UInt16),
+            ClassId.fromString("kotlin/UByte") to Pair(KotlinType.UByte, CType.UInt8),
         )
 
-        private fun Bridge.wrapper(): SirCustomTypeTranslator.BridgeWrapper = SirCustomTypeTranslator.BridgeWrapper(this)
+        private fun BidirectionalBridge.wrapper(): SirCustomTypeTranslator.BridgeWrapper = SirCustomTypeTranslator.BridgeWrapper(this)
     }
 }

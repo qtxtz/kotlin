@@ -16,10 +16,10 @@ import org.jetbrains.kotlin.sir.providers.utils.KotlinCoroutineSupportModule
 import org.jetbrains.kotlin.sir.providers.utils.KotlinRuntimeModule
 import org.jetbrains.kotlin.sir.providers.utils.KotlinRuntimeSupportModule
 import org.jetbrains.kotlin.sir.util.isNever
-import org.jetbrains.kotlin.sir.util.isVoid
 import org.jetbrains.kotlin.sir.util.name
 import org.jetbrains.kotlin.sir.util.swiftIdentifier
 import org.jetbrains.kotlin.sir.util.swiftName
+import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge.*
 import org.jetbrains.kotlin.utils.addToStdlib.ifTrue
 
 internal const val exportAnnotationFqName = "kotlin.native.internal.ExportedBridge"
@@ -248,16 +248,10 @@ private class BridgeFunctionDescriptor(
                     CFunctionBridge(listOf(cDeclaration()), listOf(foundationHeader, stdintHeader))
                 )
             )
-            val allBridges = parameters.mapTo(mutableListOf<AnyBridge>()) { it.bridge }
+            val allBridges = parameters.mapTo(mutableListOf<Bridge>()) { it.bridge }
             selfParameter?.let { allBridges.add(it.bridge) }
             extensionReceiverParameter?.let { allBridges.add(it.bridge) }
             allBridges.add(returnType)
-            allBridges.forEach {
-                if (it.typeList.size <= 1) return@forEach
-                for (i in 0..<it.typeList.size) {
-                    add(it.nativePointerToMultipleObjCBridge(i))
-                }
-            }
 
             // todo: KT-82908 Swift Export: bridges for FT should be recursive
             allBridges
@@ -320,26 +314,10 @@ private fun BridgeFunctionDescriptor.createKotlinBridge(
     buildCallSite: BridgeFunctionDescriptor.() -> String,
 ) = buildList {
     add("@${exportAnnotationFqName.substringAfterLast('.')}(\"${cBridgeName}\")")
-    val kotlinReturnType = when {
-        returnType.typeList.isEmpty() -> KotlinType.Unit
-        returnType.typeList.size == 1 -> returnType.typeList.single().kotlinType.takeIf { !isAsync } ?: KotlinType.Unit
-        // As we can't return multiple types, we use native pointer instead
-        else -> KotlinType.KotlinObject
-    }
+    val kotlinReturnType = returnType.kotlinType.takeIf { !isAsync } ?: KotlinType.Unit
 
-    val parameters = allParameters.filter { it.bridge.typeList.isNotEmpty() }.joinToString {
-        val bridge = it.bridge
-        val identifier = it.name.kotlinIdentifier
-        if (bridge.typeList.size > 1) {
-            var index = 0
-            bridge.typeList.joinToString { (kotlinType, _) ->
-                index++
-                "${identifier}_$index: ${kotlinType.repr}"
-            }
-        } else {
-            val typeRepresentation = bridge.typeList.single().kotlinType.repr
-            "$identifier: $typeRepresentation"
-        }
+    val parameters = allParameters.joinToString {
+        "${it.name.kotlinIdentifier}: ${it.bridge.kotlinType.repr}"
     }
 
     add("public fun $kotlinBridgeName($parameters): ${kotlinReturnType.repr} {")
@@ -374,7 +352,7 @@ private fun BridgeFunctionDescriptor.createKotlinBridge(
     } else {
         if (errorParameter != null) {
             // TODO: is it correct to use the first type only here?
-            val defaultValue = returnType.typeList.first().kotlinType.defaultValue
+            val defaultValue = returnType.kotlinType.defaultValue
             add(
                 """
             try {
@@ -406,13 +384,7 @@ private fun BridgeFunctionDescriptor.swiftInvocationLineForCBridge(typeNamer: Si
 context(session: SirSession)
 private fun BridgeFunctionDescriptor.swiftLinesForCBridgeCallAndTransformation(typeNamer: SirTypeNamer): List<String> {
     val swiftInvocation = swiftInvocationLineForCBridge(typeNamer)
-    if (returnType.typeList.size <= 1) {
-        return listOf(returnType.inSwiftSources.kotlinToSwift(typeNamer, swiftInvocation))
-    }
-    return buildList {
-        add("let _result = $swiftInvocation")
-        add(returnType.inSwiftSources.kotlinToSwift(typeNamer, "_result"))
-    }
+    return listOf(returnType.inSwiftSources.kotlinToSwift(typeNamer, swiftInvocation))
 }
 
 context(session: SirSession)
@@ -447,28 +419,13 @@ private fun BridgeFunctionDescriptor.swiftAsyncCall(typeNamer: SirTypeNamer): St
 context(session: SirSession)
 private fun BridgeFunctionDescriptor.cDeclaration() = buildString {
     val returnTypeBridge = returnType.takeIf { !isAsync } ?: Bridge.AsVoid
-    val returnType = when {
-        returnTypeBridge.typeList.isEmpty() -> CType.Void
-        returnTypeBridge.typeList.size == 1 -> returnTypeBridge.typeList.single().cType
-        // As we can't return multiple types, we use void* here
-        else -> CType.Object
-    }
 
     append(
-        returnType.render(buildString {
+        returnTypeBridge.cType.render(buildString {
             append(cBridgeName)
             append("(")
-            allParameters.filter { it.bridge.typeList.isNotEmpty() }.joinTo(this) {
-                val bridge = it.bridge
-                if (bridge.typeList.size > 1) {
-                    var index = 0
-                    bridge.typeList.joinToString { (_, cType) ->
-                        index++
-                        cType.render("${it.name.cIdentifier}_$index")
-                    }
-                } else {
-                    bridge.typeList.single().cType.render(it.name.cIdentifier)
-                }
+            allParameters.joinTo(this) {
+                it.bridge.cType.render(it.name.cIdentifier)
             }
             append(')')
         })

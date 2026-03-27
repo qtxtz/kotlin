@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.analysis.api.types.KaUsualClassType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.sir.*
+import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.BidirectionalBridge
 import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge
 import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.BridgeFunctionProxy
 import org.jetbrains.kotlin.sir.providers.impl.SirTypeProviderImpl.TypeTranslationCtx
@@ -411,7 +412,7 @@ public interface SirCustomTypeTranslator {
 
     public fun SirNominalType.toBridge(): BridgeWrapper?
 
-    public class BridgeWrapper internal constructor(internal val bridge: Bridge)
+    public class BridgeWrapper internal constructor(internal val bridge: BidirectionalBridge)
 }
 
 /**
