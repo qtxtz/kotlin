@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.fir.contracts.*
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.utils.getExplicitBackingField
 import org.jetbrains.kotlin.fir.declarations.utils.hasGeneratedDelegateBody
+import org.jetbrains.kotlin.fir.declarations.utils.replSnippetDelegatedPropertyCopies
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.impl.FirContractCallBlock
 import org.jetbrains.kotlin.fir.expressions.impl.FirLazyDelegatedConstructorCall
@@ -209,6 +210,24 @@ private fun calculateLazyBodyForEvalFunction(
     val newSnippet = revive<FirReplSnippet>(replDesignation)
     val newFunction = newSnippet.evalFunctionSymbol.fir
     replaceLazyBody(function, newFunction)
+    replacePropertyCopies(function, newFunction)
+}
+
+@OptIn(FirImplementationDetail::class)
+private fun replacePropertyCopies(
+    target: FirNamedFunction,
+    newFunction: FirNamedFunction,
+) {
+    val copies = target.replSnippetDelegatedPropertyCopies?.entries ?: return
+    val newProperties = newFunction.replSnippetDelegatedPropertyCopies?.values
+    requireWithAttachment(copies.size == newProperties?.size, { "Unexpected copies size" }) {
+        withFirEntry("target", target)
+        withFirEntry("newFunction", newFunction)
+    }
+
+    copies.zip(newProperties).forEach { (copy, newProperty) ->
+        copy.setValue(newProperty)
+    }
 }
 
 private fun calculateLazyBodyForConstructor(designation: FirDesignation) {
@@ -286,6 +305,11 @@ private fun calculateLazyBodyForResultProperty(firProperty: FirProperty, designa
  */
 private fun rebindDelegate(newTarget: FirProperty, oldTarget: FirProperty) {
     val delegate = newTarget.delegate ?: return
+    // Repl has a reference instead of the delegate
+    if (delegate is FirReplExpressionReference) {
+        return
+    }
+
     requireWithAttachment(
         delegate is FirWrappedDelegateExpression,
         { "Unexpected delegate type: ${delegate::class.simpleName}" },
