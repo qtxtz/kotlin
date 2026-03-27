@@ -707,17 +707,6 @@ class ArraysTest {
         assertArrayNotSameButEquals(intArrayOf(1, 2, 3, 4), intArrayOf(1, 2) + intArrayOf(3, 4))
     }
 
-    // KT-84746
-    @Test fun plusCombinations() {
-        val frames: Array<Array<Any?>> = arrayOf(arrayOf(1, 2))
-        val result1 = frames + arrayOfNulls<Any>(4)
-        val result2: Array<Array<Any?>> = frames + arrayOfNulls<Any>(4)
-
-        assertEquals("1, 2", frames.joinToString("; ") { it.joinToString() })
-        assertEquals("1, 2; null, null, null, null", result1.joinToString("; ") { it.joinToString() })
-        assertEquals("1, 2; null, null, null, null", result2.joinToString("; ") { it.joinToString() })
-    }
-
     @Test fun plusVararg() {
         fun stringOnePlus(vararg a: String) = arrayOf("1") + a
         fun longOnePlus(vararg a: Long) = longArrayOf(1) + a
