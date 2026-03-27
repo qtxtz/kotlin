@@ -41,7 +41,7 @@ class FirPsiLinkageModeTest : JvmIrLinkageModeTest() {
         get() = FirParser.Psi
 }
 
-open class JvmIrLinkageModeTest : CodegenTestCase() {
+abstract class JvmIrLinkageModeTest : CodegenTestCase() {
     private var enableLinkageViaSignatures: Boolean? = null
 
     private var source = """
