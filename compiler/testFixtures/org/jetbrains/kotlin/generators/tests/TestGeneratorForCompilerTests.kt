@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
 import org.jetbrains.kotlin.modules.xml.AbstractModuleXmlParserTest
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.utils.CUSTOM_TEST_DATA_EXTENSION_PATTERN
-import org.jetbrains.kotlin.types.AbstractTypeBindingTest
 
 fun main(args: Array<String>) {
     val mainClassName = TestGeneratorUtil.getMainClassName()
@@ -87,10 +86,6 @@ fun main(args: Array<String>) {
                     excludeDirs = listOf("local", "ideRegression"),
                     pattern = KT_OR_KTS_WITHOUT_DOTS_IN_NAME,
                 )
-            }
-
-            testClass<AbstractTypeBindingTest> {
-                model("type/binding")
             }
 
             testClass<AbstractKDocLexerTest> {
