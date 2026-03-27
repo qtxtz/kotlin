@@ -30,8 +30,6 @@ sourceSets {
 }
 
 projectTests {
-    testData(project(":compiler").isolated, "testData/loadJava")
-    testData(project(":compiler").isolated, "testData/loadJava8")
     testData(project(":compiler").isolated, "testData/builtin-classes")
 
     withJvmStdlibAndReflect()
@@ -48,8 +46,6 @@ projectTests {
     ) {
         systemProperty("kotlin.test.script.classpath", testSourceSet.output.classesDirs.joinToString(File.pathSeparator))
     }
-
-    testGenerator("org.jetbrains.kotlin.generators.tests.GenerateJava8TestsKt", generateTestsInBuildDirectory = true)
 }
 
 

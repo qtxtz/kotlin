@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.generators.tests
 import org.jetbrains.kotlin.codegen.fir.*
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
-import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJavaTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirPsiCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
@@ -20,26 +19,6 @@ fun main(args: Array<String>) {
     val mainClassName = TestGeneratorUtil.getMainClassName()
     generateTestGroupSuiteWithJUnit4(args, mainClassName) {
         testGroup("compiler/tests-gen", "compiler/testData") {
-            testClass<AbstractLoadJavaTest> {
-                model("loadJava/compiledJava", extension = "java", testMethod = "doTestCompiledJava")
-                model("loadJava/compiledJavaAndKotlin", extension = "txt", testMethod = "doTestCompiledJavaAndKotlin")
-                model(
-                    "loadJava/compiledJavaIncludeObjectMethods",
-                    extension = "java",
-                    testMethod = "doTestCompiledJavaIncludeObjectMethods"
-                )
-                model("loadJava/compiledKotlin", testMethod = "doTestCompiledKotlin")
-                model("loadJava/compiledKotlinWithStdlib", testMethod = "doTestCompiledKotlinWithStdlib")
-                model("loadJava/javaAgainstKotlin", extension = "txt", testMethod = "doTestJavaAgainstKotlin")
-                model(
-                    "loadJava/kotlinAgainstCompiledJavaWithKotlin",
-                    extension = "kt",
-                    testMethod = "doTestKotlinAgainstCompiledJavaWithKotlin",
-                    recursive = false
-                )
-                model("loadJava/sourceJava", extension = "java", testMethod = "doTestSourceJava")
-            }
-
             testClass<AbstractModuleXmlParserTest> {
                 model("modules.xml", extension = "xml")
             }
