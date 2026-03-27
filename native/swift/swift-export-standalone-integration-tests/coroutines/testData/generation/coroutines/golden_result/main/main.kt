@@ -66,11 +66,11 @@ public fun __root___FunctionalInterfaceWithSuspendFunction__TypesOfArguments__U2
             kotlinx.coroutines.suspendCancellableCoroutine { __cont ->
                 val __cancellationPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__cancellation)
                 val __continuation: Function1<Unit, Unit> = { _result ->
-                    __cont.resumeWith(kotlin.Result.success(_result))
+                    if (__cont.isActive) __cont.resumeWith(kotlin.Result.success(_result))
                 }
                 val __continuationPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__continuation)
                 val __exception: Function1<platform.Foundation.NSError, Unit> = { _error ->
-                    __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
+                    if (__cont.isActive) __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
                 }
                 val __exceptionPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__exception)
                 originalBlock(__continuationPtr, __exceptionPtr, __cancellationPtr)
@@ -95,11 +95,11 @@ public fun __root___accept_suspend_function_type__TypesOfArguments__U282920async
             kotlinx.coroutines.suspendCancellableCoroutine { __cont ->
                 val __cancellationPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__cancellation)
                 val __continuation: Function1<Int, Unit> = { _result ->
-                    __cont.resumeWith(kotlin.Result.success(_result))
+                    if (__cont.isActive) __cont.resumeWith(kotlin.Result.success(_result))
                 }
                 val __continuationPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__continuation)
                 val __exception: Function1<platform.Foundation.NSError, Unit> = { _error ->
-                    __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
+                    if (__cont.isActive) __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
                 }
                 val __exceptionPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__exception)
                 originalBlock(__continuationPtr, __exceptionPtr, __cancellationPtr)

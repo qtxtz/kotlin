@@ -1066,11 +1066,11 @@ internal sealed class Bridge(
                     |        kotlinx.coroutines.suspendCancellableCoroutine { __cont ->
                     |            val __cancellationPtr = $cancellationPtrConversion
                     |            val __continuation: $continuationKotlinType = { _result ->
-                    |                __cont.resumeWith(kotlin.Result.success(_result))
+                    |                if (__cont.isActive) __cont.resumeWith(kotlin.Result.success(_result))
                     |            }
                     |            val __continuationPtr = $continuationPtrConversion
                     |            val __exception: $exceptionKotlinType = { _error ->
-                    |                __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
+                    |                if (__cont.isActive) __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
                     |            }
                     |            val __exceptionPtr = $exceptionPtrConversion
                     |            originalBlock($callArgs)

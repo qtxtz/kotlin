@@ -41,11 +41,11 @@ public fun kotlinx_coroutines_flow_FlowCollector__TypesOfArguments__U28Swift_Opt
             kotlinx.coroutines.suspendCancellableCoroutine { __cont ->
                 val __cancellationPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__cancellation)
                 val __continuation: Function1<Unit, Unit> = { _result ->
-                    __cont.resumeWith(kotlin.Result.success(_result))
+                    if (__cont.isActive) __cont.resumeWith(kotlin.Result.success(_result))
                 }
                 val __continuationPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__continuation)
                 val __exception: Function1<platform.Foundation.NSError, Unit> = { _error ->
-                    __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
+                    if (__cont.isActive) __cont.resumeWith(kotlin.Result.failure(SwiftException(_error)))
                 }
                 val __exceptionPtr = kotlin.native.internal.ref.createRetainedExternalRCRef(__exception)
                 originalBlock(if (arg0 == null) kotlin.native.internal.NativePtr.NULL else kotlin.native.internal.ref.createRetainedExternalRCRef(arg0), __continuationPtr, __exceptionPtr, __cancellationPtr)
