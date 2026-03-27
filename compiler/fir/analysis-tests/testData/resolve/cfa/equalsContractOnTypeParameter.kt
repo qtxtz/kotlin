@@ -11,7 +11,7 @@ fun <T> test_1(obj: T) {
     if (obj == arrayListOf<Int>()) {
         // ClassCastException at runtime
         // should be no smartcast
-        obj.ensureCapacity(100)
+        obj.<!UNRESOLVED_REFERENCE!>ensureCapacity<!>(100)
     }
 }
 
