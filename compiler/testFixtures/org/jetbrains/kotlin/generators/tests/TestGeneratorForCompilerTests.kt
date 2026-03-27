@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava17Test
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJavaTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirLightTreeCompileJavaAgainstKotlinTest
 import org.jetbrains.kotlin.jvm.compiler.fir.AbstractFirPsiCompileJavaAgainstKotlinTest
-import org.jetbrains.kotlin.jvm.compiler.ir.AbstractIrCompileKotlinWithJavacIntegrationTest
 import org.jetbrains.kotlin.jvm.compiler.javac.AbstractLoadJavaUsingJavacTest
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
 import org.jetbrains.kotlin.lexer.kotlin.AbstractKotlinLexerTest
@@ -121,22 +120,6 @@ fun main(args: Array<String>) {
                     "compileJavaAgainstKotlin",
                     testClassName = "WithJavac",
                     testMethod = "doTestWithJavac",
-                    targetBackend = TargetBackend.JVM_IR
-                )
-            }
-
-
-            testClass<AbstractIrCompileKotlinWithJavacIntegrationTest> {
-                model(
-                    "compileKotlinAgainstJava",
-                    testClassName = "WithAPT",
-                    testMethod = "doTestWithAPT",
-                    targetBackend = TargetBackend.JVM_IR
-                )
-                model(
-                    "compileKotlinAgainstJava",
-                    testClassName = "WithoutAPT",
-                    testMethod = "doTestWithoutAPT",
                     targetBackend = TargetBackend.JVM_IR
                 )
             }
