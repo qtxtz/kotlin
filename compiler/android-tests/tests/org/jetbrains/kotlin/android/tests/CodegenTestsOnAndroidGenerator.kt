@@ -413,7 +413,7 @@ class CodegenTestsOnAndroidGenerator private constructor(private val pathManager
 
     private fun TestConfigurationBuilder.configure() {
         globalDefaults {
-            frontend = FrontendKinds.ClassicFrontend
+            frontend = FrontendKinds.FIR
             targetBackend = TargetBackend.ANDROID
             targetPlatform = JvmPlatforms.defaultJvmPlatform
             dependencyKind = DependencyKind.Binary

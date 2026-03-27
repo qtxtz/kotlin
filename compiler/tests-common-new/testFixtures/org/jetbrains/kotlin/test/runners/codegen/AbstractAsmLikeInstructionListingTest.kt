@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.test.backend.handlers.AsmLikeInstructionListingHandl
 import org.jetbrains.kotlin.test.backend.ir.BackendCliJvmFacade
 import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
-import org.jetbrains.kotlin.test.builders.configureClassicFrontendHandlersStep
 import org.jetbrains.kotlin.test.builders.configureFirHandlersStep
 import org.jetbrains.kotlin.test.builders.configureJvmArtifactsHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForJvmTest
@@ -21,7 +20,6 @@ import org.jetbrains.kotlin.test.configuration.commonHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.AsmLikeInstructionListingDirectives.CHECK_ASM_LIKE_INSTRUCTIONS
 import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives.DIAGNOSTICS
 import org.jetbrains.kotlin.test.directives.configureFirParser
-import org.jetbrains.kotlin.test.frontend.classic.handlers.ClassicDiagnosticsHandler
 import org.jetbrains.kotlin.test.frontend.fir.Fir2IrCliJvmFacade
 import org.jetbrains.kotlin.test.frontend.fir.FirCliJvmFacade
 import org.jetbrains.kotlin.test.frontend.fir.FirOutputArtifact
@@ -42,12 +40,6 @@ abstract class AbstractAsmLikeInstructionListingTestBase<R : ResultingArtifact.F
         }
 
         commonConfigurationForJvmTest(targetFrontend, frontendFacade, frontendToBackendConverter, backendFacade)
-
-        configureClassicFrontendHandlersStep {
-            useHandlers(
-                ::ClassicDiagnosticsHandler
-            )
-        }
 
         configureFirHandlersStep {
             useHandlers(
