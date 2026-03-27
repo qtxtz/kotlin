@@ -18,7 +18,6 @@ package org.jetbrains.kotlin.generators.tests
 
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava8Test
-import org.jetbrains.kotlin.jvm.compiler.AbstractLoadJava8WithPsiClassReadingTest
 import org.jetbrains.kotlin.jvm.compiler.javac.AbstractLoadJava8UsingJavacTest
 
 fun main(args: Array<String>) {
@@ -43,15 +42,6 @@ fun main(args: Array<String>) {
                     "loadJava8/sourceJava",
                     extension = "java",
                     testMethod = "doTestSourceJava",
-                    excludeDirs = listOf("typeUseAnnotations", "typeParameterAnnotations")
-                )
-            }
-
-            testClass<AbstractLoadJava8WithPsiClassReadingTest> {
-                model(
-                    "loadJava8/compiledJava",
-                    extension = "java",
-                    testMethod = "doTestCompiledJava",
                     excludeDirs = listOf("typeUseAnnotations", "typeParameterAnnotations")
                 )
             }

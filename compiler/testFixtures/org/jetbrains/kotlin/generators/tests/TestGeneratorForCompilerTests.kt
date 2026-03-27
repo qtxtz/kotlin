@@ -74,21 +74,9 @@ fun main(args: Array<String>) {
                 model("loadJava/sourceJava", extension = "java", testMethod = "doTestSourceJava")
             }
 
-            testClass<AbstractLoadKotlinWithTypeTableTest> {
-                model("loadJava/compiledKotlin")
-            }
-
-            testClass<AbstractLoadJavaWithPsiClassReadingTest> {
-                model("loadJava/compiledJava", extension = "java", testMethod = "doTestCompiledJava")
-            }
-
             testClass<AbstractLoadJava17Test> {
                 model("loadJava17", extension = "java", testMethod = "doTestCompiledJava", testClassName = "CompiledJava")
                 model("loadJava17", extension = "java", testMethod = "doTestSourceJava", testClassName = "SourceJava")
-            }
-
-            testClass<AbstractLoadJava17WithPsiClassReadingTest> {
-                model("loadJava17", extension = "java", testMethod = "doTestCompiledJava")
             }
 
             testClass<AbstractModuleXmlParserTest> {
