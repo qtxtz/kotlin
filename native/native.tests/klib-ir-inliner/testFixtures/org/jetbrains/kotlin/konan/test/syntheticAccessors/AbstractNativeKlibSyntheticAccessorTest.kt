@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.platform.konan.NativePlatforms
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.configuration.commonConfigurationForDumpSyntheticAccessorsTest
-import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.NativeFirstStageEnvironmentConfigurator
@@ -28,7 +27,6 @@ open class AbstractNativeKlibSyntheticAccessorTest : AbstractKotlinCompilerWithT
             irInliningFacade = ::NativePreSerializationLoweringCliFacade,
             serializerFacade = ::KlibSerializerNativeCliFacade,
             deserializerFacade = ::NativeDeserializerFacade,
-            customIgnoreDirective = KlibBasedCompilerTestDirectives.IGNORE_KLIB_SYNTHETIC_ACCESSORS_CHECKS,
         )
         globalDefaults {
             targetPlatform = NativePlatforms.unspecifiedNativePlatform
