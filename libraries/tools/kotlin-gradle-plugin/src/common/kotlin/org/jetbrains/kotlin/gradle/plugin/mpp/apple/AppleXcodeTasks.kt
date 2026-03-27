@@ -43,6 +43,7 @@ import kotlin.collections.component2
 internal object AppleXcodeTasks {
     const val embedAndSignTaskPrefix = "embedAndSign"
     const val embedAndSignTaskPostfix = "AppleFrameworkForXcode"
+    const val validateArchitecturesForTaskPrefix = "validateArchitecturesFor"
     const val checkSandboxAndWriteProtection = "checkSandboxAndWriteProtection"
 }
 
@@ -182,13 +183,15 @@ private fun fireEnvException(frameworkTaskName: String, envBuildType: NativeBuil
 }
 
 // FIXME: KT-84852 We also need the SwiftPM import linkage check here
+private fun isRequestedBinary(binary: NativeBinary, environment: XcodeEnvironment) =
+    binary.buildType == environment.buildType && environment.targets.contains(binary.konanTarget)
+
 internal fun Project.registerEmbedSwiftExportTask(
     target: KotlinNativeTarget,
     environment: XcodeEnvironment,
     swiftExportExtension: SwiftExportExtension,
 ) {
     val envTargets = environment.targets
-    val envBuildType = environment.buildType
     val binaryTaskName = embedSwiftExportTaskName()
 
     if (!isRunWithXcodeEnvironment(
@@ -200,12 +203,29 @@ internal fun Project.registerEmbedSwiftExportTask(
         return
     }
 
-    if (!envTargets.contains(target.konanTarget)) {
-        return
+    val envBuildType = environment.buildType
+        ?: error("Missing required environment variable: CONFIGURATION. Please verify that the CONFIGURATION variable is correctly set in your Xcode's environment settings")
+
+    val validateTask = registerValidateXcodeArchitecturesTask(
+        frameworkTaskName = binaryTaskName,
+        environment = environment,
+        frameworkName = SwiftExportDSLConstants.SWIFT_EXPORT_EXTENSION_NAME,
+        configuredTarget = target.konanTarget.visibleName,
+    )
+
+    val embedAndSignTask = locateOrRegisterTask<EmbedSwiftExportForXcodeTask>(binaryTaskName) { task ->
+        task.group = BasePlugin.BUILD_GROUP
+        task.description = "Embed Swift Export artifacts requested by Xcode's environment variables"
+        task.inputs.apply {
+            property("type", envBuildType)
+            property("targets", envTargets)
+        }
     }
 
-    if (envBuildType == null) {
-        error("Missing required environment variable: CONFIGURATION. Please verify that the CONFIGURATION variable is correctly set in your Xcode's environment settings")
+    embedAndSignTask.dependsOn(validateTask)
+
+    if (!envTargets.contains(target.konanTarget)) {
+        return
     }
 
     val sandBoxTask = checkSandboxAndWriteProtectionTask(environment, environment.userScriptSandboxingEnabled)
@@ -218,16 +238,6 @@ internal fun Project.registerEmbedSwiftExportTask(
     )
 
     swiftExportTask.dependsOn(sandBoxTask)
-
-    val embedAndSignTask = locateOrRegisterTask<DefaultTask>(binaryTaskName) { task ->
-        task.group = BasePlugin.BUILD_GROUP
-        task.description = "Embed Swift Export artifacts requested by Xcode's environment variables"
-        task.inputs.apply {
-            property("type", envBuildType)
-            property("targets", envTargets)
-        }
-    }
-
     embedAndSignTask.dependsOn(swiftExportTask)
 }
 
@@ -243,6 +253,12 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
         return
     }
 
+    val validateTask = registerValidateXcodeArchitecturesTask(
+        frameworkTaskName = frameworkTaskName,
+        environment = environment,
+        frameworkName = framework.baseName,
+        configuredTarget = framework.konanTarget.visibleName,
+    )
     val sandBoxTask = checkSandboxAndWriteProtectionTask(environment, environment.userScriptSandboxingEnabled)
     val assembleTask = registerAssembleAppleFrameworkTask(framework, environment) ?: return
 
@@ -255,6 +271,7 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
     )
     symbolicLinkTask.dependsOn(createBuildSystemDirectory)
     symbolicLinkTask.configure { task ->
+        task.onlyIf("Binary ${framework.name} does not match Xcode-requested build type or architecture") { isRequestedBinary(framework, environment) }
         assembleTask.frameworkPath?.let { task.frameworkPath.set(it) }
         assembleTask.dsymPath?.let { task.dsymPath.set(it) }
         task.shouldDsymLinkExist.set(
@@ -300,7 +317,12 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
         framework.linkTaskProvider.dependsOn(regenerateSyntheticLinkageProject)
     }
 
-    val embedAndSignTask = registerEmbedTask(framework, frameworkTaskName, environment) { !framework.isStatic } ?: return
+    val embedAndSignTask = registerEmbedTask(
+        framework,
+        frameworkTaskName,
+        environment,
+    ) { !framework.isStatic } ?: return
+    embedAndSignTask.dependsOn(validateTask)
     embedAndSignTask.dependsOn(assembleTask.taskProvider)
     embedAndSignTask.dependsOn(symbolicLinkTask)
 
@@ -312,6 +334,9 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
             action = environment.action,
             isStatic = provider { framework.isStatic },
         )
+        dsymCopyTask.configure { task ->
+            task.onlyIf("Binary ${framework.name} does not match Xcode-requested build type or architecture") { isRequestedBinary(framework, environment) }
+        }
         // FIXME: KT-71720
         // Dsym copy task must execute after symbolic link task because symbolic link task does clean up for KT-68257 and dSYM is copied to the same location
         dsymCopyTask.dependsOn(symbolicLinkTask)
@@ -350,7 +375,7 @@ private fun Project.registerEmbedTask(
     frameworkTaskName: String,
     environment: XcodeEnvironment,
     embedAndSignEnabled: () -> Boolean = { true },
-): TaskProvider<out Task>? {
+): TaskProvider<EmbedAndSignTask>? {
     val envBuildType = environment.buildType
     val envTargets = environment.targets
     val envEmbeddedFrameworksDir = environment.embeddedFrameworksDir
@@ -363,6 +388,9 @@ private fun Project.registerEmbedTask(
         task.group = BasePlugin.BUILD_GROUP
         task.description = "Embed and sign ${binary.namePrefix} framework as requested by Xcode's environment variables"
         task.isEnabled = embedAndSignEnabled()
+        task.onlyIf("No framework binary matches Xcode-requested build type and architectures") {
+            task.sourceFramework.isPresent
+        }
         task.inputs.apply {
             property("type", envBuildType)
             property("targets", envTargets)
@@ -374,19 +402,19 @@ private fun Project.registerEmbedTask(
         }
     }
 
-    if (binary.buildType != envBuildType || !envTargets.contains(binary.konanTarget)) return null
-
-    embedAndSignTask.configure { task ->
-        val frameworkFile = binary.outputFile
-        task.sourceFramework.fileProvider(appleFrameworkDir(frameworkTaskName, environment).map { it.resolve(frameworkFile.name) })
-        task.destinationDirectory.set(envEmbeddedFrameworksDir)
-        if (envSign != null) {
-            task.doLast {
-                val binaryToSign = envEmbeddedFrameworksDir
-                    .resolve(frameworkFile.name)
-                    .resolve(frameworkFile.nameWithoutExtension)
-                task.execOperations.exec {
-                    it.commandLine("codesign", "--force", "--sign", envSign, "--", binaryToSign)
+    if (isRequestedBinary(binary, environment)) {
+        embedAndSignTask.configure { task ->
+            val frameworkFile = binary.outputFile
+            task.sourceFramework.fileProvider(appleFrameworkDir(frameworkTaskName, environment).map { it.resolve(frameworkFile.name) })
+            task.destinationDirectory.set(envEmbeddedFrameworksDir)
+            if (envSign != null) {
+                task.doLast {
+                    val binaryToSign = envEmbeddedFrameworksDir
+                        .resolve(frameworkFile.name)
+                        .resolve(frameworkFile.nameWithoutExtension)
+                    task.execOperations.exec {
+                        it.commandLine("codesign", "--force", "--sign", envSign, "--", binaryToSign)
+                    }
                 }
             }
         }
@@ -457,6 +485,27 @@ internal fun checkIfTheLinkageProjectIsConnectedToTheXcodeProject(
         }
         error(messageLines.joinToString(" "))
     }
+}
+
+private fun Project.registerValidateXcodeArchitecturesTask(
+    frameworkTaskName: String,
+    environment: XcodeEnvironment,
+    frameworkName: String,
+    configuredTarget: String,
+): TaskProvider<ValidateXcodeArchitecturesTask> {
+    val taskName = lowerCamelCaseName(AppleXcodeTasks.validateArchitecturesForTaskPrefix, frameworkTaskName)
+
+    val taskProvider = locateOrRegisterTask<ValidateXcodeArchitecturesTask>(taskName) { task ->
+        task.description = "Check that Xcode-requested architectures are configured in Gradle"
+        task.requestedTargets.set(environment.targets.map { it.visibleName })
+        task.frameworkName.set(frameworkName)
+    }
+
+    taskProvider.configure { task ->
+        task.configuredTargets.add(configuredTarget)
+    }
+
+    return taskProvider
 }
 
 private fun Project.checkSandboxAndWriteProtectionTask(
@@ -609,6 +658,9 @@ internal abstract class FrameworkCopy : DefaultTask() {
         fun dsymFile(framework: Provider<File>): Provider<File> = framework.map { File(it.path + ".dSYM") }
     }
 }
+
+@DisableCachingByDefault(because = "Lifecycle task, no outputs")
+internal abstract class EmbedSwiftExportForXcodeTask : DefaultTask()
 
 @DisableCachingByDefault(because = "Caching breaks symlinks inside frameworks")
 internal abstract class EmbedAndSignTask : FrameworkCopy()

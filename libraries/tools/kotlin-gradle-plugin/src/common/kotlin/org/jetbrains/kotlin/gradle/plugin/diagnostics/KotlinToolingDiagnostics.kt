@@ -1250,6 +1250,23 @@ internal object KotlinToolingDiagnostics {
         }
     }
 
+    object XcodeArchitectureNotConfiguredInGradle : ToolingDiagnosticFactory(FATAL, DiagnosticGroup.Kgp.Misconfiguration) {
+        operator fun invoke(missingTargets: List<String>, frameworkName: String) = build {
+            val renderedTargets = missingTargets.sorted().joinToString(separator = ", ")
+            title("Xcode Requested Architecture Not Configured in Gradle")
+                .description {
+                    """
+                    Xcode requested target architectures that are not configured in your Gradle build: $renderedTargets.
+                    The framework '$frameworkName' cannot be built for these target architectures.
+                    """.trimIndent()
+                }
+                .solutions(
+                    "Add the missing Kotlin/Native target(s) to your kotlin {} block in build.gradle.kts",
+                    "Or exclude unsupported architectures in your Xcode project's Build Settings by setting EXCLUDED_ARCHS"
+                )
+        }
+    }
+
     object JvmWithJavaIsIncompatibleWithAndroid : ToolingDiagnosticFactory(FATAL, DiagnosticGroup.Kgp.Misconfiguration) {
         operator fun invoke(androidPluginId: String, trace: Throwable?) = build(throwable = trace) {
             title("`withJava()` in JVM Target Incompatible with Android Plugins")

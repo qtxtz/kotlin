@@ -59,6 +59,36 @@ class SwiftExportIT : KGPBaseTest() {
         }
     }
 
+    @DisplayName("embedSwiftExportForXcode fails for missing configured architecture")
+    @GradleTest
+    fun shouldFailSwiftExportWhenXcodeRequestsArchitectureNotConfiguredInGradle(
+        gradleVersion: GradleVersion,
+        @TempDir testBuildDir: Path,
+    ) {
+        project("empty", gradleVersion) {
+            plugins {
+                kotlin("multiplatform")
+            }
+            buildScriptInjection {
+                project.applyMultiplatform {
+                    iosArm64()
+                }
+            }
+            buildAndFail(
+                ":embedSwiftExportForXcode",
+                environmentVariables = swiftExportEmbedAndSignEnvVariables(
+                    testBuildDir,
+                    archs = listOf("arm64", "x86_64"),
+                    sdk = "iphonesimulator",
+                )
+            ) {
+                assertTasksFailed(":validateArchitecturesForEmbedSwiftExportForXcode")
+                assertHasDiagnostic(KotlinToolingDiagnostics.XcodeArchitectureNotConfiguredInGradle)
+                assertOutputContains("ios_x64")
+            }
+        }
+    }
+
     @DisplayName("embedSwiftExport executes normally")
     @GradleTest
     fun testSwiftExportExecutionWithSwiftExportEnabled(
