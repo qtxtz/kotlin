@@ -1086,7 +1086,7 @@ internal fun <A> KtDiagnosticFactory1<A>.createOn(
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
-private fun <A, B> KtDiagnosticFactory2<A, B>.createOn(
+internal fun <A, B> KtDiagnosticFactory2<A, B>.createOn(
     element: KtSourceElement?,
     a: A,
     b: B,
@@ -1097,7 +1097,7 @@ private fun <A, B> KtDiagnosticFactory2<A, B>.createOn(
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
-private fun <A, B, C> KtDiagnosticFactory3<A, B, C>.createOn(
+internal fun <A, B, C> KtDiagnosticFactory3<A, B, C>.createOn(
     element: KtSourceElement?,
     a: A,
     b: B,
@@ -1109,7 +1109,7 @@ private fun <A, B, C> KtDiagnosticFactory3<A, B, C>.createOn(
 }
 
 @OptIn(InternalDiagnosticFactoryMethod::class)
-private fun <A, B, C, D> KtDiagnosticFactory4<A, B, C, D>.createOn(
+internal fun <A, B, C, D> KtDiagnosticFactory4<A, B, C, D>.createOn(
     element: KtSourceElement?,
     a: A,
     b: B,
