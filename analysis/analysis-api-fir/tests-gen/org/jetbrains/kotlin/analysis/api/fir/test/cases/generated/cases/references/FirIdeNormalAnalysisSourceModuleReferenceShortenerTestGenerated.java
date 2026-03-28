@@ -892,6 +892,12 @@ public class FirIdeNormalAnalysisSourceModuleReferenceShortenerTestGenerated ext
     }
 
     @Test
+    @TestMetadata("enumEntryPartialSelection.kt")
+    public void testEnumEntryPartialSelection() {
+      run("enumEntryPartialSelection.kt");
+    }
+
+    @Test
     @TestMetadata("sealedSubObject.kt")
     public void testSealedSubObject() {
       run("sealedSubObject.kt");
@@ -913,6 +919,12 @@ public class FirIdeNormalAnalysisSourceModuleReferenceShortenerTestGenerated ext
     @TestMetadata("sealedSubObjectNotApplicable.kt")
     public void testSealedSubObjectNotApplicable() {
       run("sealedSubObjectNotApplicable.kt");
+    }
+
+    @Test
+    @TestMetadata("sealedSubObjectPartialSelection.kt")
+    public void testSealedSubObjectPartialSelection() {
+      run("sealedSubObjectPartialSelection.kt");
     }
   }
 
