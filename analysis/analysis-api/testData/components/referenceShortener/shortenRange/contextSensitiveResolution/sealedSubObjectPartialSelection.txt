@@ -3,7 +3,6 @@ with default settings:
 [qualifier] pkg.MySealedClass
 with DO_NOT_SHORTEN:
 with SHORTEN_IF_ALREADY_IMPORTED:
-[qualifier] pkg.MySealedClass
 with SHORTEN_AND_IMPORT:
 [qualifier] pkg.MySealedClass
 with SHORTEN_AND_STAR_IMPORT:

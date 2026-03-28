@@ -548,7 +548,7 @@ private class ElementsToShortenCollector(
             classifierId,
             typeElement,
             // TODO: Pass correct information after CSR shortening for types is available (KT-84719, KTIJ-38225)
-            isResolvableByContextSensitiveResolution = false
+            wholeQualifierIsResolvableByContextSensitiveResolution = false
         )?.let(::addElementToShorten)
     }
 
@@ -915,7 +915,7 @@ private class ElementsToShortenCollector(
     private fun findClassifierQualifierToShorten(
         wholeQualifierClassId: ClassId,
         wholeQualifierElement: KtElement,
-        isResolvableByContextSensitiveResolution: Boolean,
+        wholeQualifierIsResolvableByContextSensitiveResolution: Boolean,
     ): ElementToShorten? {
         val positionScopes = shorteningContext.findScopesAtPosition(
             wholeQualifierElement,
@@ -930,7 +930,14 @@ private class ElementsToShortenCollector(
         for ((classId, element) in allClassIds.zip(allQualifiedElements)) {
             if (!element.inSelection) continue
 
-            shortenClassifierQualifier(positionScopes, classId, element, isResolvableByContextSensitiveResolution)?.let { return it }
+            val isWholeQualifier = element === wholeQualifierElement
+
+            shortenClassifierQualifier(
+                positionScopes,
+                classId,
+                element,
+                wholeQualifierIsResolvableByContextSensitiveResolution && isWholeQualifier,
+            )?.let { return it }
         }
 
         val lastQualifier = allQualifiedElements.last()
