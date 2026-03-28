@@ -4639,6 +4639,18 @@ internal class UncheckedCastImpl(
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<KtBinaryExpressionWithTypeRHS>(firDiagnostic, token), KaFirDiagnostic.UncheckedCast
 
+internal class NumericCastNeverSucceedsButCanBeReplacedWithToCallImpl(
+    override val targetType: KaType,
+    firDiagnostic: KtPsiDiagnostic,
+    token: KaLifetimeToken,
+) : KaAbstractFirDiagnostic<KtBinaryExpressionWithTypeRHS>(firDiagnostic, token), KaFirDiagnostic.NumericCastNeverSucceedsButCanBeReplacedWithToCall
+
+internal class IntegerLiteralCastInsteadOfToCallImpl(
+    override val targetType: KaType,
+    firDiagnostic: KtPsiDiagnostic,
+    token: KaLifetimeToken,
+) : KaAbstractFirDiagnostic<KtBinaryExpressionWithTypeRHS>(firDiagnostic, token), KaFirDiagnostic.IntegerLiteralCastInsteadOfToCall
+
 internal class ImpossibleIsCheckErrorImpl(
     override val compileTimeCheckResult: Boolean,
     firDiagnostic: KtPsiDiagnostic,

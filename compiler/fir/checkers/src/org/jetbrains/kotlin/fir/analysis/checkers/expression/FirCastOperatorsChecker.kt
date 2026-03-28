@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.analysis.checkers.firPlatformSpecificCastChecker
 import org.jetbrains.kotlin.fir.isDisabled
 import org.jetbrains.kotlin.fir.isEnabled
+import org.jetbrains.kotlin.fir.isPrimitiveNumberOrUnsignedNumberType
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.types.*
 
@@ -168,32 +169,28 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
     ) {
         val areBothTypesNullable = l.smartCastType.canBeNull(context.session) && r.canBeNull(context.session)
 
-        when (applicability) {
-            Applicability.IMPOSSIBLE_CAST -> getImpossibilityDiagnostic(areBothTypesNullable, expression)?.let {
-                reportOn(expression.source, it)
-            }
-            Applicability.USELESS_CAST -> getUselessCastDiagnostic()?.let {
-                reportOn(expression.source, it)
-            }
-            Applicability.IMPOSSIBLE_IS_CHECK -> report(
-                getImpossibleIsCheckDiagnostic(forceWarning, areBothTypesNullable, expression),
-                context,
-            )
+        val diagnostic = when (applicability) {
+            Applicability.IMPOSSIBLE_CAST -> getImpossibilityDiagnostic(l, r, areBothTypesNullable, expression)
+            Applicability.USELESS_CAST -> reportUselessCastDiagnosticIfNeeded(l, r, expression)
+            Applicability.IMPOSSIBLE_IS_CHECK -> getImpossibleIsCheckDiagnostic(forceWarning, areBothTypesNullable, expression)
             Applicability.USELESS_IS_CHECK -> when {
-                !isLastBranchOfExhaustiveWhen(l) -> reportOn(
+                !isLastBranchOfExhaustiveWhen(l) -> FirErrors.USELESS_IS_CHECK.createOn(
                     expression.source,
-                    FirErrors.USELESS_IS_CHECK,
-                    expression.operation == FirOperation.IS
+                    expression.operation == FirOperation.IS,
+                    context.session,
                 )
+                else -> null
             }
             Applicability.CAST_ERASED -> when {
                 expression.operation == FirOperation.AS || expression.operation == FirOperation.SAFE_AS -> {
-                    reportOn(expression.source, FirErrors.UNCHECKED_CAST, l.userType, rUserType)
+                    FirErrors.UNCHECKED_CAST.createOn(expression.source, l.userType, rUserType, context.session)
                 }
-                else -> reportOn(expression.conversionTypeRef.source, FirErrors.CANNOT_CHECK_FOR_ERASED, rUserType)
+                else -> FirErrors.CANNOT_CHECK_FOR_ERASED.createOn(expression.conversionTypeRef.source, rUserType, context.session)
             }
             else -> error("Shouldn't be here")
         }
+
+        report(diagnostic, context)
     }
 
     context(context: CheckerContext)
@@ -214,21 +211,33 @@ object FirCastOperatorsChecker : FirTypeOperatorCallChecker(MppCheckerKind.Commo
 
     context(context: CheckerContext)
     private fun getImpossibilityDiagnostic(
+        l: ArgumentInfo,
+        rType: ConeKotlinType,
         areBothTypesNullable: Boolean,
         expression: FirTypeOperatorCall,
-    ) = when {
+    ): KtDiagnosticWithSource? = when {
         LanguageFeature.EnableDfaWarningsInK2.isDisabled() -> null
         areBothTypesNullable -> when (expression.operation) {
-            FirOperation.SAFE_AS -> FirErrors.SAFE_CAST_RELYING_ON_NULL
-            else -> FirErrors.UNSAFE_CAST_RELYING_ON_NULL
+            FirOperation.SAFE_AS -> FirErrors.SAFE_CAST_RELYING_ON_NULL.createOn(expression.source, context.session)
+            else -> FirErrors.UNSAFE_CAST_RELYING_ON_NULL.createOn(expression.source, context.session)
         }
-        else -> FirErrors.CAST_NEVER_SUCCEEDS
+        ((l.userType as? ConeClassLikeType)?.isPrimitiveNumberOrUnsignedNumberType() == true &&
+                (rType as? ConeClassLikeType)?.isPrimitiveNumberOrUnsignedNumberType() == true) -> {
+            FirErrors.NUMERIC_CAST_NEVER_SUCCEEDS_BUT_CAN_BE_REPLACED_WITH_TO_CALL.createOn(expression.source, rType, context.session)
+        }
+        else -> FirErrors.CAST_NEVER_SUCCEEDS.createOn(expression.source, context.session)
     }
 
     context(context: CheckerContext)
-    private fun getUselessCastDiagnostic() = when {
+    private fun reportUselessCastDiagnosticIfNeeded(
+        l: ArgumentInfo,
+        rType: ConeKotlinType,
+        expression: FirTypeOperatorCall
+    ): KtDiagnosticWithSource? = when {
         LanguageFeature.EnableDfaWarningsInK2.isDisabled() -> null
-        else -> FirErrors.USELESS_CAST
+        l.argument.hasIntegerLiteralTypeAmbiguity() -> FirErrors.INTEGER_LITERAL_CAST_INSTEAD_OF_TO_CALL
+            .createOn(expression.source, rType, context.session)
+        else -> FirErrors.USELESS_CAST.createOn(expression.source, context.session)
     }
 
     context(context: CheckerContext)

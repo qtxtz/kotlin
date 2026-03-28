@@ -3870,6 +3870,16 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         val targetType: KaType
     }
 
+    interface NumericCastNeverSucceedsButCanBeReplacedWithToCall : KaFirDiagnostic<KtBinaryExpressionWithTypeRHS> {
+        override val diagnosticClass get() = NumericCastNeverSucceedsButCanBeReplacedWithToCall::class
+        val targetType: KaType
+    }
+
+    interface IntegerLiteralCastInsteadOfToCall : KaFirDiagnostic<KtBinaryExpressionWithTypeRHS> {
+        override val diagnosticClass get() = IntegerLiteralCastInsteadOfToCall::class
+        val targetType: KaType
+    }
+
     interface ImpossibleIsCheckError : KaFirDiagnostic<KtElement> {
         override val diagnosticClass get() = ImpossibleIsCheckError::class
         val compileTimeCheckResult: Boolean

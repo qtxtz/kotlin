@@ -11,11 +11,11 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
 import org.jetbrains.kotlin.fir.analysis.checkers.fullyExpandedClassId
+import org.jetbrains.kotlin.fir.analysis.checkers.hasIntegerLiteralTypeAmbiguity
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors
 import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
-import org.jetbrains.kotlin.fir.expressions.FirIntegerLiteralOperatorCall
 import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
 import org.jetbrains.kotlin.fir.resolve.toClassLikeSymbol
 import org.jetbrains.kotlin.fir.types.ConeFlexibleType
@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
-import org.jetbrains.kotlin.types.ConstantValueKind
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 object RedundantCallOfConversionMethodChecker : FirFunctionCallChecker(MppCheckerKind.Common) {
@@ -45,28 +44,7 @@ object RedundantCallOfConversionMethodChecker : FirFunctionCallChecker(MppChecke
 
     context(context: CheckerContext)
     private fun FirExpression.isRedundant(qualifiedClassId: ClassId, session: FirSession): Boolean {
-        // The leftmost argument defines the type of the entire integer operation.
-        // Moreover, the mixing of types (for example, `2U * 4`) is prohibited.
-        fun unwrapLeftmostIntegerOperatorCallExpression(expression: FirExpression?): FirLiteralExpression? {
-            return when (expression) {
-                is FirLiteralExpression -> expression
-                is FirIntegerLiteralOperatorCall -> unwrapLeftmostIntegerOperatorCallExpression(expression.dispatchReceiver)
-                else -> null
-            }
-        }
-
-        val potentialIntegerLiteralExpression = unwrapLeftmostIntegerOperatorCallExpression(this)
-
-        if (potentialIntegerLiteralExpression?.kind?.let { it == ConstantValueKind.Int || it == ConstantValueKind.UnsignedInt } == true) {
-            /**
-             * The [Int.toInt] here work as a disambiguator for integer literals and integer literal operator calls.
-             * I.e., it removes the literal ambiguity by narrowing the union type [Long], [Int], [Short], [Byte] down to unambiguous [Int]
-             * If drop the conversion, resolver can widen the [Int] to [Long] that can affect resolution behavior.
-             * The same is also relevant for [UInt.toUInt] and not for other types
-             * because other types are not expressible via literals, unlike the [Int] and [UInt].
-             */
-            return false
-        }
+        if (hasIntegerLiteralTypeAmbiguity()) return false
 
         val thisTypeId = if (this is FirLiteralExpression) {
             resolvedType.classId

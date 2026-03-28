@@ -7665,6 +7665,13 @@ private fun KaDiagnosticConverterBuilder.addConversions174() {
             token,
         )
     }
+    add(FirErrors.INTEGER_LITERAL_CAST_INSTEAD_OF_TO_CALL) { firDiagnostic ->
+        IntegerLiteralCastInsteadOfToCallImpl(
+            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.a),
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
     add(FirErrors.UNUSED_ANONYMOUS_PARAMETER) { firDiagnostic ->
         UnusedAnonymousParameterImpl(
             firSymbolBuilder.buildSymbol(firDiagnostic.a),
@@ -8465,6 +8472,13 @@ private fun KaDiagnosticConverterBuilder.addConversions194() {
     }
     add(FirErrors.ACTUAL_TYPE_ALIAS_TO_NULLABLE_TYPE) { firDiagnostic ->
         ActualTypeAliasToNullableTypeImpl(
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
+    add(FirErrors.NUMERIC_CAST_NEVER_SUCCEEDS_BUT_CAN_BE_REPLACED_WITH_TO_CALL) { firDiagnostic ->
+        NumericCastNeverSucceedsButCanBeReplacedWithToCallImpl(
+            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.a),
             firDiagnostic as KtPsiDiagnostic,
             token,
         )

@@ -3,7 +3,7 @@
 
 class MyClass
 
-const val asOperator1 = 1 as Int
+const val asOperator1 = 1 <!INTEGER_LITERAL_CAST_INSTEAD_OF_TO_CALL!>as Int<!>
 const val asOperator2 = <!CONST_VAL_WITH_NON_CONST_INITIALIZER!>1 <!CAST_NEVER_SUCCEEDS!>as<!> String<!>
 <!TYPE_CANT_BE_USED_FOR_CONST_VAL!>const<!> val asOperator3 = "1" <!CAST_NEVER_SUCCEEDS!>as?<!> Int
 <!TYPE_CANT_BE_USED_FOR_CONST_VAL!>const<!> val asOperator4 = "1" <!CAST_NEVER_SUCCEEDS!>as?<!> MyClass

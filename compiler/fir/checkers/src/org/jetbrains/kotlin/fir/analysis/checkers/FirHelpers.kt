@@ -49,6 +49,7 @@ import org.jetbrains.kotlin.resolve.AnnotationTargetList
 import org.jetbrains.kotlin.resolve.AnnotationTargetListForDeprecation
 import org.jetbrains.kotlin.resolve.AnnotationTargetLists
 import org.jetbrains.kotlin.types.AbstractTypeChecker
+import org.jetbrains.kotlin.types.ConstantValueKind
 import org.jetbrains.kotlin.types.TypeApproximatorConfiguration
 import org.jetbrains.kotlin.types.model.KotlinTypeMarker
 import org.jetbrains.kotlin.types.model.TypeCheckerProviderContext
@@ -1089,4 +1090,38 @@ context(context: CheckerContext)
 fun FirExpression.isDispatchReceiver(): Boolean {
     val parentElement = context.containingElements.elementAtOrNull(context.containingElements.size - 2)
     return parentElement is FirQualifiedAccessExpression && parentElement.dispatchReceiver == this
+}
+
+/**
+ * Determines if there is a potential ambiguity in interpreting the given expression as an integer literal or an integer literal operator call.
+ *
+ * The problem is the integer literal (or operator call) might have an ambiguous type like
+ * ([Long] | [Int] | [Short] | [Byte]) or ([ULong] | [UInt] | [UShort] | [UByte]).
+ * The only resolution disambiguates it to a particular type that sometimes depends on the context (but in most cases it's [Int] and [UInt]).
+ * The `as Int`, `toInt`, `as Short`, `toShort` and other similar expressions
+ * *always* narrow down the ambiguous type to a particular type (specified on RHS) that prevents the integer type ascription by resolution.
+ *
+ * Since checkers don't have full-fledged info about the resolution, the redundancy diagnostics on integer literals should not be reported.
+ * The ambiguity check is only applicable to literals like `1` or `1U` but not to `1L` or `1UL`,
+ * because the latter ones already have unambiguous types ([Long] and [ULong] respectively).
+ * The literals for strict [Int], [UInt] types don't exist in Kotlin.
+ * The [Short], [Byte], [UShort], [UByte] types aren't expressible via literals at all.
+ *
+ * @param this the left-hand side expression to be checked (`lhs.toInt()`, `lhs as Int`, `lhs as Short`, etc.)
+ * @return `true` if it could cause ambiguity and neither [FirErrors.USELESS_CAST] nor [FirErrors.REDUNDANT_CALL_OF_CONVERSION_METHOD] should be reported.
+ */
+fun FirExpression.hasIntegerLiteralTypeAmbiguity(): Boolean {
+    // The leftmost argument defines the type of the entire integer operation.
+    // Moreover, the mixing of different integer types within a single integer operator call (for example, `2U * 4`) is prohibited.
+    fun unwrapLeftmostLiteralExpression(expression: FirExpression?): FirLiteralExpression? {
+        return when (expression) {
+            is FirLiteralExpression -> expression
+            is FirIntegerLiteralOperatorCall -> unwrapLeftmostLiteralExpression(expression.dispatchReceiver)
+            else -> null
+        }
+    }
+
+    val maybeIntegerLiteralExpression = unwrapLeftmostLiteralExpression(this)
+
+    return maybeIntegerLiteralExpression?.kind?.let { it == ConstantValueKind.Int || it == ConstantValueKind.UnsignedInt } == true
 }

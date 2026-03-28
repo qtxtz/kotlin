@@ -7,7 +7,7 @@ fun foo(other: Short?) {}
 
 fun test1() {
     foo(11)
-    foo(11 <!USELESS_CAST!>as Int<!>)
+    foo(11 <!INTEGER_LITERAL_CAST_INSTEAD_OF_TO_CALL!>as Int<!>)
 }
 
 /* GENERATED_FIR_TAGS: asExpression, functionDeclaration, integerLiteral, nullableType */

@@ -1,0 +1,83 @@
+/constants.fir.kt:(83,89): warning: Use 'toInt' to give the type explicitly.
+
+/constants.fir.kt:(96,103): warning: This cast can never succeed. Use 'toByte' to perform numeric conversion.
+
+/constants.fir.kt:(110,118): warning: This cast can never succeed. Use 'toShort' to perform numeric conversion.
+
+/constants.fir.kt:(125,132): warning: This cast can never succeed. Use 'toLong' to perform numeric conversion.
+
+/constants.fir.kt:(139,141): warning: This cast can never succeed.
+
+/constants.fir.kt:(153,162): warning: This cast can never succeed. Use 'toDouble' to perform numeric conversion.
+
+/constants.fir.kt:(169,177): warning: This cast can never succeed. Use 'toFloat' to perform numeric conversion.
+
+/constants.fir.kt:(187,193): warning: This cast can never succeed. Use 'toInt' to perform numeric conversion.
+
+/constants.fir.kt:(202,209): warning: This cast can never succeed. Use 'toByte' to perform numeric conversion.
+
+/constants.fir.kt:(218,226): warning: This cast can never succeed. Use 'toShort' to perform numeric conversion.
+
+/constants.fir.kt:(235,242): warning: This cast can never succeed. Use 'toLong' to perform numeric conversion.
+
+/constants.fir.kt:(251,253): warning: This cast can never succeed.
+
+/constants.fir.kt:(267,276): warning: No cast needed.
+
+/constants.fir.kt:(285,293): warning: This cast can never succeed. Use 'toFloat' to perform numeric conversion.
+
+/constants.fir.kt:(302,308): warning: This cast can never succeed. Use 'toInt' to perform numeric conversion.
+
+/constants.fir.kt:(316,323): warning: This cast can never succeed. Use 'toByte' to perform numeric conversion.
+
+/constants.fir.kt:(331,339): warning: This cast can never succeed. Use 'toShort' to perform numeric conversion.
+
+/constants.fir.kt:(347,354): warning: This cast can never succeed. Use 'toLong' to perform numeric conversion.
+
+/constants.fir.kt:(362,364): warning: This cast can never succeed.
+
+/constants.fir.kt:(377,386): warning: This cast can never succeed. Use 'toDouble' to perform numeric conversion.
+
+/constants.fir.kt:(394,402): warning: No cast needed.
+
+/constants.fir.kt:(427,434): warning: Use 'toInt' to give the type explicitly.
+
+/constants.fir.kt:(441,449): warning: This cast can never succeed. Use 'toByte' to perform numeric conversion.
+
+/constants.fir.kt:(456,465): warning: This cast can never succeed. Use 'toShort' to perform numeric conversion.
+
+/constants.fir.kt:(472,480): warning: This cast can never succeed. Use 'toLong' to perform numeric conversion.
+
+/constants.fir.kt:(487,490): warning: This cast can never succeed.
+
+/constants.fir.kt:(502,512): warning: This cast can never succeed. Use 'toDouble' to perform numeric conversion.
+
+/constants.fir.kt:(519,528): warning: This cast can never succeed. Use 'toFloat' to perform numeric conversion.
+
+/constants.fir.kt:(538,545): warning: This cast can never succeed. Use 'toInt' to perform numeric conversion.
+
+/constants.fir.kt:(554,562): warning: This cast can never succeed. Use 'toByte' to perform numeric conversion.
+
+/constants.fir.kt:(571,580): warning: This cast can never succeed. Use 'toShort' to perform numeric conversion.
+
+/constants.fir.kt:(589,597): warning: This cast can never succeed. Use 'toLong' to perform numeric conversion.
+
+/constants.fir.kt:(606,609): warning: This cast can never succeed.
+
+/constants.fir.kt:(623,633): warning: No cast needed.
+
+/constants.fir.kt:(642,651): warning: This cast can never succeed. Use 'toFloat' to perform numeric conversion.
+
+/constants.fir.kt:(660,667): warning: This cast can never succeed. Use 'toInt' to perform numeric conversion.
+
+/constants.fir.kt:(675,683): warning: This cast can never succeed. Use 'toByte' to perform numeric conversion.
+
+/constants.fir.kt:(691,700): warning: This cast can never succeed. Use 'toShort' to perform numeric conversion.
+
+/constants.fir.kt:(708,716): warning: This cast can never succeed. Use 'toLong' to perform numeric conversion.
+
+/constants.fir.kt:(724,727): warning: This cast can never succeed.
+
+/constants.fir.kt:(740,750): warning: This cast can never succeed. Use 'toDouble' to perform numeric conversion.
+
+/constants.fir.kt:(758,767): warning: No cast needed.
