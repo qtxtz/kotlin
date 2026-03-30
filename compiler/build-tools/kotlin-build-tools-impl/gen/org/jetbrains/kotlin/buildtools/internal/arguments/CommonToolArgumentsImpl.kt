@@ -13,8 +13,11 @@ import kotlin.DeprecationLevel
 import kotlin.OptIn
 import kotlin.String
 import kotlin.Suppress
+import kotlin.collections.List
+import kotlin.collections.MutableList
 import kotlin.collections.MutableMap
 import kotlin.collections.MutableSet
+import kotlin.collections.mutableListOf
 import kotlin.collections.mutableMapOf
 import kotlin.collections.mutableSetOf
 import org.jetbrains.kotlin.buildtools.`internal`.UseFromImplModuleRestricted
@@ -39,6 +42,11 @@ internal abstract class CommonToolArgumentsImpl(
   protected val internalArguments: MutableSet<String> = mutableSetOf()
 
   private val optionsMap: MutableMap<String, Any?> = mutableMapOf()
+
+  protected val _restrictedArgViolations: MutableList<RestrictedArgViolation> = mutableListOf()
+
+  internal val restrictedArgViolations: List<RestrictedArgViolation>
+    get() = _restrictedArgViolations
 
   @Suppress("UNCHECKED_CAST")
   @UseFromImplModuleRestricted
@@ -103,6 +111,10 @@ internal abstract class CommonToolArgumentsImpl(
     if (WERROR in this) { arguments.allWarningsAsErrors = get(WERROR)}
     if (WEXTRA in this) { arguments.extraWarnings = get(WEXTRA)}
     return arguments
+  }
+
+  internal open fun collectRestrictedArgViolations(compilerArgs: CommonToolArguments, defaultArgs: CommonToolArguments) {
+    _restrictedArgViolations.clear()
   }
 
   public class CommonToolArgument<V>(

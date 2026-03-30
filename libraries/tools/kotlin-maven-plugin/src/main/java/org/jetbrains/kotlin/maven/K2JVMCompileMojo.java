@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 JetBrains s.r.o.
+ * Copyright 2010-2026 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -408,6 +408,8 @@ public class K2JVMCompileMojo extends KotlinCompileMojoBase<K2JVMCompilerArgumen
 
             LegacyKotlinMavenLogger kotlinMavenLogger = new LegacyKotlinMavenLogger(messageCollector, getLog());
             try (KotlinToolchains.BuildSession buildSession = kotlinToolchains.createBuildSession()) {
+                // BTA does not support -d configured like a regular argument, it's configured on operation creation
+                arguments.setDestination(null); // TODO: KT-85393 refactor setting up arguments to avoid this hack
                 List<String> myArguments = ArgumentUtils.convertArgumentsToStringList(arguments);
                 compilationOperation.getCompilerArguments().applyArgumentStrings(myArguments);
                 CompilationResult result = buildSession.executeOperation(compilationOperation.build(), executionPolicy, kotlinMavenLogger);

@@ -126,6 +126,7 @@ import org.jetbrains.kotlin.buildtools.api.arguments.enums.LambdasMode
 import org.jetbrains.kotlin.buildtools.api.arguments.enums.SamConversionsMode
 import org.jetbrains.kotlin.buildtools.api.arguments.enums.StringConcatMode
 import org.jetbrains.kotlin.buildtools.api.arguments.enums.WhenExpressionsMode
+import org.jetbrains.kotlin.cli.common.arguments.CommonToolArguments
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.common.arguments.parseCommandLineArguments
 import org.jetbrains.kotlin.cli.common.arguments.validateArguments
@@ -437,6 +438,7 @@ internal class JvmCompilerArgumentsImpl(
 
   override fun applyArgumentStrings(arguments: List<String>) {
     val compilerArgs: K2JVMCompilerArguments = parseCommandLineArguments(arguments)
+    collectRestrictedArgViolations(compilerArgs, K2JVMCompilerArguments())
     validateArguments(compilerArgs.errors)?.let { throw CompilerArgumentsParseException(it) }
     applyCompilerArguments(compilerArgs)
   }
@@ -444,6 +446,16 @@ internal class JvmCompilerArgumentsImpl(
   override fun toArgumentStrings(): List<String> {
     val arguments = toCompilerArguments().compilerToArgumentStrings()
     return arguments
+  }
+
+  internal override fun collectRestrictedArgViolations(compilerArgs: CommonToolArguments, defaultArgs: CommonToolArguments) {
+    super.collectRestrictedArgViolations(compilerArgs, defaultArgs)
+    val args = compilerArgs as K2JVMCompilerArguments
+    val castedDefaults = defaultArgs as K2JVMCompilerArguments
+    if (args.destination != castedDefaults.destination) _restrictedArgViolations.add(RestrictedArgViolation.Warning("Argument '-d' is not supported in the Build Tools API. The destination is configured via the destinationDirectory parameter of jvmCompilationOperationBuilder. This warning will become an error starting from Kotlin 2.5.0."))
+    if (args.expression != castedDefaults.expression) _restrictedArgViolations.add(RestrictedArgViolation.Warning("Argument '-expression'/'-e' is not supported in the Build Tools API. This warning will become an error starting from Kotlin 2.5.0."))
+    if (args.includeRuntime != castedDefaults.includeRuntime) _restrictedArgViolations.add(RestrictedArgViolation.Warning("Argument '-include-runtime' is not supported in the Build Tools API. This warning will become an error starting from Kotlin 2.5.0."))
+    if (args.buildFile != castedDefaults.buildFile) _restrictedArgViolations.add(RestrictedArgViolation.Warning("Argument '-Xbuild-file'/'-module' is not supported in the Build Tools API. This warning will become an error starting from Kotlin 2.5.0."))
   }
 
   /**

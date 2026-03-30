@@ -140,6 +140,7 @@ val businessLogicTestSuits = setOf(
     "testDaemonOptions",
     "testInternalInputsTracker",
     "testAbiValidation",
+    "testRestrictedArguments",
 )
 
 fun JvmTestSuite.addSnapshotBuildToolsImpl() {
@@ -286,6 +287,12 @@ testing {
         named<JvmTestSuite>("testInternalInputsTracker") {
             dependencies {
                 implementation(project(":compiler:build-tools:kotlin-build-tools-impl"))
+            }
+        }
+
+        named<JvmTestSuite>("testRestrictedArguments") {
+            dependencies {
+                implementation(commonDependency("org.jetbrains.kotlin:kotlin-reflect"))
             }
         }
 

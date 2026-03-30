@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.buildtools.options.generator
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import org.jetbrains.kotlin.arguments.description.kotlinCompilerArguments
 import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgumentsLevel
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
@@ -153,9 +154,10 @@ internal class BtaImplGenerator(
                     addFunction(toCompilerArgumentsAffectingOutcomeFun.build())
                 }
 
-                maybeAddApplyArgumentStringsFun(level, parentClass)
+                maybeAddApplyArgumentStringsFun(level, parentClass, generateCompatLayer)
                 maybeAddToArgumentsStringFun(level, parentClass)
                 if (!generateCompatLayer) {
+                    generateRestrictedArgViolationCollection(level, parentClass)
                     generateToCompilationInputsFun(level, implClassName, parentClass)
                 }
             }
@@ -627,6 +629,95 @@ internal class BtaImplGenerator(
             addStatement("return key.id in optionsMap")
         }
     }
+
+    private fun TypeSpec.Builder.generateRestrictedArgViolationCollection(
+        level: KotlinCompilerArgumentsLevel,
+        parentClass: ClassName?,
+    ) {
+        val restrictedArgViolationClass = ClassName(targetPackage, "RestrictedArgViolation")
+        val rootCompilerArgsClass = kotlinCompilerArguments.topLevel.getCompilerArgumentsClassName()
+        val ownViolationInfos = collectRestrictedArgInfo(level)
+
+        if (parentClass == null) {
+            property(
+                "_restrictedArgViolations",
+                ClassName("kotlin.collections", "MutableList").parameterizedBy(restrictedArgViolationClass),
+                KModifier.PROTECTED,
+            ) {
+                initializer("%M()", MemberName("kotlin.collections", "mutableListOf"))
+            }
+            addProperty(
+                PropertySpec.builder(
+                    "restrictedArgViolations",
+                    ClassName("kotlin.collections", "List").parameterizedBy(restrictedArgViolationClass),
+                )
+                    .addModifiers(KModifier.INTERNAL)
+                    .getter(FunSpec.getterBuilder().addStatement("return _restrictedArgViolations").build())
+                    .build()
+            )
+            function("collectRestrictedArgViolations") {
+                addModifiers(KModifier.INTERNAL, KModifier.OPEN)
+                addParameter("compilerArgs", rootCompilerArgsClass)
+                addParameter("defaultArgs", rootCompilerArgsClass)
+                addStatement("_restrictedArgViolations.clear()")
+                if (ownViolationInfos.isNotEmpty()) {
+                    for (info in ownViolationInfos) {
+                        addViolationCheckStatement(info, "compilerArgs", "defaultArgs", restrictedArgViolationClass)
+                    }
+                }
+            }
+        } else {
+            val levelCompilerArgsClass = level.getCompilerArgumentsClassName()
+            val hasActiveViolations = ownViolationInfos.any { info ->
+                (info.errorSince != null && kotlinVersion >= info.errorSince) || kotlinVersion >= info.warningSince
+            }
+            if (hasActiveViolations) {
+                function("collectRestrictedArgViolations") {
+                    addModifiers(KModifier.INTERNAL, KModifier.OVERRIDE)
+                    addParameter("compilerArgs", rootCompilerArgsClass)
+                    addParameter("defaultArgs", rootCompilerArgsClass)
+                    addStatement("super.collectRestrictedArgViolations(compilerArgs, defaultArgs)")
+                    addStatement("val args = compilerArgs as %T", levelCompilerArgsClass)
+                    addStatement("val castedDefaults = defaultArgs as %T", levelCompilerArgsClass)
+                    for (info in ownViolationInfos) {
+                        addViolationCheckStatement(info, "args", "castedDefaults", restrictedArgViolationClass)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun FunSpec.Builder.addViolationCheckStatement(
+        info: RestrictedArgInfo,
+        argsVarName: String,
+        defaultsVarName: String,
+        restrictedArgViolationClass: ClassName,
+    ) {
+        val namesStr = listOfNotNull(info.primaryCli, info.shortName, info.deprecatedName)
+            .joinToString("/") { "'$it'" }
+        val baseMessage = buildString {
+            append("Argument $namesStr is not supported in the Build Tools API.")
+            if (info.reason != null) append(" ${info.reason}")
+        }
+        val warningMessage = buildString {
+            append(baseMessage)
+            if (info.errorSince != null) {
+                append(" This warning will become an error starting from Kotlin ${info.errorSince.releaseName}.")
+            }
+        }
+        val (violationType, message) = when {
+            info.errorSince != null && kotlinVersion >= info.errorSince -> "Error" to baseMessage
+            kotlinVersion >= info.warningSince -> "Warning" to warningMessage
+            else -> return
+        }
+        addCode(
+            CodeBlock.of(
+                "if (%L.%N != %L.%N) _restrictedArgViolations.add(%T.%L(%S))\n",
+                argsVarName, info.fieldName, defaultsVarName, info.fieldName,
+                restrictedArgViolationClass, violationType, message,
+            )
+        )
+    }
 }
 
 internal fun FunSpec.Builder.addSafeSetStatement(
@@ -732,22 +823,27 @@ private fun toCompilerConverterFunBuilder(
 private fun TypeSpec.Builder.maybeAddApplyArgumentStringsFun(
     level: KotlinCompilerArgumentsLevel,
     parentClass: TypeName?,
+    generateCompatLayer: Boolean,
 ) {
     if (!level.isLeaf()) {
         return
     }
+    val compilerArgumentsClass = level.getCompilerArgumentsClassName()
+
     function("applyArgumentStrings") {
         addModifiers(KModifier.OVERRIDE)
         if (parentClass == null) {
             addModifiers(KModifier.OPEN)
         }
-        val compilerArgumentsClass = level.getCompilerArgumentsClassName()
         addParameter("arguments", listTypeNameOf<String>())
         addStatement(
             "val compilerArgs: %T = %M(arguments)",
             compilerArgumentsClass,
             MemberName("org.jetbrains.kotlin.cli.common.arguments", "parseCommandLineArguments")
         )
+        if (!generateCompatLayer) {
+            addStatement("collectRestrictedArgViolations(compilerArgs, %T())", compilerArgumentsClass)
+        }
         addStatement(
             "%M(compilerArgs.errors)?.let { throw %M(it) }",
             MemberName("org.jetbrains.kotlin.cli.common.arguments", "validateArguments"),
