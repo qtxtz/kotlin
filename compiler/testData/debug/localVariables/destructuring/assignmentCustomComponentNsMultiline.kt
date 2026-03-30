@@ -28,8 +28,6 @@ fun box(): String {
 // test.kt:15 box:
 // test.kt:4 <init>: x:java.lang.String="X":java.lang.String, y:java.lang.String="Y":java.lang.String
 // test.kt:15 box:
-// EXPECTATIONS ClassicFrontend JVM_IR
-// test.kt:23 box: p:MyPair=MyPair
 // EXPECTATIONS FIR JVM_IR
 // test.kt:18 box: p:MyPair=MyPair
 // EXPECTATIONS JVM_IR

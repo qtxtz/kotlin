@@ -77,49 +77,6 @@ fun box(): String {
 
 // test.kt:33 box
 
-// EXPECTATIONS ClassicFrontend JVM_IR
-// test.kt:7 box
-// test.kt:3 foo
-// test.kt:7 invoke
-// test.kt:3 foo
-// test.kt:7 invoke
-// test.kt:3 foo
-// test.kt:7 invoke
-// test.kt:3 foo
-// test.kt:7 box
-
-// test.kt:9 box
-// test.kt:3 foo
-// test.kt:10 invoke
-// test.kt:3 foo
-// test.kt:11 invoke
-// test.kt:3 foo
-// test.kt:12 invoke
-// test.kt:3 foo
-// test.kt:9 box
-
-// test.kt:15 box
-// test.kt:3 foo
-// test.kt:17 invoke
-// test.kt:3 foo
-// test.kt:19 invoke
-// test.kt:3 foo
-// test.kt:20 invoke
-// test.kt:3 foo
-// test.kt:15 box
-
-// test.kt:23 box
-// test.kt:3 foo
-// test.kt:26 invoke
-// test.kt:3 foo
-// test.kt:29 invoke
-// test.kt:3 foo
-// test.kt:30 invoke
-// test.kt:3 foo
-// test.kt:23 box
-
-// test.kt:33 box
-
 // EXPECTATIONS WASM
 // test.kt:7 $box (4)
 // test.kt:3 $foo (37, 43, 37)

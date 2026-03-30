@@ -15,8 +15,6 @@ fun box(): String {
 
 // EXPECTATIONS JVM_IR
 // test.kt:8 box:
-// EXPECTATIONS ClassicFrontend JVM_IR
-// test.kt:6 box:
 // EXPECTATIONS FIR JVM_IR
 // test.kt:5 box:
 // EXPECTATIONS JVM_IR
