@@ -1,6 +1,5 @@
 // one.ContextParametersKt
 // LANGUAGE: +ContextParameters
-// SKIP_IDE_TEST
 package one
 
 context(a: Int, b: String)

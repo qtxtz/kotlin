@@ -840,6 +840,12 @@ public class SymbolLightClassesByFqNameForSourceTestGenerated extends AbstractSy
     public void testWithImplicitType() {
       run("WithImplicitType.kt");
     }
+
+    @Test
+    @TestMetadata("WithPlatformTypes.kt")
+    public void testWithPlatformTypes() {
+      run("WithPlatformTypes.kt");
+    }
   }
 
   @Nested

@@ -840,6 +840,12 @@ public class JsSymbolLightClassesByFqNameForSourceTestGenerated extends Abstract
     public void testWithImplicitType() {
       run("WithImplicitType.kt");
     }
+
+    @Test
+    @TestMetadata("WithPlatformTypes.kt")
+    public void testWithPlatformTypes() {
+      run("WithPlatformTypes.kt");
+    }
   }
 
   @Nested

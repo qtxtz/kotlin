@@ -2,7 +2,6 @@
 // LANGUAGE: +ContextParameters
 // WITH_STDLIB
 // LIBRARY_PLATFORMS: JVM
-// SKIP_IDE_TEST
 package one
 
 @JvmInline

@@ -1,5 +1,4 @@
 // one.KotlinFacadeKt
-// SKIP_IDE_TEST
 // LIBRARY_PLATFORMS: JVM
 
 // FILE: KotlinFacade.kt

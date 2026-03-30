@@ -1,5 +1,4 @@
 // ImplicitArrayWithFlexibleParameterTypesKt
-// SKIP_IDE_TEST
 // WITH_STDLIB
 // LIBRARY_PLATFORMS: JVM
 

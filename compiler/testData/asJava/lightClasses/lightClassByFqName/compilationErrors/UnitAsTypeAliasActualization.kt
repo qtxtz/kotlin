@@ -1,5 +1,4 @@
 // mypack.Usage
-// SKIP_IDE_TEST
 // MODULE: common
 // FILE: common.kt
 package mypack

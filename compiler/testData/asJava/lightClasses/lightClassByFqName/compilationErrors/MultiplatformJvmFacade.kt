@@ -1,5 +1,4 @@
 // mypack.MyFacadeKt
-// SKIP_IDE_TEST
 // MODULE: common
 // FILE: commonFile1.kt
 @file:JvmName("MyFacadeKt")

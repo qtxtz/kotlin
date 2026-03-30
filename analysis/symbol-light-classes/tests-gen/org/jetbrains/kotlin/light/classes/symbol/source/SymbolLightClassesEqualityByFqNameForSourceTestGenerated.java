@@ -840,6 +840,12 @@ public class SymbolLightClassesEqualityByFqNameForSourceTestGenerated extends Ab
     public void testWithImplicitType() {
       run("WithImplicitType.kt");
     }
+
+    @Test
+    @TestMetadata("WithPlatformTypes.kt")
+    public void testWithPlatformTypes() {
+      run("WithPlatformTypes.kt");
+    }
   }
 
   @Nested

@@ -1,6 +1,5 @@
 // one.MyClass
 // LANGUAGE: +ContextParameters
-// SKIP_IDE_TEST
 package one
 
 class MyClass {
