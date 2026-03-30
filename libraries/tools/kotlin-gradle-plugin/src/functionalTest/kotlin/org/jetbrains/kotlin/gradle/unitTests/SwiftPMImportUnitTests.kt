@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
 import org.jetbrains.kotlin.gradle.plugin.getExtension
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.ConvertSyntheticSwiftPMImportProjectIntoDefFile
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.ComputeLocalPackageDependencyInputFiles
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.FetchSyntheticImportProjectPackages
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.GenerateSyntheticLinkageImportProject
@@ -437,6 +438,53 @@ class SwiftPMImportUnitTests {
         syncLockFileToProjectDirectoryTask.assertDependsOn(
             fetchTask
         )
+    }
+
+    @Test
+    fun `ios cinterop depends on ios def task but not macos def task`() {
+        val project = swiftPMImportProject(
+            preApplyCode = {
+                val localPackageDir = project.projectDir.resolve("packageOne")
+                localPackageDir.mkdirs()
+                localPackageDir.resolve("Package.swift").writeText(
+                    """
+                    // swift-tools-version: 5.9
+                    import PackageDescription
+                    let package = Package(name: "packageOne")
+                    """.trimIndent()
+                )
+            },
+            multiplatform = {
+                iosArm64()
+                macosArm64()
+            },
+            swiftPMDependencies = { layout ->
+                localSwiftPackage(
+                    directory = layout.projectDirectory.dir("packageOne"),
+                    products = listOf(
+                        SwiftPMDependency.Product(
+                            name = "packageOne",
+                            platformConstraints = setOf(SwiftPMDependency.Platform.iOS),
+                        )
+                    ),
+                )
+            }
+        )
+        project.evaluate()
+
+        val iosDefTask = project.assertContainsTaskInstance<ConvertSyntheticSwiftPMImportProjectIntoDefFile>(
+            "convertSyntheticImportProjectIntoDefFileIphoneos"
+        )
+        val macosDefTask = project.assertContainsTaskInstance<ConvertSyntheticSwiftPMImportProjectIntoDefFile>(
+            "convertSyntheticImportProjectIntoDefFileMacosx"
+        )
+        val iosCinteropTask = project.assertContainsTaskWithName("cinteropSwiftPMImportIosArm64")
+        val macosCinteropTask = project.assertContainsTaskWithName("cinteropSwiftPMImportMacosArm64")
+
+        iosCinteropTask.assertDependsOn(iosDefTask)
+        iosCinteropTask.assertNotDependsOn(macosDefTask)
+        macosCinteropTask.assertDependsOn(macosDefTask)
+        macosCinteropTask.assertNotDependsOn(iosDefTask)
     }
 
     @Test
