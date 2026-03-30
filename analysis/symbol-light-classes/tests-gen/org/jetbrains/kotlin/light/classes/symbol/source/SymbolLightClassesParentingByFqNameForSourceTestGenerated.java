@@ -593,6 +593,50 @@ public class SymbolLightClassesParentingByFqNameForSourceTestGenerated extends A
   }
 
   @Nested
+  @TestMetadata("compiler/testData/asJava/lightClasses/lightClassByFqName/annotations")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Annotations {
+    private void run(String fileName) {
+      runTest("compiler/testData/asJava/lightClasses/lightClassByFqName/annotations/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInAnnotations() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/annotations"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("annotationConstructorProperty_all.kt")
+    public void testAnnotationConstructorProperty_all() {
+      run("annotationConstructorProperty_all.kt");
+    }
+
+    @Test
+    @TestMetadata("constructorProperty_all.kt")
+    public void testConstructorProperty_all() {
+      run("constructorProperty_all.kt");
+    }
+
+    @Test
+    @TestMetadata("custom_variable_all.kt")
+    public void testCustom_variable_all() {
+      run("custom_variable_all.kt");
+    }
+
+    @Test
+    @TestMetadata("jvmName.kt")
+    public void testJvmName() {
+      run("jvmName.kt");
+    }
+
+    @Test
+    @TestMetadata("variable_all.kt")
+    public void testVariable_all() {
+      run("variable_all.kt");
+    }
+  }
+
+  @Nested
   @TestMetadata("compiler/testData/asJava/lightClasses/lightClassByFqName/compilationErrors")
   @TestDataPath("$PROJECT_ROOT")
   public class CompilationErrors {
@@ -993,64 +1037,6 @@ public class SymbolLightClassesParentingByFqNameForSourceTestGenerated extends A
     @TestMetadata("OverridingProtected.kt")
     public void testOverridingProtected() {
       run("OverridingProtected.kt");
-    }
-  }
-
-  @Nested
-  @TestMetadata("compiler/testData/asJava/lightClasses/lightClassByFqName/k2")
-  @TestDataPath("$PROJECT_ROOT")
-  public class K2 {
-    private void run(String fileName) {
-      runTest("compiler/testData/asJava/lightClasses/lightClassByFqName/k2/" + fileName);
-    }
-
-    @Test
-    public void testAllFilesPresentInK2() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/k2"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
-    }
-
-    @Nested
-    @TestMetadata("compiler/testData/asJava/lightClasses/lightClassByFqName/k2/annotations")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Annotations {
-      private void run(String fileName) {
-        runTest("compiler/testData/asJava/lightClasses/lightClassByFqName/k2/annotations/" + fileName);
-      }
-
-      @Test
-      public void testAllFilesPresentInAnnotations() {
-        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/asJava/lightClasses/lightClassByFqName/k2/annotations"), Pattern.compile("^([^.]+)\\.(kt|kts)$"), null, true);
-      }
-
-      @Test
-      @TestMetadata("annotationConstructorProperty_all.kt")
-      public void testAnnotationConstructorProperty_all() {
-        run("annotationConstructorProperty_all.kt");
-      }
-
-      @Test
-      @TestMetadata("constructorProperty_all.kt")
-      public void testConstructorProperty_all() {
-        run("constructorProperty_all.kt");
-      }
-
-      @Test
-      @TestMetadata("custom_variable_all.kt")
-      public void testCustom_variable_all() {
-        run("custom_variable_all.kt");
-      }
-
-      @Test
-      @TestMetadata("jvmName.kt")
-      public void testJvmName() {
-        run("jvmName.kt");
-      }
-
-      @Test
-      @TestMetadata("variable_all.kt")
-      public void testVariable_all() {
-        run("variable_all.kt");
-      }
     }
   }
 
