@@ -11,17 +11,13 @@ import org.jetbrains.kotlin.analysis.api.projectStructure.KaDanglingFileModule
 import org.jetbrains.kotlin.analysis.api.projectStructure.isStable
 import org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators.AnalysisApiFirSourceTestConfigurator
 import org.jetbrains.kotlin.analysis.test.framework.base.AbstractAnalysisApiExecutionTest
-import org.jetbrains.kotlin.psi.KtCallExpression
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtExpressionCodeFragment
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtPsiFactory
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.assertions
 import org.jetbrains.kotlin.test.testFramework.runWriteAction
 import org.junit.jupiter.api.Test
 import kotlin.reflect.full.isSubclassOf
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Custom Analysis API tests covering dangling files, including code fragments.
@@ -171,6 +167,47 @@ class AnalysisApiDanglingFilesTest : AbstractAnalysisApiExecutionTest("testData/
 
         analyze(nestedCodeFragmentExpression) {
             assertions.assertTrue(useSiteModule::class.isSubclassOf(KaDanglingFileModule::class))
+        }
+    }
+
+    /**
+     * This test ensures that the LL FIR session cache correctly cleans up invalid unstable dangling file sessions.
+     */
+    @Test
+    fun invalidUnstableDanglingFileSession(mainFile: KtFile, testServices: TestServices) {
+        val assertions = testServices.assertions
+
+        // Disabled event system --> unstable dangling file.
+        val ktPsiFactory = KtPsiFactory.contextual(mainFile, markGenerated = true, eventSystemEnabled = false)
+        val danglingFile = ktPsiFactory.createFile("fake.kt", mainFile.text)
+
+        val simpleClass = danglingFile.declarations.single() as KtClass
+        val method = simpleClass.declarations.first() as KtNamedFunction
+        assertions.assertEquals("method", method.name)
+
+        // Calling `analyze` ensures that the cache creates a dangling file session for the file.
+        analyze(danglingFile) {
+            assertions.assertEquals(builtinTypes.int, method.symbol.returnType)
+        }
+
+        // This invalidates the dangling file session, so the next `analyze` call must create a new unstable dangling file session.
+        danglingFile.clearCaches()
+
+        // There are several things which can go wrong in the session cache which would cause the test to fail or stall. Chiefly, we can
+        // get an exception from the session cache because the session is invalid, or we could run into an infinite loop during updating
+        // against which we have to guard the test.
+        //
+        // The assertion acts only as a smoke test to ensure that the resulting session can run lazy resolution correctly.
+        assertions.assertTimeoutPreemptively(
+            10.seconds,
+            {
+                "Could not get the analysis session for the dangling file within 10 seconds." +
+                        " The session cache has likely run into an infinite loop."
+            },
+        ) {
+            analyze(danglingFile) {
+                assertions.assertEquals(builtinTypes.int, method.symbol.returnType)
+            }
         }
     }
 }
