@@ -40,6 +40,7 @@ import org.jetbrains.kotlin.fir.resolve.calls.findTypesForSuperCandidates
 import org.jetbrains.kotlin.fir.resolve.calls.stages.mapArguments
 import org.jetbrains.kotlin.fir.resolve.diagnostics.*
 import org.jetbrains.kotlin.fir.resolve.substitution.asCone
+import org.jetbrains.kotlin.fir.resolve.transformers.ReturnTypeCalculator
 import org.jetbrains.kotlin.fir.resolve.transformers.replaceLambdaArgumentEffects
 import org.jetbrains.kotlin.fir.resolve.transformers.unwrapAtoms
 import org.jetbrains.kotlin.fir.scopes.impl.isWrappedIntegerOperator
@@ -303,19 +304,23 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
         }
 
         val resolvedAlternative =
-            transformQualifiedAccessExpression(
-                simpleNameAlternative, mode,
-                isUsedAsReceiver = false,
-                isUsedAsGetClassReceiver = false,
-                isUsedForContextSensitiveAlternative = true,
-            )
+            context.withReturnTypeCalculator(ReturnTypeCalculator.AlreadyComputedOrError) {
+                transformQualifiedAccessExpression(
+                    simpleNameAlternative, mode,
+                    isUsedAsReceiver = false,
+                    isUsedAsGetClassReceiver = false,
+                    isUsedForContextSensitiveAlternative = true,
+                )
+            }
 
         // the simple name has been resolved to something different from erroneous expression => we can't run CSR
         if (resolvedAlternative !is FirPropertyAccessExpression || !resolvedAlternative.shouldBeResolvedInContextSensitiveMode()) return
 
         when {
             mode is ResolutionMode.WithExpectedType || mode.hintForContextSensitiveResolution != null ->
-                runContextSensitiveResolutionIfNeeded(resolvedAlternative, mode, forceResolutionInIdeMode = true)?.let { resolvedCSR ->
+                context.withReturnTypeCalculator(ReturnTypeCalculator.AlreadyComputedOrError) {
+                    runContextSensitiveResolutionIfNeeded(resolvedAlternative, mode, forceResolutionInIdeMode = true)
+                }?.let { resolvedCSR ->
                     this.appendCSRAlternativeDiagnosticIfNeeded(resolvedCSR)
                 }
 

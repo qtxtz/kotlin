@@ -1,7 +1,6 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // FULL_JDK
 // IDE_MODE
-// IGNORE_REVERSED_RESOLVE
 // ISSUE: KT-85341
 
 object Constants {
@@ -21,7 +20,7 @@ private val Anonymous = object {
 
 class D {
     companion object {
-        val ANOTHER_STATE = <!TYPECHECKER_HAS_RUN_INTO_RECURSIVE_PROBLEM!>Anonymous<!>.<!UNRESOLVED_REFERENCE!>AnotherState<!>
+        val ANOTHER_STATE = Anonymous.AnotherState
     }
 }
 
@@ -29,6 +28,6 @@ object D1 {
     val ANOTHER_STATE: D = D()
 }
 
-private val STATE = B(<!TYPECHECKER_HAS_RUN_INTO_RECURSIVE_PROBLEM!>Anonymous<!>.<!UNRESOLVED_REFERENCE!>State<!>)
+private val STATE = B(Anonymous.State)
 /* GENERATED_FIR_TAGS: anonymousObjectExpression, classDeclaration, companionObject, objectDeclaration,
 primaryConstructor, propertyDeclaration, stringLiteral */
