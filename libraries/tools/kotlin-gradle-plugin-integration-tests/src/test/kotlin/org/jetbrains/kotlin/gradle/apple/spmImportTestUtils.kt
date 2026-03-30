@@ -14,13 +14,16 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.GenerateSyntheticLinkageImportProject
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.FetchSyntheticImportProjectPackages
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.ConvertSyntheticSwiftPMImportProjectIntoDefFile
-
 import org.jetbrains.kotlin.gradle.testbase.TestProject
 import org.jetbrains.kotlin.gradle.testbase.XCTestHelpers
 import org.jetbrains.kotlin.gradle.testbase.assertFileExists
 import org.jetbrains.kotlin.gradle.testbase.boot
 import org.jetbrains.kotlin.gradle.testbase.buildScriptInjection
 import org.jetbrains.kotlin.gradle.testbase.plugins
+import org.jetbrains.kotlin.gradle.uklibs.GradleMetadata
+import org.jetbrains.kotlin.gradle.uklibs.PublishedProject
+import org.jetbrains.kotlin.gradle.uklibs.Variant
+import org.jetbrains.kotlin.gradle.uklibs.VariantFile
 import org.jetbrains.kotlin.gradle.uklibs.applyMultiplatform
 import org.jetbrains.kotlin.gradle.util.runProcess
 import java.io.Closeable
@@ -32,6 +35,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
+import kotlin.io.readText
 import kotlin.test.assertEquals
 
 @Suppress("INVISIBLE_REFERENCE")
@@ -784,4 +788,28 @@ fun TestProject.assertApplicationRunsAndObjCRuntimeDoesntEmitInStderr(
             e,
         )
     }
+}
+
+fun PublishedProject.assertSwiftPMMetadataVariantExistsInRootComponent() {
+    val gradleMetadata = rootComponent.gradleMetadata.readText().let {
+        swiftPmJson.decodeFromString<GradleMetadata>(it)
+    }
+
+    assertEquals(
+        Variant(
+            name = "swiftPMDependenciesMetadataElements",
+            attributes = mapOf(
+                "org.gradle.category" to "library",
+                "org.gradle.usage" to "swiftPMDependenciesMetadata"
+            ),
+            availableAt = null,
+            files = listOf(
+                VariantFile(
+                    name = "swiftPMDependenciesMetadata",
+                    url = "${name}-${version}-swiftpm-metadata",
+                )
+            ),
+        ),
+        gradleMetadata.variants.single { it.name == "swiftPMDependenciesMetadataElements" }
+    )
 }
