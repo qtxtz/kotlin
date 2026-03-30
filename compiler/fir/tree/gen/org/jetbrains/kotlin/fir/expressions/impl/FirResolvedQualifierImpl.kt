@@ -57,14 +57,12 @@ internal class FirResolvedQualifierImpl(
 }
 
     override fun <R, D> acceptChildren(visitor: FirVisitor<R, D>, data: D) {
-        contextSensitiveAlternative?.accept(visitor, data)
         annotations.forEach { it.accept(visitor, data) }
         explicitParent?.accept(visitor, data)
         typeArguments.forEach { it.accept(visitor, data) }
     }
 
     override fun <D> transformChildren(transformer: FirTransformer<D>, data: D): FirResolvedQualifierImpl {
-        contextSensitiveAlternative = contextSensitiveAlternative?.transform(transformer, data)
         transformAnnotations(transformer, data)
         explicitParent = explicitParent?.transform(transformer, data)
         transformTypeArguments(transformer, data)

@@ -49,13 +49,11 @@ internal class FirWhenSubjectExpressionImpl(
 
     override fun <R, D> acceptChildren(visitor: FirVisitor<R, D>, data: D) {
         annotations.forEach { it.accept(visitor, data) }
-        contextSensitiveAlternative?.accept(visitor, data)
         calleeReference.accept(visitor, data)
     }
 
     override fun <D> transformChildren(transformer: FirTransformer<D>, data: D): FirWhenSubjectExpressionImpl {
         transformAnnotations(transformer, data)
-        contextSensitiveAlternative = contextSensitiveAlternative?.transform(transformer, data)
         transformCalleeReference(transformer, data)
         return this
     }

@@ -565,6 +565,8 @@ fun BodyResolveComponents.transformExpressionUsingSmartcastInfo(
     // But for smart casts, even non-stable, they're not handled properly by the Resolution & Inference.
     // NB: This means that we effectively ignore CSR alternatives with smart casts, but that should not be a much of a problem
     // as they should only be used for enum entries/sealed subobjects which are rarely subjects of smart casts.
+    // NB: KT-85267 is not reproduced since we've stopped visiting diagnostics on context-sensitive alternatives, but still
+    // it looks reasonable to clear it here.
     if (AnalysisFlags.ideMode.isSet() && expression is FirQualifierWithContextSensitiveAlternative) {
         expression.replaceContextSensitiveAlternative(null)
     }

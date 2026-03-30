@@ -56,7 +56,6 @@ class FirPropertyAccessExpressionImpl @FirImplementationDetail constructor(
         if (extensionReceiver !== explicitReceiver && extensionReceiver !== dispatchReceiver) {
             extensionReceiver?.accept(visitor, data)
         }
-        contextSensitiveAlternative?.accept(visitor, data)
         calleeReference.accept(visitor, data)
     }
 
@@ -71,7 +70,6 @@ class FirPropertyAccessExpressionImpl @FirImplementationDetail constructor(
         if (extensionReceiver !== explicitReceiver && extensionReceiver !== dispatchReceiver) {
             extensionReceiver = extensionReceiver?.transform(transformer, data)
         }
-        contextSensitiveAlternative = contextSensitiveAlternative?.transform(transformer, data)
         transformCalleeReference(transformer, data)
         return this
     }
