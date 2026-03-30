@@ -2,12 +2,18 @@
 
 import org.gradle.internal.os.OperatingSystem
 import java.io.Closeable
+import java.io.FileOutputStream
+import java.io.IOException
 import java.io.OutputStreamWriter
+import java.io.UncheckedIOException
 import java.net.URI
+import java.nio.file.Files
+import java.nio.file.attribute.FileTime
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.Instant
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import javax.xml.stream.XMLOutputFactory
 
 plugins {
@@ -137,6 +143,53 @@ dependencies {
     intellijVersionForIde?.let { intellijCoreForIde("com.jetbrains.intellij.idea:intellij-core:$it") }
 }
 
+private fun touchFileByWritingEmptyByteArray(file: File) {
+    try {
+        FileOutputStream(file).use { it.write(ByteArray(0)) }
+    } catch (e: IOException) {
+        throw UncheckedIOException("Could not update timestamp for $file", e)
+    }
+}
+
+private fun touchExistingFile(file: File) {
+    try {
+        if (file.exists()) {
+            Files.setLastModifiedTime(file.toPath(), FileTime.fromMillis(System.currentTimeMillis()))
+        }
+    } catch (e: IOException) {
+        if (file.isFile && file.length() == 0L) {
+            // On Linux, users cannot touch files they don't own but have write access to
+            // because the JDK uses futimes() instead of futimens() [note the 'n'!]
+            // see https://github.com/gradle/gradle/issues/7873
+            touchFileByWritingEmptyByteArray(file)
+        } else {
+            throw UncheckedIOException("Could not update timestamp for $file", e)
+        }
+    }
+}
+
+private val cleanableStores = ConcurrentHashMap<String, MutableSet<File>>()
+
+private fun addFileToStoreAndUse(directory: File, name: String): File {
+    val file = directory.resolve(name)
+    cleanableStores.getOrDefault(directory.absolutePath, HashSet()).add(file)
+    touchExistingFile(file)
+    return file
+}
+
+private fun cleanStore(directory: File) {
+    fun modificationDate(file: File): Instant {
+        return Files.getLastModifiedTime(file.toPath()).toInstant()
+    }
+
+    directory.listFiles()
+        ?.filter { file ->
+            modificationDate(file).isBefore(Instant.now().minus(Duration.ofDays(30)))
+        }
+        ?.forEach { file -> file.deleteRecursively() }
+}
+
+
 @Suppress("DEPRECATION")
 fun prepareDeps(
     intellij: Configuration,
@@ -150,18 +203,17 @@ fun prepareDeps(
     val makeIntellijAnnotations = tasks.register("makeIntellijAnnotations${intellij.name.replaceFirstChar(Char::uppercase)}", Copy::class) {
         dependsOn(makeIntellijCore)
 
-        val intellijCoreRepo = org.jetbrains.kotlin.gradle.tasks.internal.CleanableStore[repoDir.resolve("intellij-core").absolutePath][intellijVersion].use()
+        val intellijCoreRepo = addFileToStoreAndUse(repoDir.resolve("intellij-core"), intellijVersion)
         from(intellijCoreRepo.resolve("artifacts/annotations.jar"))
 
-        val annotationsStore = org.jetbrains.kotlin.gradle.tasks.internal.CleanableStore[repoDir.resolve(intellijRuntimeAnnotations).absolutePath]
-        val targetDir = annotationsStore[intellijVersion].use()
+        val targetDir = addFileToStoreAndUse(repoDir.resolve(intellijRuntimeAnnotations), intellijVersion)
         into(targetDir)
 
         val ivyFile = File(targetDir, "$intellijRuntimeAnnotations.ivy.xml")
         outputs.files(ivyFile)
 
         doFirst {
-            annotationsStore.cleanStore()
+            cleanStore(repoDir.resolve(intellijRuntimeAnnotations))
         }
 
         doLast {
@@ -248,12 +300,9 @@ fun buildIvyRepositoryTask(
     pathRemap: ((String) -> String)? = null,
     sources: Provider<File>? = null
 ): TaskProvider<Task> {
-    @Suppress("DEPRECATION")
-    fun ResolvedArtifact.storeDirectory(): org.jetbrains.kotlin.gradle.tasks.internal.CleanableStore =
-        org.jetbrains.kotlin.gradle.tasks.internal.CleanableStore[repoDirectory.resolve("$organization/${moduleVersion.id.name}").absolutePath]
+    fun ResolvedArtifact.storeDirectory(): File = repoDirectory.resolve("$organization/${moduleVersion.id.name}")
 
-    fun ResolvedArtifact.moduleDirectory(): File =
-        storeDirectory()[moduleVersion.id.version].use()
+    fun ResolvedArtifact.moduleDirectory(): File = addFileToStoreAndUse(storeDirectory(), moduleVersion.id.version)
 
     return tasks.register("buildIvyRepositoryFor${configuration.name.replaceFirstChar(Char::uppercase)}") {
         dependsOn(configuration)
@@ -268,7 +317,7 @@ fun buildIvyRepositoryTask(
             val artifact = configuration.resolvedConfiguration.resolvedArtifacts.single()
             val moduleDirectory = artifact.moduleDirectory()
 
-            artifact.storeDirectory().cleanStore()
+            cleanStore(artifact.storeDirectory())
 
             val repoMarker = File(moduleDirectory, ".marker")
             if (repoMarker.exists()) {
@@ -337,9 +386,6 @@ fun buildIvyRepositoryTask(
         }
     }
 }
-
-@Suppress("DEPRECATION")
-fun org.jetbrains.kotlin.gradle.tasks.internal.CleanableStore.cleanStore() = cleanDir(Instant.now().minus(Duration.ofDays(30)))
 
 fun writeIvyXml(
     organization: String,
