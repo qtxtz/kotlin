@@ -56,7 +56,7 @@ fun test() {
     <!CLASS_LITERAL_LHS_NOT_A_CLASS!>UpperBoundOutInTypealias<in Int, in Long>::class<!>
     <!CLASS_LITERAL_LHS_NOT_A_CLASS!>UpperBoundOutInTypealias<out Int, out Long>::class<!>
 
-    UpperBoundTypeAliasUnused::class
+    <!UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING!>UpperBoundTypeAliasUnused<!>::class
     <!CLASS_LITERAL_LHS_NOT_A_CLASS!>UpperBoundTypeAliasUnused<String, String>::class<!>
     <!CLASS_LITERAL_LHS_NOT_A_CLASS!>UpperBoundTypeAliasUnused<in String, out String>::class<!>
 

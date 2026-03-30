@@ -8631,6 +8631,14 @@ private fun KaDiagnosticConverterBuilder.addConversions198() {
             token,
         )
     }
+    add(FirErrors.UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING) { firDiagnostic ->
+        UpperBoundViolatedInLhsOfClassLiteralWarningImpl(
+            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.a),
+            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.b),
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
     add(FirJvmErrors.ILLEGAL_JVM_NAME) { firDiagnostic ->
         IllegalJvmNameImpl(
             firDiagnostic as KtPsiDiagnostic,

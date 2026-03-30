@@ -105,6 +105,39 @@ fun createSubstitutorForUpperBoundViolationCheck(
     )
 }
 
+/**
+ * Imagine
+ * ```kotlin
+ * class C<X, Y : X>
+ *
+ * typealias TA<T> = C<MutableList<T>, MutableList<Int>>
+ * ```
+ *
+ * In this case, `TA::class` has type `KClass<TA<*>>` which contains upper bound violation.
+ * Currently, we report a warning for this case. In the future, we may reconsider and start
+ * reporting a deprecation warning and eventually error.
+ */
+context(context: CheckerContext, reporter: DiagnosticReporter)
+fun checkUpperBoundViolatedInLhsOfGetClass(
+    typeParameters: List<FirTypeParameterSymbol>,
+    typeArguments: List<ConeTypeProjection>,
+    substitutor: ConeSubstitutor,
+    fallbackSource: KtSourceElement?
+) {
+    checkUpperBoundViolated(
+        typeParameters,
+        typeArguments,
+        substitutor,
+        isReportExpansionError = true,
+        isIgnoreTypeParameters = false,
+        fallbackSource,
+        isInsideTypeOperatorOrParameterBounds = false,
+        mustRelaxDueToArgumentInteractionsBug = false,
+        isTypeAliasExpansionInLHSOfGetClass = true,
+        isTypealiasExpansion = true,
+    )
+}
+
 context(context: CheckerContext, reporter: DiagnosticReporter)
 fun checkUpperBoundViolated(
     typeParameters: List<FirTypeParameterSymbol>,
@@ -120,6 +153,7 @@ fun checkUpperBoundViolated(
      * See [LanguageFeature.ReportUpperBoundViolatedInCallArgumentInteractions].
      */
     mustRelaxDueToArgumentInteractionsBug: Boolean = false,
+    isTypeAliasExpansionInLHSOfGetClass: Boolean = false,
     isTypealiasExpansion: Boolean,
 ) {
     val count = minOf(typeParameters.size, typeArguments.size)
@@ -142,6 +176,7 @@ fun checkUpperBoundViolated(
                 else -> FirErrors.UPPER_BOUND_VIOLATED
             }
             val typealiasDiagnostic = when {
+                isTypeAliasExpansionInLHSOfGetClass -> FirErrors.UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING
                 mustRelax -> FirErrors.UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION_DEPRECATION_WARNING
                 else -> FirErrors.UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION
             }

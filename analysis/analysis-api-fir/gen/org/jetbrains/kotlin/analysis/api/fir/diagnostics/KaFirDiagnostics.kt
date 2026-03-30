@@ -2026,6 +2026,12 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         val actualUpperBound: KaType
     }
 
+    interface UpperBoundViolatedInLhsOfClassLiteralWarning : KaFirDiagnostic<PsiElement> {
+        override val diagnosticClass get() = UpperBoundViolatedInLhsOfClassLiteralWarning::class
+        val expectedUpperBound: KaType
+        val actualUpperBound: KaType
+    }
+
     interface TypeArgumentsNotAllowed : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = TypeArgumentsNotAllowed::class
         val place: String
