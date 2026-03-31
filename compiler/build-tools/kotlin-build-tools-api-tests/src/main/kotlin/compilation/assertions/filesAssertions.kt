@@ -51,17 +51,27 @@ fun CompilationOutcome.assertCompiledSources(expectedCompiledSources: Set<String
     }
 }
 
+/**
+ * Asserts that the compiler produces all files declared as expected outputs.
+ * Unless there's explicit expected output for the module's Kotlin module files, the default matching [Module.moduleName] will be added automatically.
+ */
 context(module: Module)
 fun CompilationOutcome.assertOutputs(vararg expectedOutputs: String) {
     assertOutputs(expectedOutputs.toSet())
 }
 
+/**
+ * Asserts that the compiler produces all files declared as expected outputs.
+ * Unless there's explicit expected output for the module's Kotlin module files, the default matching [Module.moduleName] will be added automatically.
+ */
 context(module: Module)
 fun CompilationOutcome.assertOutputs(expectedOutputs: Set<String>) {
     val filesLeft = expectedOutputs.map { module.outputDirectory.resolve(it).relativeTo(module.outputDirectory) }
         .toMutableSet()
         .apply {
-            add(module.outputDirectory.resolve("META-INF/${module.moduleName}.kotlin_module").relativeTo(module.outputDirectory))
+            if (none { it.fileName.toString().endsWith(".kotlin_module") }) {
+                add(module.outputDirectory.resolve("META-INF/${module.moduleName}.kotlin_module").relativeTo(module.outputDirectory))
+            }
         }
     val notDeclaredFiles = hashSetOf<Path>()
     for (file in module.outputDirectory.walk()) {
