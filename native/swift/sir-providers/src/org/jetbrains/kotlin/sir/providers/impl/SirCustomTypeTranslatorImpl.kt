@@ -43,6 +43,7 @@ import org.jetbrains.kotlin.sir.SirArrayType
 import org.jetbrains.kotlin.sir.SirDictionaryType
 import org.jetbrains.kotlin.sir.SirExistentialType
 import org.jetbrains.kotlin.sir.SirFunctionBridge
+import org.jetbrains.kotlin.sir.SirFunctionalType
 import org.jetbrains.kotlin.sir.SirNominalType
 import org.jetbrains.kotlin.sir.SirOptionalType
 import org.jetbrains.kotlin.sir.SirType
@@ -56,6 +57,7 @@ import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge.AsNSSet
 import org.jetbrains.kotlin.sir.providers.impl.BridgeProvider.Bridge.AsObjCBridged
 import org.jetbrains.kotlin.sir.providers.impl.SirTypeProviderImpl.TypeTranslationCtx
 import org.jetbrains.kotlin.sir.providers.sirModule
+import org.jetbrains.kotlin.sir.providers.utils.KotlinRuntimeSupportModule
 import org.jetbrains.kotlin.sir.util.SirSwiftModule
 
 public class SirCustomTypeTranslatorImpl(
@@ -79,6 +81,7 @@ public class SirCustomTypeTranslatorImpl(
                 }
                 isClassType(StandardClassIds.List) -> {
                     val swiftArgumentType = typeArguments.single().sirType(ctx)
+                    if (!swiftArgumentType.isBridgeableCollectionElement()) return null
                     swiftType = SirArrayType(
                         swiftArgumentType,
                     )
@@ -88,6 +91,7 @@ public class SirCustomTypeTranslatorImpl(
                 isClassType(StandardClassIds.Set) -> {
                     val swiftArgumentType = typeArguments.single().sirType(ctx.copy(requiresHashableAsAny = true))
                     if (swiftArgumentType.containsExistential()) return null
+                    if (!swiftArgumentType.isBridgeableCollectionElement()) return null
                     swiftType = SirNominalType(
                         SirSwiftModule.set,
                         listOf(swiftArgumentType)
@@ -99,6 +103,7 @@ public class SirCustomTypeTranslatorImpl(
                     val swiftKeyType = typeArguments.first().sirType(ctx.copy(requiresHashableAsAny = true))
                     if (swiftKeyType.containsExistential()) return null
                     val swiftValueType = typeArguments.last().sirType(ctx)
+                    if (!swiftKeyType.isBridgeableCollectionElement() || !swiftValueType.isBridgeableCollectionElement()) return null
                     swiftType = SirDictionaryType(swiftKeyType, swiftValueType)
                     AsNSDictionary(
                         swiftType,
@@ -328,7 +333,7 @@ public class SirCustomTypeTranslatorImpl(
     }
 
     private fun SirType.containsExistential(): Boolean = when (this) {
-        is SirExistentialType -> true
+        is SirExistentialType -> protocols.isNotEmpty() && protocols.singleOrNull()?.first != KotlinRuntimeSupportModule.kotlinBridgeable
         is SirOptionalType -> wrappedType.containsExistential()
         else -> false
     }
@@ -401,4 +406,9 @@ public class SirCustomTypeTranslatorImpl(
 
         private fun BidirectionalBridge.wrapper(): SirCustomTypeTranslator.BridgeWrapper = SirCustomTypeTranslator.BridgeWrapper(this)
     }
+}
+
+private fun SirType.isBridgeableCollectionElement(): Boolean = when (this) {
+    is SirNominalType, is SirExistentialType, is SirFunctionalType -> true
+    else -> false
 }
