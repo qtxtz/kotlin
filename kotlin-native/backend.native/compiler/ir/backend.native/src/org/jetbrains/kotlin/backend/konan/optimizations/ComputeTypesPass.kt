@@ -290,11 +290,12 @@ internal class ComputeTypesPass(val context: Context) : BodyLoweringPass {
 
             override fun visitTry(aTry: IrTry, data: BitSet): BitSet {
                 val prevCatchesVV = catchesVariablesValues
-                catchesVariablesValues = data.copy()
+                val catchesVV = data.copy()
+                catchesVariablesValues = catchesVV
                 val cfmpInfo = ControlFlowMergePointInfo(aTry)
                 val tryVV = aTry.tryResult.accept(this, data)
                 controlFlowMergePoint(cfmpInfo, aTry.tryResult, tryVV)
-                val catchesVV = catchesVariablesValues!!
+                prevCatchesVV?.or(catchesVV)
                 catchesVariablesValues = prevCatchesVV
                 for (aCatch in aTry.catches) {
                     variableWrites[aCatch.catchParameter] = externalWrites
