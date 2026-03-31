@@ -52,7 +52,7 @@ open class AbstractCustomJsCompilerFirstStageTest(val testDataRoot: String = "co
             ::JsFirstStageEnvironmentConfigurator,
             // And this configurator is necessary to relax the second compilation stage, since the old compiler could produce IR
             // which would not pass new improved IR validation rules
-            ::CustomWebCompilerSecondStageEnvironmentConfigurator,
+            ::CustomJsCompilerSecondStageEnvironmentConfigurator,
         )
 
         useAdditionalSourceProviders(

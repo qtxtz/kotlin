@@ -6,7 +6,6 @@
 package org.jetbrains.kotlin.wasm.test.klib
 
 import org.jetbrains.kotlin.js.test.klib.CustomWebCompilerFirstStageFacade
-import org.jetbrains.kotlin.js.test.klib.CustomWebCompilerSecondStageEnvironmentConfigurator
 import org.jetbrains.kotlin.js.test.klib.customWasmJsCompilerSettings
 import org.jetbrains.kotlin.js.test.klib.defaultLanguageVersion
 import org.jetbrains.kotlin.platform.wasm.WasmPlatforms
@@ -50,7 +49,7 @@ open class AbstractCustomWasmJsCompilerFirstStageTest(val testDataRoot: String =
             ::WasmFirstStageEnvironmentConfigurator.bind(WasmTarget.JS),
             // And this configurator is necessary to relax the second compilation stage, since the old compiler could produce IR
             // which would not pass new improved IR validation rules
-            ::CustomWebCompilerSecondStageEnvironmentConfigurator,
+            ::CustomWasmJsCompilerSecondStageEnvironmentConfigurator.bind(WasmTarget.JS),
         )
 
         useAdditionalSourceProviders(

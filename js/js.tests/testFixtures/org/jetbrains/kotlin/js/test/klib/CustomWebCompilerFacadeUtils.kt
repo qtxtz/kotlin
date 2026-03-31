@@ -35,7 +35,7 @@ internal fun TestModule.wasmTargetOrNull(testServices: TestServices, compilation
     }
 
 /**
- * Note: To be used only internally in [CustomWebCompilerFirstStageFacade] and [CustomWebCompilerSecondStageEnvironmentConfigurator].
+ * Note: To be used only internally in [CustomWebCompilerFirstStageFacade].
  */
 internal fun TestModule.customWebCompilerSettings(testServices: TestServices): CustomWebCompilerSettings =
     if (isWasmModule(testServices)) customWasmJsCompilerSettings else customJsCompilerSettings
