@@ -141,7 +141,7 @@ abstract class AbstractPartialRawFirBuilderTestCase : AbstractAnalysisApiBasedTe
         val designation = designationBuilder.resultDesignation
         TestCase.assertTrue(designation != null)
 
-        val firElement = RawFirNonLocalDeclarationBuilder.buildWithFunctionSymbolRebind(
+        val firElement = RawFirNonLocalDeclarationBuilder.buildWithSymbolRebind(
             session = session,
             scopeProvider = scopeProvider,
             designation!!,
