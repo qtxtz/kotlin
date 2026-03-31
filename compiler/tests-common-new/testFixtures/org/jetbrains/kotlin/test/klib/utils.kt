@@ -5,8 +5,14 @@
 
 package org.jetbrains.kotlin.test.klib
 
+import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
 import org.jetbrains.kotlin.test.TestInfrastructureInternals
+import org.jetbrains.kotlin.test.builders.RegisteredDirectivesBuilder
+import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
+import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_MULTIPLE_API_VERSIONS_SETTING
+import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.API_VERSION
+import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE_VERSION
 import org.jetbrains.kotlin.test.directives.model.StringDirective
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.defaultsProvider
@@ -65,4 +71,15 @@ internal fun TestServices.versionAndTargetAreIgnored(directive: StringDirective,
         }
     }
     return false
+}
+
+/**
+ * Set up the necessary directives for a KLIB compatibility test to enforce running it under
+ * a specific [customLanguageVersion] and the relevant API version.
+ */
+fun RegisteredDirectivesBuilder.setupCustomLanguageVersionForKlibCompatibilityTest(customLanguageVersion: LanguageVersion) {
+    +ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
+    LANGUAGE_VERSION with customLanguageVersion
+    +ALLOW_MULTIPLE_API_VERSIONS_SETTING
+    API_VERSION with ApiVersion.createByLanguageVersion(customLanguageVersion)
 }

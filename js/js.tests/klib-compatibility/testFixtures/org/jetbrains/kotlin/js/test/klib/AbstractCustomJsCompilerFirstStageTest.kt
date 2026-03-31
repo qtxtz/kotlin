@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives.WITH_STDLIB
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerFirstStageTestSuppressor
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestSuppressor
+import org.jetbrains.kotlin.test.klib.setupCustomLanguageVersionForKlibCompatibilityTest
 import org.jetbrains.kotlin.test.model.DependencyKind
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
@@ -39,6 +40,10 @@ open class AbstractCustomJsCompilerFirstStageTest(val testDataRoot: String = "co
             dependencyKind = DependencyKind.Binary
         }
         defaultDirectives {
+            // We need to set the custom LV to let `UnsupportedFeaturesTestConfigurator` skip tests with
+            // the language features that are not supported in the given custom LV.
+            setupCustomLanguageVersionForKlibCompatibilityTest(customJsCompilerSettings.defaultLanguageVersion)
+
             // `js-ir-minimal-for-test` must not be used in this test at all, so need to use `kotlin-test` library on 2nd stage via `WITH_STDLIB` directive
             // Note: on 1st stage, compilation is done against not `js-ir-minimal-for-test` (it's not bundled to stdlib Maven artifact),
             // but against `kotlin-test` library, which has assert functions of different signatures.

@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.konan.test.klib
 
-import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
 import org.jetbrains.kotlin.konan.test.Fir2IrCliNativeFacade
 import org.jetbrains.kotlin.konan.test.FirCliNativeFacade
@@ -25,13 +24,10 @@ import org.jetbrains.kotlin.test.builders.nativeArtifactsHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.DISABLE_FIR_DUMP_HANDLER
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_MULTIPLE_API_VERSIONS_SETTING
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.API_VERSION
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE_VERSION
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerSecondStageTestSuppressor
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestSuppressor
+import org.jetbrains.kotlin.test.klib.setupCustomLanguageVersionForKlibCompatibilityTest
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.services.TargetBackendTestSkipper
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
@@ -53,10 +49,10 @@ open class AbstractCustomNativeCompilerSecondStageTest : AbstractNativeCoreTest(
             FirDiagnosticsDirectives.FIR_PARSER with FirParser.LightTree
             +DISABLE_FIR_DUMP_HANDLER
             if (customNativeCompilerSettings.defaultLanguageVersion < LanguageVersion.LATEST_STABLE) {
-                +ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
-                LANGUAGE_VERSION with customNativeCompilerSettings.defaultLanguageVersion
-                +ALLOW_MULTIPLE_API_VERSIONS_SETTING
-                API_VERSION with ApiVersion.createByLanguageVersion(customNativeCompilerSettings.defaultLanguageVersion)
+                // We need to set the custom LV to let `UnsupportedFeaturesTestConfigurator` skip tests with
+                // the language features that are not supported in the given custom LV.
+                setupCustomLanguageVersionForKlibCompatibilityTest(customNativeCompilerSettings.defaultLanguageVersion)
+
                 LANGUAGE with "+ExportKlibToOlderAbiVersion"
             }
         }

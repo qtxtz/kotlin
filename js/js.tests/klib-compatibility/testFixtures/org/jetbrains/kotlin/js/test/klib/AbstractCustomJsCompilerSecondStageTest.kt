@@ -5,13 +5,11 @@
 
 package org.jetbrains.kotlin.js.test.klib
 
-import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
 import org.jetbrains.kotlin.js.test.preprocessors.JsExportBoxPreprocessor
 import org.jetbrains.kotlin.js.test.runners.commonConfigurationForJsTest
 import org.jetbrains.kotlin.js.test.runners.configureJsBoxHandlers
 import org.jetbrains.kotlin.js.test.runners.setUpDefaultDirectivesForJsBoxTest
-import org.jetbrains.kotlin.test.services.configuration.UnsupportedFeaturesTestConfigurator
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
@@ -19,16 +17,14 @@ import org.jetbrains.kotlin.test.builders.configureFirHandlersStep
 import org.jetbrains.kotlin.test.builders.jsArtifactsHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives.WITH_STDLIB
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_MULTIPLE_API_VERSIONS_SETTING
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.API_VERSION
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE_VERSION
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerSecondStageTestSuppressor
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestSuppressor
+import org.jetbrains.kotlin.test.klib.setupCustomLanguageVersionForKlibCompatibilityTest
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.StandardLibrariesPathProviderForKotlinProject
+import org.jetbrains.kotlin.test.services.configuration.UnsupportedFeaturesTestConfigurator
 import org.jetbrains.kotlin.utils.bind
 import org.junit.jupiter.api.Tag
 import java.io.File
@@ -52,10 +48,10 @@ open class AbstractCustomJsCompilerSecondStageTest : AbstractKotlinCompilerWithT
         useMetaTestConfigurators(::UnsupportedFeaturesTestConfigurator)
         defaultDirectives {
             if (customJsCompilerSettings.defaultLanguageVersion < LanguageVersion.LATEST_STABLE) {
-                +ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
-                LANGUAGE_VERSION with customJsCompilerSettings.defaultLanguageVersion
-                +ALLOW_MULTIPLE_API_VERSIONS_SETTING
-                API_VERSION with ApiVersion.createByLanguageVersion(customJsCompilerSettings.defaultLanguageVersion)
+                // We need to set the custom LV to let `UnsupportedFeaturesTestConfigurator` skip tests with
+                // the language features that are not supported in the given custom LV.
+                setupCustomLanguageVersionForKlibCompatibilityTest(customJsCompilerSettings.defaultLanguageVersion)
+
                 LANGUAGE with "+ExportKlibToOlderAbiVersion"
             }
             // `js-ir-minimal-for-test` must not be used in this test at all, so need to use `kotlin-test` library via `WITH_STDLIB` directive

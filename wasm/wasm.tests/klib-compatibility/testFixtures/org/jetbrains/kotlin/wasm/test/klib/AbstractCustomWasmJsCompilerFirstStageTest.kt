@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.builders.wasmArtifactsHandlersStep
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerFirstStageTestSuppressor
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestSuppressor
+import org.jetbrains.kotlin.test.klib.setupCustomLanguageVersionForKlibCompatibilityTest
 import org.jetbrains.kotlin.test.model.DependencyKind
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
@@ -41,6 +42,12 @@ open class AbstractCustomWasmJsCompilerFirstStageTest(val testDataRoot: String =
             frontend = FrontendKinds.FIR
             targetPlatform = WasmPlatforms.wasmJs
             dependencyKind = DependencyKind.Binary
+        }
+
+        defaultDirectives {
+            // We need to set the custom LV to let `UnsupportedFeaturesTestConfigurator` skip tests with
+            // the language features that are not supported in the given custom LV.
+            setupCustomLanguageVersionForKlibCompatibilityTest(customWasmJsCompilerSettings.defaultLanguageVersion)
         }
 
         useMetaTestConfigurators(::UnsupportedFeaturesTestConfigurator)

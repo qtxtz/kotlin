@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.test.builders.nativeArtifactsHandlersStep
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives.WITH_STDLIB
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerFirstStageTestSuppressor
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestSuppressor
+import org.jetbrains.kotlin.test.klib.setupCustomLanguageVersionForKlibCompatibilityTest
 import org.jetbrains.kotlin.test.model.DependencyKind
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.services.TargetBackendTestSkipper
@@ -37,6 +38,10 @@ open class AbstractCustomNativeCompilerFirstStageTest : AbstractNativeCoreTest()
             dependencyKind = DependencyKind.Binary
         }
         defaultDirectives {
+            // We need to set the custom LV to let `UnsupportedFeaturesTestConfigurator` skip tests with
+            // the language features that are not supported in the given custom LV.
+            setupCustomLanguageVersionForKlibCompatibilityTest(customNativeCompilerSettings.defaultLanguageVersion)
+
             // K/N does not have minimized stdlib for tests, so need to use the full stdlib
             +WITH_STDLIB
         }

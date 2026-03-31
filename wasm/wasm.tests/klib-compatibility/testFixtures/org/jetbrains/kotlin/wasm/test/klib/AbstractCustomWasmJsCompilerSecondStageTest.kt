@@ -5,14 +5,12 @@
 
 package org.jetbrains.kotlin.wasm.test.klib
 
-import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
 import org.jetbrains.kotlin.js.test.klib.customWasmJsCompilerSettings
 import org.jetbrains.kotlin.js.test.klib.defaultLanguageVersion
 import org.jetbrains.kotlin.js.test.preprocessors.JsExportBoxPreprocessor
 import org.jetbrains.kotlin.platform.wasm.WasmPlatforms
 import org.jetbrains.kotlin.platform.wasm.WasmTarget
-import org.jetbrains.kotlin.test.services.configuration.UnsupportedFeaturesTestConfigurator
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
@@ -22,20 +20,18 @@ import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.ALLOW_MULTIPLE_API_VERSIONS_SETTING
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.API_VERSION
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE
-import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE_VERSION
 import org.jetbrains.kotlin.test.directives.WasmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.frontend.fir.Fir2IrResultsConverter
 import org.jetbrains.kotlin.test.frontend.fir.FirFrontendFacade
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerSecondStageTestSuppressor
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerTestSuppressor
+import org.jetbrains.kotlin.test.klib.setupCustomLanguageVersionForKlibCompatibilityTest
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackendTest
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.StandardLibrariesPathProviderForKotlinProject
+import org.jetbrains.kotlin.test.services.configuration.UnsupportedFeaturesTestConfigurator
 import org.jetbrains.kotlin.test.services.configuration.WasmSecondStageEnvironmentConfigurator
 import org.jetbrains.kotlin.utils.bind
 import org.jetbrains.kotlin.wasm.test.blackbox.CustomWasmJsCompilerSecondStageFacade
@@ -73,10 +69,10 @@ open class AbstractCustomWasmJsCompilerSecondStageTest(val testDataRoot: String 
         useDirectives(WasmEnvironmentConfigurationDirectives)
         defaultDirectives {
             if (customWasmJsCompilerSettings.defaultLanguageVersion < LanguageVersion.LATEST_STABLE) {
-                +ALLOW_DANGEROUS_LANGUAGE_VERSION_TESTING
-                LANGUAGE_VERSION with customWasmJsCompilerSettings.defaultLanguageVersion
-                +ALLOW_MULTIPLE_API_VERSIONS_SETTING
-                API_VERSION with ApiVersion.createByLanguageVersion(customWasmJsCompilerSettings.defaultLanguageVersion)
+                // We need to set the custom LV to let `UnsupportedFeaturesTestConfigurator` skip tests with
+                // the language features that are not supported in the given custom LV.
+                setupCustomLanguageVersionForKlibCompatibilityTest(customWasmJsCompilerSettings.defaultLanguageVersion)
+
                 LANGUAGE with "+ExportKlibToOlderAbiVersion"
             }
 //            +WITH_STDLIB
