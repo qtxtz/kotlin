@@ -23,7 +23,7 @@ fun box() {
     a.x = x0
 }
 
-// EXPECTATIONS FIR JVM_IR
+// EXPECTATIONS JVM_IR
 // test.kt:21 box
 // test.kt:4 <init>
 // test.kt:7 <init>

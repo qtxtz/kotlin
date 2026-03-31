@@ -33,8 +33,7 @@ fun box(): String {
     return "OK"
 }
 
-// EXPECTATIONS FIR JVM_IR
-
+// EXPECTATIONS JVM_IR
 // test.kt:7 box
 // test.kt:3 foo
 // test.kt:7 box$lambda$0

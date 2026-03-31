@@ -23,7 +23,7 @@ fun box() {
     }
 }
 
-// EXPECTATIONS FIR JVM_IR
+// EXPECTATIONS JVM_IR
 // test.kt:12 box:
 // test.kt:4 <init>: x:double=1.0:double, y:java.lang.String="":java.lang.String, z:char=0:char
 // test.kt:12 box:

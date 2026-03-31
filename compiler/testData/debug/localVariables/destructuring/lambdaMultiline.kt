@@ -20,7 +20,7 @@ fun box() {
     return
 }
 
-// EXPECTATIONS FIR JVM_IR
+// EXPECTATIONS JVM_IR
 // test.kt:9 box:
 // test.kt:4 <init>: x:java.lang.String="O":java.lang.String, y:int=123:int
 // test.kt:9 box:
