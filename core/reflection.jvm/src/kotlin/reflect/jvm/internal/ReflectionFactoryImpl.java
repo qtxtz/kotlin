@@ -238,30 +238,24 @@ public class ReflectionFactoryImpl extends ReflectionFactory {
         if (klass instanceof ClassBasedDeclarationContainer) {
             return CachesKt.getOrCreateKType(((ClassBasedDeclarationContainer) klass).getJClass(), arguments, isMarkedNullable);
         }
-        return KClassifiers.createType(klass, arguments, isMarkedNullable, Collections.<Annotation>emptyList());
+        return KClassifiers.createTypeImpl(klass, arguments, isMarkedNullable, Collections.<Annotation>emptyList(), null);
     }
 
     @Override
     public KTypeParameter typeParameter(Object container, String name, KVariance variance, boolean isReified) {
-        List<KTypeParameter> typeParameters;
-        if (container instanceof KClass) {
-            typeParameters = ((KClass<?>) container).getTypeParameters();
+        if (container instanceof KClass || container instanceof KCallable) {
+            return new LazyTypeParameterReference(container, name, variance, isReified);
         }
-        else if (container instanceof KCallable) {
-            typeParameters = ((KCallable<?>) container).getTypeParameters();
-        }
-        else {
-            throw new IllegalArgumentException("Type parameter container must be a class or a callable: " + container);
-        }
-        for (KTypeParameter typeParameter : typeParameters) {
-            if (typeParameter.getName().equals(name)) return typeParameter;
-        }
-        throw new IllegalArgumentException("Type parameter " + name + " is not found in container: " + container);
+        throw new IllegalArgumentException("Type parameter container must be a class or a callable: " + container);
     }
 
     @Override
     public void setUpperBounds(KTypeParameter typeParameter, List<KType> bounds) {
-        // Do nothing. KTypeParameterImpl implementation will load upper bounds from the metadata.
+        if (typeParameter instanceof LazyTypeParameterReference) {
+            ((LazyTypeParameterReference) typeParameter).setUpperBounds(bounds);
+        } else {
+            // Do nothing. KTypeParameterImpl implementation will load upper bounds from the metadata.
+        }
     }
 
     // @Override // JPS
