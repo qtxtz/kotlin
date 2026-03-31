@@ -334,6 +334,12 @@ internal fun assertStableResult(
         )
     }
 
+    if (firstAttempt is KaSymbolResolutionSuccess) {
+        assertions.assertTrue(firstAttempt.symbols.isNotEmpty()) {
+            "Success result has no symbols"
+        }
+    }
+
     if (firstAttempt is KaCompoundSymbolResolutionError) {
         assertMultiSymbolConsistency(testServices, firstAttempt)
     }

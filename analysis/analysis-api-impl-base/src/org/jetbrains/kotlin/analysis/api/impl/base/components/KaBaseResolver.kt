@@ -289,7 +289,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
     private fun tryResolveSymbolsViaResolveToSymbols(
         reference: KtReference,
     ): KaSymbolResolutionAttempt? = reference.resolveToSymbols().ifNotEmpty {
-        KaBaseSymbolResolutionSuccess(backingSymbols = this.toList(), token = token)
+        KaBaseSymbolResolutionSuccess(backingSymbols = this.toList())
     }
 
     /**
@@ -391,7 +391,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
         }
 
         if (errors.isEmpty()) {
-            return KaBaseSymbolResolutionSuccess(successSymbols, token)
+            return KaBaseSymbolResolutionSuccess(successSymbols)
         }
 
         if (symbolAttempts.size == 1) {
@@ -400,7 +400,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
 
         val merged = buildList {
             if (successSymbols.isNotEmpty()) {
-                add(KaBaseSymbolResolutionSuccess(successSymbols, token))
+                add(KaBaseSymbolResolutionSuccess(successSymbols))
             }
 
             addAll(errors)

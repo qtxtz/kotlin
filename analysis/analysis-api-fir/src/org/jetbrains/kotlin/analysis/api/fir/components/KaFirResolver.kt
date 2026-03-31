@@ -235,7 +235,7 @@ internal class KaFirResolver(
         )
 
         if (symbols.isEmpty()) return null
-        return KaBaseSymbolResolutionSuccess(backingSymbols = symbols.toList(), token = token)
+        return KaBaseSymbolResolutionSuccess(backingSymbols = symbols.toList())
     }
 
     private fun FirElement.toKaSymbolResolutionAttempt(psi: KtElement): KaSymbolResolutionAttempt? = when (this) {
