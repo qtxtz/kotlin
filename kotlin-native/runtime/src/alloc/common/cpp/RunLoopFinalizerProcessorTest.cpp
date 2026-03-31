@@ -78,6 +78,31 @@ TEST_F(RunLoopFinalizerProcessorTest, Basic) {
     }
 }
 
+TEST_F(RunLoopFinalizerProcessorTest, BasicOnAThreadWithoutRuntime) {
+    RunLoopFinalizerProcessor processor;
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        // Deliberately not initializing the runtime.
+        return processor.attachToCurrentRunLoop();
+    });
+
+    std::array<testing::StrictMock<testing::MockFunction<void()>>, 4> finalizers;
+
+    std::atomic<bool> done = false;
+    {
+        testing::InSequence seq;
+        EXPECT_CALL(finalizers[1], Call()).WillOnce([&] { AssertThreadState(ThreadState::kRunnable); });
+        EXPECT_CALL(finalizers[0], Call());
+        EXPECT_CALL(finalizers[3], Call());
+        EXPECT_CALL(finalizers[2], Call()).WillOnce([&] { done.store(true, std::memory_order_release); });
+    }
+    processor.schedule({finalizers[0].AsStdFunction(), finalizers[1].AsStdFunction()}, 1);
+    processor.schedule({finalizers[2].AsStdFunction(), finalizers[3].AsStdFunction()}, 2);
+    runLoop.wakeUp();
+    while (!done.load(std::memory_order_acquire)) {
+        std::this_thread::yield();
+    }
+}
+
 TEST_F(RunLoopFinalizerProcessorTest, RunWithNoTasksIntoTheDistantFuture) {
     // This situation should not happen, because in production the distant future is ~100 years.
     // But let's check that nothing is going to crash regardless.
@@ -96,6 +121,31 @@ TEST_F(RunLoopFinalizerProcessorTest, RunWithNoTasksIntoTheDistantFuture) {
 
     objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
         Kotlin_initRuntimeIfNeeded();
+        return processor.attachToCurrentRunLoop();
+    });
+
+    runLoop.wakeUp();
+    while (!done.load(std::memory_order_acquire)) {
+        std::this_thread::yield();
+    }
+}
+
+TEST_F(RunLoopFinalizerProcessorTest, RunWithNoTasksIntoTheDistantFutureOnAThreadWithoutRuntime) {
+    // This situation should not happen, because in production the distant future is ~100 years.
+    // But let's check that nothing is going to crash regardless.
+    auto distantFuture = std::chrono::microseconds(10);
+    testing::StrictMock<testing::MockFunction<void(OnProcessFinishedReason)>> onProcessFinished;
+    RunLoopFinalizerProcessor processor = create(distantFuture, onProcessFinished.AsStdFunction());
+    processor.withConfig([](alloc::RunLoopFinalizerProcessorConfig& config) noexcept {
+        config.maxTimeInTask = std::chrono::hours(10);
+        config.minTimeBetweenTasks = std::chrono::nanoseconds(0);
+    });
+
+    std::atomic<bool> done = false;
+    EXPECT_CALL(onProcessFinished, Call(OnProcessFinishedReason::kDone)).WillRepeatedly([&] { done.store(true, std::memory_order_release); });
+
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        // Deliberately not initializing the runtime.
         return processor.attachToCurrentRunLoop();
     });
 

@@ -10,6 +10,7 @@
 
 #include "Clock.hpp"
 #include "Logging.hpp"
+#include "Memory.h"
 #include "Utils.hpp"
 #include "objc_support/RunLoopSource.hpp"
 #include "objc_support/RunLoopTimer.hpp"
@@ -156,7 +157,9 @@ private:
             }
             {
                 objc_support::AutoreleasePool autoreleasePool;
-                ThreadStateGuard guard(ThreadState::kRunnable); // ensure extra objects destruction doesn't happen during GC
+                // Finalizers require K/N runtime. And extra objects destructions require "runnable" state.
+                // Both have to synchronize with the GC. Using `CalledFromNativeGuard` to ensure the correct environment.
+                CalledFromNativeGuard guard;
                 for (uint64_t i = 0; i < batchCount; ++i) {
                     // There's no point checking `deadline` here since the majority of the time will probably
                     // be spent in `AutoreleasePool` destructor.
