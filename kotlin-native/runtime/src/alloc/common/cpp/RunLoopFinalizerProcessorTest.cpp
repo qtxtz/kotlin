@@ -142,7 +142,11 @@ TEST_F(RunLoopFinalizerProcessorTest, RunWithNoTasksIntoTheDistantFutureOnAThrea
     });
 
     std::atomic<bool> done = false;
-    EXPECT_CALL(onProcessFinished, Call(OnProcessFinishedReason::kDone)).WillRepeatedly([&] { done.store(true, std::memory_order_release); });
+    EXPECT_CALL(onProcessFinished, Call(OnProcessFinishedReason::kDone)).WillRepeatedly([&] {
+        // When the thread never has any finalizers, do not initialize it.
+        EXPECT_FALSE(mm::IsCurrentThreadRegistered());
+        done.store(true, std::memory_order_release);
+    });
 
     objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
         // Deliberately not initializing the runtime.

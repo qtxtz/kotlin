@@ -114,6 +114,24 @@ private:
         onProcessFinished_(std::move(onProcessFinished)),
         timer_([this]() noexcept { source_.signal(); }, distantFuture, objc_support::cf_clock::now() + distantFuture) {}
 
+    uint64_t processSingleBatch(FinalizerQueue& queue, uint64_t batchCount) noexcept {
+        uint64_t processedCount = 0;
+        objc_support::AutoreleasePool autoreleasePool;
+        // Finalizers require K/N runtime. And extra objects destructions require "runnable" state.
+        // Both have to synchronize with the GC. Using `CalledFromNativeGuard` to ensure the correct environment.
+        CalledFromNativeGuard guard;
+        for (uint64_t i = 0; i < batchCount; ++i) {
+            // There's no point checking `deadline` here since the majority of the time will probably
+            // be spent in `AutoreleasePool` destructor.
+            if (!FinalizerQueueTraits::processSingle(currentQueue_.queue)) {
+                break;
+            }
+            ++processedCount;
+            mm::safePoint();
+        }
+        return processedCount;
+    }
+
     void process() noexcept {
         auto startTime = steady_clock::now();
         {
@@ -155,22 +173,12 @@ private:
                 if (onProcessFinished_) onProcessFinished_(OnProcessFinishedReason::kDeadline);
                 return;
             }
-            {
-                objc_support::AutoreleasePool autoreleasePool;
-                // Finalizers require K/N runtime. And extra objects destructions require "runnable" state.
-                // Both have to synchronize with the GC. Using `CalledFromNativeGuard` to ensure the correct environment.
-                CalledFromNativeGuard guard;
-                for (uint64_t i = 0; i < batchCount; ++i) {
-                    // There's no point checking `deadline` here since the majority of the time will probably
-                    // be spent in `AutoreleasePool` destructor.
-                    if (!FinalizerQueueTraits::processSingle(currentQueue_.queue)) {
-                        break;
-                    }
-                    ++processedCount;
-                    mm::safePoint();
-                }
+            // Only process the batch (incl. Native runtime initialization) if there is something to process.
+            if (!FinalizerQueueTraits::isEmpty(currentQueue_.queue)) {
+                processedCount += processSingleBatch(currentQueue_.queue, batchCount);
             }
             if (!FinalizerQueueTraits::isEmpty(currentQueue_.queue)) {
+                // Current queue was longer than the batch size, try again.
                 continue;
             }
             RuntimeLogDebug({kTagGC}, "Epoch #%" PRIu64 ": finished processing finalizers on a run loop", currentQueue_.epoch);
