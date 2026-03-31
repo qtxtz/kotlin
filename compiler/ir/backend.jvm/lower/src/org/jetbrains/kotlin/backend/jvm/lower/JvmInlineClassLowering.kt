@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.util.isNullable
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
+import org.jetbrains.kotlin.name.JvmStandardClassIds
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.JVM_INLINE_ANNOTATION_FQ_NAME
 import org.jetbrains.kotlin.resolve.JVM_NAME_ANNOTATION_FQ_NAME
@@ -317,6 +318,8 @@ internal class JvmInlineClassLowering(context: JvmBackendContext) : JvmValueClas
         // Unless one of the parameters is an inline class
         // @JvmExposeBoxed bridges the gap, so, we need to generate no-arg constuctor of all parameter have default value.
         if (constructor.parameters.any { it.defaultValue == null }) return null
+        // If there is @JvmOverloads, it covers no-arg constructor for us.
+        if (constructor.hasAnnotation(JvmStandardClassIds.JVM_OVERLOADS_FQ_NAME)) return null
         return constructor.parentAsClass.factory.buildConstructor {
             updateFrom(constructor)
             isPrimary = false

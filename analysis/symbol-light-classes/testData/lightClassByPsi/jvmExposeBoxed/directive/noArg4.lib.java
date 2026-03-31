@@ -35,6 +35,9 @@ public final class RegularClassWithValueConstructor /* RegularClassWithValueCons
   public final IntWrapper getProperty();//  getProperty()
 
   @kotlin.jvm.JvmExposeBoxed(jvmName = "")
+  public  RegularClassWithValueConstructor();//  .ctor()
+
+  @kotlin.jvm.JvmExposeBoxed(jvmName = "")
   public  RegularClassWithValueConstructor(@org.jetbrains.annotations.NotNull() IntWrapper);//  .ctor(IntWrapper)
 
   private  RegularClassWithValueConstructor(int);//  .ctor(int)
@@ -48,6 +51,9 @@ public final class RegularClassWithValueConstructorAndAnnotation /* RegularClass
   @kotlin.jvm.JvmExposeBoxed(jvmName = "")
   @org.jetbrains.annotations.NotNull()
   public final IntWrapper getProperty();//  getProperty()
+
+  @kotlin.jvm.JvmExposeBoxed(jvmName = "")
+  public  RegularClassWithValueConstructorAndAnnotation();//  .ctor()
 
   @kotlin.jvm.JvmExposeBoxed(jvmName = "")
   public  RegularClassWithValueConstructorAndAnnotation(@org.jetbrains.annotations.NotNull() IntWrapper);//  .ctor(IntWrapper)

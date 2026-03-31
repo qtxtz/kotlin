@@ -41,6 +41,9 @@ public final class RegularClassWithValueConstructorAndAnnotation /* RegularClass
   @kotlin.jvm.JvmExposeBoxed()
   public  RegularClassWithValueConstructorAndAnnotation(@org.jetbrains.annotations.NotNull() IntWrapper);//  .ctor(IntWrapper)
 
+  @kotlin.jvm.JvmExposeBoxed(jvmName = "")
+  public  RegularClassWithValueConstructorAndAnnotation();//  .ctor()
+
   private  RegularClassWithValueConstructorAndAnnotation(int);//  .ctor(int)
 
   public final int getProperty-7j0DjTs();//  getProperty-7j0DjTs()
