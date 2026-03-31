@@ -1628,7 +1628,7 @@ open class PsiRawFirBuilder(
                         })
 
                         buildReplPropertyDelegate {
-                            source = statementDelegate.source
+                            source = statementDelegate.source?.fakeElement(KtFakeSourceElementKind.ReplEvalFunction)
                             propertySymbol = element.symbol
                             delegate = statementDelegate
                         }
@@ -1640,7 +1640,7 @@ open class PsiRawFirBuilder(
                         })
 
                         buildReplPropertyInitializer {
-                            source = statementInitializer.source
+                            source = statementInitializer.source?.fakeElement(KtFakeSourceElementKind.ReplEvalFunction)
                             propertySymbol = element.symbol
                             initializer = statementInitializer
                         }
