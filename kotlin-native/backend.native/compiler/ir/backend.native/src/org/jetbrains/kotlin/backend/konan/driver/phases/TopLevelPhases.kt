@@ -191,7 +191,7 @@ internal fun <C : NativeBackendPhaseContext> PhaseEngine<C>.runBackend(backendCo
             }
             try {
                 fragment.performanceManager?.notifyPhaseStarted(PhaseType.Backend)
-                backendEngine.useContext(generationState) { generationStateEngine ->
+                backendEngine.useContext(generationState, copyState = true) { generationStateEngine ->
                     val bitcodeFile = tempFiles.create(generationState.llvmModuleName, ".bc").javaFile()
                     val cExportFiles = if (config.produceCInterface) {
                         CExportFiles(
