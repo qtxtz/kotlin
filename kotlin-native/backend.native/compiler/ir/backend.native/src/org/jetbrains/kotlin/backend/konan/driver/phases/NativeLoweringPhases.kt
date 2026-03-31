@@ -525,7 +525,7 @@ private val exportInternalAbiPhase = createFileLoweringPhase(
         name = "ExportInternalAbi",
 )
 
-internal val ReturnsInsertionPhase = createFileLoweringPhase(
+private val returnsInsertionPhase = createFileLoweringPhase(
         name = "ReturnsInsertion",
         prerequisite = setOf(autoboxPhase, coroutinesPhase, enumClassPhase),
         lowering = ::ReturnsInsertionLowering,
@@ -673,6 +673,7 @@ internal fun NativeSecondStageCompilationConfig.getLoweringsAfterInlining(): Low
         eraseGenericCallsReturnTypesPhase,
         autoboxPhase,
         constructorsLoweringPhase,
+        returnsInsertionPhase,
         lowerCastsPhase.takeUnless { this.optimizationsEnabled },
 )
 

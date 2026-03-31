@@ -511,7 +511,6 @@ private fun PhaseEngine<NativeGenerationState>.runCodegen(module: IrModuleFragme
     val optimize = context.shouldOptimize()
     val enablePreCodegenInliner = context.config.preCodegenInlineThreshold != 0U && optimize
     module.files.forEach {
-        runAndMeasurePhase(ReturnsInsertionPhase, it)
         // Have to run after link dependencies phase, because fields from dependencies can be changed during lowerings.
         // Inline accessors only in optimized builds due to separate compilation and possibility to get broken debug information.
         runAndMeasurePhase(PropertyAccessorInlinePhase, it, disable = !optimize)
