@@ -7,9 +7,14 @@
 
 #include "RunLoopFinalizerProcessor.hpp"
 
+#include <atomic>
+#include <chrono>
+#include <thread>
+
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+#include "Runtime.h"
 #include "objc_support/RunLoopTestSupport.hpp"
 
 using namespace kotlin;
@@ -38,9 +43,22 @@ using RunLoopFinalizerProcessor = alloc::RunLoopFinalizerProcessor<FinalizerQueu
 
 } // namespace
 
-TEST(RunLoopFinalizerProcessorTest, Basic) {
+class RunLoopFinalizerProcessorTest : public testing::Test {
+public:
+    using OnProcessFinishedReason = RunLoopFinalizerProcessor::OnProcessFinishedReason;
+
+    template <typename Duration>
+    RunLoopFinalizerProcessor create(Duration distantFuture, std::function<void(OnProcessFinishedReason)> onProcessFinished) {
+        return RunLoopFinalizerProcessor(distantFuture, std::move(onProcessFinished));
+    }
+};
+
+TEST_F(RunLoopFinalizerProcessorTest, Basic) {
     RunLoopFinalizerProcessor processor;
-    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept { return processor.attachToCurrentRunLoop(); });
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        Kotlin_initRuntimeIfNeeded();
+        return processor.attachToCurrentRunLoop();
+    });
 
     std::array<testing::StrictMock<testing::MockFunction<void()>>, 4> finalizers;
 
@@ -60,9 +78,39 @@ TEST(RunLoopFinalizerProcessorTest, Basic) {
     }
 }
 
-TEST(RunLoopFinalizerProcessorTest, ScheduleWhileProcessing) {
+TEST_F(RunLoopFinalizerProcessorTest, RunWithNoTasksIntoTheDistantFuture) {
+    // This situation should not happen, because in production the distant future is ~100 years.
+    // But let's check that nothing is going to crash regardless.
+    auto distantFuture = std::chrono::microseconds(10);
+    testing::StrictMock<testing::MockFunction<void(OnProcessFinishedReason)>> onProcessFinished;
+    RunLoopFinalizerProcessor processor = create(distantFuture, onProcessFinished.AsStdFunction());
+    processor.withConfig([](alloc::RunLoopFinalizerProcessorConfig& config) noexcept {
+        config.maxTimeInTask = std::chrono::hours(10);
+        config.minTimeBetweenTasks = std::chrono::nanoseconds(0);
+    });
+
+    std::atomic<bool> done = false;
+    EXPECT_CALL(onProcessFinished, Call(OnProcessFinishedReason::kDone)).WillRepeatedly([&] {
+        done.store(true, std::memory_order_release);
+    });
+
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        Kotlin_initRuntimeIfNeeded();
+        return processor.attachToCurrentRunLoop();
+    });
+
+    runLoop.wakeUp();
+    while (!done.load(std::memory_order_acquire)) {
+        std::this_thread::yield();
+    }
+}
+
+TEST_F(RunLoopFinalizerProcessorTest, ScheduleWhileProcessing) {
     RunLoopFinalizerProcessor processor;
-    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept { return processor.attachToCurrentRunLoop(); });
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        Kotlin_initRuntimeIfNeeded();
+        return processor.attachToCurrentRunLoop();
+    });
 
     std::array<testing::StrictMock<testing::MockFunction<void()>>, 4> finalizers;
 
@@ -83,7 +131,7 @@ TEST(RunLoopFinalizerProcessorTest, ScheduleWhileProcessing) {
     }
 }
 
-TEST(RunLoopFinalizerProcessorTest, Overtime) {
+TEST_F(RunLoopFinalizerProcessorTest, Overtime) {
     constexpr std::chrono::nanoseconds overtime = std::chrono::milliseconds(1);
     constexpr std::chrono::nanoseconds timeoutBetween = std::chrono::milliseconds(10);
     RunLoopFinalizerProcessor processor;
@@ -92,7 +140,10 @@ TEST(RunLoopFinalizerProcessorTest, Overtime) {
         config.maxTimeInTask = overtime;
         config.batchSize = 3;
     });
-    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept { return processor.attachToCurrentRunLoop(); });
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        Kotlin_initRuntimeIfNeeded();
+        return processor.attachToCurrentRunLoop();
+    });
 
     std::array<testing::StrictMock<testing::MockFunction<void()>>, 4> finalizers;
 
@@ -123,7 +174,7 @@ TEST(RunLoopFinalizerProcessorTest, Overtime) {
     }
 }
 
-TEST(RunLoopFinalizerProcessorTest, ScheduleWhileOvertime) {
+TEST_F(RunLoopFinalizerProcessorTest, ScheduleWhileOvertime) {
     constexpr std::chrono::nanoseconds overtime = std::chrono::milliseconds(1);
     constexpr std::chrono::nanoseconds timeoutBetween = std::chrono::milliseconds(10);
     RunLoopFinalizerProcessor processor;
@@ -132,7 +183,10 @@ TEST(RunLoopFinalizerProcessorTest, ScheduleWhileOvertime) {
         config.maxTimeInTask = overtime;
         config.batchSize = 2;
     });
-    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept { return processor.attachToCurrentRunLoop(); });
+    objc_support::test_support::RunLoopInScopedThread runLoop([&]() noexcept {
+        Kotlin_initRuntimeIfNeeded();
+        return processor.attachToCurrentRunLoop();
+    });
 
     std::array<testing::StrictMock<testing::MockFunction<void()>>, 6> finalizers;
 
