@@ -188,6 +188,7 @@ public abstract interface class org/jetbrains/kotlin/buildtools/api/KotlinToolch
 
 public final class org/jetbrains/kotlin/buildtools/api/KotlinToolchainsKt {
 	public static final fun daemonExecutionPolicy (Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/buildtools/api/ExecutionPolicy$WithDaemon;
+	public static synthetic fun daemonExecutionPolicy$default (Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/ExecutionPolicy$WithDaemon;
 }
 
 public final class org/jetbrains/kotlin/buildtools/api/OperationCancelledException : java/lang/RuntimeException {
@@ -1079,9 +1080,11 @@ public final class org/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain$
 
 public final class org/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchainKt {
 	public static final fun classpathSnapshottingOperation (Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmClasspathSnapshottingOperation;
+	public static synthetic fun classpathSnapshottingOperation$default (Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmClasspathSnapshottingOperation;
 	public static final fun discoverScriptExtensionsOperation (Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain;Ljava/util/List;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/DiscoverScriptExtensionsOperation;
 	public static synthetic fun discoverScriptExtensionsOperation$default (Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain;Ljava/util/List;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/DiscoverScriptExtensionsOperation;
 	public static final fun jvmCompilationOperation (Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain;Ljava/util/List;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperation;
+	public static synthetic fun jvmCompilationOperation$default (Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmPlatformToolchain;Ljava/util/List;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperation;
 }
 
 public class org/jetbrains/kotlin/buildtools/api/jvm/JvmSnapshotBasedIncrementalCompilationConfiguration : org/jetbrains/kotlin/buildtools/api/jvm/JvmIncrementalCompilationConfiguration {
@@ -1239,6 +1242,8 @@ public final class org/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompila
 public final class org/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperationKt {
 	public static final fun snapshotBasedIcConfiguration (Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperation$Builder;Ljava/nio/file/Path;Lorg/jetbrains/kotlin/buildtools/api/SourcesChanges;Ljava/util/List;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmSnapshotBasedIncrementalCompilationConfiguration;
 	public static final fun snapshotBasedIcConfiguration (Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperation$Builder;Ljava/nio/file/Path;Lorg/jetbrains/kotlin/buildtools/api/SourcesChanges;Ljava/util/List;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmSnapshotBasedIncrementalCompilationConfiguration;
+	public static synthetic fun snapshotBasedIcConfiguration$default (Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperation$Builder;Ljava/nio/file/Path;Lorg/jetbrains/kotlin/buildtools/api/SourcesChanges;Ljava/util/List;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmSnapshotBasedIncrementalCompilationConfiguration;
+	public static synthetic fun snapshotBasedIcConfiguration$default (Lorg/jetbrains/kotlin/buildtools/api/jvm/operations/JvmCompilationOperation$Builder;Ljava/nio/file/Path;Lorg/jetbrains/kotlin/buildtools/api/SourcesChanges;Ljava/util/List;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlin/buildtools/api/jvm/JvmSnapshotBasedIncrementalCompilationConfiguration;
 }
 
 public abstract interface class org/jetbrains/kotlin/buildtools/api/trackers/BuildMetricsCollector {

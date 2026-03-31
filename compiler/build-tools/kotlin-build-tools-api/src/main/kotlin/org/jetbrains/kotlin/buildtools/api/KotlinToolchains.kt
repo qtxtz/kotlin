@@ -222,7 +222,7 @@ public inline fun <reified T : Toolchain> KotlinToolchains.getToolchain(): T {
  */
 @OptIn(ExperimentalContracts::class)
 @ExperimentalBuildToolsApi
-public inline fun KotlinToolchains.daemonExecutionPolicy(builderAction: ExecutionPolicy.WithDaemon.Builder.() -> Unit): ExecutionPolicy.WithDaemon {
+public inline fun KotlinToolchains.daemonExecutionPolicy(builderAction: ExecutionPolicy.WithDaemon.Builder.() -> Unit = {}): ExecutionPolicy.WithDaemon {
     contract {
         callsInPlace(builderAction, InvocationKind.EXACTLY_ONCE)
     }
