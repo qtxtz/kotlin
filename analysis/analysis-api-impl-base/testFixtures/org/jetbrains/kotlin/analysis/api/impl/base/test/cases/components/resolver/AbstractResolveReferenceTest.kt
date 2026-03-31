@@ -22,11 +22,7 @@ import org.jetbrains.kotlin.analysis.api.renderer.declarations.modifiers.KaDecla
 import org.jetbrains.kotlin.analysis.api.renderer.declarations.modifiers.renderers.KaModifierListRenderer
 import org.jetbrains.kotlin.analysis.api.renderer.declarations.renderers.KaTypeParameterRendererFilter
 import org.jetbrains.kotlin.analysis.api.renderer.declarations.renderers.callables.KaPropertyAccessorsRenderer
-import org.jetbrains.kotlin.analysis.api.resolution.KaMultiSymbolResolutionAttempt
-import org.jetbrains.kotlin.analysis.api.resolution.KaSymbolResolutionAttempt
-import org.jetbrains.kotlin.analysis.api.resolution.KaSymbolResolutionError
-import org.jetbrains.kotlin.analysis.api.resolution.KaSymbolResolutionSuccess
-import org.jetbrains.kotlin.analysis.api.resolution.symbols
+import org.jetbrains.kotlin.analysis.api.resolution.*
 import org.jetbrains.kotlin.analysis.api.symbols.*
 import org.jetbrains.kotlin.analysis.api.symbols.markers.KaNamedSymbol
 import org.jetbrains.kotlin.analysis.test.framework.AnalysisApiTestDirectives
@@ -180,7 +176,7 @@ abstract class AbstractResolveReferenceTest : AbstractResolveTest<KtReference?>(
                         appendLine("diagnostic: ${stringRepresentation(attempt.diagnostic)}")
                     }
 
-                    is KaMultiSymbolResolutionAttempt -> withIndent {
+                    is KaCompoundSymbolResolutionError -> withIndent {
                         for ((index, subAttempt) in attempt.attempts.withIndex()) {
                             append("attempts[$index]: ")
                             appendLine(renderFrontendIndependentKClassNameOf(subAttempt))

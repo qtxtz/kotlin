@@ -20,7 +20,7 @@ import kotlin.contracts.contract
  * This interface represents an attempt on resolving some [KtResolvable] through [KaResolver.tryResolveSymbols] API.
  *
  * [KaSymbolResolutionAttempt] represents either a [single symbol attempt][KaSingleSymbolResolutionAttempt]
- * or a [multi-symbol attempt][KaMultiSymbolResolutionAttempt].
+ * or a [compound error][KaCompoundSymbolResolutionError].
  *
  * @see KaResolver.tryResolveSymbols
  */
@@ -101,7 +101,7 @@ public interface KaSymbolResolutionError : KaSingleSymbolResolutionAttempt {
 }
 
 /**
- * Represents a partially failed resolution of a compound (multi) call at the symbol level.
+ * Represents a failed resolution of a compound (multi) call at the symbol level.
  *
  * This type is produced only when a compound call has a mix of successful and failed sub-calls,
  * or when all sub-calls fail. The [attempts] list contains:
@@ -119,7 +119,7 @@ public interface KaSymbolResolutionError : KaSingleSymbolResolutionAttempt {
  */
 @KaExperimentalApi
 @SubclassOptInRequired(KaImplementationDetail::class)
-public interface KaMultiSymbolResolutionAttempt : KaSymbolResolutionAttempt {
+public interface KaCompoundSymbolResolutionError : KaSymbolResolutionAttempt {
     /**
      * The list of individual resolution attempts for each sub-call.
      *
@@ -135,7 +135,7 @@ public interface KaMultiSymbolResolutionAttempt : KaSymbolResolutionAttempt {
  *
  * - If [this] is an instance of [KaSymbolResolutionSuccess], the list will contain [KaSymbolResolutionSuccess.symbols].
  * - If [this] is an instance of [KaSymbolResolutionError], the list will contain [KaSymbolResolutionError.candidateSymbols].
- * - If [this] is an instance of [KaMultiSymbolResolutionAttempt], the list will contain the combined symbols from all attempts.
+ * - If [this] is an instance of [KaCompoundSymbolResolutionError], the list will contain the combined symbols from all attempts.
  *
  * @see KaResolver.tryResolveSymbols
  */
@@ -164,7 +164,7 @@ public val KaSymbolResolutionAttempt.successfulSymbols: List<KaSymbol>
  *
  * - [KaSymbolResolutionSuccess]: invokes [onSuccess] with the resolved [symbols][KaSymbolResolutionSuccess.symbols].
  * - [KaSymbolResolutionError]: invokes [onFailure] with the error wrapped in a single-element list.
- * - [KaMultiSymbolResolutionAttempt]: invokes [onFailure] with the individual [attempts][KaMultiSymbolResolutionAttempt.attempts].
+ * - [KaCompoundSymbolResolutionError]: invokes [onFailure] with the individual [attempts][KaCompoundSymbolResolutionError.attempts].
  */
 @KaExperimentalApi
 @OptIn(ExperimentalContracts::class)
@@ -180,7 +180,7 @@ public inline fun <T> KaSymbolResolutionAttempt.fold(
     val attempts = when (this) {
         is KaSymbolResolutionSuccess -> return onSuccess(symbols)
         is KaSymbolResolutionError -> listOf(this)
-        is KaMultiSymbolResolutionAttempt -> attempts
+        is KaCompoundSymbolResolutionError -> attempts
     }
 
     return onFailure(attempts)

@@ -1,5 +1,5 @@
 KtPropertyDelegate(429,465): 'by ProvideDelegateHolder("provided")'
-  KaMultiSymbolResolutionAttempt:
+  KaCompoundSymbolResolutionError:
     attempts = [
       KaSymbolResolutionSuccess:
         symbols = [

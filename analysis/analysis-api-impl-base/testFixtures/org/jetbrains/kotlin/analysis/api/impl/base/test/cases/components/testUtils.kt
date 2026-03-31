@@ -334,7 +334,7 @@ internal fun assertStableResult(
         )
     }
 
-    if (firstAttempt is KaMultiSymbolResolutionAttempt) {
+    if (firstAttempt is KaCompoundSymbolResolutionError) {
         assertMultiSymbolConsistency(testServices, firstAttempt)
     }
 
@@ -373,7 +373,7 @@ internal fun assertStableResult(
             )
         }
 
-        is KaMultiCallResolutionAttempt -> if (symbolResolutionAttempt is KaMultiSymbolResolutionAttempt) {
+        is KaMultiCallResolutionAttempt -> if (symbolResolutionAttempt is KaCompoundSymbolResolutionError) {
             val callErrors = callResolutionAttempt.attempts.filterIsInstance<KaCallResolutionError>()
             val symbolErrors = symbolResolutionAttempt.attempts.filterIsInstance<KaSymbolResolutionError>()
             assertions.assertEquals(callErrors.size, symbolErrors.size) {
@@ -488,10 +488,10 @@ private fun assertMultiCallConsistency(testServices: TestServices, attempt: KaMu
 }
 
 /**
- * The function forces [KaMultiSymbolResolutionAttempt] guarantees.
+ * The function forces [KaCompoundSymbolResolutionError] guarantees.
  */
 context(_: KaSession)
-private fun assertMultiSymbolConsistency(testServices: TestServices, attempt: KaMultiSymbolResolutionAttempt) {
+private fun assertMultiSymbolConsistency(testServices: TestServices, attempt: KaCompoundSymbolResolutionError) {
     val assertions = testServices.assertions
     val attempts = attempt.attempts
     // At least one attempt must be an error

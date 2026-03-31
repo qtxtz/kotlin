@@ -1509,7 +1509,7 @@ KtConstantExpression(1361,1362): '1'
   null
 
 KtPostfixExpression(1367,1370): 'a++'
-  KaMultiSymbolResolutionAttempt:
+  KaCompoundSymbolResolutionError:
     attempts = [
       KaSymbolResolutionSuccess:
         symbols = [
@@ -1685,7 +1685,7 @@ KtConstantExpression(1430,1431): '1'
   null
 
 KtPostfixExpression(1436,1439): 'b++'
-  KaMultiSymbolResolutionAttempt:
+  KaCompoundSymbolResolutionError:
     attempts = [
       KaSymbolResolutionSuccess:
         symbols = [

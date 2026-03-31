@@ -1,5 +1,5 @@
 KtPropertyDelegate(74,109): 'by GenericDelegate<String>("hello")'
-  KaMultiSymbolResolutionAttempt:
+  KaCompoundSymbolResolutionError:
     attempts = [
       KaSymbolResolutionSuccess:
         symbols = [

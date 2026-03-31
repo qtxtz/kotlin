@@ -8,13 +8,13 @@ package org.jetbrains.kotlin.analysis.api.impl.base.resolution
 import org.jetbrains.kotlin.analysis.api.KaImplementationDetail
 import org.jetbrains.kotlin.analysis.api.lifetime.KaLifetimeToken
 import org.jetbrains.kotlin.analysis.api.lifetime.withValidityAssertion
-import org.jetbrains.kotlin.analysis.api.resolution.KaMultiSymbolResolutionAttempt
+import org.jetbrains.kotlin.analysis.api.resolution.KaCompoundSymbolResolutionError
 import org.jetbrains.kotlin.analysis.api.resolution.KaSingleSymbolResolutionAttempt
 
 @KaImplementationDetail
-class KaBaseMultiSymbolResolutionAttempt(
+class KaBaseCompoundSymbolResolutionError(
     private val backingAttempts: List<KaSingleSymbolResolutionAttempt>,
-) : KaMultiSymbolResolutionAttempt {
+) : KaCompoundSymbolResolutionError {
     init {
         require(backingAttempts.isNotEmpty()) { "Empty list of attempts" }
     }

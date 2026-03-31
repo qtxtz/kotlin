@@ -2,7 +2,7 @@ KtPropertyDelegate(419,455): 'by ProvideDelegateHolder("provided")'
   KtPropertyDelegationMethodsReference:
     isImplicitReferenceToCompanion: false
     usesContextSensitiveResolution: false
-    attempt: KaMultiSymbolResolutionAttempt
+    attempt: KaCompoundSymbolResolutionError
       attempts[0]: KaSymbolResolutionSuccess
       attempts[1]: KaSymbolResolutionError
         diagnostic: ERROR<UNRESOLVED_REFERENCE: Unresolved reference 'getValue'.>

@@ -388,7 +388,7 @@ KtBlockExpression(485,487): '{}'
   null
 
 KtForExpression(492,521): 'for ([first: String] in y) {}'
-  KaMultiSymbolResolutionAttempt:
+  KaCompoundSymbolResolutionError:
     attempts = [
       KaSymbolResolutionError:
         candidateSymbols = []

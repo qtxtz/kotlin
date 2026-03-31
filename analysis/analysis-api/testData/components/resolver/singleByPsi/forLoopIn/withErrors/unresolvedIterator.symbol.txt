@@ -1,5 +1,5 @@
 KtForExpression(15,32): 'for (x in Y()) {}'
-  KaMultiSymbolResolutionAttempt:
+  KaCompoundSymbolResolutionError:
     attempts = [
       KaSymbolResolutionError:
         candidateSymbols = []

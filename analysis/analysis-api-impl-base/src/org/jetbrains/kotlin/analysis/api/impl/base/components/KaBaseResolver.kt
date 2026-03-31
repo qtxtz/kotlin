@@ -378,7 +378,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
 
     /**
      * Merges individual symbol resolution attempts into a single result, satisfying the
-     * [KaMultiSymbolResolutionAttempt] contract: at most one [KaSymbolResolutionSuccess]
+     * [KaCompoundSymbolResolutionError] contract: at most one [KaSymbolResolutionSuccess]
      * (combining all successful symbols) and at least one [KaSymbolResolutionError].
      */
     private fun mergeSymbolAttempts(symbolAttempts: List<KaSingleSymbolResolutionAttempt>): KaSymbolResolutionAttempt {
@@ -406,7 +406,7 @@ abstract class KaBaseResolver<T : KaSession> : KaBaseSessionComponent<T>(), KaRe
             addAll(errors)
         }
 
-        return KaBaseMultiSymbolResolutionAttempt(backingAttempts = merged)
+        return KaBaseCompoundSymbolResolutionError(backingAttempts = merged)
     }
 
     protected companion object {
