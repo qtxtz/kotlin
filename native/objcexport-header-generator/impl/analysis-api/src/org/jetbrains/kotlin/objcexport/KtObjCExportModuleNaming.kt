@@ -5,6 +5,8 @@
 
 package org.jetbrains.kotlin.objcexport
 
+import com.intellij.openapi.vfs.VfsUtilCore
+import com.intellij.openapi.vfs.toNioPathOrNull
 import org.jetbrains.kotlin.analysis.api.KaExperimentalApi
 import org.jetbrains.kotlin.analysis.api.KaSession
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaLibraryModule
@@ -44,6 +46,7 @@ fun KtObjCExportModuleNaming(implementations: List<KtObjCExportModuleNaming>): K
 }
 
 internal object KtKlibObjCExportModuleNaming : KtObjCExportModuleNaming {
+    @OptIn(KaExperimentalApi::class)
     override fun KaSession.getModuleName(module: KaModule): String? {
         /*
         In this implementation, we're actually looking into the klib file, trying to resolve
@@ -52,7 +55,12 @@ internal object KtKlibObjCExportModuleNaming : KtObjCExportModuleNaming {
         This information is theoretically available already (as also used by the Analysis Api), but not yet accessible.
          */
         if (module !is KaLibraryModule) return null
-        val binaryRoot = module.binaryRoots.singleOrNull() ?: return null
+
+        // It is important to use `binaryVirtualFiles` instead of `binaryRoots`,
+        // as the latter doesn't always work as expected in the IDE. See KT-72676.
+        val binaryRoot = module.binaryVirtualFiles.mapNotNull {
+            (VfsUtilCore.getVirtualFileForJar(it) ?: it).toNioPathOrNull()
+        }.singleOrNull() ?: return null
         if (!binaryRoot.isDirectory() && binaryRoot.extension != "klib") return null
 
         val library = runCatching{
