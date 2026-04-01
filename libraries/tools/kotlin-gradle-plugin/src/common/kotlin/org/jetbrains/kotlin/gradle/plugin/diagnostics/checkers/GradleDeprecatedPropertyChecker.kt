@@ -108,6 +108,12 @@ internal object GradleDeprecatedPropertyChecker : KotlinGradleProjectChecker {
             propertyName = "kotlin.native.suppressExperimentalArtifactsDslWarning",
             details = "The kotlinArtifacts DSL has been removed. See https://kotl.in/kotlin-native-artifacts-gradle-dsl for migration details."
         ),
+        DeprecatedProperty(
+            propertyName = "kotlin.compiler.runViaBuildToolsApi",
+            details = """
+                Kotlin Gradle plugin has run JVM compilations using the Build Tools API by default since Kotlin 2.3.20. The legacy mode is deprecated and will be removed in Kotlin 2.5.0. Please create an issue if something is not working correctly when the Build Tools API is active: https://kotl.in/issue
+            """.trimIndent()
+        ), // since 2.4.0
     )
 
     private val errorDeprecatedProperties: List<DeprecatedProperty> = listOf(

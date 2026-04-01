@@ -55,4 +55,24 @@ class GradleDeprecatedPropertyChecker {
         project.evaluate()
         assertEquals("foo", propertiesService.get(KOTLIN_DEPRECATED_TEST_PROPERTY, project))
     }
+
+    @Test
+    fun `KT-85433 non-BTA compilation mode reports deprecation warning`() {
+        val project = buildProjectWithMPP(
+            preApplyCode = { enableBtaJvm(enabled = false) },
+        ) {
+            kotlin { jvm() }
+        }.evaluate()
+        project.checkDiagnostics("NonBtaCompilationModeDeprecated")
+    }
+
+    @Test
+    fun `KT-85433 explicit BTA compilation mode reports deprecation warning`() {
+        val project = buildProjectWithMPP(
+            preApplyCode = { enableBtaJvm(enabled = true) },
+        ) {
+            kotlin { jvm() }
+        }.evaluate()
+        project.checkDiagnostics("NonBtaCompilationModeDeprecated")
+    }
 }

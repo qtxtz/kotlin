@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.plugin.PropertiesProvider.PropertyNames.KOTLIN_RUN_COMPILER_VIA_BUILD_TOOLS_API
 import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftexport.SwiftExportExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SwiftPMImportExtension
@@ -212,6 +213,11 @@ fun Project.enableSecondaryJvmClassesVariant(enabled: Boolean = true) {
     project.propertiesExtension.set(PropertiesProvider.PropertyNames.KOTLIN_JVM_ADD_CLASSES_VARIANT, enabled.toString())
 }
 
+
+fun Project.enableBtaJvm(enabled: Boolean = true) {
+    @Suppress("DEPRECATION")
+    project.propertiesExtension.set(KOTLIN_RUN_COMPILER_VIA_BUILD_TOOLS_API, enabled)
+}
 
 fun Project.enableNonPackedKlibsUsage(enabled: Boolean = true) {
     project.propertiesExtension.set(PropertiesProvider.PropertyNames.KOTLIN_USE_NON_PACKED_KLIBS, enabled.toString())

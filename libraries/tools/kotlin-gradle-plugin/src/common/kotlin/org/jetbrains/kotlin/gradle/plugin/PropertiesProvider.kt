@@ -438,6 +438,8 @@ internal class PropertiesProvider private constructor(private val project: Proje
     val createArchiveTasksForCustomCompilations: Boolean
         get() = booleanProperty(KOTLIN_CREATE_ARCHIVE_TASKS_FOR_CUSTOM_COMPILATIONS) ?: false
 
+    @Suppress("DEPRECATION")
+    @Deprecated("KT-85433: non-BTA JVM compiler invocation is deprecated")
     val runKotlinCompilerViaBuildToolsApi: Provider<Boolean>
         get() = booleanProvider(KOTLIN_RUN_COMPILER_VIA_BUILD_TOOLS_API).orElse(true)
 
@@ -742,6 +744,8 @@ internal class PropertiesProvider private constructor(private val project: Proje
         val KOTLIN_BUILD_REPORT_FILE_DIR = property("kotlin.build.report.file.output_dir")
         val KOTLIN_OPTIONS_SUPPRESS_FREEARGS_MODIFICATION_WARNING = property("kotlin.options.suppressFreeCompilerArgsModificationWarning")
         val KOTLIN_JVM_ADD_CLASSES_VARIANT = property("kotlin.jvm.addClassesVariant")
+
+        @Deprecated("KT-85433: non-BTA JVM compiler invocation is deprecated")
         val KOTLIN_RUN_COMPILER_VIA_BUILD_TOOLS_API = property("kotlin.compiler.runViaBuildToolsApi")
         val KOTLIN_GENERATE_COMPILER_REF_INDEX = property("kotlin.compiler.generateCompilerRefIndex")
         val KOTLIN_MPP_ALLOW_LEGACY_DEPENDENCIES = property("kotlin.mpp.allow.legacy.dependencies")
