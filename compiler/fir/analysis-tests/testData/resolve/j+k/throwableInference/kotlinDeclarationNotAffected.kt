@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // ISSUE: KT-82961
 
 // FILE: test.kt

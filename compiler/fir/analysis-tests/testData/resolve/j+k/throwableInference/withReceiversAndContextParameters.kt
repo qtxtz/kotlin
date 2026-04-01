@@ -1,5 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
-// LANGUAGE: +ContextParameters
+// LANGUAGE: +ContextParameters +InferThrowableTypeParameterToUpperBound
 // ISSUE: KT-82961
 
 // FILE: ThrowableCallable.java
@@ -33,7 +33,7 @@ public class JavaDerived implements KotlinInterface {
 
 // FILE: test.kt
 fun Nothing?.test(j: JavaDerived) {
-    j.<!CANNOT_INFER_PARAMETER_TYPE!>basic<!> {}
+    j.basic {}
     j.<!CANNOT_INFER_PARAMETER_TYPE!>withContext<!> {}
 }
 

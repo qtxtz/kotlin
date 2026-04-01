@@ -525,6 +525,7 @@ enum class LanguageFeature(
     ForbidAnnotationsTypeArgumentsAndParenthesesForPackageQualifier(sinceVersion = KOTLIN_2_5, enabledInProgressiveMode = true, "KTLC-396"),
     EagerLambdaAnalysis(sinceVersion = KOTLIN_2_5, "KT-51107"), // Do not hesitate to move it to KOTLIN_2_6 once it's introduced
     UnitConversionsOnArbitraryExpressions(sinceVersion = KOTLIN_2_5, "KT-84393"),
+    InferThrowableTypeParameterToUpperBound(KOTLIN_2_5, "KT-82961"),
 
     // End of 2.* language features --------------------------------------------------
 

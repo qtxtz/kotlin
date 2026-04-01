@@ -1,4 +1,5 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // FIR_DUMP
 // ISSUE: KT-82961
 
@@ -17,8 +18,8 @@ public class JavaHelper {
 
 // FILE: test.kt
 fun test() {
-    // E extends RuntimeException, becames unused after SAM conversion - should be inferred to RuntimeException after the fix
-    val result: String = JavaHelper.<!CANNOT_INFER_PARAMETER_TYPE!>computeRuntime<!> { "hello" }
+    // E extends RuntimeException, becames unused after SAM conversion - inferred to RuntimeException
+    val result: String = JavaHelper.computeRuntime { "hello" }
 }
 
 /* GENERATED_FIR_TAGS: flexibleType, functionDeclaration, javaFunction, javaType, lambdaLiteral, localProperty,

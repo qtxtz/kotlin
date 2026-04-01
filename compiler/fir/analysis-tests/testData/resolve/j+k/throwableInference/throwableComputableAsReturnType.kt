@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // FIR_DUMP
 // ISSUE: KT-82961
 
@@ -15,6 +16,7 @@ public class JavaHelper {
 
 // FILE: test.kt
 fun test() {
+    // We don't allow inferring E1/E2 because they're mentioned in the return types
     val x1 = JavaHelper.<!CANNOT_INFER_PARAMETER_TYPE!>wrapAsComputable<!> { 42 }
     val x2 = <!CANNOT_INFER_PARAMETER_TYPE!>ThrowableComputable<!> { 42 }
 

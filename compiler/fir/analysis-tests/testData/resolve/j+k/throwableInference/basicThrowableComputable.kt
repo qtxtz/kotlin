@@ -1,4 +1,5 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // FIR_DUMP
 // ISSUE: KT-82961
 
@@ -16,14 +17,14 @@ public class JavaHelper {
 
 // FILE: test.kt
 fun test() {
-    // E is unused in the signature (only in throws), should be inferred to Throwable after the fix
-    val result: String = JavaHelper.<!CANNOT_INFER_PARAMETER_TYPE!>compute<!> { "hello" }
+    // E is unused in the signature (only in throws), inferred to Throwable
+    val result: String = JavaHelper.compute { "hello" }
 
     // Explicit type arguments should still work
     val result2: String = JavaHelper.compute<String, Throwable> { "hello" }
 
     // Single explicit argument should work as well
-    val result3: String = JavaHelper.compute<String, <!CANNOT_INFER_PARAMETER_TYPE!>_<!>> { "hello" }
+    val result3: String = JavaHelper.compute<String, _> { "hello" }
 }
 
 /* GENERATED_FIR_TAGS: flexibleType, functionDeclaration, javaFunction, javaType, lambdaLiteral, localProperty,

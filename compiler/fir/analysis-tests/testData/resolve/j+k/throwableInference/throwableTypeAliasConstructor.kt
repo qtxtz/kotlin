@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // FIR_DUMP
 // SUPPRESS_NO_TYPE_ALIAS_EXPANSION_MODE
 //  ^ difference in DEBUG_INFO_EXPRESSION_TYPE
@@ -20,6 +21,7 @@ typealias AliasedRunner<W, F> = JavaRunner<W, F>
 typealias SimpleRunner<U> = JavaRunner<U, RuntimeException>
 
 fun test() {
+    // We don't allow inferring exception-related type variables there, because they're mentioned in the return types of the constructors
     val r1 = <!CANNOT_INFER_PARAMETER_TYPE!>JavaRunner<!> { "hello" }
     <!DEBUG_INFO_EXPRESSION_TYPE("JavaRunner<(kotlin.String..kotlin.String?), ERROR CLASS: Cannot infer argument for type parameter E>")!>r1<!>
     val r2 = <!CANNOT_INFER_PARAMETER_TYPE!>AliasedRunner<!> { "hello" }

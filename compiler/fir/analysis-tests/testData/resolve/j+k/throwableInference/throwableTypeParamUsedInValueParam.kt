@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // FULL_JDK
 // ISSUE: KT-82961
 

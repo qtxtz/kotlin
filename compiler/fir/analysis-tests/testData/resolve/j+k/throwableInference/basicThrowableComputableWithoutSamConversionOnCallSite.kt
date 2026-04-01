@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
+// LANGUAGE: +InferThrowableTypeParameterToUpperBound
 // FIR_DUMP
 // ISSUE: KT-82961
 
