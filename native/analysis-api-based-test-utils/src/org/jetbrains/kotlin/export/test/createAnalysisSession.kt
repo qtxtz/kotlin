@@ -5,11 +5,18 @@
 
 package org.jetbrains.kotlin.export.test
 
+import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.StandardFileSystems
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.util.io.URLUtil.JAR_SEPARATOR
+import org.jetbrains.kotlin.analysis.api.projectStructure.KaLibraryModule
 import org.jetbrains.kotlin.analysis.api.standalone.StandaloneAnalysisAPISession
 import org.jetbrains.kotlin.analysis.api.standalone.buildStandaloneAnalysisAPISession
 import org.jetbrains.kotlin.analysis.project.structure.builder.buildKtLibraryModule
 import org.jetbrains.kotlin.analysis.project.structure.builder.buildKtSourceModule
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.library.KlibConstants.KLIB_FILE_EXTENSION_WITH_DOT
 import org.jetbrains.kotlin.platform.konan.NativePlatforms
 import java.io.File
 import java.nio.file.Path
@@ -54,7 +61,9 @@ fun createStandaloneAnalysisApiSession(
             platform = nativePlatform
             val stdlibModule = addModule(
                 buildKtLibraryModule {
-                    addBinaryRoot(Paths.get(kotlinNativeStdlibPath))
+                    val klib = Paths.get(kotlinNativeStdlibPath)
+                    addBinaryRoot(klib)
+                    addBinaryVirtualFile(klib.toVirtualFile())
                     platform = nativePlatform
                     libraryName = "stdlib"
                 }
@@ -63,6 +72,7 @@ fun createStandaloneAnalysisApiSession(
             val dependencyKlibModules = dependencyKlibs.map { klib ->
                 buildKtLibraryModule {
                     addBinaryRoot(klib)
+                    addBinaryVirtualFile(klib.toVirtualFile())
                     platform = nativePlatform
                     libraryName = klib.nameWithoutExtension
                     addRegularDependency(stdlibModule)
@@ -82,4 +92,20 @@ fun createStandaloneAnalysisApiSession(
             )
         }
     }
+}
+
+/**
+ * Basically mimics what the IDE does when filling [KaLibraryModule.binaryVirtualFiles], e.g.
+ * [here](https://github.com/JetBrains/intellij-community/blob/91f75cd1610d2dd77c99c28a90a715d8de85c1a1/platform/external-system-impl/src/com/intellij/openapi/externalSystem/service/project/manage/LibraryDataService.java#L175-L177).
+ * Which is important, as it helps to ensure that the code tested in the compiler environment
+ * will work in the IDE environment.
+ */
+private fun Path.toVirtualFile(): VirtualFile {
+    val pathString = FileUtil.toSystemIndependentName(this.toAbsolutePath().toString())
+    return if (pathString.endsWith(KLIB_FILE_EXTENSION_WITH_DOT)) {
+        val fileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.JAR_PROTOCOL)
+        fileSystem.findFileByPath(pathString + JAR_SEPARATOR)
+    } else {
+        VirtualFileManager.getInstance().findFileByNioPath(this)
+    } ?: error("Virtual file not found for path: $this")
 }
