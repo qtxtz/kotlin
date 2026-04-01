@@ -26,6 +26,10 @@ import org.jetbrains.kotlin.ir.util.createThisReceiverParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.StandardClassIds
 
+@RequiresOptIn(level = RequiresOptIn.Level.ERROR, message = "This is temporary API to be removed soon")
+@Target(AnnotationTarget.PROPERTY)
+annotation class UnstableBuiltInsApi
+
 /**
  * Symbols for builtins that are available without any context and are not specific to any backend
  * (but specific to the frontend)
@@ -33,6 +37,9 @@ import org.jetbrains.kotlin.name.StandardClassIds
 @OptIn(InternalSymbolFinderAPI::class)
 abstract class IrBuiltIns : SymbolFinderHolder {
     abstract val irFactory: IrFactory
+
+    @UnstableBuiltInsApi
+    open var functionFactory: IrAbstractFunctionFactory? = null
 
     abstract val anyType: IrType
     abstract val anyClass: IrClassSymbol

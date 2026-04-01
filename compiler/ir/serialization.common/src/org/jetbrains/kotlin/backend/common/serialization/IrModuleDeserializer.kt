@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.backend.common.serialization.signature.PublicIdSigna
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.ir.IrBasedFunctionFactory
 import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.UnstableBuiltInsApi
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
@@ -141,7 +142,11 @@ class IrModuleDeserializerWithBuiltIns(
         symbolTable,
         signatureComputer::computeSignature,
         onDeserializedClass
-    )
+    ).apply {
+        // TODO remove functionFactory when new symbol finder is implemented KT-81659
+        @OptIn(UnstableBuiltInsApi::class)
+        builtIns.functionFactory = this
+    }
 
     private val irBuiltInsMap = builtIns.knownBuiltins.associate {
         val symbol = (it as IrSymbolOwner).symbol

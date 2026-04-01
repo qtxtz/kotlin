@@ -45,8 +45,9 @@ class IrBuiltInsOverDescriptors(
     override val symbolFinder: SymbolFinderOverDescriptors = SymbolFinderOverDescriptors(builtIns, symbolTable)
     override val languageVersionSettings = typeTranslator.languageVersionSettings
 
-    private var _functionFactory: IrAbstractDescriptorBasedFunctionFactory? = null
-    var functionFactory: IrAbstractDescriptorBasedFunctionFactory
+    private var _functionFactory: IrAbstractFunctionFactory? = null
+    @OptIn(UnstableBuiltInsApi::class)
+    override var functionFactory: IrAbstractFunctionFactory?
         get() =
             synchronized(this) {
                 if (_functionFactory == null) {
@@ -545,10 +546,10 @@ class IrBuiltInsOverDescriptors(
 
     override val enumClass = builtIns.enum.toIrSymbol()
 
-    override fun functionN(arity: Int): IrClass = functionFactory.functionN(arity)
-    override fun kFunctionN(arity: Int): IrClass = functionFactory.kFunctionN(arity)
-    override fun suspendFunctionN(arity: Int): IrClass = functionFactory.suspendFunctionN(arity)
-    override fun kSuspendFunctionN(arity: Int): IrClass = functionFactory.kSuspendFunctionN(arity)
+    override fun functionN(arity: Int): IrClass = functionFactory!!.functionN(arity)
+    override fun kFunctionN(arity: Int): IrClass = functionFactory!!.kFunctionN(arity)
+    override fun suspendFunctionN(arity: Int): IrClass = functionFactory!!.suspendFunctionN(arity)
+    override fun kSuspendFunctionN(arity: Int): IrClass = functionFactory!!.kSuspendFunctionN(arity)
 
     override val deprecatedSymbol: IrClassSymbol = symbolFinder.findClass(StandardClassIds.Annotations.Deprecated)!!
     override val deprecationLevelSymbol: IrClassSymbol = symbolFinder.findClass(StandardClassIds.DeprecationLevel)!!

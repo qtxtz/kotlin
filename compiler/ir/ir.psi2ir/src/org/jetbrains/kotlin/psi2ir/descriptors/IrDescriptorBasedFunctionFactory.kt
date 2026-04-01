@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.builtins.StandardNames.KOTLIN_REFLECT_FQ_NAME
 import org.jetbrains.kotlin.builtins.functions.FunctionClassDescriptor
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+import org.jetbrains.kotlin.ir.IrAbstractFunctionFactory
 import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
@@ -36,48 +37,7 @@ import org.jetbrains.kotlin.utils.filterIsInstanceAnd
 import org.jetbrains.kotlin.utils.memoryOptimizedMap
 
 @OptIn(ObsoleteDescriptorBasedAPI::class)
-abstract class IrAbstractDescriptorBasedFunctionFactory {
-
-    abstract fun functionClassDescriptor(arity: Int): FunctionClassDescriptor
-    abstract fun kFunctionClassDescriptor(arity: Int): FunctionClassDescriptor
-    abstract fun suspendFunctionClassDescriptor(arity: Int): FunctionClassDescriptor
-    abstract fun kSuspendFunctionClassDescriptor(arity: Int): FunctionClassDescriptor
-
-    abstract fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass
-    abstract fun kFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass
-    abstract fun suspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass
-    abstract fun kSuspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass
-
-    fun functionN(n: Int) = functionN(n) { callback ->
-        val descriptor = functionClassDescriptor(n)
-        descriptorExtension.declareClass(descriptor) { symbol ->
-            callback(symbol)
-        }
-    }
-
-    fun kFunctionN(n: Int): IrClass {
-        return kFunctionN(n) { callback ->
-            val descriptor = kFunctionClassDescriptor(n)
-            descriptorExtension.declareClass(descriptor) { symbol ->
-                callback(symbol)
-            }
-        }
-    }
-
-    fun suspendFunctionN(n: Int): IrClass = suspendFunctionN(n) { callback ->
-        val descriptor = suspendFunctionClassDescriptor(n)
-        descriptorExtension.declareClass(descriptor) { symbol ->
-            callback(symbol)
-        }
-    }
-
-    fun kSuspendFunctionN(n: Int): IrClass = kSuspendFunctionN(n) { callback ->
-        val descriptor = kSuspendFunctionClassDescriptor(n)
-        descriptorExtension.declareClass(descriptor) { symbol ->
-            callback(symbol)
-        }
-    }
-
+abstract class IrAbstractDescriptorBasedFunctionFactory : IrAbstractFunctionFactory() {
     companion object {
         val classOrigin = IrDeclarationOriginImpl("FUNCTION_INTERFACE_CLASS")
         val memberOrigin = IrDeclarationOrigin.FUNCTION_INTERFACE_MEMBER
