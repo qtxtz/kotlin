@@ -320,7 +320,6 @@ fun Project.configureTests() {
             ":compiler:fir:modularized-tests",
             ":compiler:fir:raw-fir:light-tree2fir",
             ":compiler:fir:raw-fir:psi2fir",
-            ":compiler:incremental-compilation-impl",
             ":compiler:ir.backend.common",
             ":compiler:multiplatform-parsing",
             ":compiler:test-infrastructure-utils",
