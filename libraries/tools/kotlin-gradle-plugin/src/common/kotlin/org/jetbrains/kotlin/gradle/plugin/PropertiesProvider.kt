@@ -148,7 +148,7 @@ internal class PropertiesProvider private constructor(private val project: Proje
         get() = booleanProperty("kotlin.incremental.js.ir") ?: true
 
     val incrementalWasm: Boolean
-        get() = booleanProperty("kotlin.incremental.wasm") ?: false
+        get() = booleanProperty("kotlin.incremental.wasm") ?: true
 
     val incrementalNative: Boolean?
         get() = booleanProperty(PropertyNames.KOTLIN_NATIVE_INCREMENTAL_COMPILATION)
