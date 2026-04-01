@@ -29,26 +29,60 @@ fun CompilationOutcome.assertCompiledSources(vararg expectedCompiledSources: Str
 
 context(module: Module)
 fun CompilationOutcome.assertCompiledSources(expectedCompiledSources: Set<String>) {
-    requireLogLevel(LogLevel.DEBUG)
-    val actualCompiledSources = logLines.getValue(LogLevel.DEBUG)
-        .map { it.removePrefix("[KOTLIN] ") }
-        .filter { it.startsWith("compile iteration") }
-        .flatMap { it.replace("compile iteration: ", "").trim().split(", ") }
-        .toSet()
-    val normalizedPaths = expectedCompiledSources
-        .map { module.sourcesDirectory.resolve(it) }
-        .map { it.relativeTo(module.project.projectDirectory) }
-        .map(Path::toString)
-        .toSet()
+    val actualCompiledSources = parseCompilationSteps().flatten().toSet()
+    val normalizedPaths = normalizeFileNames(expectedCompiledSources)
     assertEquals(normalizedPaths, actualCompiledSources) {
         """
             Compiled sources do not match. Set diff:
             Unexpected: ${actualCompiledSources - normalizedPaths}
             Missing: ${normalizedPaths - actualCompiledSources}
-            
+        
             Full sets:
         """.trimIndent()
     }
+}
+
+/**
+ * Asserts the per-step compilation sets during incremental compilation.
+ * Unlike [assertCompiledSources], this checks each IC iteration separately,
+ * which is necessary for verifying monotonous compile set expansion behavior.
+ *
+ * @param steps each set contains file names expected in the corresponding compile iteration
+ */
+context(module: Module)
+fun CompilationOutcome.assertCompilationSteps(vararg steps: Set<String>) {
+    val actualSteps = parseCompilationSteps()
+    val expectedSteps = steps.map { normalizeFileNames(it) }
+    assertEquals(expectedSteps.size, actualSteps.size) {
+        "Expected ${expectedSteps.size} compilation steps but got ${actualSteps.size}.\nActual steps: $actualSteps"
+    }
+    expectedSteps.zip(actualSteps).forEachIndexed { index, (expected, actual) ->
+        assertEquals(expected, actual) {
+            """
+                Compilation step ${index + 1} does not match.
+                Unexpected: ${actual - expected}
+                Missing: ${expected - actual}
+            """.trimIndent()
+        }
+    }
+}
+
+context(module: Module)
+private fun normalizeFileNames(fileNames: Set<String>): Set<String> =
+    fileNames.map { fileName ->
+        module.sourcesDirectory.resolve(fileName)
+            .relativeTo(module.project.projectDirectory)
+            .toString()
+    }.toSet()
+
+private fun CompilationOutcome.parseCompilationSteps(): List<Set<String>> {
+    requireLogLevel(LogLevel.DEBUG)
+    return logLines.getValue(LogLevel.DEBUG)
+        .map { it.removePrefix("[KOTLIN] ") }
+        .filter { it.startsWith("compile iteration") }
+        .map { line ->
+            line.removePrefix("compile iteration: ").trim().split(", ").toSet()
+        }
 }
 
 /**
