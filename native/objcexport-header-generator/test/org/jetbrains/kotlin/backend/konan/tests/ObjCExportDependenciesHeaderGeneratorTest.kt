@@ -125,6 +125,16 @@ class ObjCExportDependenciesHeaderGeneratorTest(
     }
 
     @Test
+    @TodoAnalysisApi // KT-85171
+    fun `test - multiple klibs in library with atomicfu`() {
+        doTest(
+            dependenciesDir.resolve("multipleKlibsInLibraryWithAtomicfu"), configuration = HeaderGenerator.Configuration(
+                dependencies = listOf(testLibraryAtomicFu)
+            )
+        )
+    }
+
+    @Test
     fun `test - propertyAnnotation`() {
         doTest(
             dependenciesDir.resolve("propertyAnnotation"), configuration = HeaderGenerator.Configuration(
