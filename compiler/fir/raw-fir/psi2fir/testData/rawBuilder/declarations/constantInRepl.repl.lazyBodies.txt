@@ -7,6 +7,15 @@ FILE: constantInRepl.repl.kts
 
             public final fun $$eval(): <implicit> { LAZY_BLOCK }
 
+            public? final? const [ReplSnippetTopLevelDeclaration=true] val myConst1: <implicit> = LAZY_EXPRESSION
+                public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+            public? final? const [ReplSnippetTopLevelDeclaration=true] val myConst2: <implicit> = LAZY_EXPRESSION
+                public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+            public? final? const [ReplSnippetTopLevelDeclaration=true] val myConst3: <implicit> = LAZY_EXPRESSION
+                public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
             public? final? [ReplSnippetTopLevelDeclaration=true] val myVal: <implicit> = REPL_EXPRESSION_REF
                 public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
 
