@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.analysis.api.projectStructure.KaLibraryModule
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaModule
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaSourceModule
 import org.jetbrains.kotlin.library.loader.KlibLoader
+import org.jetbrains.kotlin.library.metadata.isCInteropLibrary
 import org.jetbrains.kotlin.library.shortName
 import org.jetbrains.kotlin.library.uniqueName
 import kotlin.io.path.extension
@@ -58,16 +59,26 @@ internal object KtKlibObjCExportModuleNaming : KtObjCExportModuleNaming {
 
         // It is important to use `binaryVirtualFiles` instead of `binaryRoots`,
         // as the latter doesn't always work as expected in the IDE. See KT-72676.
-        val binaryRoot = module.binaryVirtualFiles.mapNotNull {
+        val binaryRoots = module.binaryVirtualFiles.mapNotNull {
             (VfsUtilCore.getVirtualFileForJar(it) ?: it).toNioPathOrNull()
-        }.singleOrNull() ?: return null
-        if (!binaryRoot.isDirectory() && binaryRoot.extension != "klib") return null
+        }
 
-        val library = runCatching{
-            KlibLoader { libraryPaths(binaryRoot) }.load().librariesStdlibFirst.singleOrNull()
-        }.getOrElse { error -> error.printStackTrace(); return null } ?: return null
+        val loadedKlibs = binaryRoots.asSequence().filter {
+            it.isDirectory() || it.extension == "klib"
+        }.mapNotNull { binaryRoot ->
+            runCatching {
+                KlibLoader { libraryPaths(binaryRoot) }.load().librariesStdlibFirst.singleOrNull()
+            }.getOrElse { error -> error.printStackTrace(); null }
+        }
 
-        return library.shortName ?: library.uniqueName
+        // There should be only one non-cinterop klib, as the libraries are published and imported this way.
+        // Since types from cinterop klibs are not exported, this klib is exactly what we are looking for.
+        // The code below attempts to be more resilient by handling slightly more cases than this.
+        return loadedKlibs.filterNot {
+            it.isCInteropLibrary()
+        }.map {
+            it.shortName ?: it.uniqueName
+        }.distinct().singleOrNull()
     }
 }
 

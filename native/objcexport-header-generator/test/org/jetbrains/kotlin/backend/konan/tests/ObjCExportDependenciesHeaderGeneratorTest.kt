@@ -125,7 +125,6 @@ class ObjCExportDependenciesHeaderGeneratorTest(
     }
 
     @Test
-    @TodoAnalysisApi // KT-85171
     fun `test - multiple klibs in library with atomicfu`() {
         doTest(
             dependenciesDir.resolve("multipleKlibsInLibraryWithAtomicfu"), configuration = HeaderGenerator.Configuration(
