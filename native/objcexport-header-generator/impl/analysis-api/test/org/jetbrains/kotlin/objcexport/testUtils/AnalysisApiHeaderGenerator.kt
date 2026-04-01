@@ -76,7 +76,7 @@ object AnalysisApiHeaderGenerator : HeaderGenerator {
     }
 
     private fun Library.toLibraryModuleInfo() = LibraryModuleInfo(
-        libraryName = this.name,
+        libraryName = "Gradle: org.foo.bar:${this.name}:1.2.3",
         klibs = this.klibs,
     )
 }
