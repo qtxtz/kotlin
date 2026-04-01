@@ -237,40 +237,27 @@ private class KotlinJvmPublishingDsl(private val project: Project) : KotlinPubli
         get() = project.components.getByName("java") as AdhocComponentWithVariants
 }
 
+@Suppress("unused")
+@Deprecated("KotlinJsProjectExtension is deprecated and will be removed in the future: https://kotl.in/t6m3vu", level = DeprecationLevel.ERROR)
 abstract class KotlinJsProjectExtension(project: Project) :
     KotlinSingleTargetExtension<KotlinJsTargetDsl>(project),
     KotlinJsCompilerTypeHolder {
-    internal lateinit var irPreset: KotlinJsIrSingleTargetPreset
-
     @Deprecated("Use js() instead. Scheduled for removal in Kotlin 2.3.", ReplaceWith("js()"), level = DeprecationLevel.ERROR)
     override val target: KotlinJsTargetDsl
         get() = targetFuture.lenient.getOrNull() ?: js()
 
     override val targetFuture = CompletableFuture<KotlinJsTargetDsl>()
 
-    fun registerTargetObserver(observer: (KotlinJsTargetDsl?) -> Unit) {
-        project.launch(Undispatched) {
-            observer(targetFuture.await())
-        }
-    }
+    fun registerTargetObserver(
+        @Suppress("UNUSED_PARAMETER")
+        observer: (KotlinJsTargetDsl?) -> Unit
+    ) {}
 
     @Suppress("DEPRECATION_ERROR")
     private fun jsInternal(
+        @Suppress("UNUSED_PARAMETER")
         body: KotlinJsTargetDsl.() -> Unit,
-    ): KotlinJsTargetDsl {
-        if (!targetFuture.isCompleted) {
-            val target: KotlinJsTargetDsl = irPreset
-                .createTargetInternal("js")
-
-            this.targetFuture.complete(target)
-
-            target.project.components.addAll(target.components)
-        }
-
-        target.run(body)
-
-        return target
-    }
+    ): KotlinJsTargetDsl = error("...")
 
     @Suppress("DEPRECATION")
     @Deprecated(
@@ -334,11 +321,7 @@ abstract class KotlinJsProjectExtension(project: Project) :
         "Needed for IDE import using the MPP import mechanism",
         level = DeprecationLevel.HIDDEN
     )
-    fun getTargets(): NamedDomainObjectContainer<KotlinTarget>? =
-        targetFuture.lenient.getOrNull()?.let { target ->
-            target.project.objects.domainObjectContainer(KotlinTarget::class.java)
-                .apply { add(target) }
-        }
+    fun getTargets(): NamedDomainObjectContainer<KotlinTarget>? = null
 }
 
 abstract class KotlinAndroidProjectExtension @Inject constructor(

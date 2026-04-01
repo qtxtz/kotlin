@@ -2249,6 +2249,18 @@ internal object KotlinToolingDiagnostics {
                 .documentationLink(URI("https://youtrack.jetbrains.com/issue/KT-74451"))
         }
     }
+
+    internal object DeprecatedKotlinJsPlugin : ToolingDiagnosticFactory(
+        FATAL,
+        DiagnosticGroup.Kgp.Deprecation,
+    ) {
+        operator fun invoke(trace: Throwable? = null) = build(throwable = trace) {
+            title { "'kotlin-js' Gradle plugin is deprecated" }
+                .description { "'kotlin-js' Gradle plugin is deprecated and will be removed in the future" }
+                .solution { "Please use 'kotlin(\"multiplatform\")' plugin with a 'js()' target instead" }
+                .documentationLink(URI("https://kotl.in/t6m3vu"))
+        }
+    }
 }
 
 private fun String.indentLines(nSpaces: Int = 4, skipFirstLine: Boolean = true): String {

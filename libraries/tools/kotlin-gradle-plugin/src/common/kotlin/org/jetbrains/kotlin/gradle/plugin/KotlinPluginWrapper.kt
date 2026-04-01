@@ -312,30 +312,9 @@ abstract class AbstractKotlinJsPluginWrapper : KotlinBasePluginWrapper() {
     override fun getPlugin(project: Project): Plugin<Project> =
         KotlinJsPlugin()
 
+    @Suppress("DEPRECATION_ERROR")
     override val projectExtensionClass: KClass<out KotlinJsProjectExtension>
         get() = KotlinJsProjectExtension::class
-
-    override fun whenBuildEvaluated(project: Project) = project.runProjectConfigurationHealthCheck {
-        val isJsTargetUninitialized = !(project.kotlinExtension as KotlinJsProjectExtension).targetFuture.isCompleted
-
-        if (isJsTargetUninitialized) {
-            throw GradleException(
-                """
-                Please initialize the Kotlin/JS target in '${project.name} (${project.path})'. Use:
-                kotlin {
-                    js {
-                        // To build distributions and run tests for browser or Node.js use one or both of:
-                        browser()
-                        nodejs()
-                    }
-                }
-                Read more https://kotlinlang.org/docs/reference/js-project-setup.html
-                """.trimIndent()
-            )
-        }
-    }
-
-    override fun createTestRegistry(project: Project) = KotlinTestsRegistry(project, "test")
 }
 
 abstract class AbstractKotlinMultiplatformPluginWrapper : KotlinBasePluginWrapper() {

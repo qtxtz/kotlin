@@ -379,7 +379,6 @@ public abstract class org/jetbrains/kotlin/gradle/plugin/AbstractKotlinAndroidPl
 public abstract class org/jetbrains/kotlin/gradle/plugin/AbstractKotlinJsPluginWrapper : org/jetbrains/kotlin/gradle/plugin/KotlinBasePluginWrapper {
 	public fun <init> ()V
 	public fun getProjectExtensionClass ()Lkotlin/reflect/KClass;
-	public fun whenBuildEvaluated (Lorg/gradle/api/Project;)V
 }
 
 public abstract class org/jetbrains/kotlin/gradle/plugin/AbstractKotlinMultiplatformPluginWrapper : org/jetbrains/kotlin/gradle/plugin/KotlinBasePluginWrapper {

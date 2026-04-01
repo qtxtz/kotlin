@@ -87,16 +87,6 @@ fun buildProjectWithJvm(
     code()
 }
 
-fun buildProjectWithJs(
-    projectBuilder: ProjectBuilder.() -> Unit = {},
-    preApplyCode: Project.() -> Unit = {},
-    code: Project.() -> Unit = {},
-) = buildProject(projectBuilder) {
-    preApplyCode()
-    project.applyKotlinJsPlugin()
-    code()
-}
-
 fun buildProjectWithCocoapods(projectBuilder: ProjectBuilder.() -> Unit = {}, code: Project.() -> Unit = {}) =
     buildProject(projectBuilder) {
         project.applyMultiplatformPlugin()
@@ -106,10 +96,6 @@ fun buildProjectWithCocoapods(projectBuilder: ProjectBuilder.() -> Unit = {}, co
 
 fun Project.applyKotlinJvmPlugin() {
     project.plugins.apply(KotlinPluginWrapper::class.java)
-}
-
-fun Project.applyKotlinJsPlugin() {
-    project.plugins.apply(KotlinJsPluginWrapper::class.java)
 }
 
 fun Project.applyKotlinAndroidPlugin() {

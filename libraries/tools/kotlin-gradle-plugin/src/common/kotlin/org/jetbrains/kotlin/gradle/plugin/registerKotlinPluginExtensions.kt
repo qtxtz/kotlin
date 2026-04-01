@@ -212,8 +212,6 @@ private val Project.isMultiplatform get() = multiplatformExtensionOrNull != null
 
 private val Project.isJvm get() = kotlinJvmExtensionOrNull != null
 
-private val Project.isJs get() = kotlinExtensionOrNull is KotlinJsProjectExtension
-
 private val Project.isAndroid get() = kotlinExtension is KotlinAndroidProjectExtension
 
 private val Project.useNonPackedKlibs get() = kotlinPropertiesProvider.useNonPackedKlibs
