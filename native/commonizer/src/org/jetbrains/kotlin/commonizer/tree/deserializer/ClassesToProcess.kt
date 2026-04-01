@@ -9,8 +9,11 @@ import com.intellij.util.containers.FactoryMap
 import org.jetbrains.kotlin.commonizer.cir.CirEntityId
 import org.jetbrains.kotlin.commonizer.cir.CirName
 import org.jetbrains.kotlin.commonizer.utils.NON_EXISTING_CLASSIFIER_ID
-import kotlin.metadata.*
+import kotlin.metadata.ClassKind
+import kotlin.metadata.KmAnnotation
+import kotlin.metadata.KmClass
 import kotlin.metadata.internal.common.KmModuleFragment
+import kotlin.metadata.kind
 
 internal class ClassesToProcess {
     sealed class ClassEntry {
@@ -44,7 +47,6 @@ internal class ClassesToProcess {
             if (clazz.kind == ClassKind.ENUM_CLASS) {
                 clazz.kmEnumEntries.forEach { entry ->
                     val enumEntryId = classId.createNestedEntityId(CirName.create(entry.name))
-                    @OptIn(ExperimentalAnnotationsInMetadata::class)
                     klibEnumEntries[enumEntryId] = ClassEntry.EnumEntry(enumEntryId, entry.annotations, classId, clazz)
                 }
             }

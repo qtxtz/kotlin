@@ -120,8 +120,11 @@ public class KmClass : KmDeclarationContainer {
 
     /**
      * Annotations on the class.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 
     /**
@@ -222,8 +225,11 @@ public class KmConstructor internal constructor(internal var flags: Int) {
 
     /**
      * Annotations on the constructor.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 
     internal val extensions: List<KmConstructorExtension> =
@@ -254,8 +260,11 @@ public class KmFunction internal constructor(internal var flags: Int, public var
 
     /**
      * Annotations on the extension receiver of the function, if this is an extension function.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val extensionReceiverParameterAnnotations: MutableList<KmAnnotation> = ArrayList(0)
 
     /**
@@ -313,8 +322,11 @@ public class KmFunction internal constructor(internal var flags: Int, public var
 
     /**
      * Annotations on the function.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 
     internal val extensions: List<KmFunctionExtension> =
@@ -332,8 +344,11 @@ public class KmPropertyAccessorAttributes internal constructor(internal var flag
 
     /**
      * Annotations on the property accessor.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 }
 
@@ -393,8 +408,11 @@ public class KmProperty internal constructor(
 
     /**
      * Annotations on the extension receiver of the property, if this is an extension property.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val extensionReceiverParameterAnnotations: MutableList<KmAnnotation> = ArrayList(0)
 
     /**
@@ -454,20 +472,29 @@ public class KmProperty internal constructor(
 
     /**
      * Annotations on the property.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 
     /**
      * Annotations on the property's backing field, or empty list if the property doesn't have one.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val backingFieldAnnotations: MutableList<KmAnnotation> = ArrayList(0)
 
     /**
      * Annotations on the property's delegate field, or empty list if the property is not delegated.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val delegateFieldAnnotations: MutableList<KmAnnotation> = ArrayList(0)
 
     internal val extensions: List<KmPropertyExtension> =
@@ -562,8 +589,11 @@ public class KmValueParameter internal constructor(
 
     /**
      * Annotations on the value parameter.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 
     internal val extensions: List<KmValueParameterExtension> =
@@ -607,8 +637,11 @@ public class KmTypeParameter internal constructor(
 public class KmEnumEntry(public var name: String) {
     /**
      * Annotations on the enum entry.
+     *
+     * On JVM, annotations on declarations are stored in the metadata starting from Kotlin 2.4.0 (or starting from Kotlin 2.2.0 if the flag
+     * `-Xannotations-in-metadata was used during compilation). For earlier Kotlin/JVM versions, annotations have to be loaded manually
+     * from the class file.
      */
-    @ExperimentalAnnotationsInMetadata
     public val annotations: MutableList<KmAnnotation> = ArrayList(0)
 
     internal val extensions: List<KmEnumEntryExtension> =

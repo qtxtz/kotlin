@@ -12,7 +12,6 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
-@OptIn(ExperimentalAnnotationsInMetadata::class)
 class KlibAnnotationsTest {
     @Test
     fun testKlibAnnotations() = testKlibAnnotationsWithMetadataVersion(KlibMetadataVersion.LATEST_STABLE_SUPPORTED)
