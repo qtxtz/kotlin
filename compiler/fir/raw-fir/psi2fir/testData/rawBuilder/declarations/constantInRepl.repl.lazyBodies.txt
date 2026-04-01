@@ -1,0 +1,13 @@
+FILE: constantInRepl.repl.kts
+    REPL_SNIPPET: <snippet-constantInRepl.repl.kts>
+        public final object ConstantInRepl_repl : R|kotlin/Any| {
+            public ConstantInRepl_repl.constructor(): R|ConstantInRepl_repl| {
+                super<R|kotlin/Any|>()
+            }
+
+            public final fun $$eval(): <implicit> { LAZY_BLOCK }
+
+            public? final? [ReplSnippetTopLevelDeclaration=true] val myVal: <implicit> = REPL_EXPRESSION_REF
+                public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+        }

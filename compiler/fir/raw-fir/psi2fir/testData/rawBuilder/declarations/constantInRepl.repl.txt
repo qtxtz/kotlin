@@ -1,0 +1,24 @@
+FILE: constantInRepl.repl.kts
+    REPL_SNIPPET: <snippet-constantInRepl.repl.kts>
+        public final object ConstantInRepl_repl : R|kotlin/Any| {
+            public ConstantInRepl_repl.constructor(): R|ConstantInRepl_repl| {
+                super<R|kotlin/Any|>()
+            }
+
+            public final fun $$eval(): <implicit> {
+                public? final? const val myConst1: <implicit> = IntegerLiteral(1)
+                    public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+                public? final? const val myConst2: <implicit> = IntegerLiteral(2).plus#(myConst1#)
+                    public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+                public? final? const val myConst3: <implicit> = IntegerLiteral(3).plus#(myConst2#)
+                    public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+                <repl property initializer: /ConstantInRepl_repl.myVal> = IntegerLiteral(4).plus#(myConst3#)
+            }
+
+            public? final? [ReplSnippetTopLevelDeclaration=true] val myVal: <implicit> = REPL_EXPRESSION_REF
+                public? [ContainingClassKey=ConstantInRepl_repl] get(): <implicit>
+
+        }
