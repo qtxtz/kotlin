@@ -21,9 +21,13 @@ import org.jetbrains.kotlin.platform.konan.NativePlatforms
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
-import kotlin.io.path.nameWithoutExtension
 
 const val defaultKotlinSourceModuleName = "testModule"
+
+data class LibraryModuleInfo(
+    val libraryName: String,
+    val klibs: List<Path>,
+)
 
 /**
  * Creates a standalone analysis session from Kotlin source code passed as [kotlinSources]
@@ -32,7 +36,7 @@ fun createStandaloneAnalysisApiSession(
     tempDir: File,
     kotlinSourceModuleName: String = defaultKotlinSourceModuleName,
     kotlinSources: Map</* File Name */ String, /* Source Code */ String>,
-    dependencyKlibs: List<Path> = emptyList(),
+    dependencies: List<LibraryModuleInfo> = emptyList(),
 ): StandaloneAnalysisAPISession {
     val testModuleRoot = tempDir.resolve("testModule")
     testModuleRoot.mkdirs()
@@ -42,7 +46,7 @@ fun createStandaloneAnalysisApiSession(
             writeText(sourceCode)
         }
     }
-    return createStandaloneAnalysisApiSession(kotlinSourceModuleName, listOf(testModuleRoot), dependencyKlibs)
+    return createStandaloneAnalysisApiSession(kotlinSourceModuleName, listOf(testModuleRoot), dependencies)
 }
 
 /**
@@ -52,7 +56,7 @@ fun createStandaloneAnalysisApiSession(
 fun createStandaloneAnalysisApiSession(
     kotlinSourceModuleName: String = defaultKotlinSourceModuleName,
     kotlinFiles: List<File>,
-    dependencyKlibs: List<Path> = emptyList(),
+    dependencies: List<LibraryModuleInfo> = emptyList(),
 ): StandaloneAnalysisAPISession {
     val currentArchitectureTarget = HostManager.host
     val nativePlatform = NativePlatforms.nativePlatformByTargets(listOf(currentArchitectureTarget))
@@ -69,12 +73,14 @@ fun createStandaloneAnalysisApiSession(
                 }
             )
 
-            val dependencyKlibModules = dependencyKlibs.map { klib ->
+            val dependencyKlibModules = dependencies.map { dep ->
                 buildKtLibraryModule {
-                    addBinaryRoot(klib)
-                    addBinaryVirtualFile(klib.toVirtualFile())
+                    dep.klibs.forEach {
+                        addBinaryRoot(it)
+                        addBinaryVirtualFile(it.toVirtualFile())
+                    }
                     platform = nativePlatform
-                    libraryName = klib.nameWithoutExtension
+                    libraryName = dep.libraryName
                     addRegularDependency(stdlibModule)
                 }
             }
