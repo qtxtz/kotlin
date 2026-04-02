@@ -3,7 +3,7 @@
 
 fun main() {
     "".run {
-        {}
+        <!UNUSED_LAMBDA_EXPRESSION!>{}<!>
     }
 }
 

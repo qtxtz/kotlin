@@ -3,7 +3,7 @@
 
 private class C
 
-private context(c: C?) fun contextC() { c }
+private context(c: C?) fun contextC() { <!UNUSED_EXPRESSION!>c<!> }
 
 private inline fun consumeWithContext() { with(null) { contextC() } }
 
