@@ -196,6 +196,7 @@ fun Project.configureKotlinCompilationOptions() {
                             "-jvm-default=disable"
                     )
                 }
+
             }
         }
     }
