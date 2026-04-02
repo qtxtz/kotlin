@@ -25,9 +25,12 @@ class SwiftExportWithCoroutinesTestSupport : BeforeTestExecutionCallback {
             // but this fixes compilation of the corresponding static caches.
             dependencies = setOf(atomicFuModule, atomicFuCinteropInterop)
         )
-        (context?.requiredTestInstance as AbstractSwiftExportTest).givenModules += setOf(
-            kotlinxCoroutinesModule,
-            atomicFuModule,
-        )
+        (context?.requiredTestInstance as AbstractSwiftExportTest).apply {
+            givenModules += setOf(
+                kotlinxCoroutinesModule,
+                atomicFuModule,
+            )
+            minOSVersion = "15.0"
+        }
     }
 }
