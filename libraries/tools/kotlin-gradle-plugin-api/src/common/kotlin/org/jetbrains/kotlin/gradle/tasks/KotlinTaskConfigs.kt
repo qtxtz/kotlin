@@ -157,18 +157,6 @@ interface KotlinJvmCompile : BaseKotlinCompile,
     override val moduleName: Property<String>
 
     /**
-     * @suppress
-     */
-    // JVM specific
-    @get:Internal("Takes part in compiler args.")
-    @Deprecated(
-        message = "Configure compilerOptions directly. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compilerOptions"),
-        level = DeprecationLevel.ERROR,
-    )
-    val parentKotlinOptions: Property<KotlinJvmOptionsDeprecated>
-
-    /**
      * Controls JVM target validation mode between this task and the Java compilation task from Gradle for the same source set.
      *
      * Using the same JVM targets ensures that the produced JAR file contains class files of the same JVM bytecode version,

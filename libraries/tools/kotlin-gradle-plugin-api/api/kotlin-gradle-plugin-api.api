@@ -1570,7 +1570,6 @@ public final class org/jetbrains/kotlin/gradle/tasks/KotlinJavaToolchain$JdkSett
 public abstract interface class org/jetbrains/kotlin/gradle/tasks/KotlinJvmCompile : org/jetbrains/kotlin/gradle/dsl/KotlinCompile, org/jetbrains/kotlin/gradle/tasks/BaseKotlinCompile, org/jetbrains/kotlin/gradle/tasks/KotlinCompilationTask, org/jetbrains/kotlin/gradle/tasks/UsesKotlinJavaToolchain {
 	public abstract fun getJvmTargetValidationMode ()Lorg/gradle/api/provider/Property;
 	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
-	public abstract fun getParentKotlinOptions ()Lorg/gradle/api/provider/Property;
 }
 
 public final class org/jetbrains/kotlin/gradle/tasks/KotlinJvmCompile$DefaultImpls {

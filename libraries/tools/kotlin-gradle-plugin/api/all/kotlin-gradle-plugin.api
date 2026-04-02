@@ -5976,7 +5976,6 @@ public abstract class org/jetbrains/kotlin/gradle/tasks/KotlinCompile : org/jetb
 	public abstract fun getLibraries ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
 	public fun getMultiplatformStructure ()Lorg/jetbrains/kotlin/gradle/tasks/K2MultiplatformStructure;
-	public fun getParentKotlinOptions ()Lorg/gradle/api/provider/Property;
 	public final fun getUsePreciseJavaTracking ()Z
 	public fun kotlinOptions (Lkotlin/jvm/functions/Function1;)V
 	public fun kotlinOptions (Lorg/gradle/api/Action;)V

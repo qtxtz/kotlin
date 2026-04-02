@@ -69,16 +69,6 @@ abstract class KotlinCompile @Inject constructor(
         compilerOptions
     )
 
-    @Suppress("DEPRECATION_ERROR", "DEPRECATION")
-    @Deprecated(
-        "Configure compilerOptions directly. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compilerOptions"),
-        level = DeprecationLevel.ERROR,
-    )
-    override val parentKotlinOptions: Property<KotlinJvmOptions> = objectFactory
-        .property(kotlinOptions)
-        .chainedDisallowChanges()
-
     @get:Nested
     override val multiplatformStructure: K2MultiplatformStructure = objectFactory.newInstance()
 
