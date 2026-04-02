@@ -888,8 +888,6 @@ public abstract class org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompi
 }
 
 public abstract class org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinNativeCompilation : org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompilation {
-	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
-	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinNativeCompile;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public final fun getKonanTarget ()Lorg/jetbrains/kotlin/konan/target/KonanTarget;
@@ -1049,8 +1047,6 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinAnd
 }
 
 public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinCommonCompilation : org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompilation, org/jetbrains/kotlin/gradle/plugin/mpp/KotlinMetadataCompilation {
-	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
-	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinCompileCommon;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 }
 
@@ -1081,8 +1077,6 @@ public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJsCompilation : org/je
 	public synthetic fun getBinaries ()Lorg/gradle/api/DomainObjectSet;
 	public fun getBinaries ()Lorg/jetbrains/kotlin/gradle/targets/js/ir/KotlinJsBinaryContainer;
 	public final fun getCompilationPurpose ()Ljava/lang/String;
-	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
-	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/Kotlin2JsCompile;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public final fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public final fun getNpmAggregatedConfigurationName ()Ljava/lang/String;
@@ -1102,8 +1096,6 @@ public final class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJsCompilationKt 
 public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJvmAndroidCompilation : org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompilationToRunnableFiles {
 	public final fun getAndroidVariant ()Lcom/android/build/gradle/api/BaseVariant;
 	public final fun getCompileJavaTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
-	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
-	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinCompile;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public synthetic fun getTarget ()Lorg/jetbrains/kotlin/gradle/plugin/KotlinTarget;
@@ -1122,8 +1114,6 @@ public final class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJvmAndroidCompil
 
 public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJvmCompilation : org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompilationToRunnableFiles, org/jetbrains/kotlin/gradle/plugin/KotlinCompilationWithResources {
 	public final fun getCompileJavaTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
-	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
-	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinCompile;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public fun getProcessResourcesTaskName ()Ljava/lang/String;
