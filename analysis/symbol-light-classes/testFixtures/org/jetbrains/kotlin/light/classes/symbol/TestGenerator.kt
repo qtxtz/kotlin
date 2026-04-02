@@ -47,13 +47,13 @@ fun main(args: Array<String>) {
 
             run {
                 testClass<AbstractSymbolLightClassesAnnotationEqualityForSourceTest> {
-                    model("annotationsEquality", pattern = TestGeneratorUtil.KT)
+                    model("annotationsEquality", pattern = TestGeneratorUtil.KT_OR_KTS)
                 }
             }
 
             run {
                 testClass<AbstractLightClassUtilTest> {
-                    model("lightElements", pattern = TestGeneratorUtil.KT)
+                    model("lightElements", pattern = TestGeneratorUtil.KT_OR_KTS)
                 }
             }
 
