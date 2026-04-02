@@ -541,11 +541,19 @@ val KtDeclaration.containingClassOrObject: KtClassOrObject?
 @KtExperimentalApi
 val KtDeclaration.containingScript: KtScript?
     get() = when (val parent = parent) {
-        is KtBlockExpression -> parent.parent as? KtScript
+        is KtBlockExpression -> parent.containingScript
         is KtDestructuringDeclaration if this is KtDestructuringDeclarationEntry -> parent.containingScript
         else -> null
     }
 
+/**
+ * The containing script for the block expression.
+ *
+ * @see KtDeclaration.containingScript
+ */
+@KtExperimentalApi
+val KtBlockExpression.containingScript: KtScript?
+    get() = parent as? KtScript
 
 /**
  * Containing [ClassId] for a declaration. It supports [KtScript] in REPL mode.
