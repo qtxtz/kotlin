@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.KtDiagnosticFactory2
+import org.jetbrains.kotlin.diagnostics.chooseFactory
 import org.jetbrains.kotlin.diagnostics.reportOn
 import org.jetbrains.kotlin.fir.FirComposableSessionComponent
 import org.jetbrains.kotlin.fir.FirSession
@@ -172,6 +173,8 @@ fun checkUpperBoundViolated(
                 !isExplicitTypeArgumentSource(argumentSource) && LanguageFeature.DontIgnoreUpperBoundViolatedOnImplicitArguments.isDisabled()
                         || mustRelaxDueToArgumentInteractionsBug
             val regularDiagnostic = when {
+                isInsideTypeOperatorOrParameterBounds ->
+                    FirErrors.UPPER_BOUND_VIOLATED_IN_TYPE_OPERATOR_OR_PARAMETER_BOUNDS.chooseFactory()
                 mustRelax -> FirErrors.UPPER_BOUND_VIOLATED_DEPRECATION_WARNING
                 else -> FirErrors.UPPER_BOUND_VIOLATED
             }
@@ -198,17 +201,10 @@ fun checkUpperBoundViolated(
                     } else {
                         val extraMessage =
                             if (upperBound.unwrapToSimpleTypeUsingLowerBound() is ConeCapturedType) "Consider removing the explicit type arguments" else ""
-                        when {
-                            !isInsideTypeOperatorOrParameterBounds -> reporter.reportOn(
-                                argumentSource ?: fallbackSource, regularDiagnostic,
-                                upperBound, argumentType, extraMessage
-                            )
-                            else -> reporter.reportOn(
-                                argumentSource ?: fallbackSource,
-                                FirErrors.UPPER_BOUND_VIOLATED_IN_TYPE_OPERATOR_OR_PARAMETER_BOUNDS,
-                                upperBound, argumentType, extraMessage,
-                            )
-                        }
+                        reporter.reportOn(
+                            argumentSource ?: fallbackSource, regularDiagnostic,
+                            upperBound, argumentType, extraMessage
+                        )
                     }
                 } else {
                     for (additionalUpperBoundsProvider in additionalUpperBoundsProviders) {
