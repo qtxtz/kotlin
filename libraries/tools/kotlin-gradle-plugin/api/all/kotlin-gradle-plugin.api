@@ -477,7 +477,6 @@ public class org/jetbrains/kotlin/gradle/plugin/KaptExtension : org/jetbrains/ko
 	public fun getJavacOptions ()Ljava/util/Map;
 	public fun getKeepJavacAnnotationProcessors ()Z
 	public fun getMapDiagnosticLocations ()Z
-	public fun getProcessors ()Ljava/lang/String;
 	public fun getShowProcessorStats ()Z
 	public fun getStrictMode ()Z
 	public fun getStripMetadata ()Z
@@ -492,7 +491,6 @@ public class org/jetbrains/kotlin/gradle/plugin/KaptExtension : org/jetbrains/ko
 	public fun setIncludeCompileClasspath (Ljava/lang/Boolean;)V
 	public fun setKeepJavacAnnotationProcessors (Z)V
 	public fun setMapDiagnosticLocations (Z)V
-	public fun setProcessors (Ljava/lang/String;)V
 	public fun setShowProcessorStats (Z)V
 	public fun setStrictMode (Z)V
 	public fun setStripMetadata (Z)V
