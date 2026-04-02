@@ -45,16 +45,6 @@ internal constructor(
 
     @get:Internal
     @Deprecated(
-        "FileResolver is an internal Gradle API and must be removed to support Gradle 9.0. Please remove usages of this property. Scheduled for removal in Kotlin 2.4.",
-        ReplaceWith("TODO(\"FileResolver is an internal Gradle API and must be removed to support Gradle 9.0. Please remove usages of this property.\")"),
-        DeprecationLevel.ERROR,
-    )
-    @Suppress("unused")
-    open val fileResolver: Nothing
-        get() = injected
-
-    @get:Internal
-    @Deprecated(
         "ExecHandleFactory is an internal Gradle API and must be removed to support Gradle 9.0. Please remove usages of this property. Scheduled for removal in Kotlin 2.4.",
         ReplaceWith("TODO(\"ExecHandleFactory is an internal Gradle API and must be removed to support Gradle 9.0. Please remove usages of this property.\")"),
         DeprecationLevel.ERROR,
