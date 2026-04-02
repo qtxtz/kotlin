@@ -90,15 +90,6 @@ abstract class KotlinCompile @Inject constructor(
     @get:Internal // To support compile avoidance (ClasspathSnapshotProperties.classpathSnapshot will be used as input instead)
     abstract override val libraries: ConfigurableFileCollection
 
-    @get:Deprecated(
-        message = "Please migrate to compilerOptions.moduleName. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compilerOptions.moduleName"),
-        level = DeprecationLevel.ERROR,
-    )
-    @get:Optional
-    @get:Input
-    abstract override val moduleName: Property<String>
-
     @get:Input
     internal val useFirRunner: Property<Boolean> = objectFactory.propertyWithConvention(false)
 
@@ -139,8 +130,6 @@ abstract class KotlinCompile @Inject constructor(
     @get:Internal
     internal abstract val associatedJavaCompileTaskName: Property<String>
 
-    @get:Internal
-    internal val nagTaskModuleNameUsage: Property<Boolean> = objectFactory.propertyWithConvention(false)
 
     @get:Internal
     internal val scriptDefinitions: ConfigurableFileCollection = objectFactory.fileCollection()
@@ -231,7 +220,6 @@ abstract class KotlinCompile @Inject constructor(
 
             KotlinJvmCompilerOptionsHelper.fillCompilerArguments(compilerOptions, args)
 
-            overrideArgsUsingTaskModuleNameWithWarning(args)
             requireNotNull(args.moduleName)
 
             val localExecutionTimeFreeCompilerArgs = executionTimeFreeCompilerArgs
@@ -304,21 +292,6 @@ abstract class KotlinCompile @Inject constructor(
             }
 
             args.freeArgs += (scriptSourcesFiles + javaSourcesFiles + sourcesFiles).map { it.absolutePath }
-        }
-    }
-
-    @Suppress("DEPRECATION_ERROR")
-    protected fun overrideArgsUsingTaskModuleNameWithWarning(
-        args: K2JVMCompilerArguments,
-    ) {
-        val taskModuleName = moduleName.orNull
-        if (taskModuleName != null) {
-            if (nagTaskModuleNameUsage.get()) {
-                logger.warn(
-                    "w: $path 'KotlinJvmCompile.moduleName' is deprecated, please migrate to 'compilerOptions.moduleName'!"
-                )
-            }
-            args.moduleName = taskModuleName
         }
     }
 

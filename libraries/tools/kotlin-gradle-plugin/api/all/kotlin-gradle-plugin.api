@@ -5974,13 +5974,11 @@ public abstract class org/jetbrains/kotlin/gradle/tasks/KotlinCompile : org/jetb
 	public synthetic fun getKotlinOptions ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCommonOptions;
 	public final fun getKotlinOptions ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinJvmOptions;
 	public abstract fun getLibraries ()Lorg/gradle/api/file/ConfigurableFileCollection;
-	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
 	public fun getMultiplatformStructure ()Lorg/jetbrains/kotlin/gradle/tasks/K2MultiplatformStructure;
 	public final fun getUsePreciseJavaTracking ()Z
 	public fun kotlinOptions (Lkotlin/jvm/functions/Function1;)V
 	public fun kotlinOptions (Lorg/gradle/api/Action;)V
 	protected fun makeIncrementalCompilationFeatures ()Lorg/jetbrains/kotlin/incremental/IncrementalCompilationFeatures;
-	protected final fun overrideArgsUsingTaskModuleNameWithWarning (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;)V
 	public final fun setJavaPackagePrefix (Ljava/lang/String;)V
 	public fun setSource ([Ljava/lang/Object;)V
 	public final fun setUsePreciseJavaTracking (Z)V

@@ -145,18 +145,6 @@ interface KotlinJvmCompile : BaseKotlinCompile,
     UsesKotlinJavaToolchain {
 
     /**
-     * @suppress
-     */
-    @get:Deprecated(
-        message = "Please migrate to compilerOptions.moduleName. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compilerOptions.moduleName"),
-        level = DeprecationLevel.ERROR,
-    )
-    @get:Optional
-    @get:Input
-    override val moduleName: Property<String>
-
-    /**
      * Controls JVM target validation mode between this task and the Java compilation task from Gradle for the same source set.
      *
      * Using the same JVM targets ensures that the produced JAR file contains class files of the same JVM bytecode version,
@@ -205,17 +193,6 @@ interface KaptGenerateStubs : KotlinJvmCompile {
     @get:Internal("Not an input, just passed as kapt args. ")
     val kaptClasspath: ConfigurableFileCollection
 
-    /**
-     * @suppress
-     */
-    @get:Deprecated(
-        message = "Please migrate to compilerOptions.moduleName. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compilerOptions.moduleName"),
-        level = DeprecationLevel.ERROR,
-    )
-    @get:Optional
-    @get:Input
-    override val moduleName: Property<String>
 }
 
 /**

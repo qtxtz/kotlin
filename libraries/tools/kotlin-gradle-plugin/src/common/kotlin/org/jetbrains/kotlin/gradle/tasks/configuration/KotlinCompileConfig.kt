@@ -109,8 +109,6 @@ internal open class BaseKotlinCompileConfig<TASK : KotlinCompile> : AbstractKotl
                     task.associatedJavaCompileTaskTargetCompatibility.value(javaTask.map { it.targetCompatibility })
                     task.associatedJavaCompileTaskName.value(javaTask.map { it.name })
                 }
-
-                task.nagTaskModuleNameUsage.value(true).disallowChanges()
             }
         }
     }
