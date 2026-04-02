@@ -392,7 +392,10 @@ internal open class GradleCompilerRunner(
             get() = when (this) {
                 is KotlinCompile -> compilerOptions.moduleName.get()
                 is Kotlin2JsCompile -> compilerOptions.moduleName.get()
-                is KotlinCompileCommon -> moduleName.get()
+                is KotlinCompileCommon -> {
+                    @Suppress("DEPRECATION")
+                    moduleName.get()
+                }
                 else -> throw IllegalStateException("Unknown AbstractKotlinCompile task instance: ${this::class.qualifiedName}")
             }
 

@@ -113,7 +113,12 @@ interface BaseKotlinCompile : KotlinCompileTool {
     /**
      * @suppress
      */
+    @get:Deprecated(
+        message = "Task.moduleName is only used in metadata compilations",
+        level = DeprecationLevel.WARNING,
+    )
     @get:Input
+    @get:Optional
     val moduleName: Property<String>
 
     /**

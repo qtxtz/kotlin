@@ -5944,7 +5944,6 @@ public abstract class org/jetbrains/kotlin/gradle/tasks/Kotlin2JsCompile : org/j
 	public fun getKotlinOptions ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinJsOptions;
 	public abstract fun getLibraries ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	protected final fun getLibraryFilter ()Lkotlin/jvm/functions/Function1;
-	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
 	public fun getMultiplatformStructure ()Lorg/jetbrains/kotlin/gradle/tasks/K2MultiplatformStructure;
 	public final synthetic fun getOutputFileProperty ()Lorg/gradle/api/provider/Property;
 	public fun getProduceUnpackagedKlib ()Lorg/gradle/api/provider/Property;
@@ -6004,6 +6003,7 @@ public abstract class org/jetbrains/kotlin/gradle/tasks/KotlinCompileCommon : or
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformCommonCompilerOptions;
 	public synthetic fun getKotlinOptions ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCommonOptions;
 	public fun getKotlinOptions ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinMultiplatformCommonOptions;
+	public abstract fun getModuleName ()Lorg/gradle/api/provider/Property;
 	public fun kotlinOptions (Lkotlin/jvm/functions/Function1;)V
 	public fun kotlinOptions (Lorg/gradle/api/Action;)V
 	public synthetic fun setupCompilerArgs (Lorg/jetbrains/kotlin/cli/common/arguments/CommonToolArguments;ZZ)V
