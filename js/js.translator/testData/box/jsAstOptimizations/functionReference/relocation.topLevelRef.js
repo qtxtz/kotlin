@@ -1,11 +1,6 @@
 function topLevel$ref() {
-  var l = function () {
+  return constructCallableReference(function () {
     topLevel();
     return Unit_instance;
-  };
-  l.callableName = 'topLevel';
-  l.$flags = 0;
-  l.$arity = 0;
-  l.$id = 0;
-  return l;
+  }, 0, 0, 0, 'topLevel');
 }
