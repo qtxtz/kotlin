@@ -683,6 +683,20 @@ fun Project.configureKotlinCompileTasksGradleCompatibility() {
     }
 }
 
+fun Project.applyWorkaroundForKt85412ForTestCompilations() {
+    // workaround for KT-85412
+    // main compilations are handled separately in this file
+    extensions.findByType<KotlinJvmExtension>()?.target?.compilations?.configureEach {
+        if (name.contains("test", ignoreCase = true)) {
+            compileTaskProvider.configure {
+                (compilerOptions as KotlinJvmCompilerOptions).moduleName.value(
+                    "${project.name}_${this@configureEach.name}".replace(invalidModuleNameCharactersRegex, "_")
+                ).disallowChanges()
+            }
+        }
+    }
+}
+
 /**
  * Configures the build tools API version for the project to use Kotlin compiler of the version
  * that can produce binaries of [GradlePluginVariant.bundledKotlinVersion] for [GradlePluginVariant.GRADLE_MIN]
