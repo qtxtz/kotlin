@@ -148,7 +148,7 @@ private fun Project.registerDsymArchiveTask(
     dsymPath: Provider<File>?,
     dwarfDsymFolderPath: String?,
     action: XcodeEnvironment.Action?,
-    isStatic: Provider<Boolean>,
+    isStatic: Boolean,
 ): TaskProvider<*> {
     return locateOrRegisterTask<CopyDsymDuringArchiving>(
         lowerCamelCaseName(
@@ -156,7 +156,7 @@ private fun Project.registerDsymArchiveTask(
             frameworkCopyTaskName
         )
     ) { task ->
-        task.onlyIf { action == XcodeEnvironment.Action.install && !isStatic.get() }
+        task.onlyIf { action == XcodeEnvironment.Action.install && !isStatic }
         task.dwarfDsymFolderPath.set(dwarfDsymFolderPath)
         dsymPath?.let { task.dsymPath.set(it) }
     }
@@ -261,6 +261,7 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
     )
     val sandBoxTask = checkSandboxAndWriteProtectionTask(environment, environment.userScriptSandboxingEnabled)
     val assembleTask = registerAssembleAppleFrameworkTask(framework, environment) ?: return
+    val matchesRequestedBinary = isRequestedBinary(framework, environment)
 
     val builtProductsDir = builtProductsDir(frameworkTaskName, environment)
     val createBuildSystemDirectory = registerCreateBuildSystemDirectory(builtProductsDir)
@@ -271,17 +272,15 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
     )
     symbolicLinkTask.dependsOn(createBuildSystemDirectory)
     symbolicLinkTask.configure { task ->
-        task.onlyIf("Binary ${framework.name} does not match Xcode-requested build type or architecture") { isRequestedBinary(framework, environment) }
+        task.onlyIf("Binary ${framework.name} does not match Xcode-requested build type or architecture") { matchesRequestedBinary }
         assembleTask.frameworkPath?.let { task.frameworkPath.set(it) }
         assembleTask.dsymPath?.let { task.dsymPath.set(it) }
         task.shouldDsymLinkExist.set(
-            provider {
-                when (environment.action) {
-                    // Don't create symbolic link for dSYM when archiving: KT-71423
-                    XcodeEnvironment.Action.install -> false
-                    XcodeEnvironment.Action.other,
-                    null -> !framework.isStatic
-                }
+            when (environment.action) {
+                // Don't create symbolic link for dSYM when archiving: KT-71423
+                XcodeEnvironment.Action.install -> false
+                XcodeEnvironment.Action.other,
+                null -> !framework.isStatic
             }
         )
     }
@@ -324,17 +323,14 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
     embedAndSignTask.dependsOn(assembleTask.taskProvider)
     embedAndSignTask.dependsOn(symbolicLinkTask)
 
-    if (kotlinPropertiesProvider.appleCopyDsymDuringArchiving) {
+    if (kotlinPropertiesProvider.appleCopyDsymDuringArchiving && matchesRequestedBinary) {
         val dsymCopyTask = registerDsymArchiveTask(
             frameworkCopyTaskName = frameworkTaskName,
             dsymPath = assembleTask.dsymPath,
             dwarfDsymFolderPath = environment.dwarfDsymFolderPath,
             action = environment.action,
-            isStatic = provider { framework.isStatic },
+            isStatic = framework.isStatic,
         )
-        dsymCopyTask.configure { task ->
-            task.onlyIf("Binary ${framework.name} does not match Xcode-requested build type or architecture") { isRequestedBinary(framework, environment) }
-        }
         // FIXME: KT-71720
         // Dsym copy task must execute after symbolic link task because symbolic link task does clean up for KT-68257 and dSYM is copied to the same location
         dsymCopyTask.dependsOn(symbolicLinkTask)
@@ -560,8 +556,14 @@ private fun Project.appleFrameworkDir(frameworkTaskName: String, environment: Xc
     }
 }
 
-private fun Project.builtProductsDir(frameworkTaskName: String, environment: XcodeEnvironment) = project.provider {
-    environment.builtProductsDir ?: fireEnvException(frameworkTaskName, environment)
+private fun Project.builtProductsDir(frameworkTaskName: String, environment: XcodeEnvironment): Provider<File> {
+    val builtProductsDir = environment.builtProductsDir
+    val envBuildType = environment.buildType
+    val envRepresentation = environment.toString()
+
+    return project.provider {
+        builtProductsDir ?: fireEnvException(frameworkTaskName, envBuildType, envRepresentation)
+    }
 }
 
 
