@@ -156,11 +156,10 @@ class CodegenTestsOnAndroidGenerator private constructor(private val pathManager
     private fun generateTestsAndFlavourSuites() {
         println("Generating test files...")
 
-        val folders = arrayOf<File>(
-//            TODO(KT-85465): uncomment
-//            File("compiler/testData/codegen/box"),
-//            File("compiler/testData/codegen/boxJvm"),
-//            File("compiler/testData/codegen/boxInline")
+        val folders = arrayOf(
+            File("compiler/testData/codegen/box"),
+            File("compiler/testData/codegen/boxJvm"),
+            File("compiler/testData/codegen/boxInline")
         )
 
         generateTestMethodsForDirectories(commonFlavor, reflectFlavor, *folders)
