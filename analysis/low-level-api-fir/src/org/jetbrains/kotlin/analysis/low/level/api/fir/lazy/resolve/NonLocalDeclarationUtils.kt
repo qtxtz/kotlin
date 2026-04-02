@@ -41,7 +41,12 @@ internal fun elementCanBeLazilyResolved(element: KtElement?): Boolean = when (el
             else -> null
         }
 
-        elementCanBeLazilyResolved(parentToCheck.takeUnless { it is KtEnumEntry })
+        when (parentToCheck) {
+            is KtEnumEntry -> false
+            // Destructuring declarations are embedded into the eval function inside repl snippets
+            is KtScript if element is KtDestructuringDeclaration && parentToCheck.isReplSnippet -> false
+            else -> elementCanBeLazilyResolved(parentToCheck)
+        }
     }
 
     is KtPropertyAccessor -> elementCanBeLazilyResolved(element.property)
