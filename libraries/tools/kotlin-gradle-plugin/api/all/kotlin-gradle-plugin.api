@@ -6096,7 +6096,6 @@ public abstract class org/jetbrains/kotlin/gradle/tasks/KotlinTest : org/gradle/
 	public final fun addRunListener (Lorg/jetbrains/kotlin/gradle/internal/testing/KotlinTestRunnerListener;)V
 	protected fun createTestExecuter ()Lorg/gradle/api/internal/tasks/testing/TestExecuter;
 	public final fun getExcludePatterns ()Ljava/util/Set;
-	public fun getExecHandleFactory ()Ljava/lang/Void;
 	protected final fun getFilterExt ()Lorg/gradle/api/internal/tasks/testing/filter/DefaultTestFilter;
 	public final fun getIgnoreRunFailures ()Z
 	public final fun getIncludePatterns ()Ljava/util/Set;
