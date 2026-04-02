@@ -529,17 +529,6 @@ public final class org/jetbrains/kotlin/gradle/dsl/KotlinPublishingDsl$DefaultIm
 	public static fun publishing (Lorg/jetbrains/kotlin/gradle/dsl/KotlinPublishingDsl;Lorg/gradle/api/Action;)V
 }
 
-public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinTargetHierarchyDsl {
-	public abstract fun apply (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyTemplate;Lkotlin/jvm/functions/Function1;)V
-	public abstract fun custom (Lkotlin/jvm/functions/Function1;)V
-	public abstract fun default (Lkotlin/jvm/functions/Function1;)V
-}
-
-public final class org/jetbrains/kotlin/gradle/dsl/KotlinTargetHierarchyDsl$DefaultImpls {
-	public static synthetic fun apply$default (Lorg/jetbrains/kotlin/gradle/dsl/KotlinTargetHierarchyDsl;Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyTemplate;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun default$default (Lorg/jetbrains/kotlin/gradle/dsl/KotlinTargetHierarchyDsl;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-}
-
 public abstract interface class org/jetbrains/kotlin/gradle/dsl/KotlinTopLevelExtension : org/jetbrains/kotlin/gradle/dsl/KotlinTopLevelExtensionConfig, org/jetbrains/kotlin/gradle/plugin/KotlinSourceSetContainer {
 	public abstract fun abiValidation ()V
 	public abstract fun abiValidation (Lorg/gradle/api/Action;)V

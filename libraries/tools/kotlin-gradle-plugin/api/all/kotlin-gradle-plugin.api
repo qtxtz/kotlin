@@ -138,12 +138,6 @@ public abstract class org/jetbrains/kotlin/gradle/dsl/AbstractKotlinNativeBinary
 	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
 }
 
-public final class org/jetbrains/kotlin/gradle/dsl/DeprecatedKotlinTargetHierarchyDsl : org/jetbrains/kotlin/gradle/dsl/KotlinTargetHierarchyDsl {
-	public fun apply (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyTemplate;Lkotlin/jvm/functions/Function1;)V
-	public fun custom (Lkotlin/jvm/functions/Function1;)V
-	public fun default (Lkotlin/jvm/functions/Function1;)V
-}
-
 public abstract class org/jetbrains/kotlin/gradle/dsl/KotlinAndroidProjectExtension : org/jetbrains/kotlin/gradle/dsl/KotlinSingleTargetExtension, org/jetbrains/kotlin/gradle/dsl/KotlinAndroidExtension {
 	public fun <init> (Lorg/gradle/api/Project;)V
 	public fun compilerOptions (Lkotlin/jvm/functions/Function1;)V

@@ -248,10 +248,6 @@ internal constructor(
         hierarchy.applyHierarchyTemplate(template)
     }
 
-    @ExperimentalKotlinGradlePluginApi
-    val targetHierarchy: @Suppress("DEPRECATION_ERROR") DeprecatedKotlinTargetHierarchyDsl
-        get() = @Suppress("DEPRECATION_ERROR") DeprecatedKotlinTargetHierarchyDsl(this)
-
     @Suppress("unused") // DSL
     val testableTargets: NamedDomainObjectCollection<KotlinTargetWithTests<*, *>>
         get() = targets.withType(KotlinTargetWithTests::class.java)
