@@ -11,25 +11,21 @@ import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.compiler.plugin.registerExtension
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
-import org.jetbrains.kotlin.incremental.utils.findAnnotationsRuntimeJsKlib
-import org.jetbrains.kotlin.js.config.JsGenerationGranularity
+import org.jetbrains.kotlin.incremental.utils.findAnnotationsRuntimeWasmKlib
 import org.jetbrains.kotlin.js.config.ModuleKind
 import org.jetbrains.kotlin.plugin.sandbox.fir.FirPluginPrototypeExtensionRegistrar
 import org.jetbrains.kotlin.plugin.sandbox.ir.GeneratedDeclarationsIrBodyFiller
 import org.jetbrains.kotlin.test.TargetBackend
+import org.jetbrains.kotlin.wasm.config.wasmGenerateClosedWorldMultimodule
+import org.jetbrains.kotlin.wasm.config.wasmIncludedModuleOnly
 
-abstract class AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
-    targetBackend: TargetBackend,
-    granularity: JsGenerationGranularity,
-    workingDirPath: String
-) : JsAbstractInvalidationTest(targetBackend, granularity, workingDirPath) {
-    private val annotationsKlib = findAnnotationsRuntimeJsKlib()
+abstract class AbstractIncrementalWasmWithPluginCompilerRunnerTest(
+    workingDirPath: String,
+) : WasmAbstractInvalidationTest(TargetBackend.WASM, workingDirPath) {
+    private val annotationsKlib = findAnnotationsRuntimeWasmKlib()
 
     override val librariesToExcludeFromStats
         get() = super.librariesToExcludeFromStats + annotationsKlib
-
-    override val libraryNamesToExcludeFromStats: Set<String>
-        get() = super.libraryNamesToExcludeFromStats + "kotlin_org_jetbrains_kotlin_plugin_annotations"
 
     @OptIn(ExperimentalCompilerApi::class)
     override fun createConfiguration(
@@ -38,7 +34,7 @@ abstract class AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
         languageFeatures: List<String>,
         allLibraries: List<String>,
         friendLibraries: List<String>,
-        includedLibrary: String?
+        includedLibrary: String?,
     ): CompilerConfiguration {
         val copy = super.createConfiguration(
             moduleName,
@@ -59,30 +55,19 @@ abstract class AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
     }
 }
 
-abstract class AbstractIncrementalCodegenJsWithPluginSandboxPerModuleTest :
-    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
-        TargetBackend.JS_IR,
-        JsGenerationGranularity.PER_MODULE,
-        "plugin-sandbox/incremental/perModule"
-    )
+abstract class AbstractIncrementalWasmWithPluginSandboxTest :
+    AbstractIncrementalWasmWithPluginCompilerRunnerTest("plugin-sandbox/incremental/wasm")
 
-abstract class AbstractIncrementalCodegenJsEs6WithPluginSandboxPerModuleTest :
-    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
-        TargetBackend.JS_IR_ES6,
-        JsGenerationGranularity.PER_MODULE,
-        "plugin-sandbox/incremental/perModuleEs6"
-    )
+abstract class AbstractIncrementalWasmMultiModuleWithPluginSandboxTest :
+    AbstractIncrementalWasmWithPluginCompilerRunnerTest("plugin-sandbox/incremental/wasmMultimodule") {
+    override fun modifyConfig(configuration: CompilerConfiguration) {
+        configuration.wasmGenerateClosedWorldMultimodule = true
+    }
+}
 
-abstract class AbstractIncrementalCodegenJsWithPluginSandboxPerFileTest :
-    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
-        TargetBackend.JS_IR,
-        JsGenerationGranularity.PER_FILE,
-        "plugin-sandbox/incremental/perFile"
-    )
-
-abstract class AbstractIncrementalCodegenJsEs6WithPluginSandboxPerFileTest :
-    AbstractIncrementalCodegenJsWithPluginCompilerRunnerTest(
-        TargetBackend.JS_IR_ES6,
-        JsGenerationGranularity.PER_FILE,
-        "plugin-sandbox/incremental/perFileEs6"
-    )
+abstract class AbstractIncrementalWasmSingleModuleWithPluginSandboxTest :
+    AbstractIncrementalWasmWithPluginCompilerRunnerTest("plugin-sandbox/incremental/wasmSinglemodule") {
+    override fun modifyConfig(configuration: CompilerConfiguration) {
+        configuration.wasmIncludedModuleOnly = true
+    }
+}
