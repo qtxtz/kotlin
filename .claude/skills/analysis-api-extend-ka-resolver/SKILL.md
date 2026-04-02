@@ -1,5 +1,5 @@
 ---
-name: analysis-extend-ka-resolver
+name: analysis-api-extend-ka-resolver
 description: Add KaResolver resolveSymbol/resolveCall support for a PSI type
 user-invocable: true
 disable-model-invocation: true
