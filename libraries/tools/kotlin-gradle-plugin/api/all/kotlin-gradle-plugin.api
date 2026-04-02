@@ -890,7 +890,6 @@ public abstract class org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompi
 public abstract class org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinNativeCompilation : org/jetbrains/kotlin/gradle/plugin/mpp/AbstractKotlinCompilation {
 	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
 	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinNativeCompile;
-	public fun getCompileKotlinTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public final fun getKonanTarget ()Lorg/jetbrains/kotlin/konan/target/KonanTarget;
@@ -1084,7 +1083,6 @@ public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJsCompilation : org/je
 	public final fun getCompilationPurpose ()Ljava/lang/String;
 	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
 	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/Kotlin2JsCompile;
-	public fun getCompileKotlinTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public final fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public final fun getNpmAggregatedConfigurationName ()Ljava/lang/String;
@@ -1106,7 +1104,6 @@ public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJvmAndroidCompilation 
 	public final fun getCompileJavaTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
 	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinCompile;
-	public fun getCompileKotlinTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public synthetic fun getTarget ()Lorg/jetbrains/kotlin/gradle/plugin/KotlinTarget;

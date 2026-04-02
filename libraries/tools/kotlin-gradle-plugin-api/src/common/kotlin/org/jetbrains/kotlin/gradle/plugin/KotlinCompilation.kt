@@ -216,17 +216,6 @@ interface KotlinCompilation<UNUSED : KotlinAnyOptionsDeprecated> : Named,
     /**
      * @suppress
      */
-    @Suppress("DEPRECATION", "TYPEALIAS_EXPANSION_DEPRECATION_ERROR")
-    @Deprecated(
-        message = "Replaced with compileTaskProvider. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compileTaskProvider"),
-        level = DeprecationLevel.ERROR,
-    )
-    val compileKotlinTaskProvider: TaskProvider<out KotlinCompileDeprecated<KotlinCommonOptionsDeprecated>>
-
-    /**
-     * @suppress
-     */
     @Suppress("TYPEALIAS_EXPANSION_DEPRECATION_ERROR")
     @OptIn(InternalKotlinGradlePluginApi::class)
     @Deprecated(

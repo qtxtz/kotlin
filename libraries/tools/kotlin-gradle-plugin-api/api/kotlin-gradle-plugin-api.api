@@ -857,7 +857,6 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinCompila
 	public abstract fun getCompileDependencyFiles ()Lorg/gradle/api/file/FileCollection;
 	public abstract fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
 	public abstract fun getCompileKotlinTaskName ()Ljava/lang/String;
-	public abstract fun getCompileKotlinTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public abstract fun getCompileOnlyConfigurationName ()Ljava/lang/String;
 	public abstract fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public abstract fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;

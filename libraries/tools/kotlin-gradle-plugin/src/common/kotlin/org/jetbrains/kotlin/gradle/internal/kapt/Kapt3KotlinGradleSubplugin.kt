@@ -153,7 +153,7 @@ class Kapt3GradleSubplugin @Inject internal constructor() :
 
         @Suppress("UNCHECKED_CAST")
         val kotlinCompile: TaskProvider<KotlinCompile>
-            // Can't use just kotlinCompilation.compileKotlinTaskProvider, as the latter is not statically-known to be KotlinCompile
+            // Can't use just kotlinCompilation.compileTaskProvider, as the latter is not statically-known to be KotlinCompile
             get() = kotlinCompilation.compileTaskProvider as TaskProvider<KotlinCompile>
     }
 

@@ -85,15 +85,6 @@ open class KotlinJsCompilation @Inject internal constructor(
     override val compileKotlinTask: Kotlin2JsCompile
         get() = compilation.compileKotlinTask as Kotlin2JsCompile
 
-    @Suppress("UNCHECKED_CAST", "DEPRECATION_ERROR")
-    @Deprecated(
-        "Replaced with compileTaskProvider. Scheduled for removal in Kotlin 2.3",
-        replaceWith = ReplaceWith("compileTaskProvider"),
-        level = DeprecationLevel.ERROR
-    )
-    override val compileKotlinTaskProvider: TaskProvider<out Kotlin2JsCompile>
-        get() = compilation.compileKotlinTaskProvider as TaskProvider<out Kotlin2JsCompile>
-
     @Suppress("UNCHECKED_CAST")
     override val compileTaskProvider: TaskProvider<Kotlin2JsCompile>
         get() = compilation.compileTaskProvider as TaskProvider<Kotlin2JsCompile>
