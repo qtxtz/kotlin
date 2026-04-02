@@ -40,15 +40,6 @@ open class KotlinJvmCompilation @Inject internal constructor(
     override val compilerOptions: DeprecatedHasCompilerOptions<KotlinJvmCompilerOptions> =
         compilation.compilerOptions.castCompilerOptionsType()
 
-    @Deprecated(
-        "Replaced with compileTaskProvider. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("compileTaskProvider"),
-        level = DeprecationLevel.ERROR
-    )
-    @Suppress("UNCHECKED_CAST", "DEPRECATION_ERROR")
-    override val compileKotlinTaskProvider: TaskProvider<out org.jetbrains.kotlin.gradle.tasks.KotlinCompile>
-        get() = compilation.compileKotlinTaskProvider as TaskProvider<out org.jetbrains.kotlin.gradle.tasks.KotlinCompile>
-
     @Suppress("DEPRECATION_ERROR")
     @Deprecated(
         "Accessing task instance directly is deprecated. Scheduled for removal in Kotlin 2.3.",

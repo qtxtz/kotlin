@@ -1127,7 +1127,6 @@ public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinJvmCompilation : org/j
 	public final fun getCompileJavaTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public synthetic fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/dsl/KotlinCompile;
 	public fun getCompileKotlinTask ()Lorg/jetbrains/kotlin/gradle/tasks/KotlinCompile;
-	public fun getCompileKotlinTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompileTaskProvider ()Lorg/gradle/api/tasks/TaskProvider;
 	public fun getCompilerOptions ()Lorg/jetbrains/kotlin/gradle/plugin/HasCompilerOptions;
 	public fun getProcessResourcesTaskName ()Ljava/lang/String;
