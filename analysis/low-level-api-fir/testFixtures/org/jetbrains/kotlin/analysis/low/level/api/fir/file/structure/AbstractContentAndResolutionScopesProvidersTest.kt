@@ -82,7 +82,7 @@ import java.util.*
  * This approach is technically not very correct, but pragmatic and convenient, as we would otherwise have to define a separate syntax for
  * library modules.
  */
-open class AbstractContentAndResolutionScopesProvidersTest : AbstractAnalysisApiBasedTest() {
+abstract class AbstractContentAndResolutionScopesProvidersTest : AbstractAnalysisApiBasedTest() {
     private var refinerToRegister: DummyContentScopeRefiner = DummyContentScopeRefiner()
     override val configurator: AnalysisApiTestConfigurator = ContentScopeProviderConfigurator(refinerToRegister)
 
