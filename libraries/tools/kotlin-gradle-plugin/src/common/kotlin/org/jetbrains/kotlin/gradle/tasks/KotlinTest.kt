@@ -30,14 +30,6 @@ internal constructor(
     @Optional
     var targetName: String? = null
 
-    @Internal // Taken into account by excludePatterns.
-    @Deprecated(
-        "Use filter.excludePatterns instead. Scheduled for removal in Kotlin 2.3.",
-        ReplaceWith("filter.excludePatterns"),
-        level = DeprecationLevel.ERROR
-    )
-    var excludes = mutableSetOf<String>()
-
     protected val filterExt: DefaultTestFilter
         @Internal get() = filter as DefaultTestFilter
 
@@ -48,9 +40,8 @@ internal constructor(
     val includePatterns: Set<String>
         @Input get() = filterExt.includePatterns + filterExt.commandLineIncludePatterns
 
-    @Suppress("DEPRECATION_ERROR")
     val excludePatterns: Set<String>
-        @Input get() = excludes + filterExt.excludePatterns
+        @Input get() = filterExt.excludePatterns
 
     @get:Internal
     @Deprecated(
