@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.gradle.testbase.assertFileExists
 import org.jetbrains.kotlin.gradle.testbase.boot
 import org.jetbrains.kotlin.gradle.testbase.buildScriptInjection
 import org.jetbrains.kotlin.gradle.testbase.plugins
+import org.jetbrains.kotlin.gradle.testing.prettyPrinted
 import org.jetbrains.kotlin.gradle.uklibs.GradleMetadata
 import org.jetbrains.kotlin.gradle.uklibs.PublishedProject
 import org.jetbrains.kotlin.gradle.uklibs.Variant
@@ -806,10 +807,10 @@ fun PublishedProject.assertSwiftPMMetadataVariantExistsInRootComponent() {
             files = listOf(
                 VariantFile(
                     name = "swiftPMDependenciesMetadata",
-                    url = "${name}-${version}-swiftpm-metadata",
+                    url = "${name}-${version}-swiftpm-metadata.json",
                 )
             ),
-        ),
-        gradleMetadata.variants.single { it.name == "swiftPMDependenciesMetadataElements" }
+        ).prettyPrinted,
+        gradleMetadata.variants.single { it.name == "swiftPMDependenciesMetadataElements" }.prettyPrinted
     )
 }

@@ -100,6 +100,7 @@ internal fun Project.registerSwiftPMDependenciesMetadataApiElements(swiftPMDepen
         attributes.attribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
         outgoing.artifact(swiftPMDependenciesMetadata) {
             it.classifier = "swiftpm-metadata"
+            it.extension = "json"
         }
     }.get()
 }
