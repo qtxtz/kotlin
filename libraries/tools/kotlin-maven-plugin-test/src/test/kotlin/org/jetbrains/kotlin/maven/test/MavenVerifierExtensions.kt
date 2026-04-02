@@ -59,6 +59,14 @@ fun Verifier.assertFileExists(
     assertTrue(path.exists(), messageSupplier)
 }
 
+fun Verifier.assertFileDoesNotExist(
+    relativePath: String,
+    messageSupplier: () -> String = { "Expected file to be absent, but it exists: $relativePath" },
+) {
+    val path = Path(basedir).resolve(relativePath)
+    assertFalse(path.exists(), messageSupplier)
+}
+
 fun Verifier.assertFileContains(
     relativePath: String,
     expectedSubstring: String
