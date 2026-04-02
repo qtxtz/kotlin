@@ -2894,7 +2894,6 @@ public final class org/jetbrains/kotlin/gradle/targets/js/ir/D8EnvironmentConfig
 public abstract class org/jetbrains/kotlin/gradle/targets/js/ir/DefaultIncrementalSyncTask : org/gradle/api/DefaultTask, org/jetbrains/kotlin/gradle/tasks/IncrementalSyncTask {
 	public fun <init> ()V
 	public final fun doCopy (Lorg/gradle/work/InputChanges;)V
-	public fun getDestinationDir ()Ljava/io/File;
 	public abstract fun getFs ()Lorg/gradle/api/file/FileSystemOperations;
 	public abstract fun getObjectFactory ()Lorg/gradle/api/model/ObjectFactory;
 }
