@@ -12,9 +12,9 @@
 #include <llvm-c/TargetMachine.h>
 #include <llvm-c/Transforms/PassBuilder.h>
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-# endif
+#endif
 
 void LLVMKotlinInitializeTargets(void);
 
@@ -23,22 +23,22 @@ void LLVMSetNoTailCall(LLVMValueRef Call);
 int LLVMInlineCall(LLVMValueRef call);
 
 /// Run `Passes` on module `M`.
-/// When `Profile` is not `NULL` also collect profiling data and store the result in it.
-/// NOTE: This function is not thread-safe, when any of the following options are non-null:
+/// When `Profile` is not `NULL` also collect profiling data and store the
+/// result in it.
+///
+/// NOTE: This function is not thread-safe, because it may write
+///       into global variables by modifying CLI-defined options.
+///       Currently these arguments affect the global environment:
 ///       - SaveIRAfterPasses
 ///       - SaveIRDirectory
-LLVMErrorRef LLVMKotlinRunPasses(
-        LLVMModuleRef M,
-        const char *Passes,
-        LLVMTargetMachineRef TM,
-        int InlinerThreshold,
-        LLVMKotlinPassesProfileRef* Profile,
-        const char *SaveIRAfterPasses,
-        const char *SaveIRDirectory
-);
+LLVMErrorRef LLVMKotlinRunPasses(LLVMModuleRef M, const char *Passes,
+                                 LLVMTargetMachineRef TM, int InlinerThreshold,
+                                 LLVMKotlinPassesProfileRef *Profile,
+                                 const char *SaveIRAfterPasses,
+                                 const char *SaveIRDirectory);
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
-#endif //LIBLLVMEXT_EXTENSIONS_H
+#endif // LIBLLVMEXT_EXTENSIONS_H

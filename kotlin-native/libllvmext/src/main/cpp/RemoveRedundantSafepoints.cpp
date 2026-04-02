@@ -1,6 +1,6 @@
 /*
- * Copyright 2010-2022 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license
- * that can be found in the LICENSE file.
+ * Copyright 2010-2022 JetBrains s.r.o. Use of this source code is governed by
+ * the Apache 2.0 license that can be found in the LICENSE file.
  */
 
 #include <CAPIExtensions.h>
@@ -10,17 +10,20 @@
 
 using namespace llvm;
 
-static constexpr const char* functionPrologueSafepointName = "Kotlin_mm_safePointFunctionPrologue";
+static constexpr const char *functionPrologueSafepointName =
+    "Kotlin_mm_safePointFunctionPrologue";
 
 static constexpr size_t functionPrologueSafepointNameLength =
-  std::char_traits<char>::length(functionPrologueSafepointName);
+    std::char_traits<char>::length(functionPrologueSafepointName);
 
 static bool InstructionIsPrologueSafepoint(LLVMValueRef instruction) {
   if (LLVMIsACallInst(instruction) || LLVMIsAInvokeInst(instruction)) {
     size_t calledNameLength = 0;
-    const char* calledName = LLVMGetValueName2(LLVMGetCalledValue(instruction), &calledNameLength);
+    const char *calledName =
+        LLVMGetValueName2(LLVMGetCalledValue(instruction), &calledNameLength);
     return functionPrologueSafepointNameLength == calledNameLength &&
-      strncmp(calledName, functionPrologueSafepointName, calledNameLength) == 0;
+           strncmp(calledName, functionPrologueSafepointName,
+                   calledNameLength) == 0;
   }
   return false;
 }
@@ -36,8 +39,10 @@ static bool BlockHasSafepointInstruction(LLVMBasicBlockRef block) {
   return false;
 }
 
-static void RemoveOrInlinePrologueSafepointInstructions(
-  LLVMBasicBlockRef block, bool removeFirst, bool isSafepointInliningAllowed) {
+static void
+RemoveOrInlinePrologueSafepointInstructions(LLVMBasicBlockRef block,
+                                            bool removeFirst,
+                                            bool isSafepointInliningAllowed) {
   // Collect safepoint calls to erase and inline.
   LLVMValueRef toInline = nullptr;
   std::vector<LLVMValueRef> toErase;
@@ -47,7 +52,8 @@ static void RemoveOrInlinePrologueSafepointInstructions(
     if (InstructionIsPrologueSafepoint(current)) {
       if (!first || removeFirst) {
         toErase.push_back(current);
-      } else if (isSafepointInliningAllowed && !LLVMIsDeclaration(LLVMGetCalledValue(current))) {
+      } else if (isSafepointInliningAllowed &&
+                 !LLVMIsDeclaration(LLVMGetCalledValue(current))) {
         toInline = current;
       }
       first = false;
@@ -63,7 +69,8 @@ static void RemoveOrInlinePrologueSafepointInstructions(
   }
 }
 
-void LLVMKotlinRemoveRedundantSafepoints(LLVMModuleRef module, int isSafepointInliningAllowed) {
+void LLVMKotlinRemoveRedundantSafepoints(LLVMModuleRef module,
+                                         int isSafepointInliningAllowed) {
   bool inliningAllowed = isSafepointInliningAllowed != 0;
   LLVMValueRef currentFunction = LLVMGetFirstFunction(module);
   while (currentFunction) {
@@ -71,10 +78,12 @@ void LLVMKotlinRemoveRedundantSafepoints(LLVMModuleRef module, int isSafepointIn
       LLVMBasicBlockRef firstBlock = LLVMGetFirstBasicBlock(currentFunction);
       if (firstBlock) {
         bool firstBlockHasSafepoint = BlockHasSafepointInstruction(firstBlock);
-        RemoveOrInlinePrologueSafepointInstructions(firstBlock, false, inliningAllowed);
+        RemoveOrInlinePrologueSafepointInstructions(firstBlock, false,
+                                                    inliningAllowed);
         LLVMBasicBlockRef currentBlock = LLVMGetNextBasicBlock(firstBlock);
         while (currentBlock) {
-          RemoveOrInlinePrologueSafepointInstructions(currentBlock, firstBlockHasSafepoint, inliningAllowed);
+          RemoveOrInlinePrologueSafepointInstructions(
+              currentBlock, firstBlockHasSafepoint, inliningAllowed);
           currentBlock = LLVMGetNextBasicBlock(currentBlock);
         }
       }

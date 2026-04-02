@@ -6,6 +6,6 @@
 using namespace llvm;
 
 unsigned LLVMGetProgramAddressSpace(LLVMModuleRef moduleRef) {
-    auto module = unwrap(moduleRef);
-    return module ? module->getDataLayout().getProgramAddressSpace() : 0;
+  auto module = unwrap(moduleRef);
+  return module ? module->getDataLayout().getProgramAddressSpace() : 0;
 }

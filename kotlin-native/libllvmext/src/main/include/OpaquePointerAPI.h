@@ -5,15 +5,14 @@
 #include <llvm-c/Core.h>
 #include <llvm-c/Target.h>
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-# endif
+#endif
 
 unsigned LLVMGetProgramAddressSpace(LLVMModuleRef moduleRef);
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
 #endif // LIBLLVMEXT_OPAQUE_POINTER_API_H
-
