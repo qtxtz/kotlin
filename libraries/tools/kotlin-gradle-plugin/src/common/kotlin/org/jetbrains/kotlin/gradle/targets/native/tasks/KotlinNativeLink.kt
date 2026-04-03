@@ -278,8 +278,6 @@ constructor(
     @get:Internal
     internal val externalDependenciesBuildCompilerArgs: ListProperty<String> = objectFactory.listProperty<String>().empty()
 
-    private val gradleUserHomeDir = project.gradle.gradleUserHomeDir
-
     private class CacheSettings(
         val icEnabled: Boolean,
         val threads: Int,
@@ -464,6 +462,7 @@ constructor(
 
     @Deprecated(
         message = "This property will be removed in future releases. Don't use it in your code.",
+        level = DeprecationLevel.ERROR,
     )
     @get:Internal
     val konanDataDir: Provider<String?> = kotlinNativeProvider.flatMap { it.konanDataDir }
