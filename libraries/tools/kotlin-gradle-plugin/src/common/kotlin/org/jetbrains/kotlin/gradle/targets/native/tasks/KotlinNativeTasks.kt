@@ -197,7 +197,10 @@ abstract class AbstractKotlinNativeCompile<
     @get:Input
     abstract val additionalCompilerOptions: Provider<Collection<String>>
 
-    @Deprecated("Use implementations compilerOptions")
+    @Deprecated(
+        message = "Use implementations compilerOptions",
+        level = DeprecationLevel.ERROR,
+    )
     @get:Internal
     val languageSettings: LanguageSettings
         get() = compilation.languageSettings
