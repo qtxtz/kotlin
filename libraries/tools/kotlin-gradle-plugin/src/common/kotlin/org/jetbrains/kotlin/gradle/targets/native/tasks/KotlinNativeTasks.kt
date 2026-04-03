@@ -190,7 +190,10 @@ abstract class AbstractKotlinNativeCompile<
     @get:Internal
     abstract val kotlinOptions: T
 
-    @Deprecated("Use implementations compilerOptions to get/set freeCompilerArgs")
+    @Deprecated(
+        message = "Use implementations compilerOptions to get/set freeCompilerArgs",
+        level = DeprecationLevel.ERROR,
+    )
     @get:Input
     abstract val additionalCompilerOptions: Provider<Collection<String>>
 
