@@ -206,7 +206,10 @@ abstract class AbstractKotlinNativeCompile<
         get() = compilation.languageSettings
 
     @Suppress("DeprecatedCallableAddReplaceWith")
-    @get:Deprecated("Replaced with 'compilerOptions.progressiveMode'")
+    @get:Deprecated(
+        message ="Replaced with 'compilerOptions.progressiveMode'",
+        level = DeprecationLevel.ERROR,
+    )
     @get:Internal
     val progressiveMode: Boolean
         get() = compilation.compilerOptions.options.progressiveMode.get()
