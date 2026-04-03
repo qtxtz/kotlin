@@ -386,6 +386,7 @@ internal constructor(
 
     @Deprecated(
         message = "Replaced with compilerOptions.optIn",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("compilerOptions.optIn")
     )
     val optInAnnotationsInUse: Set<String>
