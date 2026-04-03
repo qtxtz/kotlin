@@ -374,7 +374,10 @@ internal constructor(
     val apiVersion: String?
         @Optional @Input get() = compilerOptions.apiVersion.orNull?.version
 
-    @Deprecated("Language features is internal Kotlin compiler flags and should not be used directly")
+    @Deprecated(
+        message = "Language features is internal Kotlin compiler flags and should not be used directly",
+        level = DeprecationLevel.ERROR,
+    )
     val enabledLanguageFeatures: Set<String>
         @Internal get() = compilerOptions
             .freeCompilerArgs.get()
