@@ -212,16 +212,6 @@ interface KotlinHierarchyBuilder {
     fun withJs()
 
     /**
-     * @suppress
-     */
-    @Deprecated(
-        "Renamed to 'withWasmJs'. Scheduled for removal in Kotlin 2.3.",
-        replaceWith = ReplaceWith("withWasmJs()"),
-        level = DeprecationLevel.ERROR
-    )
-    fun withWasm()
-
-    /**
      * Only includes Kotlin's Wasm/JS targets in this [group].
      */
     fun withWasmJs()
