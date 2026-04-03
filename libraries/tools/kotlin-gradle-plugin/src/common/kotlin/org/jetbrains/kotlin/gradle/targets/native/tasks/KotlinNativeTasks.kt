@@ -905,6 +905,7 @@ abstract class CInteropProcess @Inject internal constructor(params: Params) :
     @get:Internal
     @Deprecated(
         "This eager parameter is deprecated.",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("definitionFile")
     )
     val defFile: File get() = definitionFile.asFile.get()
