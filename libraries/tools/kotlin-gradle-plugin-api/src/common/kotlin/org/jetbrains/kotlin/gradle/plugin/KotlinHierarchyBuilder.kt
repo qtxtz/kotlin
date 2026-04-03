@@ -146,15 +146,9 @@ interface KotlinHierarchyBuilder {
     /**
      * @suppress
      */
-    @Deprecated("Use 'excludeCompilations' instead", ReplaceWith("excludeCompilations(predicate)"), level = DeprecationLevel.ERROR)
-    fun withoutCompilations(predicate: (KotlinCompilation<*>) -> Boolean) = excludeCompilations(predicate)
-
-    /**
-     * @suppress
-     */
     @Deprecated(
-        "Use plain 'withoutCompilations(!predicate) instead'. Scheduled for removal in Kotlin 2.3.",
-        ReplaceWith("withoutCompilations { !predicate(it) }"),
+        "Use plain 'excludeCompilations(!predicate) instead'. Scheduled for removal in Kotlin 2.3.",
+        ReplaceWith("excludeCompilations { !predicate(it) }"),
         level = DeprecationLevel.ERROR
     )
     fun filterCompilations(predicate: (KotlinCompilation<*>) -> Boolean) = excludeCompilations { !predicate(it) }
