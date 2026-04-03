@@ -456,29 +456,6 @@ class ConfigurationsTest : MultiplatformExtensionTest() {
         }
     }
 
-    @Test
-    fun `test platform notation for BOM is consumable in dependencies`() {
-        val project = buildProjectWithMPP {
-            kotlin {
-                jvm()
-                sourceSets.getByName("jvmMain").apply {
-                    dependencies {
-                        api(
-                            // Deprecated in KT-58759, remove test after deletion
-                            @Suppress("DEPRECATION_ERROR")
-                            platform("test:platform-dependency:1.0.0")
-                        )
-                    }
-                }
-            }
-        }
-
-        project.evaluate()
-
-        project.assertContainsDependencies("jvmMainApi", project.dependencies.platform("test:platform-dependency:1.0.0"))
-    }
-
-
     /**
      * This tests verifies only turkish letters 'İ' and 'ı' because only with turkish locale ASCII letters 'i' and 'I' are
      * capitalised/decapitalised to non-ascii letters.
