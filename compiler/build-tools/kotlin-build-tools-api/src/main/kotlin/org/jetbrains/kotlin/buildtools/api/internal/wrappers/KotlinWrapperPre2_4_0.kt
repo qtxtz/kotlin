@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.buildtools.api.arguments.*
 import org.jetbrains.kotlin.buildtools.api.arguments.enums.*
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmPlatformToolchain
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompilationConfiguration
+import org.jetbrains.kotlin.buildtools.api.jvm.operations.DiscoverScriptExtensionsOperation
 import org.jetbrains.kotlin.buildtools.api.jvm.operations.JvmCompilationOperation
 import java.io.File
 import java.nio.file.Path
@@ -65,6 +66,10 @@ internal class KotlinWrapperPre2_4_0(
             JvmCompilationOperationBuilderWrapper(
                 base.jvmCompilationOperationBuilder(sources, destinationDirectory)
             )
+
+        override fun discoverScriptExtensionsOperationBuilder(classpath: List<Path>): DiscoverScriptExtensionsOperation.Builder {
+            throw UnsupportedOperationException("DiscoverScriptExtensionsOperation is available from Kotlin compiler version 2.4.0")
+        }
 
         @Deprecated(
             "Use jvmCompilationOperationBuilder instead",
