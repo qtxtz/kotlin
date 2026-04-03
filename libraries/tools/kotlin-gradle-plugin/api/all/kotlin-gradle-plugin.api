@@ -1006,7 +1006,6 @@ public final class org/jetbrains/kotlin/gradle/plugin/mpp/JointAndroidKotlinTarg
 	public fun getPublicationDelegate ()Lorg/gradle/api/publish/maven/MavenPublication;
 	public fun getPublishable ()Z
 	public fun getPublishableOnCurrentHost ()Z
-	public fun getSourcesArtifacts ()Ljava/util/Set;
 	public synthetic fun getTarget ()Lorg/jetbrains/kotlin/gradle/plugin/KotlinTarget;
 	public fun getTarget ()Lorg/jetbrains/kotlin/gradle/plugin/mpp/KotlinAndroidTarget;
 	public fun getUsages ()Ljava/util/Set;
@@ -1345,7 +1344,6 @@ public class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinVariant : org/jetbrain
 	public fun getPublicationDelegate ()Lorg/gradle/api/publish/maven/MavenPublication;
 	public fun getPublishable ()Z
 	public fun getPublishableOnCurrentHost ()Z
-	public fun getSourcesArtifacts ()Ljava/util/Set;
 	public final fun getTarget ()Lorg/jetbrains/kotlin/gradle/plugin/KotlinTarget;
 	public fun getUsages ()Ljava/util/Set;
 	public final fun setArtifactTargetName (Ljava/lang/String;)V

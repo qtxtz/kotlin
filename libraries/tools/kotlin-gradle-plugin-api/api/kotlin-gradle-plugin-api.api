@@ -1273,7 +1273,6 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinTargetC
 	public abstract fun getDefaultArtifactId ()Ljava/lang/String;
 	public abstract fun getPublishable ()Z
 	public abstract fun getPublishableOnCurrentHost ()Z
-	public abstract fun getSourcesArtifacts ()Ljava/util/Set;
 	public abstract fun getTarget ()Lorg/jetbrains/kotlin/gradle/plugin/KotlinTarget;
 }
 
