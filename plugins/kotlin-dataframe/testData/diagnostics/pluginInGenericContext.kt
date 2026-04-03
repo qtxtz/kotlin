@@ -5,18 +5,20 @@ import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
 
-
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION, AnnotationTarget.FUNCTION)
 public annotation class DisableInterpretation
 
-private inline fun <reified T> convert(l: List<T>) = l.<!DATAFRAME_PLUGIN_NOT_YET_SUPPORTED_IN_GENERIC, DATAFRAME_PLUGIN_NOT_YET_SUPPORTED_IN_INLINE!>toDataFrame<!>()
-
 @DisableInterpretation
-private inline fun <reified T> convert1(l: List<T>) = l.<!DATAFRAME_PLUGIN_IS_DISABLED!>toDataFrame<!>()
+private fun <T> create(valuesList: List<T>) = <!DATAFRAME_PLUGIN_IS_DISABLED!>dataFrameOf<!>("x" to valuesList)
 
+private fun <T> create1(valuesList: List<T>) = <!DATAFRAME_PLUGIN_NOT_YET_SUPPORTED_IN_GENERIC!>dataFrameOf<!>("x" to valuesList)
+
+class Container<T> {
+    private fun test() = <!DATAFRAME_PLUGIN_NOT_YET_SUPPORTED_IN_GENERIC!>dataFrameOf<!>("a" to columnOf(1))
+}
 
 fun box(): String {
-    convert(listOf(1, 2, 3))
+    val df = create(listOf(1, 2, 3))
     return "OK"
 }

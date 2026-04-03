@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.annotations.DisableInterpretation
 import org.jetbrains.kotlinx.dataframe.annotations.Order
 import org.jetbrains.kotlinx.dataframe.annotations.ScopeProperty
 import kotlin.reflect.KClass
@@ -68,6 +69,7 @@ object Names {
     val ORDER_ARGUMENT = Name.identifier(Order::order.name)
     val SCOPE_PROPERTY_ANNOTATION = ClassId(annotationsPackage, Name.identifier(ScopeProperty::class.simpleName!!))
     val COLUMN_NAME_ANNOTATION = ClassId(annotationsPackage, Name.identifier(ColumnName::class.simpleName!!))
+    val DISABLE_INTERPRETATION_ANNOTATION = ClassId(annotationsPackage, Name.identifier(DisableInterpretation ::class.simpleName!!))
     val COLUMN_NAME_ARGUMENT = Name.identifier(ColumnName::name.name)
 
     val DATA_SCHEMA_CLASS_ID = ClassId(annotationsPackage, Name.identifier("DataSchema"))

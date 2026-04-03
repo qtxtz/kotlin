@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirFunctionTarget
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.fullyExpandedClassId
+import org.jetbrains.kotlin.fir.analysis.checkers.typeParameterSymbols
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.impl.SchemaProperty
 import org.jetbrains.kotlinx.dataframe.plugin.analyzeRefinedCallShape
@@ -28,6 +29,7 @@ import org.jetbrains.kotlin.fir.declarations.InlineStatus
 import org.jetbrains.kotlin.fir.declarations.builder.buildAnonymousFunction
 import org.jetbrains.kotlin.fir.declarations.builder.buildRegularClass
 import org.jetbrains.kotlin.fir.declarations.builder.buildValueParameter
+import org.jetbrains.kotlin.fir.declarations.hasAnnotationSafe
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.utils.classId
 import org.jetbrains.kotlin.fir.declarations.utils.isInline
@@ -135,9 +137,14 @@ class FunctionCallTransformer(
     override fun intercept(callInfo: CallInfo, symbol: FirNamedFunctionSymbol): CallReturnType? {
         val callSiteAnnotations = (callInfo.callSite as? FirAnnotationContainer)?.annotations ?: emptyList()
         if (!shouldRefine(callSiteAnnotations, symbol, session)) return null
+
+        if (callInfo.containingDeclarations.any { it.hasAnnotationSafe(Names.DISABLE_INTERPRETATION_ANNOTATION, session) }) {
+            return null
+        }
         // See org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirInlineBodyRegularClassChecker
         if (callInfo.containingDeclarations.lastOrNull() is FirPropertyAccessor) return null
         if (callInfo.containingDeclarations.any { it is FirFunction && it.isInline }) return null
+        if (callInfo.containingDeclarations.any { it.symbol.typeParameterSymbols?.isNotEmpty() == true }) return null
 
         return transformers.firstNotNullOfOrNull { it.interceptOrNull(callInfo, symbol, callInfo.twoDigitHash()) }
     }
@@ -181,7 +188,6 @@ class FunctionCallTransformer(
             // possibly null if explicit receiver type is typealias
             val argument = (callInfo.explicitReceiver?.resolvedType)?.typeArguments?.getOrNull(0)
             val newDataFrameArgument = buildNewTypeArgument(argument, callInfo.name, hash, callInfo.callSite)
-
             val typeRef = buildResolvedTypeRef {
                 coneType = dataSchemaLikeClassId.constructClassLikeType(
                     typeArguments = arrayOf(

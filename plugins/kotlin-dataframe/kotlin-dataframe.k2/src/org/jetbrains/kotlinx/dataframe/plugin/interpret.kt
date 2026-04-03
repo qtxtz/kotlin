@@ -372,7 +372,7 @@ private fun KotlinTypeFacade.columnWithPathApproximations(propertyAccess: FirPro
             Names.DATA_COLUMN_CLASS_ID -> {
                 val type = when (val arg = it.typeArguments.single()) {
                     is ConeStarProjection -> session.builtinTypes.nullableAnyType.coneType
-                    else -> arg as ConeClassLikeType
+                    is ConeKotlinTypeProjection -> arg.type
                 }
                 simpleColumnOf(propertyAccess.columnName(), type)
             }
