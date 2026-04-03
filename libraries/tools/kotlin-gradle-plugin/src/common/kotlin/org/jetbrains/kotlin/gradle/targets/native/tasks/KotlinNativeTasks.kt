@@ -360,6 +360,7 @@ internal constructor(
     // region Language settings imported from a SourceSet.
     @Deprecated(
         message = "Replaced with kotlinOptions.languageVersion",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("kotlinOptions.languageVersion")
     )
     val languageVersion: String?
