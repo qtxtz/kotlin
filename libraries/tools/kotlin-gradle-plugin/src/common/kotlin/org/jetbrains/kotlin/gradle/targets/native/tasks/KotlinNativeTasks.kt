@@ -838,6 +838,7 @@ abstract class CInteropProcess @Inject internal constructor(params: Params) :
 
     @Deprecated(
         "Eager outputFile was replaced with lazy outputFileProvider",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("outputFileProvider")
     )
     @get:Internal
