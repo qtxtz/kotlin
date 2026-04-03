@@ -5921,14 +5921,16 @@ internal class UpperBoundCannotBeArrayImpl(
 
 internal class UpperBoundViolatedBasedOnJavaAnnotationsImpl(
     override val expectedUpperBound: KaType,
-    override val actualUpperBound: KaType,
+    override val actualType: KaType,
+    override val onTypeParameter: KaType,
     firDiagnostic: KtPsiDiagnostic,
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.UpperBoundViolatedBasedOnJavaAnnotations
 
 internal class UpperBoundViolatedInTypealiasExpansionBasedOnJavaAnnotationsImpl(
     override val expectedUpperBound: KaType,
-    override val actualUpperBound: KaType,
+    override val actualType: KaType,
+    override val onTypeParameter: KaType,
     firDiagnostic: KtPsiDiagnostic,
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.UpperBoundViolatedInTypealiasExpansionBasedOnJavaAnnotations

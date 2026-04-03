@@ -4932,13 +4932,15 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
     interface UpperBoundViolatedBasedOnJavaAnnotations : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = UpperBoundViolatedBasedOnJavaAnnotations::class
         val expectedUpperBound: KaType
-        val actualUpperBound: KaType
+        val actualType: KaType
+        val onTypeParameter: KaType
     }
 
     interface UpperBoundViolatedInTypealiasExpansionBasedOnJavaAnnotations : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = UpperBoundViolatedInTypealiasExpansionBasedOnJavaAnnotations::class
         val expectedUpperBound: KaType
-        val actualUpperBound: KaType
+        val actualType: KaType
+        val onTypeParameter: KaType
     }
 
     interface StrictfpOnClass : KaFirDiagnostic<KtAnnotationEntry> {

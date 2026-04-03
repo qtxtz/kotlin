@@ -8,7 +8,7 @@ package org.jetbrains.kotlin.fir.analysis.checkers
 import org.jetbrains.kotlin.KtSourceElement
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
-import org.jetbrains.kotlin.diagnostics.KtDiagnosticFactory2
+import org.jetbrains.kotlin.diagnostics.KtDiagnosticFactory3
 import org.jetbrains.kotlin.diagnostics.chooseFactory
 import org.jetbrains.kotlin.diagnostics.reportOn
 import org.jetbrains.kotlin.fir.FirComposableSessionComponent
@@ -212,6 +212,7 @@ fun checkUpperBoundViolated(
                     for (additionalUpperBoundsProvider in additionalUpperBoundsProviders) {
                         // Only check if the original check was successful to prevent duplicate diagnostics
                         val reported = reportUpperBoundViolationWarningIfNecessary(
+                            parameterSymbol,
                             additionalUpperBoundsProvider,
                             argumentType,
                             upperBound,
@@ -237,6 +238,7 @@ fun checkUpperBoundViolated(
  */
 context(context: CheckerContext, reporter: DiagnosticReporter)
 private fun reportUpperBoundViolationWarningIfNecessary(
+    onTypeParameter: FirTypeParameterSymbol,
     additionalUpperBoundsProvider: FirPlatformUpperBoundsProvider,
     argumentType: ConeKotlinType,
     upperBound: ConeKotlinType,
@@ -266,7 +268,7 @@ private fun reportUpperBoundViolationWarningIfNecessary(
          */
         val properArgumentType =
             argumentType.attributes.explicitTypeArgumentIfMadeFlexibleSynthetically?.coneType ?: argumentType
-        reporter.reportOn(argumentSource, factory, upperBound, properArgumentType)
+        reporter.reportOn(argumentSource, factory, upperBound, properArgumentType, onTypeParameter.toConeType())
         return true
     }
     return false
@@ -322,8 +324,10 @@ fun ConeTypeProjection.withSource(source: FirTypeRefSource?): ConeTypeProjection
 }
 
 abstract class FirPlatformUpperBoundsProvider : FirComposableSessionComponent<FirPlatformUpperBoundsProvider> {
-    abstract val diagnostic: KtDiagnosticFactory2<ConeKotlinType, ConeKotlinType>
-    abstract val diagnosticForTypeAlias: KtDiagnosticFactory2<ConeKotlinType, ConeKotlinType>
+    protected typealias PlatformUpperBoundViolatedDiagnosticFactory = KtDiagnosticFactory3<ConeKotlinType, ConeKotlinType, ConeKotlinType>
+
+    abstract val diagnostic: PlatformUpperBoundViolatedDiagnosticFactory
+    abstract val diagnosticForTypeAlias: PlatformUpperBoundViolatedDiagnosticFactory
 
     abstract fun getAdditionalUpperBound(coneKotlinType: ConeKotlinType): ConeKotlinType?
 
@@ -333,9 +337,9 @@ abstract class FirPlatformUpperBoundsProvider : FirComposableSessionComponent<Fi
     class Composed(
         override val components: List<FirPlatformUpperBoundsProvider>
     ) : FirPlatformUpperBoundsProvider(), FirComposableSessionComponent.Composed<FirPlatformUpperBoundsProvider> {
-        override val diagnostic: KtDiagnosticFactory2<ConeKotlinType, ConeKotlinType>
+        override val diagnostic: PlatformUpperBoundViolatedDiagnosticFactory
             get() = shouldNotBeCalled()
-        override val diagnosticForTypeAlias: KtDiagnosticFactory2<ConeKotlinType, ConeKotlinType>
+        override val diagnosticForTypeAlias: PlatformUpperBoundViolatedDiagnosticFactory
             get() = shouldNotBeCalled()
 
         override fun getAdditionalUpperBound(coneKotlinType: ConeKotlinType): ConeKotlinType {

@@ -940,24 +940,15 @@ object DIAGNOSTICS_LIST : DiagnosticList("FirErrors") {
         val INFERENCE_ERROR by error<PsiElement>()
         val PROJECTION_ON_NON_CLASS_TYPE_ARGUMENT by error<PsiElement>()
 
-        fun upperBoundViolatedBuilder(withExtraMessage: Boolean = false): DiagnosticBuilder.() -> Unit = {
-            parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualType")
-            parameter<ConeKotlinType>("onTypeParameter")
-            if (withExtraMessage) {
-                parameter<String>("extraMessage")
-            }
-        }
-
-        val UPPER_BOUND_VIOLATED by error<PsiElement>(init = upperBoundViolatedBuilder(withExtraMessage = true))
-        val UPPER_BOUND_VIOLATED_DEPRECATION_WARNING by warning<PsiElement>(init = upperBoundViolatedBuilder(withExtraMessage = true))
+        val UPPER_BOUND_VIOLATED by error<PsiElement>(init = upperBoundViolatedDiagnosticInit(withExtraMessage = true))
+        val UPPER_BOUND_VIOLATED_DEPRECATION_WARNING by warning<PsiElement>(init = upperBoundViolatedDiagnosticInit(withExtraMessage = true))
         val UPPER_BOUND_VIOLATED_IN_TYPE_OPERATOR_OR_PARAMETER_BOUNDS by deprecationError<PsiElement>(
             LanguageFeature.ForbidUpperBoundsViolationOnTypeOperatorAndParameterBounds,
-            init = upperBoundViolatedBuilder(withExtraMessage = true),
+            init = upperBoundViolatedDiagnosticInit(withExtraMessage = true),
         )
-        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION by error<PsiElement>(init = upperBoundViolatedBuilder())
-        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION_DEPRECATION_WARNING by warning<PsiElement>(init = upperBoundViolatedBuilder())
-        val UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING by warning<PsiElement>(init = upperBoundViolatedBuilder())
+        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION by error<PsiElement>(init = upperBoundViolatedDiagnosticInit())
+        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION_DEPRECATION_WARNING by warning<PsiElement>(init = upperBoundViolatedDiagnosticInit())
+        val UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING by warning<PsiElement>(init = upperBoundViolatedDiagnosticInit())
 
         val TYPE_ARGUMENTS_NOT_ALLOWED by error<PsiElement> {
             parameter<String>("place")
