@@ -368,6 +368,7 @@ internal constructor(
 
     @Deprecated(
         message = "Replaced with kotlinOptions.apiVersion",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("kotlinOptions.apiVersion")
     )
     val apiVersion: String?
