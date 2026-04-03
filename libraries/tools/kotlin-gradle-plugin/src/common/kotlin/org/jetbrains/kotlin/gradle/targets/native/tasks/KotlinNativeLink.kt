@@ -141,7 +141,10 @@ constructor(
         binary.buildType.name.lowercase(Locale.ROOT).replaceFirstChar { it.titlecase(Locale.ROOT) }
     }
 
-    @Deprecated("Use toolOptions to configure the task")
+    @Deprecated(
+        message = "Use toolOptions to configure the task",
+        level = DeprecationLevel.ERROR,
+    )
     @get:Internal
     val languageSettings: LanguageSettings = compilation.defaultSourceSet.languageSettings
 
