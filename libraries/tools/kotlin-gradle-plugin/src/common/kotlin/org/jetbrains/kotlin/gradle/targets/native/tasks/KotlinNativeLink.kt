@@ -188,7 +188,8 @@ constructor(
 
     @Suppress("unused", "UNCHECKED_CAST")
     @Deprecated(
-        "Use toolOptions.freeCompilerArgs",
+        message = "Use toolOptions.freeCompilerArgs",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("toolOptions.freeCompilerArgs.get()")
     )
     @get:Internal
