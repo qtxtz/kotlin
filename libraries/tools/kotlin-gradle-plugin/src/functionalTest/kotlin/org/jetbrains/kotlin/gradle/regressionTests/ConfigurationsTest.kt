@@ -479,35 +479,6 @@ class ConfigurationsTest : MultiplatformExtensionTest() {
     }
 
 
-    @Test
-    fun `test enforcedPlatform notation for BOM is consumable in dependencies`() {
-        val project = buildProjectWithMPP {
-            kotlin {
-                js("browser") {
-                    browser {
-                        binaries.executable()
-                    }
-                }
-                sourceSets.getByName("browserMain").apply {
-                    dependencies {
-                        implementation(
-                            // Deprecated in KT-58759, remove test after deletion
-                            @Suppress("DEPRECATION_ERROR")
-                            enforcedPlatform("test:enforced-platform-dependency")
-                        )
-                    }
-                }
-            }
-        }
-
-        project.evaluate()
-
-        project.assertContainsDependencies(
-            "browserMainImplementation",
-            project.dependencies.enforcedPlatform("test:enforced-platform-dependency")
-        )
-    }
-
     /**
      * This tests verifies only turkish letters 'İ' and 'ı' because only with turkish locale ASCII letters 'i' and 'I' are
      * capitalised/decapitalised to non-ascii letters.

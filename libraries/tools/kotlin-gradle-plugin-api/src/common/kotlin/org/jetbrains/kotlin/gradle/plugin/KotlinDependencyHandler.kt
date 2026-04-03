@@ -347,28 +347,6 @@ interface KotlinDependencyHandler : HasProject {
      */
     @Deprecated(
         "Scheduled for removal in Kotlin 2.3. Check KT-58759",
-        replaceWith = ReplaceWith("project.dependencies.enforcedPlatform(notation)"),
-        level = DeprecationLevel.ERROR,
-    )
-    fun enforcedPlatform(notation: Any): Dependency =
-        project.dependencies.enforcedPlatform(notation)
-
-    /**
-     * @suppress
-     */
-    @Deprecated(
-        "Scheduled for removal in Kotlin 2.3. Check KT-58759",
-        replaceWith = ReplaceWith("project.dependencies.enforcedPlatform(notation, configureAction)"),
-        level = DeprecationLevel.ERROR,
-    )
-    fun enforcedPlatform(notation: Any, configureAction: Action<in Dependency>): Dependency =
-        project.dependencies.enforcedPlatform(notation, configureAction)
-
-    /**
-     * @suppress
-     */
-    @Deprecated(
-        "Scheduled for removal in Kotlin 2.3. Check KT-58759",
         replaceWith = ReplaceWith("project.dependencies.platform(notation)"),
         level = DeprecationLevel.ERROR,
     )
