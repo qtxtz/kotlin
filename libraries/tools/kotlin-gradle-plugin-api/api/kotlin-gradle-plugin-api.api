@@ -1027,7 +1027,6 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinGradleP
 public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder {
 	public abstract fun common (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun excludeCompilations (Lkotlin/jvm/functions/Function1;)V
-	public abstract fun filterCompilations (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun group (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun withAndroidNative ()V
 	public abstract fun withAndroidNativeArm32 ()V
@@ -1069,7 +1068,6 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinHierarc
 
 public final class org/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder$DefaultImpls {
 	public static fun common (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder;Lkotlin/jvm/functions/Function1;)V
-	public static fun filterCompilations (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder;Lkotlin/jvm/functions/Function1;)V
 	public static synthetic fun group$default (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
@@ -1081,7 +1079,6 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinHierarc
 
 public final class org/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder$Root$DefaultImpls {
 	public static fun common (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder$Root;Lkotlin/jvm/functions/Function1;)V
-	public static fun filterCompilations (Lorg/jetbrains/kotlin/gradle/plugin/KotlinHierarchyBuilder$Root;Lkotlin/jvm/functions/Function1;)V
 }
 
 public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinHierarchyTemplate {

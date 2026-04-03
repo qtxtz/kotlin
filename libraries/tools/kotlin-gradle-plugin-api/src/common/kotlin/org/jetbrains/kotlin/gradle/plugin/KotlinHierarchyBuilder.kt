@@ -144,16 +144,6 @@ interface KotlinHierarchyBuilder {
     fun excludeCompilations(predicate: (KotlinCompilation<*>) -> Boolean)
 
     /**
-     * @suppress
-     */
-    @Deprecated(
-        "Use plain 'excludeCompilations(!predicate) instead'. Scheduled for removal in Kotlin 2.3.",
-        ReplaceWith("excludeCompilations { !predicate(it) }"),
-        level = DeprecationLevel.ERROR
-    )
-    fun filterCompilations(predicate: (KotlinCompilation<*>) -> Boolean) = excludeCompilations { !predicate(it) }
-
-    /**
      * Only includes targets for Kotlin/Native in this [group].
      *
      * For more information, see [Native targets overview](https://kotlinlang.org/docs/native-target-support.html).
