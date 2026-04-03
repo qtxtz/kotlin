@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
 import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
+import org.jetbrains.kotlin.fir.scopes.impl.toConeType
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.types.AbstractTypeChecker
@@ -162,6 +163,7 @@ fun checkUpperBoundViolated(
     val additionalUpperBoundsProviders = context.session.platformUpperBoundsProviders
 
     for (index in 0 until count) {
+        val parameterSymbol = typeParameters[index]
         val argument = typeArguments[index]
         val argumentType = argument.type
         val sourceAttribute = argumentType?.attributes?.sourceAttribute
@@ -185,7 +187,7 @@ fun checkUpperBoundViolated(
             }
             if (!isIgnoreTypeParameters || (argumentType.typeArguments.isEmpty() && argumentType !is ConeTypeParameterType)) {
                 val intersection =
-                    typeSystemContext.intersectTypes(typeParameters[index].resolvedBounds.map { it.coneType })
+                    typeSystemContext.intersectTypes(parameterSymbol.resolvedBounds.map { it.coneType })
                 val upperBound = substitutor.substituteOrSelf(intersection)
                 if (!AbstractTypeChecker.isSubtypeOf(
                         typeSystemContext,
@@ -196,14 +198,14 @@ fun checkUpperBoundViolated(
                 ) {
                     if (isReportExpansionError && (argumentTypeRef == null || isTypealiasExpansion)) {
                         reporter.reportOn(
-                            argumentSource ?: fallbackSource, typealiasDiagnostic, upperBound, argumentType
+                            argumentSource ?: fallbackSource, typealiasDiagnostic, upperBound, argumentType, parameterSymbol.toConeType()
                         )
                     } else {
                         val extraMessage =
                             if (upperBound.unwrapToSimpleTypeUsingLowerBound() is ConeCapturedType) "Consider removing the explicit type arguments" else ""
                         reporter.reportOn(
                             argumentSource ?: fallbackSource, regularDiagnostic,
-                            upperBound, argumentType, extraMessage
+                            upperBound, argumentType, parameterSymbol.toConeType(), extraMessage,
                         )
                     }
                 } else {

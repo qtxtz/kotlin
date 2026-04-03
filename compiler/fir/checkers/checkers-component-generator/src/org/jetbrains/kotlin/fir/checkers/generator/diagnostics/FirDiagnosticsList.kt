@@ -939,35 +939,26 @@ object DIAGNOSTICS_LIST : DiagnosticList("FirErrors") {
         val RECURSION_IN_IMPLICIT_TYPES by error<PsiElement>()
         val INFERENCE_ERROR by error<PsiElement>()
         val PROJECTION_ON_NON_CLASS_TYPE_ARGUMENT by error<PsiElement>()
-        val UPPER_BOUND_VIOLATED by error<PsiElement> {
+
+        fun upperBoundViolatedBuilder(withExtraMessage: Boolean = false): DiagnosticBuilder.() -> Unit = {
             parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualUpperBound")
-            parameter<String>("extraMessage")
+            parameter<ConeKotlinType>("actualType")
+            parameter<ConeKotlinType>("onTypeParameter")
+            if (withExtraMessage) {
+                parameter<String>("extraMessage")
+            }
         }
-        val UPPER_BOUND_VIOLATED_DEPRECATION_WARNING by warning<PsiElement> {
-            parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualUpperBound")
-            parameter<String>("extraMessage")
-        }
+
+        val UPPER_BOUND_VIOLATED by error<PsiElement>(init = upperBoundViolatedBuilder(withExtraMessage = true))
+        val UPPER_BOUND_VIOLATED_DEPRECATION_WARNING by warning<PsiElement>(init = upperBoundViolatedBuilder(withExtraMessage = true))
         val UPPER_BOUND_VIOLATED_IN_TYPE_OPERATOR_OR_PARAMETER_BOUNDS by deprecationError<PsiElement>(
             LanguageFeature.ForbidUpperBoundsViolationOnTypeOperatorAndParameterBounds,
-        ) {
-            parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualUpperBound")
-            parameter<String>("extraMessage")
-        }
-        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION by error<PsiElement> {
-            parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualUpperBound")
-        }
-        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION_DEPRECATION_WARNING by warning<PsiElement> {
-            parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualUpperBound")
-        }
-        val UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING by warning<PsiElement> {
-            parameter<ConeKotlinType>("expectedUpperBound")
-            parameter<ConeKotlinType>("actualUpperBound")
-        }
+            init = upperBoundViolatedBuilder(withExtraMessage = true),
+        )
+        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION by error<PsiElement>(init = upperBoundViolatedBuilder())
+        val UPPER_BOUND_VIOLATED_IN_TYPEALIAS_EXPANSION_DEPRECATION_WARNING by warning<PsiElement>(init = upperBoundViolatedBuilder())
+        val UPPER_BOUND_VIOLATED_IN_LHS_OF_CLASS_LITERAL_WARNING by warning<PsiElement>(init = upperBoundViolatedBuilder())
+
         val TYPE_ARGUMENTS_NOT_ALLOWED by error<PsiElement> {
             parameter<String>("place")
         }

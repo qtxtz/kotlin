@@ -1,5 +1,5 @@
-/upperBoundsViolatedInLhsOfGetClass.kt:(382,384): warning: Type alias in the left-hand side of class literal leads to incompatible upper bound: type argument is not subtype of 'Inv<String>'. Consider using the expanded class instead.
+/upperBoundsViolatedInLhsOfGetClass.kt:(382,384): warning: Star projected type alias leads to incompatible upper bound: type parameter 'Y (of class C<X, Y : X>)' must be subtype of 'Inv<String>', but actual: 'Inv<*>'. Consider using the expanded class instead.
 
-/upperBoundsViolatedInLhsOfGetClass.kt:(396,399): warning: Type alias in the left-hand side of class literal leads to incompatible upper bound: type argument is not subtype of 'Int'. Consider using the expanded class instead.
+/upperBoundsViolatedInLhsOfGetClass.kt:(396,399): warning: Star projected type alias leads to incompatible upper bound: type parameter 'Y (of class C<X, Y : X>)' must be subtype of 'Int', but actual: 'List<*>'. Consider using the expanded class instead.
 
-/upperBoundsViolatedInLhsOfGetClass.kt:(441,444): warning: Type alias in the left-hand side of class literal leads to incompatible upper bound: type argument is not subtype of 'MutableList<*>'. Consider using the expanded class instead.
+/upperBoundsViolatedInLhsOfGetClass.kt:(441,444): warning: Star projected type alias leads to incompatible upper bound: type parameter 'Y (of class C<X, Y : X>)' must be subtype of 'MutableList<*>', but actual: 'List<*>'. Consider using the expanded class instead.
