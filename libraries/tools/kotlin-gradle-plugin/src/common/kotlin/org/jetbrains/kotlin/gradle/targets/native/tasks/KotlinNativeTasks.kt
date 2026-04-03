@@ -304,6 +304,7 @@ internal constructor(
 
     @Deprecated(
         message = "Please use 'compilerOptions.moduleName' to configure",
+        level = DeprecationLevel.ERROR,
         replaceWith = ReplaceWith("compilerOptions.moduleName.get()")
     )
     @get:Internal
