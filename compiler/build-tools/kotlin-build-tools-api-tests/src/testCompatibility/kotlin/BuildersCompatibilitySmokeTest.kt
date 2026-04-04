@@ -27,9 +27,10 @@ import org.jetbrains.kotlin.buildtools.api.jvm.operations.JvmCompilationOperatio
 import org.jetbrains.kotlin.buildtools.tests.compilation.BaseCompilationTest
 import org.jetbrains.kotlin.buildtools.tests.compilation.model.BtaVersionsOnlyCompilationTest
 import org.jetbrains.kotlin.buildtools.tests.compilation.model.DefaultStrategyAgnosticCompilationTest
+import org.jetbrains.kotlin.tooling.core.KotlinToolingVersion
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.DisplayName
 import java.nio.file.Paths
 import kotlin.io.path.toPath
@@ -185,13 +186,17 @@ class BuildersCompatibilitySmokeTest : BaseCompilationTest() {
         assertEquals(false, operation2[JvmClasspathSnapshottingOperation.PARSE_INLINED_LOCAL_CLASSES])
     }
 
-    @Disabled("KT-85072")
     @DisplayName("Modifying DiscoverScriptExtensionsOperation builder after build does not affect the built operation")
-    @DefaultStrategyAgnosticCompilationTest
-    fun testDiscoverScriptExtensionsBuilderImmutability(strategyConfig: CompilerExecutionStrategyConfiguration) {
-        val toolchain = strategyConfig.first
+    @BtaVersionsOnlyCompilationTest
+    fun testDiscoverScriptExtensionsBuilderImmutability(kotlinToolchain: KotlinToolchains) {
+        val version = KotlinToolingVersion(kotlinToolchain.getCompilerVersion())
+        assumeTrue(
+            version >= KotlinToolingVersion(2, 4, 0, "snapshot")
+                    || kotlinToolchain::class.simpleName == "KotlinToolchainsV1Adapter"
+        )
+
         val classpath = listOf(workingDirectory.resolve("greet-script-template"))
-        val builder = toolchain.jvm.discoverScriptExtensionsOperationBuilder(classpath)
+        val builder = kotlinToolchain.jvm.discoverScriptExtensionsOperationBuilder(classpath)
         val renderer1 = object : CompilerMessageRenderer {
             override fun render(
                 severity: CompilerMessageRenderer.Severity,
