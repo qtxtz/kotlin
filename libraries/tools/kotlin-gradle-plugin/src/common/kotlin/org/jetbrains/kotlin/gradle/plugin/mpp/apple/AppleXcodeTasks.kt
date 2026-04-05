@@ -296,7 +296,7 @@ internal fun Project.registerEmbedAndSignAppleFrameworkTask(framework: Framework
         regenerateSyntheticLinkageProject.configure {
             it.doFirst {
                 if (!envProjectPath.isPresent && !xcodeProjectPathForKmpIJPlugin.isPresent) {
-                    error("Please specify Xcode project path in \"swiftPMDependencies { xcodeProjectPathForKmpIJPlugin.set(...) }\"")
+                    error("Please make sure $PROJECT_FILE_PATH_ENV environment variable is present")
                 }
             }
             it.syntheticImportProjectRoot.set(
@@ -496,7 +496,7 @@ private fun Project.checkSyntheticImportProjectIsCorrectlyIntegrated(): TaskProv
         task.onlyIf { hasDirectOrTransitiveSwiftPMDependencies.get() }
         task.doFirst {
             if (!envProjectPath.isPresent && !xcodeProjectPathForKmpIJPlugin.isPresent) {
-                error("Please specify Xcode project path in \"swiftPMDependencies { xcodeProjectPathForKmpIJPlugin.set(...) }\"")
+                error("Please make sure $PROJECT_FILE_PATH_ENV environment variable is present")
             }
 
             checkIfTheLinkageProjectIsConnectedToTheXcodeProject(

@@ -1875,7 +1875,6 @@ public abstract class org/jetbrains/kotlin/gradle/plugin/mpp/apple/swiftimport/S
 	public final fun getMacosMinimumDeploymentTarget ()Lorg/gradle/api/provider/Property;
 	public final fun getTvosMinimumDeploymentTarget ()Lorg/gradle/api/provider/Property;
 	public final fun getWatchosMinimumDeploymentTarget ()Lorg/gradle/api/provider/Property;
-	public abstract fun getXcodeProjectPathForKmpIJPlugin ()Lorg/gradle/api/file/RegularFileProperty;
 	public final fun iOS ()Lorg/jetbrains/kotlin/gradle/plugin/mpp/apple/swiftimport/SwiftPMDependency$Platform;
 	public final fun id (Ljava/lang/String;)Lorg/jetbrains/kotlin/gradle/plugin/mpp/apple/swiftimport/SwiftPMDependency$Remote$Repository$Id;
 	public final fun localPackageWithProducts (Lorg/gradle/api/file/Directory;Ljava/util/List;Ljava/lang/String;Ljava/util/List;Ljava/util/Set;)V

@@ -54,7 +54,7 @@ abstract class SwiftPMImportExtension @Inject constructor(
     val discoverClangModulesImplicitly: Property<Boolean> = objects.property(Boolean::class.java)
         .convention(true)
 
-    abstract val xcodeProjectPathForKmpIJPlugin: RegularFileProperty
+    internal abstract val xcodeProjectPathForKmpIJPlugin: RegularFileProperty
 
     internal abstract val swiftPMDependencies: DomainObjectSet<SwiftPMDependency>
 
