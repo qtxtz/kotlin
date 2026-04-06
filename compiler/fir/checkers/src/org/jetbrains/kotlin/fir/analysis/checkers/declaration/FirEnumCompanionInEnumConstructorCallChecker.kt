@@ -81,7 +81,7 @@ object FirEnumCompanionInEnumConstructorCallChecker : FirClassChecker(MppChecker
             }
             val qualifiedAccess = when (node) {
                 is QualifiedAccessNode -> node.fir
-                is FunctionCallExitNode -> node.fir
+                is FunctionCallExitNode -> node.firAsFunctionCallOrNull ?: continue
                 else -> continue
             }
             val matchingReceiver = qualifiedAccess.allReceiverExpressions

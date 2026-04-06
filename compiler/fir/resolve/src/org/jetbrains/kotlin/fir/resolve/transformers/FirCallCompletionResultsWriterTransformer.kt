@@ -423,11 +423,20 @@ class FirCallCompletionResultsWriterTransformer(
         }
 
         data?.argumentReplacements?.get(collectionLiteral)?.let { replacement ->
+            handleArgumentReplacementInCfg(collectionLiteral, replacement)
             return if (mode == Mode.TopLevelSyntheticCallInPclaCompletion) replacement
             else replacement.transform(this, data)
         }
 
         return collectionLiteral
+    }
+
+    private fun handleArgumentReplacementInCfg(original: FirExpression, replacement: FirExpression) {
+        if (original !is FirCollectionLiteral) return
+        check(replacement is FirFunctionCall) {
+            "Collection literal replacement must be a ${FirFunctionCall::class.simpleName}"
+        }
+        dataFlowAnalyzer.updateCollectionLiteralNodes(original, replacement)
     }
 
     override fun transformFunctionCall(functionCall: FirFunctionCall, data: ExpectedArgumentType?): FirStatement {
@@ -1196,7 +1205,10 @@ class FirCallCompletionResultsWriterTransformer(
                 override fun <E : FirElement> transformElement(element: E, data: Nothing?): E {
                     @Suppress("UNCHECKED_CAST")
                     return when {
-                        element === returnInfo.expression -> replacement as E
+                        element === returnInfo.expression -> {
+                            handleArgumentReplacementInCfg(returnInfo.expression, replacement)
+                            replacement as E
+                        }
                         else -> element
                     }
                 }

@@ -21,7 +21,7 @@ fun test() {
     if (cond()) {
         var x: Int?
         x = 42
-        foo([{ x = null }, {}], x.plus(42)) // non-inline
+        foo([{ x = null }, {}], <!SMARTCAST_IMPOSSIBLE!>x<!>.plus(42)) // non-inline
     } else {
         // for reference
         var x: Int?
@@ -32,7 +32,7 @@ fun test() {
     if (cond()) {
         var y: Int?
         y = 42
-        foo([{ y = null }], y.plus(42)) // inline
+        foo([{ y = null }], <!SMARTCAST_IMPOSSIBLE!>y<!>.plus(42)) // inline
     } else {
         var y: Int?
         y = 42
@@ -67,7 +67,7 @@ fun test() {
 fun test2() {
     if (cond()) {
         var x: Int? = 42
-        bar([{ x = null }, {}], x!!, x) // non-inline
+        bar([{ x = null }, {}], x!!, <!SMARTCAST_IMPOSSIBLE!>x<!>) // non-inline
     } else {
         var x: Int? = 42
         bar(Z.of({ x = null }, {}), x!!, <!SMARTCAST_IMPOSSIBLE!>x<!>)
@@ -75,7 +75,7 @@ fun test2() {
 
     if (cond()) {
         var y: Int? = 42
-        bar([{ y = null }], y!!, y) // inline
+        bar([{ y = null }], y!!, <!SMARTCAST_IMPOSSIBLE!>y<!>) // inline
     } else {
         var y: Int? = 42
         bar(Z.of({ y = null }), y!!, <!SMARTCAST_IMPOSSIBLE!>y<!>)
@@ -105,7 +105,7 @@ fun test2() {
 fun test3() {
     if (cond()) {
         var x: Int? = 42
-        bar([{ x = 42 }, {}], x!!, x) // non-inline
+        bar([{ x = 42 }, {}], x!!, <!SMARTCAST_IMPOSSIBLE!>x<!>) // non-inline
     } else {
         var x: Int? = 42
         bar(Z.of({ x = 42 }, {}), x!!, <!SMARTCAST_IMPOSSIBLE!>x<!>)
@@ -113,7 +113,7 @@ fun test3() {
 
     if (cond()) {
         var y: Int? = 42
-        bar([{ y = 42 }], y!!, y) // inline
+        bar([{ y = 42 }], y!!, <!SMARTCAST_IMPOSSIBLE!>y<!>) // inline
     } else {
         var y: Int? = 42
         bar(Z.of({ y = 42 }), y!!, <!SMARTCAST_IMPOSSIBLE!>y<!>)

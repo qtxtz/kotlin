@@ -57,7 +57,7 @@ object FirTailrecFunctionChecker : FirFunctionChecker(MppCheckerKind.Common) {
             override fun visitNode(node: CFGNode<*>) {}
 
             override fun visitFunctionCallExitNode(node: FunctionCallExitNode) {
-                val functionCall = node.fir
+                val functionCall = node.firAsFunctionCallOrNull ?: return
                 val resolvedSymbol = functionCall.calleeReference.toResolvedCallableSymbol() as? FirNamedFunctionSymbol ?: return
                 if (resolvedSymbol != declaration.symbol) return
                 if (functionCall.arguments.size != resolvedSymbol.valueParameterSymbols.size && resolvedSymbol.isOverride) {

@@ -2219,13 +2219,18 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
                 }
                 else -> {
                     collectionLiteral.transformAnnotations(transformer, data)
-                    collectionLiteral.transformChildren(transformer, ResolutionMode.ContextDependent)
+                    dataFlowAnalyzer.enterCallArguments(collectionLiteral, collectionLiteral.arguments)
+                    collectionLiteral.replaceArgumentList(collectionLiteral.argumentList.transform(this, ResolutionMode.ContextDependent))
+                    dataFlowAnalyzer.exitCallArguments() // collectionLiteral
                     if (data != ResolutionMode.ContextDependent) {
                         components.syntheticCallGenerator.resolveCollectionLiteralExpressionWithSyntheticOuterCall(
-                            collectionLiteral, data as? ResolutionMode.WithExpectedType, resolutionContext
+                            collectionLiteral, data as? ResolutionMode.WithExpectedType, resolutionContext,
                         )
                     } else {
-                        collectionLiteral
+                        collectionLiteral.also {
+                            dataFlowAnalyzer.enterFunctionCall(it)
+                            dataFlowAnalyzer.exitFunctionCall(it, callCompleted = false)
+                        }
                     }
                 }
             }

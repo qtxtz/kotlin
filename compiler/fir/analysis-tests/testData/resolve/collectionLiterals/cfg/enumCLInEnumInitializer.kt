@@ -8,11 +8,11 @@ fun <T> myNonInlineRun(block: () -> T): T = block()
 enum class E(val previous: E? = null) {
     X,
     Y(X),
-    Z([]),
-    T([X, Y]),
-    S(<!UNINITIALIZED_ENUM_COMPANION!>run<!> { [Z] }),
+    Z(<!UNINITIALIZED_ENUM_COMPANION!>[]<!>),
+    T(<!UNINITIALIZED_ENUM_COMPANION!>[X, Y]<!>),
+    S(<!UNINITIALIZED_ENUM_COMPANION!>run<!> { <!UNINITIALIZED_ENUM_COMPANION!>[Z]<!> }),
     P(myRun {
-        if (true) return@myRun [] else return@myRun [X]
+        if (true) return@myRun <!UNINITIALIZED_ENUM_COMPANION!>[]<!> else return@myRun <!UNINITIALIZED_ENUM_COMPANION!>[X]<!>
     }),
     Q(myNonInlineRun {
         if (true) return@myNonInlineRun []

@@ -33,16 +33,23 @@ digraph withOuterCall_kt {
             subgraph cluster_5 {
                 color=blue
                 8 [label="Function call arguments enter"];
-                9 [label="Const: Int(1)"];
-                10 [label="Const: Int(2)"];
-                11 [label="Const: Int(3)"];
-                12 [label="Function call arguments exit"];
+                subgraph cluster_6 {
+                    color=blue
+                    9 [label="Function call arguments enter"];
+                    10 [label="Const: Int(1)"];
+                    11 [label="Const: Int(2)"];
+                    12 [label="Const: Int(3)"];
+                    13 [label="Function call arguments exit"];
+                }
+                14 [label="Function call enter: Q|kotlin/collections|.R|kotlin/collections/setOf|<R|kotlin/Int|>(...)"];
+                15 [label="Function call exit: Q|kotlin/collections|.R|kotlin/collections/setOf|<R|kotlin/Int|>(...)" style="filled" fillcolor=yellow];
+                16 [label="Function call arguments exit"];
             }
-            13 [label="Function call enter: R|/foo|(...)"];
-            14 [label="Function call exit: R|/foo|(...)" style="filled" fillcolor=yellow];
-            15 [label="Exit block"];
+            17 [label="Function call enter: R|/foo|(...)"];
+            18 [label="Function call exit: R|/foo|(...)" style="filled" fillcolor=yellow];
+            19 [label="Exit block"];
         }
-        16 [label="Exit function test" style="filled" fillcolor=red];
+        20 [label="Exit function test" style="filled" fillcolor=red];
     }
     6 -> {7};
     7 -> {8};
@@ -54,5 +61,9 @@ digraph withOuterCall_kt {
     13 -> {14};
     14 -> {15};
     15 -> {16};
+    16 -> {17};
+    17 -> {18};
+    18 -> {19};
+    19 -> {20};
 
 }
