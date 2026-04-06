@@ -356,7 +356,7 @@ class LauncherScriptTest : TestCaseWithTmpdir() {
             ".kts",
             "$testDataDirectory/noInline.myscript",
             expectedExitCode = 1,
-            expectedStderr = """compiler/testData/launcher/noInline.myscript:1:7: error: unresolved reference 'CompilerOptions'.
+            expectedStderr = """compiler/tests-integration/testData/launcher/noInline.myscript:1:7: error: unresolved reference 'CompilerOptions'.
 @file:CompilerOptions("-Xno-inline")
       ^
 """
