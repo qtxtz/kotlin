@@ -50,5 +50,5 @@ projectTests {
     @OptIn(KotlinCompilerDistUsage::class)
     withDist()
 
-    testData(project(":compiler").isolated, "testData/integration/smoke/")
+    testData(project(":compiler:tests-integration").isolated, "testData/integration/smoke/")
 }

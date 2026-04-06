@@ -29,7 +29,7 @@ abstract class AbstractJavaModulesIntegrationTest(
         get() = KtTestUtil.getJdk11Home()
 
     override val testDataPath: String
-        get() = "compiler/testData/javaModules/"
+        get() = ForTestCompileRuntime.transformTestDataPath("compiler/tests-integration/testData/javaModules/").absolutePath
 
     private fun module(
         name: String,

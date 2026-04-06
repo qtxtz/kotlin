@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.daemon
 
 import org.jetbrains.kotlin.cli.common.CompilerSystemProperties
+import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime
 import org.jetbrains.kotlin.daemon.client.CompileServiceSession
 import org.jetbrains.kotlin.daemon.client.DaemonReportMessage
 import org.jetbrains.kotlin.daemon.client.DaemonReportingTargets
@@ -63,7 +64,7 @@ abstract class BaseDaemonSessionTest {
         Thread.sleep(500) // wait a bit so that all the daemons are shut down
     }
 
-    fun getHelloAppBaseDir(): File = getTestDataFileLocatedInCompilerTestData("integration/smoke/helloApp")
+    fun getHelloAppBaseDir(): File = ForTestCompileRuntime.transformTestDataPath("compiler/tests-integration/testData/integration/smoke/helloApp")
 
     private fun DaemonJVMOptions.withLogFile(logFile: File) = copy(
         jvmParams = (jvmParams + "D${CompilerSystemProperties.COMPILE_DAEMON_LOG_PATH_PROPERTY.property}=\"${logFile.loggerCompatiblePath}\"").toMutableList()

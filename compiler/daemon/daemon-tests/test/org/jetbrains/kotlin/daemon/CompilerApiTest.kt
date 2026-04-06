@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.common.messages.MessageCollectorImpl
 import org.jetbrains.kotlin.cli.common.messages.OutputMessageUtil
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
+import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.daemon.client.DaemonReportingTargets
 import org.jetbrains.kotlin.daemon.client.KotlinCompilerClient
@@ -88,8 +89,9 @@ class CompilerApiTest : KotlinIntegrationTestBase() {
         return code to outputs
     }
 
-    private fun getHelloAppBaseDir(): File = getTestDataFileLocatedInCompilerTestData("integration/smoke/helloApp")
-    private fun getSimpleScriptBaseDir(): File = getTestDataFileLocatedInCompilerTestData("integration/smoke/simpleScript")
+    private fun getHelloAppBaseDir(): File = ForTestCompileRuntime.transformTestDataPath("compiler/tests-integration/testData/integration/smoke/helloApp")
+    private fun getSimpleScriptBaseDir(): File = ForTestCompileRuntime.transformTestDataPath("compiler/tests-integration/testData/integration/smoke/simpleScript")
+
 
     private fun run(baseDir: File, logName: String, vararg args: String): Int = runJava(baseDir, logName, *args)
 
