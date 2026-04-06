@@ -1392,9 +1392,8 @@ class FirCallCompletionResultsWriterTransformer(
             val diagnostic = resolvedCalleeReference.diagnostic
             if (diagnostic is ConeConstraintSystemHasContradiction) {
                 val candidate = diagnostic.candidate as Candidate
-                val newSyntheticCallType = session.typeContext.commonSuperTypeOrNull(candidate.argumentMapping.keys.unwrapAtoms().map {
-                    it.resolvedType
-                })
+                val argumentTypes = candidate.argumentMapping.keys.unwrapResolvedTypes()
+                val newSyntheticCallType = session.typeContext.commonSuperTypeOrNull(argumentTypes)
                 if (newSyntheticCallType != null && !newSyntheticCallType.hasError()) {
                     syntheticCall.replaceConeTypeOrNull(newSyntheticCallType)
                 }
@@ -1600,7 +1599,7 @@ private fun <K, V : Any> LinkedHashMap<out K, out V?>.filterValuesNotNull(): Lin
 }
 
 fun <V> LinkedHashMap<ConeResolutionAtom, V>.unwrapAtoms(): LinkedHashMap<FirExpression, V> {
-    return mapKeysToLinkedMap { it.unwrapAtom() }
+    return mapKeysToLinkedMap { it.expression }
 }
 
 inline fun <K1, K2, V> LinkedHashMap<K1, V>.mapKeysToLinkedMap(transform: (K1) -> K2): LinkedHashMap<K2, V> {
@@ -1608,13 +1607,16 @@ inline fun <K1, K2, V> LinkedHashMap<K1, V>.mapKeysToLinkedMap(transform: (K1) -
 }
 
 private fun Collection<ConeResolutionAtom>.unwrapAtoms(): List<FirExpression> {
-    return map { it.unwrapAtom() }
+    return map { it.expression }
 }
 
-private fun ConeResolutionAtom.unwrapAtom(): FirExpression {
-    return when (this) {
-        is ConeCollectionLiteralAtom -> subAtom?.unwrapAtom() ?: expression
-        is ConeResolutionAtomWithPostponedChild -> subAtom?.unwrapAtom() ?: expression
-        else -> expression
-    }
+private fun Collection<ConeResolutionAtom>.unwrapResolvedTypes(): List<ConeKotlinType> {
+    fun ConeResolutionAtom.unwrapExpression(): FirExpression =
+        when (this) {
+            is ConeCollectionLiteralAtom -> subAtom?.unwrapExpression() ?: expression
+            is ConeResolutionAtomWithPostponedChild -> subAtom?.unwrapExpression() ?: expression
+            else -> expression
+        }
+
+    return map { it.unwrapExpression().resolvedType }
 }
