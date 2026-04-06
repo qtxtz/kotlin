@@ -1148,6 +1148,18 @@ public class ContextCollectorSourceTestGenerated extends AbstractContextCollecto
     }
 
     @Test
+    @TestMetadata("collectionLiteral.kt")
+    public void testCollectionLiteral() {
+      run("collectionLiteral.kt");
+    }
+
+    @Test
+    @TestMetadata("collectionLiteralWithLambda.kt")
+    public void testCollectionLiteralWithLambda() {
+      run("collectionLiteralWithLambda.kt");
+    }
+
+    @Test
     @TestMetadata("dispatchReceiver.kt")
     public void testDispatchReceiver() {
       run("dispatchReceiver.kt");
