@@ -140,6 +140,6 @@ object FirTailrecFunctionChecker : FirFunctionChecker(MppCheckerKind.Common) {
         return false
     }
 
-    val ElvisLhsExitNode.correspondingElvisExitNode: ElvisExitNode?
+    private val ElvisLhsExitNode.correspondingElvisExitNode: ElvisExitNode?
         get() = followingNodes.firstIsInstanceOrNull<ElvisLhsIsNotNullNode>()?.followingNodes?.firstIsInstanceOrNull<ElvisExitNode>()
 }
