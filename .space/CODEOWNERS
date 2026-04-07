@@ -174,7 +174,6 @@
 
 /compiler/testData/builtin-classes/ "Kotlin Libraries"
 /compiler/testData/checkLocalVariablesTable/ "Kotlin JVM"
-/compiler/testData/classpathOrder/ "Kotlin JVM"
 /compiler/testData/cli/ "Kotlin Frontend"
 /compiler/testData/cli/js/ "Kotlin JS" "Kotlin Frontend"
 /compiler/testData/cli/js/js*Help.out "Kotlin JS" "Kotlin Frontend"
