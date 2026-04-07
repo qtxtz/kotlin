@@ -38,11 +38,15 @@ import org.jetbrains.kotlinx.dataframe.codeGen.FieldKind
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.ColumnType
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
+import org.jetbrains.kotlinx.dataframe.plugin.findSchemaArgument
+import org.jetbrains.kotlinx.dataframe.plugin.getSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.*
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names.DATA_ROW_CLASS_ID
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names.DATA_SCHEMA_CLASS_ID
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names.DF_CLASS_ID
+import org.jetbrains.kotlinx.dataframe.plugin.utils.isDataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.utils.isDataRow
 import java.util.*
 
 class ToDataFrameDsl : AbstractSchemaModificationInterpreter() {
@@ -246,6 +250,23 @@ internal fun KotlinTypeFacade.toDataFrame(
                                 )
                             )
                         )
+                    }
+
+                    returnType.isDataRow(session) -> {
+                        val schema = returnType.findSchemaArgument(isTest)?.getSchema()
+                            ?: PluginDataFrameSchema.EMPTY
+                        val group = SimpleColumnGroup(name, schema.columns())
+                        if (!returnType.isMarkedNullable) {
+                            group
+                        } else {
+                            makeNullable(group)
+                        }
+                    }
+
+                    returnType.isDataFrame(session) && !returnType.isMarkedNullable -> {
+                        val schema = returnType.findSchemaArgument(isTest)?.getSchema()
+                            ?: PluginDataFrameSchema.EMPTY
+                        SimpleFrameColumn(name, schema.columns())
                     }
 
                     returnType.isIterable(session) -> {
