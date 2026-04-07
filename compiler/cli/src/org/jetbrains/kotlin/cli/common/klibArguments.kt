@@ -35,7 +35,6 @@ fun CompilerConfiguration.setupCommonKlibArguments(
 
     // Paths.
     arguments.relativePathBases?.let { klibRelativePathBases += it }
-    klibNormalizeAbsolutePath = arguments.normalizeAbsolutePath
 
     // Diagnostics & checks.
     produceKlibSignaturesClashChecks = arguments.enableSignatureClashChecks
