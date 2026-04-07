@@ -242,7 +242,7 @@ class CodegenTestsOnAndroidGenerator private constructor(private val pathManager
             val flavorName = flavorConfig.getFlavorForNewFiles(filesToCompile.size)
 
             val outputDir = File(pathManager.getOutputForCompiledFiles(flavorName))
-            println("Generating ${filesToCompile.size} files into ${outputDir.name}, configuration: '${environment.configuration}'...")
+            println("Generating ${filesToCompile.size} from ${unitTestDescriptions.joinToString { it.fqName.asString() }} files into ${outputDir.name}, configuration: '${environment.configuration}'...")
 
             val state = GenerationUtils.compileFiles(filesToCompile, environment)
 
@@ -308,11 +308,6 @@ class CodegenTestsOnAndroidGenerator private constructor(private val pathManager
 
                 val fullFileText = FileUtil.loadFile(file, true)
 
-                if (fullFileText.contains("// WITH_COROUTINES")) {
-                    if (fullFileText.contains("kotlin.coroutines.experimental")) continue
-                    if (fullFileText.contains("// LANGUAGE_VERSION: 1.2")) continue
-                }
-
                 // Cannot dex -> cannot run
                 if (fullFileText.contains("// IGNORE_DEXING")) continue
 
@@ -321,7 +316,6 @@ class CodegenTestsOnAndroidGenerator private constructor(private val pathManager
                 // TODO: Support jvm assertions
                 if (fullFileText.contains("// ASSERTIONS_MODE: jvm")) continue
                 if (fullFileText.contains("// MODULE: ")) continue
-                if (fullFileText.contains("// IGNORE_BACKEND_K1")) continue
                 val targets = InTextDirectivesUtils.findLinesWithPrefixesRemoved(fullFileText, "// JVM_TARGET:")
 
                 val isAtLeastJvm8Target = !targets.contains(JvmTarget.JVM_1_6.description)

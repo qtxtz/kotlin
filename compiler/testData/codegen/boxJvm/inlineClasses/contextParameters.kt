@@ -2,10 +2,10 @@
 // WITH_STDLIB
 // FULL_JDK
 // WORKS_WHEN_VALUE_CLASS
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextParameters
 // PARAMETERS_METADATA
 
+package test
 
 OPTIONAL_JVM_INLINE_ANNOTATION
 value class A(val x: Int) {
@@ -29,12 +29,16 @@ private fun checkInlineClass() {
     val sum2 = with(a) { a.g(100) }
     if (sum2 != 106) error(sum2.toString())
 
-    for (methodName in listOf("f-impl", "g-miQMsnA")) {
-        checkParameters("A", methodName)
+    for (methodName in listOf("f-impl", "g-zj4m074")) {
+        checkParameters("test.A", methodName)
     }
 }
 
 private fun checkParameters(className: String, methodName: String) {
+    val methodNames = Class.forName(className).declaredMethods.map { it.name }
+    if (methodName !in methodNames) {
+        error("$methodName is not found in $methodNames")
+    }
     val method = Class.forName(className).declaredMethods.single { it.name == methodName }
     val parameters = method.getParameters()
     for ((index, parameter) in parameters.withIndex()) {
