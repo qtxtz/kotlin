@@ -252,7 +252,7 @@ internal fun KotlinTypeFacade.toDataFrame(
                         )
                     }
 
-                    returnType.isDataRow(session) -> {
+                    returnType.isDataRow() -> {
                         val schema = returnType.findSchemaArgument(isTest)?.getSchema()
                             ?: PluginDataFrameSchema.EMPTY
                         val group = SimpleColumnGroup(name, schema.columns())
@@ -263,7 +263,7 @@ internal fun KotlinTypeFacade.toDataFrame(
                         }
                     }
 
-                    returnType.isDataFrame(session) && !returnType.isMarkedNullable -> {
+                    returnType.isDataFrame() && !returnType.isMarkedNullable -> {
                         val schema = returnType.findSchemaArgument(isTest)?.getSchema()
                             ?: PluginDataFrameSchema.EMPTY
                         SimpleFrameColumn(name, schema.columns())
