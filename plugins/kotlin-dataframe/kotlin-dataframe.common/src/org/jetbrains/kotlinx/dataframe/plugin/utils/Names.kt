@@ -64,6 +64,7 @@ object Names {
     val INTERPRETABLE_FQNAME: FqName
         get() = FqName("org.jetbrains.kotlinx.dataframe.annotations.Interpretable")
     private val annotationsPackage = FqName("org.jetbrains.kotlinx.dataframe.annotations")
+    val STRING_API_INTERPRETABLE_ANNOTATION = ClassId(annotationsPackage, Name.identifier("StringApiInterpretable"))
     val ORDER_ANNOTATION = ClassId(annotationsPackage, Name.identifier(Order::class.simpleName!!))
     val CONVERTER_ANNOTATION = ClassId(annotationsPackage, Name.identifier("Converter"))
     val ORDER_ARGUMENT = Name.identifier(Order::order.name)
