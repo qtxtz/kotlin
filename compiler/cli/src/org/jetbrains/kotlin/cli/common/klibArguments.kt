@@ -68,7 +68,6 @@ fun CompilerConfiguration.setupCommonKlibArguments(
 fun CompilerConfiguration.copyCommonKlibArgumentsFrom(source: CompilerConfiguration) {
     // Paths.
     klibRelativePathBases = source.klibRelativePathBases
-    klibNormalizeAbsolutePath = source.klibNormalizeAbsolutePath
 
     // Diagnostics & checks.
     produceKlibSignaturesClashChecks = source.produceKlibSignaturesClashChecks
