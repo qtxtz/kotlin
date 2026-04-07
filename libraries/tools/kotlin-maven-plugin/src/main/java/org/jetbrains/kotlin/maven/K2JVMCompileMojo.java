@@ -18,7 +18,6 @@ package org.jetbrains.kotlin.maven;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.toolchain.Toolchain;
 import org.apache.maven.toolchain.ToolchainManager;
@@ -86,6 +85,9 @@ public class K2JVMCompileMojo extends KotlinCompileMojoBase<K2JVMCompilerArgumen
 
     @Parameter(property = "kotlin.compiler.jvmTarget")
     protected String jvmTarget;
+
+    @Parameter(property = "kotlin.compiler.jdkRelease")
+    protected String jdkRelease;
 
     @Parameter(property = "kotlin.compiler.jdkHome")
     protected String jdkHome;
@@ -231,6 +233,10 @@ public class K2JVMCompileMojo extends KotlinCompileMojoBase<K2JVMCompilerArgumen
 
         if (arguments.getNoOptimize()) {
             getLog().info("Optimization is turned off");
+        }
+
+        if (jdkRelease != null) {
+            arguments.setJdkRelease(jdkRelease);
         }
 
         if (jvmTarget != null) {
