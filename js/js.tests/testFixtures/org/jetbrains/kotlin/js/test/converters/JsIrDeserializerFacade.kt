@@ -5,9 +5,9 @@
 
 package org.jetbrains.kotlin.js.test.converters
 
+import org.jetbrains.kotlin.backend.common.linkage.partial.setupPartialLinkageConfig
 import org.jetbrains.kotlin.config.PartialLinkageConfig
 import org.jetbrains.kotlin.config.PartialLinkageLogLevel
-import org.jetbrains.kotlin.backend.common.linkage.partial.setupPartialLinkageConfig
 import org.jetbrains.kotlin.ir.backend.js.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImplForJsIC
 import org.jetbrains.kotlin.js.test.utils.JsIrIncrementalDataProvider
@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.test.services.*
 
 open class JsIrDeserializerFacade(
     testServices: TestServices,
-    private val firstTimeCompilation: Boolean = true,
 ) : DeserializerFacade<BinaryArtifacts.KLib, IrBackendInput>(testServices, ArtifactKinds.KLib, BackendKinds.IrBackend) {
     override val additionalServices: List<ServiceRegistrationData>
         get() = listOf(
@@ -53,13 +52,11 @@ open class JsIrDeserializerFacade(
             klibs = klibs,
         )
 
-        val filesToLoad = module.files.takeIf { !firstTimeCompilation }?.map { "/${it.relativePath}" }?.toSet()
         val mainModuleLib = klibs.included ?: error("No module with ${mainModule.libPath} found")
 
         val moduleInfo = loadIr(
             modulesStructure,
             IrFactoryImplForJsIC(WholeWorldStageController()),
-            filesToLoad,
             loadFunctionInterfacesIntoStdlib = true,
         )
 

@@ -113,7 +113,6 @@ private fun deserializeDependencies(
 fun loadIr(
     modulesStructure: ModulesStructure,
     irFactory: IrFactory,
-    filesToLoad: Set<String>? = null,
     loadFunctionInterfacesIntoStdlib: Boolean = false,
 ): IrModuleInfo {
     val mainModule = modulesStructure.mainModule
@@ -135,7 +134,6 @@ fun loadIr(
                 moduleDescriptor = moduleDescriptor,
                 klibs = modulesStructure.klibs,
                 friendModules = friendModules,
-                filesToLoad = filesToLoad,
                 configuration = configuration,
                 symbolTable = symbolTable,
                 messageCollector = messageLogger,
@@ -252,7 +250,6 @@ private fun getIrModuleInfoForKlib(
     moduleDescriptor: ModuleDescriptor,
     klibs: LoadedKlibs,
     friendModules: Map<String, List<String>>,
-    filesToLoad: Set<String>?,
     configuration: CompilerConfiguration,
     symbolTable: SymbolTable,
     messageCollector: MessageCollector,
@@ -282,7 +279,7 @@ private fun getIrModuleInfoForKlib(
     val moduleDependencies: IrModuleDependencies = deserializeDependencies(
         klibs = klibs,
         irLinker = irLinker,
-        filesToLoad = filesToLoad,
+        filesToLoad = configuration[JSConfigurationKeys.IC_FILES_TO_LOAD],
         mapping = mapping
     )
     irBuiltIns.functionFactory = IrDescriptorBasedFunctionFactory(
