@@ -783,7 +783,7 @@ tasks {
     register("compileAll") {
         /*
          * Build cache tests don't work properly with KMP projects,
-         * so such projects are temporary excluded from them (KTI-2822)
+         * so such projects are temporarily excluded from them (KTI-2822)
          */
         val excludedNativePrefixes = listOf(
             ":native",
@@ -810,44 +810,51 @@ tasks {
         delete = setOf(artifactsDir)
     }
 
-    fun aggregateLibsTask(name: String, projectTask: String, projects: List<String>) =
-        register(name) {
-            projects.forEach { dependsOn("$it:$projectTask") }
-        }
-
     val coreLibsPublishable = coreLibProjects + listOf(":kotlin-stdlib-common")
     val coreLibsBuildable = coreLibProjects + listOf(":kotlin-stdlib-jvm-minimal-for-test", ":kotlin-stdlib-js-ir-minimal-for-test")
 
-    aggregateLibsTask(
-        "coreLibsClean", "clean",
-        (coreLibProjects + coreLibsBuildable + coreLibsPublishable).distinct() +
-                ":kotlin-stdlib:samples"
-    )
-
-    aggregateLibsTask("coreLibsAssemble", "assemble", coreLibsBuildable)
-    aggregateLibsTask("coreLibsInstall", "install", coreLibsPublishable)
-    aggregateLibsTask("coreLibsPublish", "publish", coreLibsPublishable)
-    aggregateLibsTask(
-        "coreLibsTest", "check",
-        coreLibsBuildable + listOfNotNull(
-            ":kotlin-stdlib:samples",
-            ":kotlin-test:kotlin-test-js-it",
-            ":tools:binary-compatibility-validator",
-            ":tools:jdk-api-validator",
+    register("coreLibsClean") {
+        dependsOnAll(
+            task = "clean",
+            projects = coreLibProjects + coreLibsBuildable + coreLibsPublishable + ":kotlin-stdlib:samples"
         )
-    )
+    }
 
-    register("gradlePluginTest") {
+    register("coreLibsAssemble") {
+        dependsOnAll("assemble", coreLibsBuildable)
+    }
+
+    register("coreLibsInstall") {
+        dependsOnAll("install", coreLibsPublishable)
+    }
+
+    register("coreLibsPublish") {
+        dependsOnAll("publish", coreLibsPublishable)
+    }
+
+    testLifecycleTask("coreLibsTest") {
+        dependsOnAll(
+            task = "check",
+            projects = coreLibsBuildable + listOf(
+                ":kotlin-stdlib:samples",
+                ":kotlin-test:kotlin-test-js-it",
+                ":tools:binary-compatibility-validator",
+                ":tools:jdk-api-validator",
+            )
+        )
+    }
+
+    testLifecycleTask("gradlePluginTest") {
         gradlePluginProjects.forEach {
             dependsOn("$it:check")
         }
     }
 
-    register("gradlePluginIntegrationTest") {
+    testLifecycleTask("gradlePluginIntegrationTest") {
         dependsOn(":kotlin-gradle-plugin-integration-tests:check")
     }
 
-    register("jvmCompilerTest") {
+    testLifecycleTask("jvmCompilerTest") {
         dependsOn(
             ":compiler:tests-common-new:test",
             ":compiler:container:test",
@@ -857,26 +864,26 @@ tasks {
         )
     }
 
-    register("testsForBootstrapBuildTest") {
+    testLifecycleTask("testsForBootstrapBuildTest") {
         dependsOn(":compiler:tests-common-new:test")
     }
 
-    register("jvmCompilerIntegrationTest") {
+    testLifecycleTask("jvmCompilerIntegrationTest") {
         dependsOn(
             ":kotlin-compiler-embeddable:test",
             ":kotlin-compiler-client-embeddable:test"
         )
     }
 
-    register("jsCompilerTest") {
+    testLifecycleTask("jsCompilerTest") {
         dependsOn(":js:js.tests:jsTest")
     }
 
-    register("wasmCompilerTest") {
+    testLifecycleTask("wasmCompilerTest") {
         // KTI-2670: TODO: don't invoke this obsolete task in KTI
     }
 
-    register("wasmFirCompilerTest") {
+    testLifecycleTask("wasmFirCompilerTest") {
         dependsOn(":wasm:wasm.tests:test")
         // Windows WABT release requires Visual C++ Redistributable
         if (!kotlinBuildProperties.isTeamcityBuild.get() || !org.gradle.internal.os.OperatingSystem.current().isWindows) {
@@ -889,7 +896,7 @@ tasks {
     // - different cache policies
     // - different GCs
     // ...
-    register("nativeCompilerTest") {
+    testLifecycleTask("nativeCompilerTest") {
         dependsOn(":kotlin-atomicfu-compiler-plugin:nativeTest")
         dependsOn(":plugins:plugin-sandbox:nativeTest")
         dependsOn(":libraries:tools:analysis-api-based-klib-reader:check")
@@ -904,7 +911,7 @@ tasks {
 
     // Similar to nativeCompilerTest, but should be executed only on macOS host as these tests
     // technically or semantically depend on Xcode SDK.
-    register("nativeAppleSpecificTests") {
+    testLifecycleTask("nativeAppleSpecificTests") {
         dependsOn(":native:objcexport-header-generator:check")
         dependsOn(":native:swift:swift-export-embeddable:testCoroutinesITWithEmbeddable")
         dependsOn(":native:swift:swift-export-embeddable:testExternalITWithEmbeddable")
@@ -915,7 +922,7 @@ tasks {
     }
 
     // These are unit tests of Native compiler
-    register("nativeCompilerUnitTest") {
+    testLifecycleTask("nativeCompilerUnitTest") {
         dependsOn(":native:kotlin-native-utils:check")
         dependsOn(":native:unsafe-mem:check")
         if (kotlinBuildProperties.isKotlinNativeEnabled.get()) {
@@ -930,12 +937,12 @@ tasks {
         }
     }
 
-    register("klibIrTest") {
+    testLifecycleTask("klibIrTest") {
         dependsOn(":tools:binary-compatibility-validator:check")
         dependsOn(":native:native.tests:klib-ir-inliner:check")
     }
 
-    register("firCompilerTest") {
+    testLifecycleTask("firCompilerTest") {
         dependsOn(":compiler:fir:raw-fir:psi2fir:test")
         dependsOn(":compiler:fir:raw-fir:light-tree2fir:test")
         dependsOn(":compiler:fir:analysis-tests:test")
@@ -943,12 +950,12 @@ tasks {
         dependsOn(":compiler:fir:fir2ir:aggregateTests")
     }
 
-    register("nightlyFirCompilerTest") {
+    testLifecycleTask("nightlyFirCompilerTest") {
         dependsOn(":compiler:fir:fir2ir:nightlyTests")
         dependsOn(":compiler:fastJarFSLongTests")
     }
 
-    register("scriptingJvmTest") {
+    testLifecycleTask("scriptingJvmTest") {
         dependsOn("dist")
         dependsOn(":kotlin-scripting-compiler:test")
         dependsOn(":kotlin-scripting-common:test")
@@ -963,16 +970,16 @@ tasks {
         dependsOn(":kotlin-main-kts-test:test")
     }
 
-    register("scriptingTest") {
+    testLifecycleTask("scriptingTest") {
         dependsOn("scriptingJvmTest")
     }
 
-    register("compilerTest") {
+    testLifecycleTask("compilerTest") {
         dependsOn("jvmCompilerTest")
         dependsOn("miscCompilerTest")
     }
 
-    register("miscCompilerTest") {
+    testLifecycleTask("miscCompilerTest") {
         dependsOn(":compiler:test")
         dependsOn(":compiler:tests-integration:test")
         dependsOn(":kotlin-compiler-embeddable:test")
@@ -992,7 +999,7 @@ tasks {
         dependsOn(":core:language.version-settings:check")
     }
 
-    register("miscTest") {
+    testLifecycleTask("miscTest") {
         dependsOn("coreLibsTest")
         dependsOn("toolsTest")
         dependsOn("examplesTest")
@@ -1008,12 +1015,12 @@ tasks {
         dependsOn(":kotlin-gradle-plugin-dsl-codegen:test")
     }
 
-    register("incrementalCompilationTest") {
+    testLifecycleTask("incrementalCompilationTest") {
         dependsOn(":compiler:incremental-compilation-impl:test")
         dependsOn(":compiler:incremental-compilation-impl:testJvmICWithJdk11")
     }
 
-    register("compilerPluginTest") {
+    testLifecycleTask("compilerPluginTest") {
         dependsOn(":kotlin-allopen-compiler-plugin:test")
         dependsOn(":kotlin-assignment-compiler-plugin:test")
         dependsOn(":kotlin-atomicfu-compiler-plugin:test")
@@ -1030,7 +1037,7 @@ tasks {
         dependsOn(":kotlin-dataframe-compiler-plugin:test")
     }
 
-    register("toolsTest") {
+    testLifecycleTask("toolsTest") {
         dependsOn(":tools:kotlinp-jvm:test")
         dependsOn(":native:kotlin-klib-commonizer:test")
 //        dependsOn(":native:kotlin-klib-commonizer-api:test")
@@ -1047,14 +1054,14 @@ tasks {
         dependsOn(":libraries:tools:abi-validation:abi-tools-tests:check")
     }
 
-    register("examplesTest") {
+    testLifecycleTask("examplesTest") {
         dependsOn("dist")
         project(":examples").subprojects.forEach { p ->
             dependsOn("${p.path}:check")
         }
     }
 
-    register("distTest") {
+    testLifecycleTask("distTest") {
         dependsOn("compilerTest")
         dependsOn("frontendApiTests")
         dependsOn("toolsTest")
@@ -1062,46 +1069,46 @@ tasks {
         dependsOn("examplesTest")
     }
 
-    register("specTest") {
+    testLifecycleTask("specTest") {
         dependsOn("dist")
         dependsOn(":compiler:tests-spec:test")
     }
 
-    register("androidCodegenTest") {
+    testLifecycleTask("androidCodegenTest") {
         dependsOn(":compiler:android-tests:test")
     }
 
-    register("jps-tests") {
+    testLifecycleTask("jps-tests") {
         dependsOn("dist")
         dependsOn(":jps:jps-plugin:test")
     }
 
-    register("frontendApiTests") {
+    testLifecycleTask("frontendApiTests") {
         dependsOn(":analysis:analysisAllTests")
     }
 
-    register("kaptTests") {
+    testLifecycleTask("kaptTests") {
         dependsOn(":kotlin-annotation-processing:test")
         dependsOn(":kotlin-annotation-processing:testJdk11")
         dependsOn(":kotlin-annotation-processing-base:test")
         dependsOn(":kotlin-annotation-processing-cli:test")
     }
 
-    register("parcelizeTests") {
+    testLifecycleTask("parcelizeTests") {
         dependsOn(":plugins:parcelize:parcelize-compiler:test")
     }
 
-    register("codebaseTests") {
+    testLifecycleTask("codebaseTests") {
         dependsOn(":repo:codebase-tests:test")
     }
 
-    register("statisticsTests") {
+    testLifecycleTask("statisticsTests") {
         dependsOn(":kotlin-gradle-statistics:test")
     }
 
     register("test") {
         doLast {
-            throw GradleException("Don't use directly, use aggregate tasks *-check instead")
+            throw GradleException("Don't use directly, use aggregate '*Test' tasks instead")
         }
     }
 
