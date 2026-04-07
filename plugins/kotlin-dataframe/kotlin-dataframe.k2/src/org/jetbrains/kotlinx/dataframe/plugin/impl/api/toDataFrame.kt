@@ -233,43 +233,39 @@ internal fun KotlinTypeFacade.toDataFrame(
                         || returnType.classId in preserveClasses
                         || callable in preserveProperties
                         || (!returnType.canBeUnfolded(session) && !fieldKind.shouldBeConvertedToColumnGroup && !fieldKind.shouldBeConvertedToFrameColumn)
-                if (shouldCreateValueCol) {
-                    SimpleDataColumn(
-                        name,
-                        ColumnType(
-                            returnType.withNullability(
-                                returnType.isMarkedNullable || makeNullable,
-                                session.typeContext
+
+                when {
+                    shouldCreateValueCol -> {
+                        SimpleDataColumn(
+                            name,
+                            ColumnType(
+                                returnType.withNullability(
+                                    returnType.isMarkedNullable || makeNullable,
+                                    session.typeContext
+                                )
                             )
                         )
-                    )
-                } else if (
-                    returnType.isSubtypeOf(
-                        StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection)),
-                        session
-                    ) ||
-                    returnType.isSubtypeOf(
-                        StandardClassIds.Iterable.constructClassLikeType(
-                            arrayOf(ConeStarProjection),
-                            isMarkedNullable = true
-                        ), session
-                    )
-                ) {
-                    val type: ConeKotlinType = when (val typeArgument = returnType.typeArguments[0]) {
-                        is ConeKotlinType -> typeArgument
-                        ConeStarProjection -> session.builtinTypes.nullableAnyType.coneType
-                        else -> session.builtinTypes.nullableAnyType.coneType
                     }
-                    if (type.isValueType(session)) {
-                        val columnType = List.constructClassLikeType(arrayOf(type), returnType.isMarkedNullable)
-                            .withNullability(makeNullable, session.typeContext)
-                            .wrap()
-                        SimpleDataColumn(name, columnType)
-                    } else {
-                        SimpleFrameColumn(name, convert(type, depth + 1, makeNullable = false))
+
+                    returnType.isIterable(session) -> {
+                        val type: ConeKotlinType = when (val typeArgument = returnType.typeArguments[0]) {
+                            is ConeKotlinType -> typeArgument
+                            ConeStarProjection -> session.builtinTypes.nullableAnyType.coneType
+                            else -> session.builtinTypes.nullableAnyType.coneType
+                        }
+                        if (type.isValueType(session)) {
+                            val columnType = List.constructClassLikeType(arrayOf(type), returnType.isMarkedNullable)
+                                .withNullability(makeNullable, session.typeContext)
+                                .wrap()
+                            SimpleDataColumn(name, columnType)
+                        } else {
+                            SimpleFrameColumn(name, convert(type, depth + 1, makeNullable = false))
+                        }
                     }
-                } else {
-                    SimpleColumnGroup(name, convert(returnType, depth + 1, returnType.isMarkedNullable || makeNullable))
+
+                    else -> {
+                        SimpleColumnGroup(name, convert(returnType, depth + 1, returnType.isMarkedNullable || makeNullable))
+                    }
                 }
             }
     }
@@ -287,6 +283,21 @@ internal fun KotlinTypeFacade.toDataFrame(
         }
     }
 }
+
+private fun ConeKotlinType.isIterable(session: FirSession): Boolean =
+    isSubtypeOf(
+        StandardClassIds.Iterable.constructClassLikeType(
+            typeArguments = arrayOf(ConeStarProjection),
+            isMarkedNullable = false,
+        ),
+        session
+    ) || isSubtypeOf(
+        StandardClassIds.Iterable.constructClassLikeType(
+            typeArguments = arrayOf(ConeStarProjection),
+            isMarkedNullable = true,
+        ),
+        session
+    )
 
 private data class ToDataFrameProperty(val callable: FirCallableSymbol<*>, val columnName: String)
 
