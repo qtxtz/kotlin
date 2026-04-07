@@ -1,17 +1,6 @@
 /*
- * Copyright 2010-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.psi;
@@ -19,7 +8,6 @@ package org.jetbrains.kotlin.psi;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.util.PsiTreeUtil;
 import kotlin.jvm.functions.Function1;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import org.jetbrains.kotlin.name.FqName;
@@ -38,16 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class KtPsiUtilTest extends KotlinTestWithEnvironment {
-    @NotNull
-    private KtFile loadPsiFile(@NotNull String name) {
-        try {
-            String text = KtTestUtil.doLoadFile(KtTestUtil.getTestDataPathBase(), name);
-            return KtTestUtil.createFile(name + ".kt", text, getProject());
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void testUnquotedIdentifier() {
         Assert.assertEquals("", KtPsiUtil.unquoteIdentifier(""));
@@ -164,7 +142,16 @@ public class KtPsiUtilTest extends KotlinTestWithEnvironment {
         String trueResultString = "/*true*/";
         String falseResultString = "/*false*/";
 
-        KtFile file = loadPsiFile(new File("psiUtil/" + getTestName(true) + ".kt").getPath());
+        KtFile file;
+        String name = "compiler/psi/psi-impl/testData/psiUtil/" + getTestName(true) + ".kt";
+        try {
+            String text = KtTestUtil.doLoadFile(KtTestUtil.getTestDataPathBase(), name);
+            file = KtTestUtil.createFile(name + ".kt", text, getProject());
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         String text = file.getText();
 
         // /*true*/|/*false*/

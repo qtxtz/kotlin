@@ -222,7 +222,6 @@
 /compiler/testData/loadJavaPackageAnnotations/ "Kotlin Frontend"
 /compiler/testData/moduleProtoBuf/ "Kotlin JVM"
 /compiler/testData/modules.xml/ "Kotlin Frontend"
-/compiler/testData/psiUtil/ "Kotlin Analysis API"
 /compiler/testData/reflection/ "Kotlin Libraries" alexander.udalov@jetbrains.com
 /compiler/testData/serialization/builtinsSerializer/ "Kotlin Frontend"
 /compiler/testData/serialization/klib/ "Kotlin Common Backend"
@@ -230,7 +229,6 @@
 /compiler/testData/writeFlags/ "Kotlin JVM"
 /compiler/testData/writeSignature/ "Kotlin JVM"
 /compiler/tests/ "Kotlin Compiler"
-/compiler/tests/org/jetbrains/kotlin/psi/ "Kotlin Analysis API"
 /compiler/testFixtures/ "Kotlin Compiler"
 /compiler/tests-against-klib/ "Kotlin JVM"
 /compiler/tests-common/ "Kotlin Compiler"

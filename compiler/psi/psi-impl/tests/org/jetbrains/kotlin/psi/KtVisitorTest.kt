@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -8,8 +8,10 @@ package org.jetbrains.kotlin.psi
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
+import org.jetbrains.kotlin.K1Deprecation
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
+import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.test.KotlinTestUtils
 import org.jetbrains.kotlin.test.KotlinTestWithEnvironment
 
@@ -49,7 +51,7 @@ class KtVisitorTest : KotlinTestWithEnvironment() {
                         insideStringConcatenation = true
                     }
                     is KtOperationReferenceExpression -> {
-                        if (element.operationSignTokenType == org.jetbrains.kotlin.lexer.KtTokens.PLUS) {
+                        if (element.operationSignTokenType == KtTokens.PLUS) {
                             actualPlusOperatorCount++
                         }
                     }
@@ -99,6 +101,7 @@ class KtVisitorTest : KotlinTestWithEnvironment() {
         }
     }
 
+    @OptIn(K1Deprecation::class)
     override fun createEnvironment(): KotlinCoreEnvironment {
         return KotlinCoreEnvironment.createForTests(
             testRootDisposable, KotlinTestUtils.newConfiguration(), EnvironmentConfigFiles.JVM_CONFIG_FILES
