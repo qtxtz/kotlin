@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2020 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -14,6 +14,12 @@ import org.jetbrains.kotlin.analysis.api.projectStructure.*
 import org.jetbrains.kotlin.analysis.api.utils.errors.withKaModuleEntry
 import org.jetbrains.kotlin.analysis.low.level.api.fir.LLFirInternals
 import org.jetbrains.kotlin.analysis.low.level.api.fir.projectStructure.LLFirBuiltinsSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirAbstractSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirCommonSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirJsSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirJvmSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirNativeSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirWasmSessionFactory
 import org.jetbrains.kotlin.analysis.low.level.api.fir.util.checkCanceled
 import org.jetbrains.kotlin.fir.FirSourceModuleData
 import org.jetbrains.kotlin.fir.FirSession
