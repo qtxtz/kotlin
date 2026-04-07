@@ -221,9 +221,6 @@
 /compiler/testData/loadJava/ "Kotlin Frontend"
 /compiler/testData/loadJava8/ "Kotlin Frontend"
 /compiler/testData/loadJavaPackageAnnotations/ "Kotlin Frontend"
-/compiler/testData/mockJDK/ "Kotlin Build Infrastructure"
-/compiler/testData/mockJDK9/ "Kotlin Build Infrastructure"
-/compiler/testData/mockJDKModified/ "Kotlin Build Infrastructure"
 /compiler/testData/moduleProtoBuf/ "Kotlin JVM"
 /compiler/testData/modules.xml/ "Kotlin Frontend"
 /compiler/testData/psiUtil/ "Kotlin Analysis API"
@@ -494,6 +491,7 @@
 /tests/ "Kotlin" "Kotlin Build Infrastructure"
 
 /third-party/ "Kotlin Frontend"
+/third-party/mockJDKs/ "Kotlin Build Infrastructure"
 
 /wasm/ "Kotlin Wasm"
 /wasm/wasm.tests/klib-compatibility/ "Kotlin Common Backend"

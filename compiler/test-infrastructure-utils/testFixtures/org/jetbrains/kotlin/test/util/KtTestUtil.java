@@ -206,7 +206,7 @@ public class KtTestUtil {
         if (property!= null) {
             return new File(property);
         } else {
-            return new File(getHomeDirectory(), "compiler/testData/mockJDK/jre/lib/rt.jar");
+            return new File(getHomeDirectory(), "third-party/mockJDKs/mockJDK/jre/lib/rt.jar");
         }
     }
 
@@ -217,7 +217,7 @@ public class KtTestUtil {
         if (property!= null) {
             return new File(property);
         } else {
-            return new File(getHomeDirectory(), "compiler/testData/mockJDKModified/rt.jar");
+            return new File(getHomeDirectory(), "third-party/mockJDKs/mockJDKModified/rt.jar");
         }
     }
 
@@ -255,7 +255,7 @@ public class KtTestUtil {
         if (property!= null) {
             return new File(property);
         } else {
-            return new File(getHomeDirectory(), "compiler/testData/mockJDK/jre/lib/annotations.jar");
+            return new File(getHomeDirectory(), "third-party/mockJDKs/mockJDK/jre/lib/annotations.jar");
         }
     }
 
