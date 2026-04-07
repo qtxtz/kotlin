@@ -1,14 +1,15 @@
 /*
- * Copyright 2010-2024 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions
+package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
 import org.jetbrains.kotlin.analysis.low.level.api.fir.caches.cleanable.ValueReferenceCleaner
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 
 /**
  * [LLFirSessionCleaner] is a [ValueReferenceCleaner] which handles cleanup of the session after it has been explicitly invalidated or

@@ -11,6 +11,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.ModificationTracker
 import org.jetbrains.kotlin.analysis.api.platform.lifetime.ModificationTrackerWithInvalidationReason
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaModule
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache
 import org.jetbrains.kotlin.fir.BuiltinTypes
 import org.jetbrains.kotlin.fir.FirElementWithResolveState
 import org.jetbrains.kotlin.fir.FirSession
@@ -28,18 +29,21 @@ import kotlin.uuid.Uuid
  *
  * ### Invalidation
  *
- * [LLFirSession] will be invalidated by [LLFirSessionInvalidationService] when its [KaModule] or one of the module's dependencies is
- * modified, or when a global modification event occurs. Sessions are managed by [LLFirSessionCache], which holds a soft reference to its
- * [LLFirSession]s. This allows a session to be garbage collected when it is softly reachable. The session's [LLFirSessionCleaner] ensures
- * that its associated [Disposable] is properly disposed even after garbage collection.
+ * [LLFirSession] will be invalidated by [LLFirSessionInvalidationService][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationService]
+ * when its [KaModule] or one of the module's dependencies is modified, or when a global modification event occurs. Sessions are managed by
+ * [LLFirSessionCache][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache], which holds a soft reference to
+ * its [LLFirSession]s. This allows a session to be garbage collected when it is softly reachable. The session's
+ * [LLFirSessionCleaner][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCleaner] ensures that its associated
+ * [Disposable] is properly disposed even after garbage collection.
  *
- * When a session is invalidated after a modification event, the [LLFirSessionInvalidationEventPublisher] will publish a
- * [session invalidation event][LLFirSessionInvalidationTopics]. This allows entities whose lifetime depends on the session's lifetime to be
- * invalidated with the session. Such an event is not published when the session is garbage collected due to being softly reachable, because
- * the [LLFirSessionCleaner] is not guaranteed to be executed in a write action. If we try to publish a session invalidation event outside
- * a write action, another thread might already have built another [LLFirSession] for the same [KaModule], causing a race between the new
- * session and the session invalidation event (which can only refer to the [KaModule] because the session has already been garbage
- * collected).
+ * When a session is invalidated after a modification event, the [LLFirSessionInvalidationEventPublisher][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationEventPublisher]
+ * will publish a [session invalidation event][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationTopics].
+ * This allows entities whose lifetime depends on the session's lifetime to be invalidated with the session. Such an event is not published
+ * when the session is garbage collected due to being softly reachable, because the
+ * [LLFirSessionCleaner][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCleaner] is not guaranteed to be
+ * executed in a write action. If we try to publish a session invalidation event outside a write action, another thread might already have
+ * built another [LLFirSession] for the same [KaModule], causing a race between the new session and the session invalidation event (which
+ * can only refer to the [KaModule] because the session has already been garbage collected).
  *
  * Because of this, it's important that cached entities which depend on a session's lifetime (and therefore its session invalidation events)
  * are *exactly as softly reachable* as the [LLFirSession]. This means that the cached entity should keep a strong reference to the session,

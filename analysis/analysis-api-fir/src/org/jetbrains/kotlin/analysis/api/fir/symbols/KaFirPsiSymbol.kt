@@ -270,7 +270,7 @@ internal fun KaFirKtBasedSymbol<KtClassOrObject, FirClassSymbol<*>>.createSuperT
 
 /**
  * Currently, the compiled file can represent both library and non-library origin depending on the `preferBinary`
- * parameter from [org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCache.getSession].
+ * parameter from [org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache.getSession].
  *
  * So, depending on it, we may represent one decompiled file as [KaSymbolOrigin.SOURCE] and as [KaSymbolOrigin.LIBRARY]
  * at the same time.

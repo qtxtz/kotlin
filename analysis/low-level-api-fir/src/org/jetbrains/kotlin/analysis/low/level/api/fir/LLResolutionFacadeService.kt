@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.analysis.api.utils.errors.withKaModuleEntry
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.LLResolutionFacade
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirLibraryOrLibrarySourceResolvableModuleSession
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCache
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache
 import org.jetbrains.kotlin.analysis.low.level.api.fir.state.*
 import org.jetbrains.kotlin.analysis.low.level.api.fir.util.errorWithFirSpecificEntries
 import org.jetbrains.kotlin.utils.exceptions.errorWithAttachment

@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions
+package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
@@ -14,6 +14,9 @@ import org.jetbrains.kotlin.analysis.api.projectStructure.*
 import org.jetbrains.kotlin.analysis.api.utils.errors.withKaModuleEntry
 import org.jetbrains.kotlin.analysis.low.level.api.fir.LLFirInternals
 import org.jetbrains.kotlin.analysis.low.level.api.fir.projectStructure.LLFirBuiltinsSessionFactory
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirDanglingFileSession
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionConfigurator
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirAbstractSessionFactory
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirCommonSessionFactory
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirJsSessionFactory

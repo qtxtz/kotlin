@@ -1,9 +1,9 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions
+package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache
 
 import com.intellij.util.messages.Topic
 import org.jetbrains.kotlin.analysis.api.KaImplementationDetail
@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.analysis.api.projectStructure.KaModule
  * only the reporter thread has access to sessions.
  *
  * When a session is garbage-collected due to being softly reachable, no session invalidation event will be published for it. See the
- * documentation of [LLFirSession] for background information.
+ * documentation of [LLFirSession][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession] for background information.
  *
  * Session invalidation events are not published for unstable
  * [KtDanglingFileModules][org.jetbrains.kotlin.analysis.api.projectStructure.KaDanglingFileModule].

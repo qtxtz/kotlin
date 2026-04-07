@@ -43,10 +43,10 @@
     />
 
     <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.projectStructure.LLFirBuiltinsSessionFactory"/>
-    <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCache"/>
-    <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationService"/>
+    <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache"/>
+    <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationService"/>
     <projectService
-        serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationEventPublisher"
+        serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationEventPublisher"
     />
     <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.LLFirGlobalResolveComponents"/>
     <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.LLResolutionFacadeService"/>
@@ -68,11 +68,11 @@
 
   <projectListeners>
     <listener
-        class="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationService$LLKotlinModificationEventListener"
+        class="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationService$LLKotlinModificationEventListener"
         topic="org.jetbrains.kotlin.analysis.api.platform.modification.KotlinModificationEventListener"
     />
     <listener
-        class="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationService$LLPsiModificationTrackerListener"
+        class="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationService$LLPsiModificationTrackerListener"
         topic="com.intellij.psi.util.PsiModificationTracker$Listener"
     />
     <listener

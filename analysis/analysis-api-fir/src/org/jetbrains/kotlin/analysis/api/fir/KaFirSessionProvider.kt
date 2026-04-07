@@ -33,9 +33,9 @@ import org.jetbrains.kotlin.analysis.low.level.api.fir.LLFirInternals
 import org.jetbrains.kotlin.analysis.low.level.api.fir.api.getResolutionFacade
 import org.jetbrains.kotlin.analysis.low.level.api.fir.file.structure.LLFirDeclarationModificationService
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCache
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationListener
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationTopics
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationListener
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationTopics
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.structure.LLSessionStructureWriter
 import org.jetbrains.kotlin.analysis.low.level.api.fir.statistics.LLStatisticsService
 import org.jetbrains.kotlin.analysis.low.level.api.fir.statistics.domains.LLAnalysisSessionStatistics
@@ -190,7 +190,7 @@ internal class KaFirSessionProvider(project: Project) : KaBaseSessionProvider(pr
      * Schedules cache removal on a low-memory event.
      *
      * We ask the cache cleaner to schedule a global cache cleanup. It has to wait until there is no ongoing analysis as
-     * [LLFirSessionCleaner][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCleaner] called from [LLFirSessionCache]
+     * [LLFirSessionCleaner][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCleaner] called from [LLFirSessionCache]
      * marks sessions invalid (and analyses in progress will be very surprised). [KaFirSession]s will also be invalidated during this step.
      */
     private fun handleLowMemoryEvent() {

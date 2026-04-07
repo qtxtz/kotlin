@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.session.AbstractSe
 import org.jetbrains.kotlin.analysis.api.impl.base.test.cases.session.TestSession
 import org.jetbrains.kotlin.analysis.api.platform.modification.KotlinModificationEventKind
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaLibraryModule
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache
 import org.jetbrains.kotlin.analysis.low.level.api.fir.test.configurators.LLSourceLikeTestConfigurator
 import org.jetbrains.kotlin.analysis.test.framework.projectStructure.KtTestModule
 import org.jetbrains.kotlin.analysis.test.framework.test.configurators.AnalysisApiTestConfigurator

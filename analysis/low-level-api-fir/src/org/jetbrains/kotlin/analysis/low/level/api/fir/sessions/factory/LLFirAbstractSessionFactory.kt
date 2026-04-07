@@ -34,10 +34,10 @@ import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirLibrarySess
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirNotUnderContentRootResolvableModuleSession
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirScriptSession
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCache
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionConfigurator
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSourcesSession
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.configure
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.configure
 import org.jetbrains.kotlin.analysis.low.level.api.fir.symbolProviders.*
 import org.jetbrains.kotlin.analysis.low.level.api.fir.symbolProviders.combined.LLCombinedJavaSymbolProvider
 import org.jetbrains.kotlin.analysis.low.level.api.fir.symbolProviders.combined.LLCombinedKotlinSymbolProvider

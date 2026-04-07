@@ -6,7 +6,7 @@
 package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.structure
 
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCacheStorage
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCacheStorage
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSourcesSession
 
 internal object LLSessionStructureGraphBuilder {

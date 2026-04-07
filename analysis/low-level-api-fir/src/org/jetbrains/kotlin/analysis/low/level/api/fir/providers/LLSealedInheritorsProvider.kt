@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.analysis.api.platform.projectStructure.KotlinModuleD
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaDanglingFileModule
 import org.jetbrains.kotlin.analysis.api.projectStructure.baseContextModule
 import org.jetbrains.kotlin.analysis.low.level.api.fir.projectStructure.llFirModuleData
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionCache
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache
 import org.jetbrains.kotlin.fir.declarations.FirClass
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.SealedClassInheritorsProvider

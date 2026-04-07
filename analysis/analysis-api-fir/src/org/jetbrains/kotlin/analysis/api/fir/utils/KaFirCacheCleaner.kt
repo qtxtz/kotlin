@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.analysis.api.KaImplementationDetail
 import org.jetbrains.kotlin.analysis.api.KaSession
 import org.jetbrains.kotlin.analysis.api.analyze
 import org.jetbrains.kotlin.analysis.api.platform.KaCachedService
-import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSessionInvalidationService
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationService
 import org.jetbrains.kotlin.analysis.low.level.api.fir.statistics.LLStatisticsService
 import org.jetbrains.kotlin.analysis.low.level.api.fir.statistics.domains.LLAnalysisSessionStatistics
 import org.jetbrains.kotlin.analysis.low.level.api.fir.util.LLFlightRecorder

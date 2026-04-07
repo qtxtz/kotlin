@@ -1,9 +1,9 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions
+package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache
 
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaModule
 import org.jetbrains.kotlin.analysis.low.level.api.fir.LLFirInternals
@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.analysis.low.level.api.fir.caches.cleanable.Cleanabl
 import org.jetbrains.kotlin.analysis.low.level.api.fir.caches.cleanable.CleanableValueReferenceCache
 import org.jetbrains.kotlin.analysis.low.level.api.fir.caches.cleanable.CleanableWeakValueReferenceCache
 import org.jetbrains.kotlin.analysis.low.level.api.fir.caches.cleanable.ValueReferenceCleaner
+import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 
 /**
  * A type of cache which is used by [LLFirSessionCache] to store [LLFirSession]s.

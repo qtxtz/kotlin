@@ -1,9 +1,9 @@
 /*
- * Copyright 2010-2024 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions
+package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.util.PsiModificationTracker
@@ -13,8 +13,8 @@ import org.jetbrains.kotlin.analysis.api.platform.modification.KotlinModificatio
 import org.jetbrains.kotlin.analysis.api.projectStructure.KaModule
 
 /**
- * [LLFirSessionInvalidationService] listens to [modification events][org.jetbrains.kotlin.analysis.api.platform.modification.KotlinModificationEvent]
- * and invalidates [LLFirSession]s which depend on the modified [KaModule].
+ * [LLFirSessionInvalidationService] listens to [modification events][KotlinModificationEvent] and invalidates
+ * [LLFirSession][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession]s which depend on the modified [KaModule].
  */
 @KaImplementationDetail
 class LLFirSessionInvalidationService(private val project: Project) {
