@@ -23,12 +23,15 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.GenerateSyntheti
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SwiftPMImportExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SwiftPMDependency
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.SyncPackageResolvedTask
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.transitiveSwiftPMDependenciesProvider
 import org.jetbrains.kotlin.gradle.util.*
 import org.jetbrains.kotlin.konan.target.HostManager
 import kotlin.test.Test
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.utils.normalizedAbsoluteFile
 import org.junit.jupiter.api.Assumptions
+import org.junit.jupiter.api.assertThrows
+import java.io.FileNotFoundException
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -534,6 +537,39 @@ class SwiftPMImportUnitTests {
             setOf(),
             staticFrameworkTaskDependencies - dynamicFrameworkTaskDependencies,
         )
+    }
+
+    @Test
+    fun `KT-85517 - swiftPM metadata resolution doesn't fail on accidentally resolve outgoing variants without Usage`() {
+        val rootProject = buildProject {
+            plugins.apply("java-library")
+            project.configurations.create("consumable") {
+                it.outgoing.artifact(file("foo"))
+                it.attributes.attribute(org.gradle.api.attributes.Attribute.of("foo", String::class.java), "bar")
+            }
+        }.evaluate()
+
+        val swiftPMConsumer = swiftPMImportProject(
+            projectBuilder = {
+                withParent(rootProject)
+            },
+            multiplatform = {
+                iosSimulatorArm64()
+                sourceSets.commonMain.dependencies {
+                    implementation(project(":"))
+                }
+            },
+            swiftPMDependencies = { layout ->
+                localSwiftPackage(
+                    directory = layout.projectDirectory.dir("my-custom-pkg"),
+                    products = listOf("ManifestPackage"),
+                )
+            }
+        ).evaluate()
+
+        assertThrows<FileNotFoundException> {
+            swiftPMConsumer.transitiveSwiftPMDependenciesProvider().get()
+        }
     }
 }
 
