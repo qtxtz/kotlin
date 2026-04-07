@@ -23,11 +23,12 @@ import org.jetbrains.kotlin.js.common.safeModuleName
 import org.jetbrains.kotlin.js.config.ModuleKind
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.resolve.DataClassResolver
 import org.jetbrains.kotlin.utils.*
 import org.jetbrains.kotlin.utils.addToStdlib.runIf
+
+public const val EXTENSION_RECEIVER_NAME: String = "_this_"
 
 internal class ExportModelGenerator(private val config: TypeScriptExportConfig) {
     context(_: KaSession)
@@ -304,7 +305,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
             function.receiverParameter?.let {
                 add(
                     ExportedParameter(
-                        sanitizeName(SpecialNames.THIS),
+                        EXTENSION_RECEIVER_NAME,
                         exportType(
                             it.returnType,
                             functionTypeParameterScope,
@@ -362,7 +363,9 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                             isStatic = isStatic,
                             isAbstract = isAbstract,
                             isProtected = isProtected,
-                        ).withAttributes(property).withAttributes(setter)
+                        )
+                            .withAttributes(property, ignoreDoc = true)
+                            .withAttributes(setter)
                     )
                 }
                 if (customGetterName != null) {
@@ -379,7 +382,9 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                             isStatic = isStatic,
                             isAbstract = isAbstract,
                             isProtected = isProtected,
-                        ).withAttributes(property).withAttributes(getter)
+                        )
+                            .withAttributes(property, ignoreDoc = true)
+                            .withAttributes(getter)
                     )
                 }
             }
@@ -424,7 +429,10 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                             parameters = emptyList(),
                             isMember = true,
                             isProtected = false
-                        ).withAttributes(property).withAttributes(getter),
+                        )
+                            .withAttributes(property, ignoreDoc = true)
+                            .withAttributes(getter),
+
                         runIf(!property.isVal) {
                             ExportedFunction(
                                 name = ExportedMemberName.Identifier("set"),
@@ -450,7 +458,9 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                                 ),
                                 isMember = true,
                                 isProtected = false
-                            ).withAttributes(property).withAttributes(setter)
+                            )
+                                .withAttributes(property, ignoreDoc = true)
+                                .withAttributes(setter)
                         }
                     )
                 )
@@ -479,7 +489,9 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                     isStatic = isStatic,
                     isAbstract = isAbstract,
                     isProtected = isProtected,
-                ).withAttributes(property).withAttributes(getter)
+                )
+                    .withAttributes(property, ignoreDoc = true)
+                    .withAttributes(getter)
             )
             if (!property.isVal) {
                 accessors.add(
@@ -489,7 +501,9 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                         isStatic = isStatic,
                         isAbstract = isAbstract,
                         isProtected = isProtected,
-                    ).withAttributes(property).withAttributes(setter)
+                    )
+                        .withAttributes(property, ignoreDoc = true)
+                        .withAttributes(setter)
                 )
             }
             return accessors

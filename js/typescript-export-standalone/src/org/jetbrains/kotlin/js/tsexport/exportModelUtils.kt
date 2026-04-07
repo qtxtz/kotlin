@@ -1,14 +1,15 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-@file:OptIn(KaContextParameterApi::class)
+@file:OptIn(KaContextParameterApi::class, KaNonPublicApi::class, KtNonPublicApi::class)
 
 package org.jetbrains.kotlin.js.tsexport
 
 import org.jetbrains.kotlin.analysis.api.KaContextParameterApi
 import org.jetbrains.kotlin.analysis.api.KaExperimentalApi
+import org.jetbrains.kotlin.analysis.api.KaNonPublicApi
 import org.jetbrains.kotlin.analysis.api.KaSession
 import org.jetbrains.kotlin.analysis.api.annotations.KaAnnotated
 import org.jetbrains.kotlin.analysis.api.annotations.KaAnnotationValue
@@ -35,6 +36,7 @@ import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsImplicitExport
 import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsStatic
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.psi.KtNonPublicApi
 import org.jetbrains.kotlin.util.OperatorNameConventions
 import org.jetbrains.kotlin.utils.addToStdlib.butIf
 
@@ -333,7 +335,8 @@ internal fun KaDeclarationSymbol.exportedVisibility(parent: KaDeclarationSymbol?
         else -> ExportedVisibility.DEFAULT
     }
 
-internal fun <T : ExportedDeclaration> T.withAttributes(source: KaDeclarationSymbol?): T {
+context(_: KaSession)
+internal fun <T : ExportedDeclaration> T.withAttributes(source: KaDeclarationSymbol?, ignoreDoc: Boolean = false): T {
     if (source == null) return this
     if (this is ExportedConstructor && visibility == ExportedVisibility.PRIVATE) return this
 
@@ -344,6 +347,8 @@ internal fun <T : ExportedDeclaration> T.withAttributes(source: KaDeclarationSym
     if (source.annotations.contains(JsExportDefault)) {
         attributes.add(ExportedAttribute.DefaultExport)
     }
+
+    if (!ignoreDoc) addDocumentationAttributes(source)
 
     return this
 }

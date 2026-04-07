@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -18,6 +18,7 @@ public sealed class ExportedDeclaration {
 public sealed class ExportedAttribute {
     public class DeprecatedAttribute(public val message: String) : ExportedAttribute()
     public object DefaultExport : ExportedAttribute()
+    public class Documentation(public val sections: MutableList<String>) : ExportedAttribute()
 }
 
 public data class ExportedModule(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -10,6 +10,8 @@ import org.jetbrains.kotlin.js.common.isValidES5Identifier
 import org.jetbrains.kotlin.js.common.makeValidES5Identifier
 import org.jetbrains.kotlin.js.config.ModuleKind
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
+import org.jetbrains.kotlin.utils.addToStdlib.partitionIsInstance
 import org.jetbrains.kotlin.utils.addToStdlib.runIf
 
 
@@ -105,7 +107,13 @@ public class ExportModelToTsDeclarations(private val moduleKind: ModuleKind) {
         }
 
     private fun Iterable<ExportedAttribute>.toTypeScript(indent: String): String {
-        return joinToString("\n") { it.toTypeScript(indent) }
+        val (deprecatedAttributes, other) = partitionIsInstance<_, ExportedAttribute.DeprecatedAttribute>()
+        val documentationAttribute = other.firstIsInstanceOrNull<ExportedAttribute.Documentation>()
+            ?.also { docs -> docs.sections.addAll(deprecatedAttributes.map { tsDeprecated(it.message) }) }
+
+        val mergedAttributes = if (documentationAttribute != null) other else this
+
+        return mergedAttributes.joinToString("\n") { it.toTypeScript(indent) }
             .run { if (isNotEmpty()) plus("\n") else this }
     }
 
@@ -119,9 +127,18 @@ public class ExportModelToTsDeclarations(private val moduleKind: ModuleKind) {
 
     private fun ExportedAttribute.toTypeScript(indent: String): String {
         return when (this) {
-            is ExportedAttribute.DeprecatedAttribute -> indent + tsDeprecated(message)
             is ExportedAttribute.DefaultExport -> ""
+            is ExportedAttribute.Documentation -> buildTSDocComment(sections, indent)
+            is ExportedAttribute.DeprecatedAttribute -> buildDeprecatedOnlyComment(message, indent)
         }
+    }
+
+    private fun buildDeprecatedOnlyComment(message: String, indent: String): String =
+        "$indent/** ${tsDeprecated(message)} */"
+
+    private fun buildTSDocComment(sections: List<String>, indent: String): String {
+        if (sections.isEmpty() || sections.all { it.isBlank() }) return ""
+        return "$indent/**\n$indent * " + sections.joinToString("\n$indent * ") + "\n$indent */"
     }
 
     private fun ErrorDeclaration.generateTypeScriptString(): String {
@@ -564,6 +581,6 @@ public class ExportModelToTsDeclarations(private val moduleKind: ModuleKind) {
             .apply { attributes += ExportedAttribute.DeprecatedAttribute("$Metadata is used for internal purposes, please don't use it in your code, because it can be removed at any moment") }
 
     private fun tsDeprecated(message: String): String {
-        return "/** @deprecated $message */"
+        return "@deprecated $message"
     }
 }
