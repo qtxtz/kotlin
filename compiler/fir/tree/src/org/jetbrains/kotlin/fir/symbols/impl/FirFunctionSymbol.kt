@@ -46,7 +46,21 @@ sealed class FirFunctionSymbol<out D : FirFunction>(override val callableId: Cal
         }
 
     fun calculateContractDescription() {
-        lazyResolveToPhase(FirResolvePhase.CONTRACTS)
+        val fir = fir as? FirContractDescriptionOwner ?: return
+        when (fir.contractDescription) {
+            null, is FirErrorContractDescription, is FirResolvedContractDescription -> {}
+            is FirLegacyRawContractDescription, is FirRawContractDescription -> {
+                lazyResolveToPhase(FirResolvePhase.CONTRACTS)
+                when (val description = fir.contractDescription) {
+                    null, is FirErrorContractDescription, is FirResolvedContractDescription -> {}
+                    is FirLegacyRawContractDescription, is FirRawContractDescription -> {
+                        errorWithAttachment("Expected a resolved contract description, but got: ${description::class.simpleName}") {
+                            withFirEntry("fir", fir)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     val resolvedControlFlowGraphReference: FirControlFlowGraphReference?
