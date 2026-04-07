@@ -19,11 +19,12 @@ import org.jetbrains.kotlin.fir.java.declarations.FirJavaClass
 import org.jetbrains.kotlin.fir.java.resolveIfJavaType
 import org.jetbrains.kotlin.fir.references.toResolvedPropertySymbol
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
+import org.jetbrains.kotlin.fir.resolve.scope
 import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
 import org.jetbrains.kotlin.fir.resolve.toSymbol
+import org.jetbrains.kotlin.fir.scopes.CallableCopyTypeCalculator
 import org.jetbrains.kotlin.fir.scopes.collectAllFunctions
 import org.jetbrains.kotlin.fir.scopes.collectAllProperties
-import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
@@ -342,13 +343,12 @@ private fun ConeKotlinType.hasProperties(session: FirSession): Boolean {
 
 private fun ConeKotlinType.properties(session: FirSession): List<ToDataFrameProperty> {
     val symbol = this.toRegularClassSymbol(session) as? FirClassSymbol<*> ?: return emptyList()
-    val scope = symbol.unsubstitutedScope(
+    val scope = scope(
         session,
         ScopeSession(),
-        withForcedTypeCalculator = false,
-        memberRequiredPhase = FirResolvePhase.STATUS
-    )
-
+        CallableCopyTypeCalculator.DoNothing,
+        FirResolvePhase.STATUS
+    ) ?: return emptyList()
 
     @OptIn(SymbolInternals::class)
     symbol.fir.let { firClass ->
