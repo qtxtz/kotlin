@@ -22,8 +22,8 @@ fun main() {
     expectsA(<!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.X<!>)
     val a1: A = <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Y<!>
 
-    expectsA(<!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Z<!>)
-    val a2: A = <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Z<!>
+    expectsA(A.Z)
+    val a2: A = A.Z
 }
 
 /* GENERATED_FIR_TAGS: enumDeclaration, enumEntry, functionDeclaration, localProperty, propertyDeclaration */
