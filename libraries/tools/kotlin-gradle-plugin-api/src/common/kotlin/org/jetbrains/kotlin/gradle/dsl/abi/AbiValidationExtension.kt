@@ -44,6 +44,7 @@ interface AbiValidationExtension {
         level = DeprecationLevel.ERROR
     )
     val enabled: Property<Boolean>
+        get() = error("Property 'enabled' was removed, to enable ABI validation call function abiValidation(), abiValidation { ... } or read abiValidation property.")
 
     /**
      * A set of filtering rules that restrict Application Binary Interface (ABI) declarations from being included in a dump.
@@ -170,6 +171,7 @@ interface AbiValidationExtension {
     )
     @Suppress("DEPRECATION_ERROR")
     val legacyDump: AbiValidationLegacyDumpExtension
+        get() = error("A separate property 'legacyDump' was removed. Please place all its properties on a higher level.")
 
     /**
      * Configures the [legacyDump] with the provided configuration.
@@ -181,6 +183,7 @@ interface AbiValidationExtension {
     )
     @Suppress("DEPRECATION_ERROR")
     fun legacyDump(action: Action<AbiValidationLegacyDumpExtension>) {
+        error("A separate block 'legacyDump' was removed. Please place all its properties on a higher level.")
     }
 
     /**

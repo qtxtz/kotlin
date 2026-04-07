@@ -50,7 +50,6 @@ internal abstract class AbiValidationExtensionImpl @Inject constructor(
         "Property was removed, to enable ABI validation call function abiValidation(), abiValidation { ... } or read abiValidation property.",
         level = DeprecationLevel.ERROR
     )
-    final override val enabled: Property<Boolean> = objects.property<Boolean>().convention(false)
 
     override val filters: AbiFiltersSpec = objects.AbiFiltersSpecImpl()
 
@@ -59,13 +58,6 @@ internal abstract class AbiValidationExtensionImpl @Inject constructor(
     override val keepLocallyUnsupportedTargets: Property<Boolean> = objects.property<Boolean>()
 
     override val binariesSource: Property<BinariesSource> = objects.propertyWithConvention<BinariesSource>(BinariesSource.MAIN_COMPILATION)
-
-    @Suppress("DEPRECATION_ERROR")
-    @Deprecated(
-        "A separate 'legacyDump' property was removed. Please place all its properties on a higher level.",
-        level = DeprecationLevel.WARNING
-    )
-    override val legacyDump: org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationLegacyDumpExtension = AbiValidationLegacyDumpExtensionImpl(referenceDumpDir)
 
     override val checkTaskProvider: TaskProvider<Task>
         get() = tasks.named(KotlinAbiCheckTaskImpl.NAME)
@@ -83,13 +75,3 @@ internal fun Project.AbiValidationExtensionImpl(): AbiValidationExtensionImpl =
         BuildSessionService.registerIfAbsent(this),
         configurations
     )
-
-
-@Suppress("DEPRECATION_ERROR")
-private class AbiValidationLegacyDumpExtensionImpl(
-    @Deprecated(
-        "A separate block 'legacyDump' was removed. All its properties have been moved to a higher level.",
-        level = DeprecationLevel.WARNING
-    )
-    override val referenceDumpDir: DirectoryProperty,
-) : org.jetbrains.kotlin.gradle.dsl.abi.AbiValidationLegacyDumpExtension
