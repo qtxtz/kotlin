@@ -30,6 +30,7 @@ import kotlin.test.Test
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.utils.normalizedAbsoluteFile
 import org.junit.jupiter.api.Assumptions
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.io.FileNotFoundException
 import kotlin.test.BeforeTest
@@ -567,7 +568,7 @@ class SwiftPMImportUnitTests {
             }
         ).evaluate()
 
-        assertThrows<FileNotFoundException> {
+        assertDoesNotThrow {
             swiftPMConsumer.transitiveSwiftPMDependenciesProvider().get()
         }
     }
