@@ -1407,6 +1407,22 @@ internal object KotlinToolingDiagnostics {
         }
     }
 
+    object SwiftPMImportLockFileSync : ToolingDiagnosticFactory(ERROR, DiagnosticGroup.Kgp.Misconfiguration) {
+        operator fun invoke() = build {
+            title("Invalid SwiftPM package lock synchronization configuration")
+
+                .description {
+                    "The 'packageResolvedSynchronization' property for SwiftPM import was modified after the project was evaluated. " +
+                            "This property must be configured during the configuration phase."
+                }
+
+                .solution {
+                    "Move the configuration of 'packageResolvedSynchronization' to the project configuration phase (e.g., directly in the build script), " +
+                            "and avoid changing it after evaluation (e.g., inside 'afterEvaluate')."
+                }
+        }
+    }
+
     data class CompilationDependenciesPair(
         val compilation: KotlinCompilation<*>,
         val dependencyCoords: List<String>,

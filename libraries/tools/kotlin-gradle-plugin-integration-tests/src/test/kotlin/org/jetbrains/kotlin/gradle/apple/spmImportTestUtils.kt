@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.GenerateSyntheticLinkageImportProject
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.FetchSyntheticImportProjectPackages
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.ConvertSyntheticSwiftPMImportProjectIntoDefFile
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.swiftimport.PackageResolvedSynchronization
 import org.jetbrains.kotlin.gradle.testbase.TestProject
 import org.jetbrains.kotlin.gradle.testbase.XCTestHelpers
 import org.jetbrains.kotlin.gradle.testbase.assertFileExists
@@ -42,6 +43,7 @@ import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.writeText
 import kotlin.io.readText
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @Suppress("INVISIBLE_REFERENCE")
 const val SYNTHETIC_IMPORT_TARGET_MAGIC_NAME = GenerateSyntheticLinkageImportProject.Companion.SYNTHETIC_IMPORT_TARGET_MAGIC_NAME
@@ -373,12 +375,14 @@ internal fun TestProject.initDefaultKmp(extra: KotlinMultiplatformExtension.() -
     }
 }
 
-internal data class LockFileTestFixture(
+internal class LockFileTestFixture(
     val project: TestProject,
     val cacheDirFile: File,
     val reposRoot: Path,
     val daemon: GitDaemon,
-    val projectDirectoryPackageResolved: Path = project.projectPath.resolve("Package.resolved"),
+    val packageResolvedSynchronization: PackageResolvedSynchronization,
+    val persistedPackageResolvedSyncPath: Path =
+        project.selectedPersistedPackageResolvedPath(packageResolvedSynchronization),
 )
 
 internal data class RepoRef(
@@ -387,6 +391,7 @@ internal data class RepoRef(
 ) : java.io.Serializable
 
 internal fun TestProject.withLockFileFixture(
+    packageResolvedSynchronization: PackageResolvedSynchronization = PackageResolvedSynchronization.Identifier("default"),
     block: LockFileTestFixture.() -> Unit,
 ) {
     val cacheDirFile = projectPath.resolve("customXcodePackageCache").toFile()
@@ -403,10 +408,21 @@ internal fun TestProject.withLockFileFixture(
             cacheDirFile = cacheDirFile,
             reposRoot = reposRoot,
             daemon = this,
+            packageResolvedSynchronization,
         ).block()
     }
 }
 
+internal fun TestProject.selectedPersistedPackageResolvedPath(
+    sync: PackageResolvedSynchronization,
+): Path =
+    when (sync) {
+        is PackageResolvedSynchronization.Identifier ->
+            projectPath.resolve(".swiftpm-locks/${sync.identifier}/swiftImport/Package.resolved")
+
+        PackageResolvedSynchronization.None ->
+            projectPath.resolve("Package.resolved")
+    }
 
 internal fun TestProject.initSwiftPmProject(
     cacheDirFile: File,
@@ -420,6 +436,11 @@ internal fun TestProject.initSwiftPmProject(
                     listOf(
                         "-packageFingerprintPolicy", "warn",
                         "-packageCachePath", cacheDirFile.path,
+                    )
+                )
+                task.additionalSwiftPackageResolveArgs.set(
+                    listOf(
+                        "--resolver-fingerprint-checking", "warn",
                     )
                 )
             }
@@ -473,17 +494,19 @@ internal fun LockFileTestFixture.releaseTag(
 }
 
 internal fun BuildResult.assertResolvedVersions(
-    projectDirPackageResolved: Path,
-    checkoutRepoDir: Path,
+    persistedPackageResolved: Path,
+    checkoutRepoDir: Path? = null,
     expectedPins: List<Pair<RepoRef, String>>,
 ) {
-    assertFileExists(projectDirPackageResolved, "Project directory Package.resolved should be generated")
+    assertFileExists(persistedPackageResolved, "Project directory Package.resolved should be generated")
 
-    val actual = parsePackageResolved(projectDirPackageResolved.readText())
+    val actual = parsePackageResolved(persistedPackageResolved.readText())
 
     val expected = SwiftPmPackageResolved(
         pins = expectedPins.map { (repoRef, version) ->
-            assertCheckoutVersion(checkoutRepoDir, repoRef, version)
+            checkoutRepoDir?.let { checkoutRepoDir ->
+                assertCheckoutVersion(checkoutRepoDir, repoRef, version)
+            }
             SwiftPmPin(
                 identity = repoRef.name.lowercase(),
                 kind = "remoteSourceControl",
@@ -497,8 +520,11 @@ internal fun BuildResult.assertResolvedVersions(
         version = 2,
     )
 
-    assertEquals(expected, actual.ignoreRevisions())
+    assertEquals(expected.sortedPins(), actual.sortedPins().ignoreRevisions())
 }
+
+private fun SwiftPmPackageResolved.sortedPins(): SwiftPmPackageResolved =
+    copy(pins = pins.sortedBy { it.identity })
 
 private fun assertCheckoutVersion(checkoutRepoDir: Path, repoRef: RepoRef, version: String) {
     val gitCheckoutTag = runGit(

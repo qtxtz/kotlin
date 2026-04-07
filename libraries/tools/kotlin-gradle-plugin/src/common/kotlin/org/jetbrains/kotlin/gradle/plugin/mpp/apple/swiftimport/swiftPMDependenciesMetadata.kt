@@ -28,9 +28,11 @@ import org.jetbrains.kotlin.gradle.plugin.sources.internal
 import org.jetbrains.kotlin.gradle.plugin.usageByName
 import org.jetbrains.kotlin.gradle.utils.createConsumable
 import org.jetbrains.kotlin.gradle.utils.getAttributeSafely
+import org.jetbrains.kotlin.gradle.utils.maybeCreateDependencyScope
 import org.jetbrains.kotlin.gradle.utils.maybeCreateResolvable
 
 private const val SWIFTPM_DEPENDENCIES_METADATA_USAGE = "swiftPMDependenciesMetadata"
+internal const val SWIFTPM_DEPENDENCIES_METADATA_FOR_LOCK_FILES_USAGE = "swiftPMDependenciesMetadataForLockFiles"
 
 @Suppress("UNCHECKED_CAST")
 private fun swiftPMDependencies(swiftPMDependenciesMetadataClasspath: ArtifactView): Provider<TransitiveSwiftPMDependencies> {
@@ -57,6 +59,20 @@ private fun swiftPMDependencies(swiftPMDependenciesMetadataClasspath: ArtifactVi
                 }
             TransitiveSwiftPMDependencies(metadataByDependencyIdentifier)
         }
+}
+
+internal fun Project.swiftPMDependenciesForLockFilesScopeConfiguration(): Configuration {
+    return project.configurations.maybeCreateDependencyScope("swiftPMDependenciesForLockFilesMetadataClasspathDependencies")
+}
+
+internal fun Project.swiftPMDependenciesForLockFilesResolvableMetadataConfiguration(): Configuration {
+    return project.configurations.maybeCreateResolvable("swiftPMDependenciesForLockFilesMetadataClasspath") {
+        attributes.attribute(Usage.USAGE_ATTRIBUTE, project.usageByName(SWIFTPM_DEPENDENCIES_METADATA_FOR_LOCK_FILES_USAGE))
+        attributes.attribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
+        attributes.attribute(KotlinPlatformType.attribute, KotlinPlatformType.common)
+
+        extendsFrom(project.swiftPMDependenciesForLockFilesScopeConfiguration())
+    }
 }
 
 private fun Project.swiftPMDependenciesResolvableMetadataConfiguration(): Configuration {
@@ -110,6 +126,16 @@ internal fun Project.registerSwiftPMDependenciesMetadataApiElements(swiftPMDepen
         outgoing.artifact(swiftPMDependenciesMetadata) {
             it.classifier = "swiftpm-metadata"
             it.extension = "json"
+        }
+    }.get()
+}
+
+internal fun Project.registerSwiftPMDependenciesMetadataForLockFilesApiElements(swiftPMDependenciesMetadata: TaskProvider<SerializeSwiftPMDependenciesMetadataForLockFiles>): Configuration {
+    return project.configurations.createConsumable("swiftPMDependenciesMetadataElementsForLockFiles") {
+        attributes.attribute(Usage.USAGE_ATTRIBUTE, project.usageByName(SWIFTPM_DEPENDENCIES_METADATA_FOR_LOCK_FILES_USAGE))
+        attributes.attribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
+        outgoing.artifact(swiftPMDependenciesMetadata) {
+            it.classifier = "swiftpm-metadata"
         }
     }.get()
 }

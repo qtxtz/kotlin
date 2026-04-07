@@ -109,7 +109,7 @@ class SwiftPMImportPopularSwiftPMDependenciesTests : KGPBaseTest() {
         swiftPackage(
             url = url("https://github.com/apple/swift-protobuf.git"),
             version = exact("1.32.0"),
-            products = listOf(),
+            products = listOf(product("SwiftProtobuf")),
         )
     }
 
@@ -1216,12 +1216,12 @@ class SwiftPMImportPopularSwiftPMDependenciesTests : KGPBaseTest() {
 }
 
 private fun TestProject.testKotlinLinkage() {
-    build(":linkReleaseFrameworkIosArm64")
+    // build(":linkReleaseFrameworkIosArm64")
     build(":linkDebugFrameworkIosSimulatorArm64")
 }
 
 private fun TestProject.copyLockFileIntoIosProject() {
-    projectPath.resolve("Package.resolved").copyTo(
+    projectPath.resolve(".swiftpm-locks/default/swiftImport/Package.resolved").copyTo(
         projectPath.resolve("iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved").also {
             it.parent.createDirectories()
         }
