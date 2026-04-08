@@ -21,9 +21,6 @@ import org.jetbrains.kotlin.fir.resolve.*
 import org.jetbrains.kotlin.fir.resolve.diagnostics.ConeUnresolvedSymbolError
 import org.jetbrains.kotlin.fir.resolve.diagnostics.ConeUnresolvedTypeQualifierError
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
-import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
-import org.jetbrains.kotlin.fir.resolve.toSymbol
-import org.jetbrains.kotlin.fir.types.ConeClassifierLookupTag
 import org.jetbrains.kotlin.fir.symbols.ConeTypeParameterLookupTag
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeAliasSymbol
@@ -69,7 +66,14 @@ class FirJvmTypeMapper(override val session: FirSession) : FirSessionComponent, 
     fun isPrimitiveBacked(type: ConeKotlinType): Boolean =
         AbstractTypeMapper.isPrimitiveBacked(defaultContext, type)
 
-    private val defaultContext = Context { null }
+    /**
+     * [FirJvmTypeMapper] is registered as a [FirSessionComponent], but [Context] depends on other session components, like the
+     * [typeContext] and symbol provider. To avoid ordering issues during session component registration, [defaultContext] is lazy.
+     */
+    private val defaultContext by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        Context { null }
+    }
+
     val typeContext: TypeSystemCommonBackendContext
         get() = defaultContext.typeContext
 
