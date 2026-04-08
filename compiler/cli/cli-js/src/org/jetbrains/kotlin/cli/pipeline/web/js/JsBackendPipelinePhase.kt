@@ -6,15 +6,13 @@
 package org.jetbrains.kotlin.cli.pipeline.web.js
 
 import org.jetbrains.kotlin.backend.common.CompilationException
-import org.jetbrains.kotlin.cli.CliDiagnostics.COMPILER_EXCEPTION
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
+import org.jetbrains.kotlin.cli.common.reportCompilationException
 import org.jetbrains.kotlin.cli.js.IcCachesArtifacts
 import org.jetbrains.kotlin.cli.js.Ir2JsTransformer
 import org.jetbrains.kotlin.cli.pipeline.web.JsBackendPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.WebBackendPipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.web.WebIrLoadingPipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
-import org.jetbrains.kotlin.cli.report
 import org.jetbrains.kotlin.cli.reportLog
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.messageCollector
@@ -107,16 +105,7 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
             outputs.writeAll(artifactConfiguration)
             return outputs
         } catch (e: CompilationException) {
-            configuration.report(
-                COMPILER_EXCEPTION,
-                e.stackTraceToString(),
-                CompilerMessageLocation.create(
-                    path = e.path,
-                    line = e.line,
-                    column = e.column,
-                    lineContent = e.content
-                )
-            )
+            configuration.reportCompilationException(e)
             return null
         }
     }
