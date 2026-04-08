@@ -10,12 +10,22 @@ import org.jetbrains.kotlin.fir.SessionConfiguration
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.scopes.FirOverrideChecker
 import org.jetbrains.kotlin.fir.scopes.impl.FirStandardOverrideChecker
-import org.jetbrains.kotlin.fir.session.FirNativeSessionFactory.Companion.registerNativeComponents
+import org.jetbrains.kotlin.fir.session.FirNativeSessionFactory
 
 @OptIn(SessionConfiguration::class)
 internal object LLNativeSessionComponentRegistration : LLPlatformSessionComponentRegistration {
     override fun registerComponents(session: LLFirSession, platformSpecificSymbolProviders: List<FirSymbolProvider>) = with(session) {
-        registerNativeComponents()
+        // For session component registration, there is currently no practical difference between the default and the `ForMetadata` session
+        // factory. However, given that the `ForMetadata` factory exists and might change in the future, we have to take it into account.
+        val firSessionFactory = if (session.isMetadataSession) {
+            FirNativeSessionFactory.ForMetadata
+        } else {
+            FirNativeSessionFactory
+        }
+
+        with(firSessionFactory) {
+            registerNativeComponents()
+        }
     }
 
     override fun registerResolvableLibraryComponents(session: LLFirSession) = with(session) {
