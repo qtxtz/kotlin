@@ -1,13 +1,11 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
 package org.jetbrains.kotlin.test.directives
 
-import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants
 import org.jetbrains.kotlin.js.config.ModuleKind
-import org.jetbrains.kotlin.js.config.RuntimeDiagnostic
 import org.jetbrains.kotlin.js.config.SourceMapSourceEmbedding
 import org.jetbrains.kotlin.test.directives.model.DirectiveApplicability
 import org.jetbrains.kotlin.test.directives.model.SimpleDirectivesContainer
@@ -90,20 +88,13 @@ object JsEnvironmentConfigurationDirectives : SimpleDirectivesContainer() {
     )
 
     val SAFE_EXTERNAL_BOOLEAN by directive(
-        description = "",
+        description = "Wrap access to external 'Boolean' properties with an explicit conversion to 'Boolean'",
         applicability = DirectiveApplicability.Global
     )
 
-    val SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC by enumDirective<RuntimeDiagnostic>(
-        description = "",
+    val SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC by stringDirective(
+        description = "Enable runtime diagnostics when accessing external 'Boolean' properties.",
         applicability = DirectiveApplicability.Global,
-        additionalParser = {
-            when (it.lowercase()) {
-                K2JsArgumentConstants.RUNTIME_DIAGNOSTIC_LOG -> RuntimeDiagnostic.LOG
-                K2JsArgumentConstants.RUNTIME_DIAGNOSTIC_EXCEPTION -> RuntimeDiagnostic.EXCEPTION
-                else -> null
-            }
-        }
     )
 
     val DONT_RUN_GENERATED_CODE by stringDirective(
@@ -228,7 +219,7 @@ object JsEnvironmentConfigurationDirectives : SimpleDirectivesContainer() {
     )
 
     val KEEP by stringDirective(
-        description = "Keep declarations",
+        description = "List of fully qualified names not to be eliminated by DCE.",
         applicability = DirectiveApplicability.Global
     )
 

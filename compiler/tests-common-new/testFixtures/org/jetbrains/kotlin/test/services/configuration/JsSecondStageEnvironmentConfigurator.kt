@@ -6,14 +6,20 @@
 package org.jetbrains.kotlin.test.services.configuration
 
 import org.jetbrains.kotlin.backend.common.linkage.partial.setupPartialLinkageConfig
+import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.PartialLinkageConfig
 import org.jetbrains.kotlin.config.PartialLinkageLogLevel
 import org.jetbrains.kotlin.ir.backend.js.MainModule
 import org.jetbrains.kotlin.js.config.*
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.platform.isJs
+import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.CALL_MAIN
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.GENERATE_INLINE_ANONYMOUS_FUNCTIONS
+import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.KEEP
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.PROPERTY_LAZY_INITIALIZATION
+import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.SAFE_EXTERNAL_BOOLEAN
+import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.SOURCE_MAP_EMBED_SOURCES
 import org.jetbrains.kotlin.test.model.ArtifactKinds
 import org.jetbrains.kotlin.test.model.DependencyRelation
@@ -28,6 +34,8 @@ open class JsSecondStageEnvironmentConfigurator(testServices: TestServices) : Js
     override fun DirectiveToConfigurationKeyExtractor.provideConfigurationKeys() {
         register(PROPERTY_LAZY_INITIALIZATION, JSConfigurationKeys.PROPERTY_LAZY_INITIALIZATION)
         register(GENERATE_INLINE_ANONYMOUS_FUNCTIONS, JSConfigurationKeys.GENERATE_INLINE_ANONYMOUS_FUNCTIONS)
+        register(SAFE_EXTERNAL_BOOLEAN, JSConfigurationKeys.SAFE_EXTERNAL_BOOLEAN)
+        register(SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC, JSConfigurationKeys.SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC)
     }
 
     override fun configureCompilerConfiguration(configuration: CompilerConfiguration, module: TestModule) {
@@ -62,5 +70,16 @@ open class JsSecondStageEnvironmentConfigurator(testServices: TestServices) : Js
 
         // Enforce PL with the ERROR log level to fail any tests where PL detected any incompatibilities.
         configuration.setupPartialLinkageConfig(PartialLinkageConfig(PartialLinkageLogLevel.ERROR))
+
+        configuration.callMainMode = if (CALL_MAIN in module.directives) {
+            K2JsArgumentConstants.CALL
+        } else {
+            K2JsArgumentConstants.NO_CALL
+        }
+
+        configuration.keep = module.directives[KEEP]
+
+        val testPackage = extractTestPackage(testServices, ignoreEsModules = false)
+        configuration.additionalExportedDeclarationNames = setOf(testPackage.child(Name.identifier("box")))
     }
 }

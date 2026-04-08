@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.js.config.ModuleKind
 import org.jetbrains.kotlin.js.config.SourceMapNamesPolicy
 import org.jetbrains.kotlin.js.config.SourceMapSourceEmbedding
 import org.jetbrains.kotlin.js.config.WebArtifactConfiguration
+import org.jetbrains.kotlin.name.FqName
 import java.io.File
 
 @Suppress("unused")
@@ -115,4 +116,5 @@ object JsConfigurationKeysContainer : KeysContainer("org.jetbrains.kotlin.js.con
     val IC_CACHE_READ_ONLY by key<Boolean>()
     val PRESERVE_IC_ORDER by key<Boolean>()
     val IC_FILES_TO_LOAD by key<Set<String>>(throwOnNull = false)
+    val ADDITIONAL_EXPORTED_DECLARATION_NAMES by key<Set<FqName>>()
 }

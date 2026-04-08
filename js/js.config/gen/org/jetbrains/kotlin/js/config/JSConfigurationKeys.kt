@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.config.CompilerConfigurationKey
 import org.jetbrains.kotlin.incremental.js.IncrementalDataProvider
 import org.jetbrains.kotlin.incremental.js.IncrementalNextRoundChecker
 import org.jetbrains.kotlin.incremental.js.IncrementalResultsConsumer
+import org.jetbrains.kotlin.name.FqName
 
 object JSConfigurationKeys {
     @JvmField
@@ -207,6 +208,9 @@ object JSConfigurationKeys {
 
     @JvmField
     val IC_FILES_TO_LOAD = CompilerConfigurationKey.create<Set<String>>("IC_FILES_TO_LOAD")
+
+    @JvmField
+    val ADDITIONAL_EXPORTED_DECLARATION_NAMES = CompilerConfigurationKey.create<Set<FqName>>("ADDITIONAL_EXPORTED_DECLARATION_NAMES")
 
 }
 
@@ -421,4 +425,8 @@ var CompilerConfiguration.preserveIcOrder: Boolean
 var CompilerConfiguration.icFilesToLoad: Set<String>
     get() = getSet(JSConfigurationKeys.IC_FILES_TO_LOAD)
     set(value) { put(JSConfigurationKeys.IC_FILES_TO_LOAD, value) }
+
+var CompilerConfiguration.additionalExportedDeclarationNames: Set<FqName>
+    get() = getSet(JSConfigurationKeys.ADDITIONAL_EXPORTED_DECLARATION_NAMES)
+    set(value) { put(JSConfigurationKeys.ADDITIONAL_EXPORTED_DECLARATION_NAMES, value) }
 

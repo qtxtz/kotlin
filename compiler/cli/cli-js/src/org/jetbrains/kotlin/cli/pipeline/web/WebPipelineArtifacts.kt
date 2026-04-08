@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.cli.pipeline.PipelineArtifact
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.pipeline.AllModulesFrontendOutput
 import org.jetbrains.kotlin.fir.pipeline.Fir2IrActualizedResult
+import org.jetbrains.kotlin.ir.backend.js.LoweredIr
 import org.jetbrains.kotlin.ir.backend.js.ModulesStructure
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
 import java.io.File
@@ -63,6 +64,16 @@ data class WebLoadedIrPipelineArtifact(
 ) : LoadedIrPipelineArtifact() {
     @CliPipelineInternals(OPT_IN_MESSAGE)
     override fun withCompilerConfiguration(newConfiguration: CompilerConfiguration): WebLoadedIrPipelineArtifact {
+        return copy(configuration = newConfiguration)
+    }
+}
+
+data class JsLoweredIrPipelineArtifact(
+    val ir: LoweredIr,
+    override val configuration: CompilerConfiguration,
+) : PipelineArtifact() {
+    @CliPipelineInternals(OPT_IN_MESSAGE)
+    override fun withCompilerConfiguration(newConfiguration: CompilerConfiguration): JsLoweredIrPipelineArtifact {
         return copy(configuration = newConfiguration)
     }
 }

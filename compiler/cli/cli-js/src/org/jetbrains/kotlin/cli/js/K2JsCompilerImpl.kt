@@ -6,17 +6,18 @@
 package org.jetbrains.kotlin.cli.js
 
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
-import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.perfManager
 import org.jetbrains.kotlin.ir.backend.js.LoweredIr
 import org.jetbrains.kotlin.ir.backend.js.ModulesStructure
-import org.jetbrains.kotlin.ir.backend.js.compileIr
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputsBuilt
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.IrModuleToJsTransformer
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.JsCodeGenerator
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.TranslationMode
-import org.jetbrains.kotlin.js.config.*
+import org.jetbrains.kotlin.js.config.JsGenerationGranularity
+import org.jetbrains.kotlin.js.config.artifactConfiguration
+import org.jetbrains.kotlin.js.config.dce
+import org.jetbrains.kotlin.js.config.minimizedMemberNames
 import org.jetbrains.kotlin.util.PhaseType
 
 class Ir2JsTransformer private constructor(
@@ -24,10 +25,6 @@ class Ir2JsTransformer private constructor(
     val messageCollector: MessageCollector,
     val configuration: CompilerConfiguration,
     val mainCallArguments: List<String>?,
-    val keep: Set<String>,
-    val dceRuntimeDiagnostic: String?,
-    val safeExternalBoolean: Boolean,
-    val safeExternalBooleanDiagnostic: String?,
     val granularity: JsGenerationGranularity,
     val dce: Boolean,
     val minimizedMemberNames: Boolean,
@@ -42,10 +39,6 @@ class Ir2JsTransformer private constructor(
         messageCollector,
         configuration,
         mainCallArguments,
-        keep = configuration.keep.toSet(),
-        dceRuntimeDiagnostic = configuration.dceRuntimeDiagnostic,
-        safeExternalBoolean = configuration.safeExternalBoolean,
-        safeExternalBooleanDiagnostic = configuration.safeExternalBooleanDiagnostic,
         granularity = configuration.artifactConfiguration!!.granularity,
         dce = configuration.dce,
         minimizedMemberNames = configuration.minimizedMemberNames,
@@ -53,34 +46,7 @@ class Ir2JsTransformer private constructor(
 
     private val performanceManager = module.compilerConfiguration.perfManager
 
-    private fun lowerIr(loadedIr: WebLoadedIrPipelineArtifact): LoweredIr {
-        val (moduleFragment, moduleDependencies, irBuiltIns, symbolTable, deserializer) =
-            loadedIr.moduleInfo
-        return compileIr(
-            moduleFragment = moduleFragment,
-            mainModule = module.mainModule,
-            mainCallArguments = mainCallArguments,
-            configuration = module.compilerConfiguration,
-            moduleDependencies = moduleDependencies,
-            irBuiltIns = irBuiltIns,
-            symbolTable = symbolTable,
-            irLinker = deserializer,
-            exportedDeclarations = emptySet(),
-            keep = keep,
-            dceRuntimeDiagnostic = RuntimeDiagnostic.resolve(
-                dceRuntimeDiagnostic,
-                configuration
-            ),
-            safeExternalBoolean = safeExternalBoolean,
-            safeExternalBooleanDiagnostic = RuntimeDiagnostic.resolve(
-                safeExternalBooleanDiagnostic,
-                configuration
-            ),
-        )
-    }
-
-    private fun makeJsCodeGenerator(loadedIr: WebLoadedIrPipelineArtifact): JsCodeGenerator {
-        val ir = lowerIr(loadedIr)
+    private fun makeJsCodeGenerator(ir: LoweredIr): JsCodeGenerator {
         val transformer = IrModuleToJsTransformer(ir.context, ir.moduleFragmentToUniqueName, mainCallArguments != null)
 
         val mode = TranslationMode.fromFlags(dce, granularity, minimizedMemberNames)
@@ -89,8 +55,8 @@ class Ir2JsTransformer private constructor(
             .makeJsCodeGenerator(ir.allModules, mode)
     }
 
-    fun compileAndTransformIrNew(loadedIr: WebLoadedIrPipelineArtifact): CompilationOutputsBuilt {
-        return makeJsCodeGenerator(loadedIr)
+    fun compileAndTransformIrNew(loweredIr: LoweredIr): CompilationOutputsBuilt {
+        return makeJsCodeGenerator(loweredIr)
             .generateJsCode(relativeRequirePath = true, outJsProgram = false)
             .also {
                 performanceManager?.notifyPhaseFinished(PhaseType.Backend)
