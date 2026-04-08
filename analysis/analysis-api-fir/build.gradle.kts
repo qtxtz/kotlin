@@ -70,7 +70,7 @@ projectTests {
         @OptIn(TemporaryTestFederationApi::class)
         isSmokeTest = true
 
-        extensions.configure<TestInputsCheckExtension> {
+        testInputsCheck {
             allowFlightRecorder = true
         }
     }

@@ -90,7 +90,7 @@ fun Project.customCompilerTest(
         workingDir = projectDir
 
         useJUnitPlatform { includeTags(tag) }
-        extensions.configure<TestInputsCheckExtension> {
+        testInputsCheck {
             isNative.set(true)
             // Permissions for older compiler, for unnecessarily performed access to root dir, already fixed in 2.2.20, commit dbd8ac94
             extraPermissions.add("""permission java.io.FilePermission "${projectDir.resolve("stdlib")}", "read";""")
