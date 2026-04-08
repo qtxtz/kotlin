@@ -12,7 +12,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":compiler:ir.tree"))
+    implementation(project(":compiler:ir.tree"))
     api(project(":compiler:fir:entrypoint"))
     api(project(":analysis:low-level-api-fir"))
     api(project(":analysis:analysis-api"))
