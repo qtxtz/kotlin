@@ -101,10 +101,180 @@ internal class LLFirSessionFactory(
         KotlinPlatformSettings.getInstance(project)
     }
 
-    fun createSourcesSession(module: KaSourceModule): LLFirSourcesSession = doCreateSourcesSession(module)
+    fun createSourcesSession(module: KaSourceModule): LLFirSourcesSession {
+        val platform = module.targetPlatform
+        val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
+        val languageVersionSettings = wrapLanguageVersionSettings(module.languageVersionSettings)
 
-    fun createResolvableLibrarySession(module: KaModule): LLFirLibraryOrLibrarySourceResolvableModuleSession =
-        doCreateResolvableLibrarySession(module)
+        val scopeProvider = platformConfiguration.createSourceScopeProvider()
+        val components = LLFirModuleResolveComponents(module, globalResolveComponents, scopeProvider)
+
+        val session = LLFirSourcesSession(module, components, builtinsSession.builtinTypes) {
+            computeDependencySessions(module)
+        }
+
+        components.session = session
+
+        val moduleData = createModuleData(session)
+        val resolutionScope = resolutionScopeProvider.getResolutionScope(module)
+
+        return session.apply {
+            registerModuleData(moduleData)
+            register(FirKotlinScopeProvider::class, scopeProvider)
+
+            registerAllCommonComponents(languageVersionSettings, module, resolutionScope)
+            registerSourceLikeComponents()
+
+            val firProvider = LLFirProvider(
+                this,
+                components,
+                /* Source modules can contain `kotlin` package only if `-Xallow-kotlin-package` is specified, this is handled in LLFirProvider */
+                canContainKotlinPackage = false,
+            ) { scope ->
+                project.createDeclarationProvider(scope, module)
+            }
+
+            register(FirProvider::class, firProvider)
+            register(FirLazyDeclarationResolver::class, LLFirLazyDeclarationResolver())
+
+            registerCompilerPluginServices(project, resolutionScope)
+            registerCompilerPluginExtensions(project, module)
+            registerCommonComponentsAfterExtensionsAreConfigured()
+
+            val dependencyProvider = LLDependenciesSymbolProvider(this) {
+                buildList {
+                    addMerged(session, computeDependencySymbolProviders(session.dependencies))
+                    add(builtinsSession.symbolProvider)
+                }
+            }
+
+            register(DEPENDENCIES_SYMBOL_PROVIDER_QUALIFIED_KEY, dependencyProvider)
+
+            LLFirSessionConfigurator.configure(this)
+
+            val syntheticFunctionInterfaceProvider =
+                FirExtensionSyntheticFunctionInterfaceProvider.createIfNeeded(this, moduleData, scopeProvider)
+
+            val switchableExtensionDeclarationsSymbolProvider =
+                LLFirSwitchableExtensionDeclarationsSymbolProvider
+                    .createIfNeeded(this)
+                    ?.also { register(FirSwitchableExtensionDeclarationsSymbolProvider::class, it) }
+
+            register(
+                FirBuiltinSyntheticFunctionInterfaceProvider::class,
+                builtinsSession.syntheticFunctionInterfacesSymbolProvider
+            )
+
+            val platformSpecificSymbolProviders = platformConfiguration.createPlatformSpecificSymbolProviders(this, module.contentScope)
+            register(
+                FirSymbolProvider::class,
+                LLModuleWithDependenciesSymbolProvider(
+                    this,
+                    providers = buildList {
+                        add(firProvider.symbolProvider)
+                        addIfNotNull(switchableExtensionDeclarationsSymbolProvider)
+                        addAll(platformSpecificSymbolProviders)
+                        addIfNotNull(syntheticFunctionInterfaceProvider)
+                    },
+                    dependencyProvider,
+                )
+            )
+
+            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
+            platformComponentRegistration.registerSourceComponents(this)
+        }
+    }
+
+    fun createResolvableLibrarySession(module: KaModule): LLFirLibraryOrLibrarySourceResolvableModuleSession {
+        val binaryModule = when (module) {
+            is KaLibraryModule, is KaBuiltinsModule -> module
+            is KaLibrarySourceModule -> module.binaryLibrary
+            else -> errorWithAttachment("Unexpected module ${module::class.simpleName}") {
+                withKaModuleEntry("module", module)
+            }
+        }
+
+        val platform = module.targetPlatform
+        val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
+        val languageVersionSettings = KotlinProjectStructureProvider.getInstance(project).libraryLanguageVersionSettings
+
+        val scopeProvider = FirKotlinScopeProvider()
+        val components = LLFirModuleResolveComponents(module, globalResolveComponents, scopeProvider)
+
+        val session = LLFirLibraryOrLibrarySourceResolvableModuleSession(module, components, builtinsSession.builtinTypes)
+        components.session = session
+
+        val moduleData = createModuleData(session)
+        val binaryContentScope = binaryModule.contentScope
+
+        return session.apply {
+            registerModuleData(moduleData)
+            register(FirKotlinScopeProvider::class, scopeProvider)
+
+            registerAllCommonComponents(languageVersionSettings, module, binaryContentScope)
+            registerCommonComponentsAfterExtensionsAreConfigured()
+
+            val firProvider = LLFirProvider(
+                this,
+                components,
+                canContainKotlinPackage = true,
+            ) { scope ->
+                project.createDeclarationProvider(scope, module)
+            }
+
+            register(FirProvider::class, firProvider)
+
+            register(FirLazyDeclarationResolver::class, LLFirLazyDeclarationResolver())
+
+            // We need FirRegisteredPluginAnnotations during extensions' registration process
+            val annotationsResolver = project.createAnnotationResolver(binaryContentScope)
+            register(FirRegisteredPluginAnnotations::class, LLFirIdeRegisteredPluginAnnotations(this, annotationsResolver))
+            register(FirPredicateBasedProvider::class, FirEmptyPredicateBasedProvider)
+
+            val dependencyProvider = LLDependenciesSymbolProvider(this) {
+                buildList {
+                    if (module !is KaBuiltinsModule) {
+                        add(builtinsSession.symbolProvider)
+                    }
+
+                    // The library (source) module will usually have a `KaLibraryFallbackDependenciesModule`, which will be added here, but
+                    // this also works when the library (source) module has precise dependencies.
+                    addMerged(session, computeDependencySymbolProviders(binaryModule))
+
+                    if (binaryModule is KaLibraryModule) {
+                        KotlinAnchorModuleProvider.getInstance(project)?.getAnchorModule(binaryModule)?.let { anchorModule ->
+                            val anchorModuleSession = LLFirSessionCache.getInstance(project).getSession(anchorModule)
+                            val anchorModuleSymbolProvider =
+                                anchorModuleSession.symbolProvider as LLModuleWithDependenciesSymbolProvider
+
+                            addAll(anchorModuleSymbolProvider.providers)
+                            addAll(anchorModuleSymbolProvider.dependencyProvider.providers)
+                        }
+                    }
+                }
+            }
+
+            register(DEPENDENCIES_SYMBOL_PROVIDER_QUALIFIED_KEY, dependencyProvider)
+
+            val platformSpecificSymbolProviders = platformConfiguration.createPlatformSpecificSymbolProviders(this, binaryContentScope)
+            register(
+                FirSymbolProvider::class,
+                LLModuleWithDependenciesSymbolProvider(
+                    this,
+                    providers = buildList {
+                        add(firProvider.symbolProvider)
+                        addAll(platformSpecificSymbolProviders)
+                    },
+                    dependencyProvider,
+                )
+            )
+
+            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
+            platformComponentRegistration.registerResolvableLibraryComponents(this)
+
+            LLFirSessionConfigurator.configure(this)
+        }
+    }
 
     /**
      * Creates a binary [LLFirLibrarySession] for a [KaLibraryModule] or [KaLibraryFallbackDependenciesModule].
@@ -112,7 +282,69 @@ internal class LLFirSessionFactory(
      * Both regular libraries and library fallback dependencies can be treated from the same point of view of a binary session. Hence, it
      * doesn't make practical sense to have separate session creation machinery for [KaLibraryFallbackDependenciesModule].
      */
-    fun createBinaryLibrarySession(module: KaModule): LLFirLibrarySession = doCreateBinaryLibrarySession(module)
+    fun createBinaryLibrarySession(module: KaModule): LLFirLibrarySession {
+        require(module is KaLibraryModule || module is KaLibraryFallbackDependenciesModule) {
+            "A binary library session can only be created for a `${KaLibraryModule::class.simpleName}` or a " +
+                    "`${KaLibraryFallbackDependenciesModule::class.simpleName}`. Instead got: `${module::class.simpleName}`."
+        }
+
+        val platform = module.targetPlatform
+        val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
+
+        val session = LLFirLibrarySession(module, builtinsSession.builtinTypes)
+
+        val moduleData = createModuleData(session)
+        val contentScope = module.contentScope
+
+        return session.apply {
+            val languageVersionSettings = KotlinProjectStructureProvider.getInstance(project).libraryLanguageVersionSettings
+            registerModuleData(moduleData)
+            registerIdeComponents(project, languageVersionSettings, contentScope)
+            register(FirLazyDeclarationResolver::class, FirDummyCompilerLazyDeclarationResolver)
+            registerCommonComponents(languageVersionSettings, isMetadataCompilation = false)
+            registerCommonComponentsAfterExtensionsAreConfigured()
+            registerKdocDeserializer()
+
+            val kotlinScopeProvider = when {
+                platform.isJvm() -> FirKotlinScopeProvider(::wrapScopeWithJvmMapped)
+                else -> FirKotlinScopeProvider()
+            }
+
+            register(FirKotlinScopeProvider::class, kotlinScopeProvider)
+
+            val symbolProvider = LLModuleWithDependenciesSymbolProvider(
+                this,
+                providers = platformConfiguration.createBinaryLibrarySymbolProviders(this, contentScope),
+                LLDependenciesSymbolProvider(this) {
+                    // A binary library session should not have any dependencies (apart from fallback builtins), as library module
+                    // dependencies only apply to *resolvable* sessions, including fallback dependencies.
+                    listOf(builtinsSession.symbolProvider)
+                },
+            )
+
+            register(FirProvider::class, LLFirLibrarySessionProvider(symbolProvider))
+            register(FirSymbolProvider::class, symbolProvider)
+
+            platformComponentRegistration.registerComponents(this, emptyList())
+            platformComponentRegistration.registerBinaryLibraryComponents(this)
+
+            LLFirSessionConfigurator.configure(this)
+        }
+    }
+
+    private fun LLFirSession.registerKdocDeserializer() {
+        if (ktModule.targetPlatform.isJvm()) {
+            // Only KLib-based platforms are supported
+            return
+        }
+
+        if (platformSettings.deserializedDeclarationsOrigin == KotlinDeserializedDeclarationsOrigin.STUBS) {
+            // KDoc is always deserialized in stubs. No need to put it also to the FIR
+            return
+        }
+
+        register(FirKDocDeserializer::class, KlibBasedKDocDeserializer)
+    }
 
     fun createScriptSession(module: KaScriptModule): LLFirScriptSession {
         val platform = module.targetPlatform
@@ -279,253 +511,7 @@ internal class LLFirSessionFactory(
         }
     }
 
-    private fun doCreateSourcesSession(module: KaSourceModule): LLFirSourcesSession {
-        val platform = module.targetPlatform
-        val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
-        val languageVersionSettings = wrapLanguageVersionSettings(module.languageVersionSettings)
-
-        val scopeProvider = platformConfiguration.createSourceScopeProvider()
-        val components = LLFirModuleResolveComponents(module, globalResolveComponents, scopeProvider)
-
-        val session = LLFirSourcesSession(module, components, builtinsSession.builtinTypes) {
-            computeDependencySessions(module)
-        }
-
-        components.session = session
-
-        val moduleData = createModuleData(session)
-        val resolutionScope = resolutionScopeProvider.getResolutionScope(module)
-
-        return session.apply {
-            registerModuleData(moduleData)
-            register(FirKotlinScopeProvider::class, scopeProvider)
-
-            registerAllCommonComponents(languageVersionSettings, module, resolutionScope)
-            registerSourceLikeComponents()
-
-            val firProvider = LLFirProvider(
-                this,
-                components,
-                /* Source modules can contain `kotlin` package only if `-Xallow-kotlin-package` is specified, this is handled in LLFirProvider */
-                canContainKotlinPackage = false,
-            ) { scope ->
-                project.createDeclarationProvider(scope, module)
-            }
-
-            register(FirProvider::class, firProvider)
-            register(FirLazyDeclarationResolver::class, LLFirLazyDeclarationResolver())
-
-            registerCompilerPluginServices(project, resolutionScope)
-            registerCompilerPluginExtensions(project, module)
-            registerCommonComponentsAfterExtensionsAreConfigured()
-
-            val dependencyProvider = LLDependenciesSymbolProvider(this) {
-                buildList {
-                    addMerged(session, computeDependencySymbolProviders(session.dependencies))
-                    add(builtinsSession.symbolProvider)
-                }
-            }
-
-            register(DEPENDENCIES_SYMBOL_PROVIDER_QUALIFIED_KEY, dependencyProvider)
-
-            LLFirSessionConfigurator.configure(this)
-
-            val syntheticFunctionInterfaceProvider =
-                FirExtensionSyntheticFunctionInterfaceProvider.createIfNeeded(this, moduleData, scopeProvider)
-            val switchableExtensionDeclarationsSymbolProvider =
-                LLFirSwitchableExtensionDeclarationsSymbolProvider.createIfNeeded(this)?.also {
-                    register(FirSwitchableExtensionDeclarationsSymbolProvider::class, it)
-                }
-
-            register(
-                FirBuiltinSyntheticFunctionInterfaceProvider::class,
-                builtinsSession.syntheticFunctionInterfacesSymbolProvider
-            )
-
-            val platformSpecificSymbolProviders = platformConfiguration.createPlatformSpecificSymbolProviders(this, module.contentScope)
-            register(
-                FirSymbolProvider::class,
-                LLModuleWithDependenciesSymbolProvider(
-                    this,
-                    providers = buildList {
-                        add(firProvider.symbolProvider)
-                        addIfNotNull(switchableExtensionDeclarationsSymbolProvider)
-                        addAll(platformSpecificSymbolProviders)
-                        addIfNotNull(syntheticFunctionInterfaceProvider)
-                    },
-                    dependencyProvider,
-                )
-            )
-
-            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
-            platformComponentRegistration.registerSourceComponents(this)
-        }
-    }
-
-    private fun doCreateResolvableLibrarySession(
-        module: KaModule,
-    ): LLFirLibraryOrLibrarySourceResolvableModuleSession {
-        val binaryModule = when (module) {
-            is KaLibraryModule, is KaBuiltinsModule -> module
-            is KaLibrarySourceModule -> module.binaryLibrary
-            else -> errorWithAttachment("Unexpected module ${module::class.simpleName}") {
-                withKaModuleEntry("module", module)
-            }
-        }
-
-        val platform = module.targetPlatform
-        val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
-        val languageVersionSettings = KotlinProjectStructureProvider.getInstance(project).libraryLanguageVersionSettings
-
-        val scopeProvider = FirKotlinScopeProvider()
-        val components = LLFirModuleResolveComponents(module, globalResolveComponents, scopeProvider)
-
-        val session = LLFirLibraryOrLibrarySourceResolvableModuleSession(module, components, builtinsSession.builtinTypes)
-        components.session = session
-
-        val moduleData = createModuleData(session)
-        val binaryContentScope = binaryModule.contentScope
-
-        return session.apply {
-            registerModuleData(moduleData)
-            register(FirKotlinScopeProvider::class, scopeProvider)
-
-            registerAllCommonComponents(languageVersionSettings, module, binaryContentScope)
-            registerCommonComponentsAfterExtensionsAreConfigured()
-
-            val firProvider = LLFirProvider(
-                this,
-                components,
-                canContainKotlinPackage = true,
-            ) { scope ->
-                project.createDeclarationProvider(scope, module)
-            }
-
-            register(FirProvider::class, firProvider)
-
-            register(FirLazyDeclarationResolver::class, LLFirLazyDeclarationResolver())
-
-            // We need FirRegisteredPluginAnnotations during extensions' registration process
-            val annotationsResolver = project.createAnnotationResolver(binaryContentScope)
-            register(FirRegisteredPluginAnnotations::class, LLFirIdeRegisteredPluginAnnotations(this, annotationsResolver))
-            register(FirPredicateBasedProvider::class, FirEmptyPredicateBasedProvider)
-
-            val dependencyProvider = LLDependenciesSymbolProvider(this) {
-                buildList {
-                    if (module !is KaBuiltinsModule) {
-                        add(builtinsSession.symbolProvider)
-                    }
-
-                    // The library (source) module will usually have a `KaLibraryFallbackDependenciesModule`, which will be added here, but
-                    // this also works when the library (source) module has precise dependencies.
-                    addMerged(session, computeDependencySymbolProviders(binaryModule))
-
-                    if (binaryModule is KaLibraryModule) {
-                        KotlinAnchorModuleProvider.getInstance(project)?.getAnchorModule(binaryModule)?.let { anchorModule ->
-                            val anchorModuleSession = LLFirSessionCache.getInstance(project).getSession(anchorModule)
-                            val anchorModuleSymbolProvider =
-                                anchorModuleSession.symbolProvider as LLModuleWithDependenciesSymbolProvider
-
-                            addAll(anchorModuleSymbolProvider.providers)
-                            addAll(anchorModuleSymbolProvider.dependencyProvider.providers)
-                        }
-                    }
-                }
-            }
-
-            register(DEPENDENCIES_SYMBOL_PROVIDER_QUALIFIED_KEY, dependencyProvider)
-
-            val platformSpecificSymbolProviders = platformConfiguration.createPlatformSpecificSymbolProviders(this, binaryContentScope)
-            register(
-                FirSymbolProvider::class,
-                LLModuleWithDependenciesSymbolProvider(
-                    this,
-                    providers = buildList {
-                        add(firProvider.symbolProvider)
-                        addAll(platformSpecificSymbolProviders)
-                    },
-                    dependencyProvider,
-                )
-            )
-
-            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
-            platformComponentRegistration.registerResolvableLibraryComponents(this)
-
-            LLFirSessionConfigurator.configure(this)
-        }
-    }
-
-    private fun doCreateBinaryLibrarySession(module: KaModule): LLFirLibrarySession {
-        require(module is KaLibraryModule || module is KaLibraryFallbackDependenciesModule) {
-            "A binary library session can only be created for a `${KaLibraryModule::class.simpleName}` or a " +
-                    "`${KaLibraryFallbackDependenciesModule::class.simpleName}`. Instead got: `${module::class.simpleName}`."
-        }
-
-        val platform = module.targetPlatform
-        val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
-
-        val session = LLFirLibrarySession(module, builtinsSession.builtinTypes)
-
-        val moduleData = createModuleData(session)
-        val contentScope = module.contentScope
-
-        return session.apply {
-            val languageVersionSettings = KotlinProjectStructureProvider.getInstance(project).libraryLanguageVersionSettings
-            registerModuleData(moduleData)
-            registerIdeComponents(project, languageVersionSettings, contentScope)
-            register(FirLazyDeclarationResolver::class, FirDummyCompilerLazyDeclarationResolver)
-            registerCommonComponents(languageVersionSettings, isMetadataCompilation = false)
-            registerCommonComponentsAfterExtensionsAreConfigured()
-            registerKdocDeserializer()
-
-            val kotlinScopeProvider = when {
-                platform.isJvm() -> FirKotlinScopeProvider(::wrapScopeWithJvmMapped)
-                else -> FirKotlinScopeProvider()
-            }
-
-            register(FirKotlinScopeProvider::class, kotlinScopeProvider)
-
-            val symbolProvider = LLModuleWithDependenciesSymbolProvider(
-                this,
-                providers = platformConfiguration.createBinaryLibrarySymbolProviders(this, contentScope),
-                LLDependenciesSymbolProvider(this) {
-                    // A binary library session should not have any dependencies (apart from fallback builtins), as library module
-                    // dependencies only apply to *resolvable* sessions, including fallback dependencies.
-                    listOf(builtinsSession.symbolProvider)
-                },
-            )
-
-            register(FirProvider::class, LLFirLibrarySessionProvider(symbolProvider))
-            register(FirSymbolProvider::class, symbolProvider)
-
-            platformComponentRegistration.registerComponents(this, emptyList())
-            platformComponentRegistration.registerBinaryLibraryComponents(this)
-
-            LLFirSessionConfigurator.configure(this)
-        }
-    }
-
-    private fun LLFirSession.registerKdocDeserializer() {
-        if (ktModule.targetPlatform.isJvm()) {
-            // Only KLib-based platforms are supported
-            return
-        }
-
-        if (platformSettings.deserializedDeclarationsOrigin == KotlinDeserializedDeclarationsOrigin.STUBS) {
-            // KDoc is always deserialized in stubs. No need to put it also to the FIR
-            return
-        }
-
-        register(FirKDocDeserializer::class, KlibBasedKDocDeserializer)
-    }
-
-    fun createDanglingFileSession(module: KaDanglingFileModule, contextSession: LLFirSession): LLFirSession =
-        doCreateDanglingFileSession(module, contextSession)
-
-    private fun doCreateDanglingFileSession(
-        module: KaDanglingFileModule,
-        contextSession: LLFirSession,
-    ): LLFirSession {
+    fun createDanglingFileSession(module: KaDanglingFileModule, contextSession: LLFirSession): LLFirSession {
         val platform = module.targetPlatform
 
         val builtinsSession = LLFirBuiltinsSessionFactory.getInstance(project).getBuiltinsSession(platform)
