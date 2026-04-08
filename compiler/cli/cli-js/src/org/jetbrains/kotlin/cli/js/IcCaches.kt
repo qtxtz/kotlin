@@ -8,10 +8,7 @@ package org.jetbrains.kotlin.cli.js
 import org.jetbrains.kotlin.backend.wasm.ic.WasmICContextMultimodule
 import org.jetbrains.kotlin.backend.wasm.ic.WasmICContextSingleModule
 import org.jetbrains.kotlin.backend.wasm.ic.WasmICContextWholeWorld
-import org.jetbrains.kotlin.cli.common.arguments.CommonJsAndWasmCompilerArguments
-import org.jetbrains.kotlin.cli.common.arguments.KotlinWasmCompilerArguments
 import org.jetbrains.kotlin.cli.pipeline.web.wasm.WasmCompilationMode
-import org.jetbrains.kotlin.cli.pipeline.web.wasm.WasmCompilationMode.Companion.wasmCompilationMode
 import org.jetbrains.kotlin.cli.reportLog
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.ir.backend.js.JsICContext
@@ -33,33 +30,6 @@ sealed class IcCachesConfigurationData {
         val generateDebugInformation: Boolean,
         val mode: WasmCompilationMode,
     ) : IcCachesConfigurationData()
-}
-
-internal fun prepareIcCaches(
-    cacheDirectory: String,
-    arguments: CommonJsAndWasmCompilerArguments,
-    outputDir: File,
-    targetConfiguration: CompilerConfiguration,
-    mainCallArguments: List<String>?,
-): IcCachesArtifacts {
-    val data = when {
-        arguments is KotlinWasmCompilerArguments -> IcCachesConfigurationData.Wasm(
-            wasmDebug = arguments.wasmDebug,
-            generateWat = arguments.wasmGenerateWat,
-            generateDebugInformation = arguments.sourceMap || arguments.generateDwarf,
-            mode = targetConfiguration.wasmCompilationMode(),
-        )
-        else -> IcCachesConfigurationData.Js(
-            arguments.granularity
-        )
-    }
-    return prepareIcCaches(
-        cacheDirectory,
-        data,
-        outputDir,
-        targetConfiguration,
-        mainCallArguments,
-    )
 }
 
 internal fun prepareIcCaches(
