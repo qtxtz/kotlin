@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.analysis.api.projectStructure.KaDanglingFileResoluti
 import org.jetbrains.kotlin.analysis.api.projectStructure.copyOrigin
 import org.jetbrains.kotlin.analysis.low.level.api.fir.LLFirInternals
 import org.jetbrains.kotlin.analysis.low.level.api.fir.file.structure.LLFirDeclarationModificationService
-import org.jetbrains.kotlin.backend.common.pop
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtImplementationDetail
@@ -119,7 +118,7 @@ internal class KaFirDanglingFileResolutionModeProvider : KaDanglingFileResolutio
         val stubList: MutableList<StubElement<*>?> = mutableListOf(stub)
         val result: MutableList<KotlinStubElement<*>> = mutableListOf()
         while (stubList.isNotEmpty()) {
-            val stub = stubList.pop() as? KotlinStubElement<*> ?: continue
+            val stub = stubList.removeLast() as? KotlinStubElement<*> ?: continue
             stub.childrenStubs.filterTo(stubList) { stub.shouldAddChild(it) }
             result.addIfNotNull(stub)
         }
