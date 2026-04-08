@@ -431,12 +431,14 @@ internal fun checkIfTheLinkageProjectIsConnectedToTheXcodeProject(
             ":${IntegrateLinkagePackageIntoXcodeProject.TASK_NAME}"
         } else "${gradleProjectPath}:${IntegrateLinkagePackageIntoXcodeProject.TASK_NAME}"
 
-        val gradlew = searchForGradlew(xcodeProjectThatCalledEmbedAndSign)
+        val gradleCommand = searchForGradlew(xcodeProjectThatCalledEmbedAndSign)?.path
+            ?: rootProjectDir.resolve("gradlew").takeIf { it.exists() }?.path
+            ?: "gradle"
         val messageLines = listOf(
             "You have SwiftPM dependencies with embedAndSign integration.",
             "Please integrate with synthetic import linkage project by",
             "running the following command:",
-            "${PROJECT_PATH_ENV}='${xcodeProjectThatCalledEmbedAndSign.path}' '${gradlew?.path}' -p '${rootProjectDir}' '${taskCall}' -i"
+            "${PROJECT_PATH_ENV}='${xcodeProjectThatCalledEmbedAndSign.path}' '${gradleCommand}' -p '${rootProjectDir}' '${taskCall}' -i"
         )
         messageLines.forEach {
             println("error: $it")

@@ -1298,6 +1298,35 @@ class SwiftPMImportXcodeIntegrationIT : KGPBaseTest() {
     }
 
     @GradleTest
+    fun `embedAndSignAppleFrameworkForXcode uses root gradlew for external xcode project`(version: GradleVersion) {
+        project("emptyxcode", version) {
+            initDefaultKmpWithLocalSPM()
+
+            val siblingIosAppPath = projectPath.parent.resolve("iosApp")
+            val iosAppXcodeProj = projectPath.resolve("iosApp").moveTo(siblingIosAppPath).resolve("iosApp.xcodeproj")
+            val xcodeBuildOutput = projectPath.resolve("build/xcodeOutput")
+
+            buildAndFail(
+                "embedAndSignAppleFrameworkForXcode",
+                environmentVariables = EnvironmentalVariables(
+                    "CONFIGURATION" to "Debug",
+                    "ARCHS" to "arm64",
+                    "SDK_NAME" to "iphonesimulator",
+                    "FRAMEWORKS_FOLDER_PATH" to "Frameworks",
+                    "TARGET_BUILD_DIR" to xcodeBuildOutput.absolutePathString(),
+                    "BUILT_PRODUCTS_DIR" to xcodeBuildOutput.absolutePathString(),
+                    "PROJECT_FILE_PATH" to iosAppXcodeProj.absolutePathString(),
+                )
+            ) {
+                assertOutputContains("Please integrate with synthetic import linkage project by")
+                assertOutputContains("XCODEPROJ_PATH='${iosAppXcodeProj.toRealPath().pathString}'")
+                assertOutputContains("'gradle'")
+                assertOutputDoesNotContain("path.parentFile must not be null")
+            }
+        }
+    }
+
+    @GradleTest
     fun `integrateLinkagePackage fails when embed-and-sign phase is absent`(version: GradleVersion) {
         project("emptyxcode-no-embedandsign", version) {
             initDefaultKmpWithLocalSPM()
