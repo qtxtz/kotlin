@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.ir.backend.js.tsexport.*
 import org.jetbrains.kotlin.js.common.makeValidES5Identifier
 import org.jetbrains.kotlin.js.common.safeModuleName
 import org.jetbrains.kotlin.js.config.ModuleKind
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.name.StandardClassIds
@@ -169,7 +170,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                     name = function.getJsSymbolForOverriddenDeclaration()?.let(ExportedMemberName::WellKnownSymbol)
                         ?: ExportedMemberName.Identifier(function.getExportedIdentifier()),
                     returnType = if (function.isSuspend) {
-                        ExportedType.ClassType(name = "Promise", arguments = listOf(returnType))
+                        ExportedType.ClassType(name = FqName("Promise"), arguments = listOf(returnType))
                     } else {
                         returnType
                     },
@@ -231,7 +232,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
         }
 
         fun returnType() = ExportedType.ClassType(
-            name = constructedClass.getExportedFqName(config.generateNamespacesForPackages, config).asString(),
+            name = constructedClass.getExportedFqName(config.generateNamespacesForPackages, config),
             arguments = typeParameterScope.values.map(ExportedType::TypeParameterRef),
         )
 
@@ -674,7 +675,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
                     enumEntries.memoryOptimizedMap {
                         ExportedType.TypeOf(
                             ExportedType.ClassType(
-                                name = it.getExportedFqName(config.generateNamespacesForPackages, config).asString(),
+                                name = it.getExportedFqName(config.generateNamespacesForPackages, config),
                                 arguments = emptyList(),
                             )
                         )

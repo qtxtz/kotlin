@@ -560,7 +560,7 @@ class ExportModelGenerator(val context: JsIrBackendContext, val isEsModules: Boo
                                     ExportedConstructSignature(
                                         parameters = constructor.parameters.drop(1),
                                         returnType = ExportedType.ClassType(
-                                            name = innerClassReference,
+                                            name = FqName(innerClassReference),
                                             arguments = constructorTypeParameterScope.values.map(ExportedType::TypeParameterRef)
                                         ),
                                         typeParameters = typeParameters.map { constructorTypeParameterScope[it.symbol]!! },
@@ -775,7 +775,7 @@ class ExportModelGenerator(val context: JsIrBackendContext, val isEsModules: Boo
                                         name = it.getFqNameWithJsNameWhenAvailable(
                                             shouldIncludePackage = !isEsModules,
                                             isEsModules = isEsModules,
-                                        ).asString(),
+                                        ),
                                         arguments = emptyList()
                                     )
                                 )
@@ -1029,7 +1029,7 @@ class ExportModelGenerator(val context: JsIrBackendContext, val isEsModules: Boo
                     val name = klass.getFqNameWithJsNameWhenAvailable(
                         shouldIncludePackage = !isNonExportedExternal && !isEsModules,
                         isEsModules = isEsModules,
-                    ).asString()
+                    )
 
                     val exportedSupertype = runIf(shouldCalculateExportedSupertypeForImplicit && isImplicitlyExported) {
                         val transitiveExportedType = nonNullType.collectSuperTransitiveHierarchy()

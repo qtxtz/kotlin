@@ -163,7 +163,6 @@ internal class TypeExporter(private val config: TypeScriptExportConfig, private 
                 val isNonExportedExternal = symbol.isExternal && !isExported
                 val name = symbol
                     .getExportedFqName(shouldIncludePackage = !isNonExportedExternal && config.generateNamespacesForPackages, config)
-                    .asString()
 
                 // TODO(KT-82340): Approximate to actual supertype
                 val exportedSupertype = Primitive.Any
