@@ -37,7 +37,7 @@ dependencies {
     implementation(project(":analysis:analysis-api-platform-interface"))
     implementation(project(":analysis:analysis-api"))
     implementation(project(":analysis:analysis-internal-utils"))
-    implementation(project(":analysis:analysis-api-standalone:analysis-api-standalone-base"))
+    implementation(project(":analysis:analysis-api-impl-base"))
     implementation(project(":kotlin-scripting-compiler"))
     implementation(project(":kotlin-scripting-common"))
     implementation(project(":kotlin-assignment-compiler-plugin.k2"))
@@ -57,7 +57,6 @@ dependencies {
     testFixturesCompileOnly(toolsJarApi())
     testRuntimeOnly(toolsJar())
     testFixturesApi(testFixtures(project(":compiler:tests-common")))
-    testFixturesApi(testFixtures(project(":compiler:fir:analysis-tests:legacy-fir-tests")))
     testFixturesApi(testFixtures(project(":analysis:analysis-test-framework")))
     testFixturesApi(testFixtures(project(":analysis:analysis-api-impl-base")))
     testFixturesApi(testFixtures(project(":compiler:fir:raw-fir:psi2fir")))
@@ -69,7 +68,6 @@ dependencies {
     testFixturesApi(testFixtures(project(":plugins:scripting:scripting-tests")))
     testFixturesApi(project(":kotlin-scripting-common"))
     testFixturesImplementation(testFixtures(project(":analysis:decompiled:decompiler-to-psi")))
-    testFixturesImplementation(testFixtures(project(":compiler:tests-spec")))
 
     // We use 'api' instead of 'implementation' because other modules might be using these jars indirectly
     testFixturesApi(project(":plugins:plugin-sandbox"))
