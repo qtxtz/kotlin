@@ -12,23 +12,12 @@ plugins {
 }
 
 dependencies {
-    api(project(":compiler:psi:psi-api"))
-    api(project(":compiler:fir:fir2ir"))
     api(project(":compiler:ir.tree"))
-    api(project(":compiler:fir:resolve"))
-    api(project(":compiler:fir:providers"))
-    api(project(":compiler:fir:semantics"))
-    api(project(":compiler:fir:checkers"))
-    api(project(":compiler:fir:checkers:checkers.jvm"))
-    api(project(":compiler:fir:checkers:checkers.js"))
-    api(project(":compiler:fir:checkers:checkers.native"))
-    api(project(":compiler:fir:fir-jvm"))
     api(project(":compiler:fir:entrypoint"))
     api(project(":analysis:low-level-api-fir"))
     api(project(":analysis:analysis-api"))
     api(project(":analysis:analysis-api-impl-base"))
     api(project(":analysis:light-classes-base"))
-    api(project(":compiler:backend.common.jvm"))
     implementation(project(":compiler:backend.jvm.entrypoint"))
     api(intellijCore())
     implementation(project(":analysis:analysis-api-platform-interface"))
