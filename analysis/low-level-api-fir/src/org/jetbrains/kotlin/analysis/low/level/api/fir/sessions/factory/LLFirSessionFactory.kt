@@ -122,7 +122,7 @@ internal class LLFirSessionFactory(
             registerModuleData(moduleData)
             register(FirKotlinScopeProvider::class, scopeProvider)
 
-            registerAllCommonComponents(languageVersionSettings, module, resolutionScope)
+            registerAllCommonComponents(languageVersionSettings, resolutionScope)
             registerSourceLikeComponents()
 
             val firProvider = LLFirProvider(
@@ -211,7 +211,7 @@ internal class LLFirSessionFactory(
             registerModuleData(moduleData)
             register(FirKotlinScopeProvider::class, scopeProvider)
 
-            registerAllCommonComponents(languageVersionSettings, module, binaryContentScope)
+            registerAllCommonComponents(languageVersionSettings, binaryContentScope)
             registerCommonComponentsAfterExtensionsAreConfigured()
 
             val firProvider = LLFirProvider(
@@ -364,7 +364,7 @@ internal class LLFirSessionFactory(
             registerModuleData(moduleData)
             register(FirKotlinScopeProvider::class, scopeProvider)
 
-            registerAllCommonComponents(languageVersionSettings, module, resolutionScope)
+            registerAllCommonComponents(languageVersionSettings, resolutionScope)
             registerSourceLikeComponents()
 
             registerCommonComponentsAfterExtensionsAreConfigured()
@@ -464,7 +464,7 @@ internal class LLFirSessionFactory(
             registerModuleData(moduleData)
             register(FirKotlinScopeProvider::class, scopeProvider)
 
-            registerAllCommonComponents(languageVersionSettings, module, resolutionScope)
+            registerAllCommonComponents(languageVersionSettings, resolutionScope)
             registerSourceLikeComponents()
 
             registerCommonComponentsAfterExtensionsAreConfigured()
@@ -530,7 +530,7 @@ internal class LLFirSessionFactory(
             registerModuleData(moduleData)
             register(FirKotlinScopeProvider::class, scopeProvider)
 
-            registerAllCommonComponents(languageVersionSettings, module, resolutionScope)
+            registerAllCommonComponents(languageVersionSettings, resolutionScope)
             registerSourceLikeComponents()
 
             val firProvider = LLFirProvider(
@@ -738,7 +738,6 @@ internal class LLFirSessionFactory(
 
     private fun LLFirSession.registerAllCommonComponents(
         languageVersionSettings: LanguageVersionSettings,
-        module: KaModule,
         annotationSearchScope: GlobalSearchScope,
     ) {
         registerIdeComponents(project, languageVersionSettings, annotationSearchScope)
