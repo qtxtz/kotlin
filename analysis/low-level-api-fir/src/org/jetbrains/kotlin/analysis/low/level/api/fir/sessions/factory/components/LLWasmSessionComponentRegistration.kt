@@ -6,17 +6,16 @@
 package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.components
 
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
-import org.jetbrains.kotlin.analysis.low.level.api.fir.util.getWasmTarget
 import org.jetbrains.kotlin.fir.SessionConfiguration
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.session.FirWasmSessionFactory
+import org.jetbrains.kotlin.platform.wasm.WasmTarget
 
 @OptIn(SessionConfiguration::class)
-internal object LLWasmSessionComponentRegistration : LLPlatformSessionComponentRegistration {
+internal class LLWasmSessionComponentRegistration(private val wasmTarget: WasmTarget) : LLPlatformSessionComponentRegistration {
     override fun registerComponents(session: LLFirSession, platformSpecificSymbolProviders: List<FirSymbolProvider>) = with(session) {
         // We have to distinguish between WasmJS and WasmWasi and pick the correct session factory.
-        val target = ktModule.targetPlatform.getWasmTarget()
-        with(FirWasmSessionFactory.of(target)) {
+        with(FirWasmSessionFactory.of(wasmTarget)) {
             registerWasmComponents()
         }
     }

@@ -84,7 +84,7 @@ internal class LLFirSessionFactory(
 ) {
     private val platformConfiguration = LLPlatformSessionConfiguration.forPlatform(targetPlatform, project)
 
-    private val platformComponentRegistration = LLPlatformSessionComponentRegistration.forPlatform(targetPlatform)
+    private val platformComponentRegistrations = LLPlatformSessionComponentRegistration.forPlatform(targetPlatform)
 
     @KaCachedService
     private val globalResolveComponents: LLFirGlobalResolveComponents by lazy(LazyThreadSafetyMode.PUBLICATION) {
@@ -180,8 +180,9 @@ internal class LLFirSessionFactory(
                 )
             )
 
-            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
-            platformComponentRegistration.registerSourceComponents(this)
+            session.registerPlatformSpecificComponents(platformSpecificSymbolProviders) { registration ->
+                registration.registerSourceComponents(this)
+            }
         }
     }
 
@@ -269,8 +270,9 @@ internal class LLFirSessionFactory(
                 )
             )
 
-            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
-            platformComponentRegistration.registerResolvableLibraryComponents(this)
+            session.registerPlatformSpecificComponents(platformSpecificSymbolProviders) { registration ->
+                registration.registerResolvableLibraryComponents(this)
+            }
 
             LLFirSessionConfigurator.configure(this)
         }
@@ -325,8 +327,9 @@ internal class LLFirSessionFactory(
             register(FirProvider::class, LLFirLibrarySessionProvider(symbolProvider))
             register(FirSymbolProvider::class, symbolProvider)
 
-            platformComponentRegistration.registerComponents(this, emptyList())
-            platformComponentRegistration.registerBinaryLibraryComponents(this)
+            session.registerPlatformSpecificComponents(platformSpecificSymbolProviders = emptyList()) { registration ->
+                registration.registerBinaryLibraryComponents(this)
+            }
 
             LLFirSessionConfigurator.configure(this)
         }
@@ -631,8 +634,9 @@ internal class LLFirSessionFactory(
                 )
             )
 
-            platformComponentRegistration.registerComponents(this, platformSpecificSymbolProviders)
-            platformComponentRegistration.registerDanglingFileComponents(this)
+            session.registerPlatformSpecificComponents(platformSpecificSymbolProviders) { registration ->
+                registration.registerDanglingFileComponents(this)
+            }
         }
     }
 
@@ -747,6 +751,16 @@ internal class LLFirSessionFactory(
 
     private fun LLFirSession.registerSourceLikeComponents() {
         register(FirNameConflictsTracker::class, LLNameConflictsTracker(this))
+    }
+
+    private inline fun LLFirSession.registerPlatformSpecificComponents(
+        platformSpecificSymbolProviders: List<FirSymbolProvider>,
+        registerAdditionalComponents: (LLPlatformSessionComponentRegistration) -> Unit,
+    ) {
+        platformComponentRegistrations.forEach { registration ->
+            registration.registerComponents(this, platformSpecificSymbolProviders)
+            registerAdditionalComponents(registration)
+        }
     }
 
     /**

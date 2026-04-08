@@ -5,11 +5,12 @@
 
 package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.components
 
-import org.jetbrains.kotlin.analysis.api.platform.projectStructure.KaModulePlatformKind
-import org.jetbrains.kotlin.analysis.api.platform.projectStructure.toModulePlatformKind
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
-import org.jetbrains.kotlin.platform.TargetPlatform
+import org.jetbrains.kotlin.platform.*
+import org.jetbrains.kotlin.platform.jvm.JvmPlatform
+import org.jetbrains.kotlin.platform.wasm.WasmPlatformWithTarget
+import org.jetbrains.kotlin.platform.wasm.WasmTarget
 
 /**
  * Handles the registration of platform-specific session components.
@@ -49,13 +50,26 @@ internal interface LLPlatformSessionComponentRegistration {
     fun registerDanglingFileComponents(session: LLFirSession) {}
 
     companion object {
-        fun forPlatform(targetPlatform: TargetPlatform): LLPlatformSessionComponentRegistration =
-            when (targetPlatform.toModulePlatformKind()) {
-                KaModulePlatformKind.METADATA -> LLCommonSessionComponentRegistration
-                KaModulePlatformKind.JVM -> LLJvmSessionComponentRegistration
-                KaModulePlatformKind.JS -> LLJsSessionComponentRegistration
-                KaModulePlatformKind.WASM -> LLWasmSessionComponentRegistration
-                KaModulePlatformKind.NATIVE -> LLNativeSessionComponentRegistration
+        fun forPlatform(targetPlatform: TargetPlatform): List<LLPlatformSessionComponentRegistration> = buildList {
+            if (targetPlatform.has<JvmPlatform>()) {
+                add(LLJvmSessionComponentRegistration)
             }
+
+            if (targetPlatform.has<JsPlatform>()) {
+                add(LLJsSessionComponentRegistration)
+            }
+
+            if (targetPlatform.has<WasmPlatform>()) {
+                val wasmTargets = targetPlatform.subplatformsOfType<WasmPlatform>().mapTo(mutableSetOf()) { platform ->
+                    (platform as? WasmPlatformWithTarget)?.target ?: WasmTarget.JS
+                }
+
+                wasmTargets.forEach { add(LLWasmSessionComponentRegistration(it)) }
+            }
+
+            if (targetPlatform.has<NativePlatform>()) {
+                add(LLNativeSessionComponentRegistration)
+            }
+        }
     }
 }
