@@ -143,6 +143,12 @@ public class KaptStubConverterTestGenerated extends AbstractKaptStubConverterTes
   }
 
   @Test
+  @TestMetadata("companionBlocksAndExtensions.kt")
+  public void testCompanionBlocksAndExtensions() {
+    run("companionBlocksAndExtensions.kt");
+  }
+
+  @Test
   @TestMetadata("cyrillicClassName.kt")
   public void testCyrillicClassName() {
     run("cyrillicClassName.kt");
