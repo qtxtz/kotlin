@@ -47,7 +47,7 @@ private class Transformer(
             val symbol = data?.symbol ?: error("\"typeOf\" call in unexpected position")
             val builder = irBuiltIns
                     .createIrBuilder(symbol, expression.startOffset, expression.endOffset)
-                    .toNativeRuntimeReflectionBuilder(symbols) { message ->
+                    .toNativeConstantReflectionBuilder(symbols) { message ->
                         errorContext.reportCompilationError(message, expression.getCompilerMessageLocation(data.file))
                     }
             return builder.irKType(expression.typeArguments[0]!!)
