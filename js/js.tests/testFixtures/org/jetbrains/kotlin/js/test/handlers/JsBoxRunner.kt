@@ -5,11 +5,15 @@
 
 package org.jetbrains.kotlin.js.test.handlers
 
-import org.jetbrains.kotlin.js.test.utils.*
+import org.jetbrains.kotlin.js.test.utils.extractEntryModulePath
+import org.jetbrains.kotlin.js.test.utils.getAllFilesForRunner
+import org.jetbrains.kotlin.js.test.utils.getTestModuleName
+import org.jetbrains.kotlin.js.test.utils.testWithModuleSystem
 import org.jetbrains.kotlin.js.testOld.V8JsTestChecker
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.services.TestServices
+import org.jetbrains.kotlin.test.services.configuration.extractTestPackage
 import org.jetbrains.kotlin.test.services.defaultsProvider
 import org.jetbrains.kotlin.test.services.moduleStructure
 
