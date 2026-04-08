@@ -7,17 +7,13 @@ package org.jetbrains.kotlin.js.test.converters
 
 import org.jetbrains.kotlin.backend.common.serialization.cityHash64
 import org.jetbrains.kotlin.cli.common.isWindows
+import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.js.JsIrLoweringPipelinePhase
 import org.jetbrains.kotlin.config.CommonConfigurationKeys
-import org.jetbrains.kotlin.ir.backend.js.CompilerResult
-import org.jetbrains.kotlin.ir.backend.js.LoweredIr
 import org.jetbrains.kotlin.ir.backend.js.SourceMapsInfo
 import org.jetbrains.kotlin.ir.backend.js.ic.JsExecutableProducer
-import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
-import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.IrModuleToJsTransformer
-import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.TranslationMode
-import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.safeName
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.*
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.js.backend.ast.ESM_EXTENSION
 import org.jetbrains.kotlin.js.backend.ast.REGULAR_EXTENSION
@@ -96,13 +92,17 @@ class JsIrLoweringFacade(
 
         val cliInputArtifact = inputArtifact.cliArtifact as? WebLoadedIrPipelineArtifact
             ?: error("JsIrLoweringFacade expects WebLoadedIrPipelineArtifact")
-        val loweredIr = JsIrLoweringPipelinePhase.executePhase(cliInputArtifact)?.ir
+        val loweredIr = JsIrLoweringPipelinePhase.executePhase(cliInputArtifact)
             ?: return processErrorFromCliPhase(configuration, testServices)
 
         return loweredIr2JsArtifact(module, loweredIr, JsEnvironmentConfigurationDirectives.CALL_MAIN in module.directives)
     }
 
-    private fun loweredIr2JsArtifact(module: TestModule, loweredIr: LoweredIr, shouldReferMainFunction: Boolean): BinaryArtifacts.Js {
+    private fun loweredIr2JsArtifact(
+        module: TestModule,
+        loweredIr: JsLoweredIrPipelineArtifact,
+        shouldReferMainFunction: Boolean,
+    ): BinaryArtifacts.Js {
         val moduleKind = JsEnvironmentConfigurator.getModuleKind(testServices, module)
         val isEsModules = moduleKind == ModuleKind.ES
 

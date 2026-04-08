@@ -14,9 +14,10 @@ import org.jetbrains.kotlin.cli.pipeline.PipelineArtifact
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.pipeline.AllModulesFrontendOutput
 import org.jetbrains.kotlin.fir.pipeline.Fir2IrActualizedResult
-import org.jetbrains.kotlin.ir.backend.js.LoweredIr
+import org.jetbrains.kotlin.ir.backend.js.JsIrBackendContext
 import org.jetbrains.kotlin.ir.backend.js.ModulesStructure
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
+import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import java.io.File
 
 data class WebFrontendPipelineArtifact(
@@ -69,7 +70,10 @@ data class WebLoadedIrPipelineArtifact(
 }
 
 data class JsLoweredIrPipelineArtifact(
-    val ir: LoweredIr,
+    val context: JsIrBackendContext,
+    val mainModule: IrModuleFragment,
+    val allModules: List<IrModuleFragment>,
+    val moduleFragmentToUniqueName: Map<IrModuleFragment, String>,
     override val configuration: CompilerConfiguration,
 ) : PipelineArtifact() {
     @CliPipelineInternals(OPT_IN_MESSAGE)

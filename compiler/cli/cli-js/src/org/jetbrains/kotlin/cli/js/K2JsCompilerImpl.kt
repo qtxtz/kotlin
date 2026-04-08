@@ -6,9 +6,9 @@
 package org.jetbrains.kotlin.cli.js
 
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
+import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.perfManager
-import org.jetbrains.kotlin.ir.backend.js.LoweredIr
 import org.jetbrains.kotlin.ir.backend.js.ModulesStructure
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputsBuilt
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.IrModuleToJsTransformer
@@ -46,7 +46,7 @@ class Ir2JsTransformer private constructor(
 
     private val performanceManager = module.compilerConfiguration.perfManager
 
-    private fun makeJsCodeGenerator(ir: LoweredIr): JsCodeGenerator {
+    private fun makeJsCodeGenerator(ir: JsLoweredIrPipelineArtifact): JsCodeGenerator {
         val transformer = IrModuleToJsTransformer(ir.context, ir.moduleFragmentToUniqueName, mainCallArguments != null)
 
         val mode = TranslationMode.fromFlags(dce, granularity, minimizedMemberNames)
@@ -55,7 +55,7 @@ class Ir2JsTransformer private constructor(
             .makeJsCodeGenerator(ir.allModules, mode)
     }
 
-    fun compileAndTransformIrNew(loweredIr: LoweredIr): CompilationOutputsBuilt {
+    fun compileAndTransformIrNew(loweredIr: JsLoweredIrPipelineArtifact): CompilationOutputsBuilt {
         return makeJsCodeGenerator(loweredIr)
             .generateJsCode(relativeRequirePath = true, outJsProgram = false)
             .also {

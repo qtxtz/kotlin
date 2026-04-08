@@ -10,9 +10,9 @@ import org.jetbrains.kotlin.backend.wasm.WasmCompilerResult
 import org.jetbrains.kotlin.codegen.ClassFileFactory
 import org.jetbrains.kotlin.diagnostics.impl.BaseDiagnosticsCollector
 import org.jetbrains.kotlin.fileClasses.JvmFileClassInfo
-import org.jetbrains.kotlin.ir.backend.js.CompilerResult
-import org.jetbrains.kotlin.wasm.ir.WasmModule
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilerResult
 import org.jetbrains.kotlin.utils.fileUtils.withReplacedExtensionOrNull
+import org.jetbrains.kotlin.wasm.ir.WasmModule
 import java.io.File
 
 class SourceFileInfo(

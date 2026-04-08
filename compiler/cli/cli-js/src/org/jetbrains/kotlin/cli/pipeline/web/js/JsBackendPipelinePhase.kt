@@ -99,7 +99,7 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
     ): CompilationOutputs? {
         val configuration = loadedIr.configuration
         val start = System.currentTimeMillis()
-        val loweredIr = JsIrLoweringPipelinePhase.executePhase(loadedIr)?.ir ?: return null
+        val loweredIr = JsIrLoweringPipelinePhase.executePhase(loadedIr) ?: return null
         try {
             val outputs = ir2JsTransformer.compileAndTransformIrNew(loweredIr)
             configuration.reportLog("Executable production duration: ${System.currentTimeMillis() - start}ms")

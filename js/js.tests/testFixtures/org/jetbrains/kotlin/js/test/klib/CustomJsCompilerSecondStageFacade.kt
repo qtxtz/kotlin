@@ -10,8 +10,8 @@ import org.jetbrains.kotlin.cli.common.arguments.CommonCompilerArguments
 import org.jetbrains.kotlin.cli.common.arguments.K2JSCompilerArguments
 import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants.SOURCE_MAP_SOURCE_CONTENT_NEVER
 import org.jetbrains.kotlin.cli.common.arguments.cliArgument
-import org.jetbrains.kotlin.ir.backend.js.CompilerResult
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputsBuilt
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilerResult
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.TranslationMode
 import org.jetbrains.kotlin.js.test.converters.finalizePath
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerException

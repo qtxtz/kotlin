@@ -97,12 +97,12 @@ object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, Js
                 }
             }
         }
-        val loweredIr = LoweredIr(
+        return JsLoweredIrPipelineArtifact(
             context,
             mainModule = moduleFragment,
             allModules = allModules,
-            moduleFragmentToUniqueName = moduleDependencies.fragmentNames
+            moduleFragmentToUniqueName = moduleDependencies.fragmentNames,
+            configuration,
         )
-        return JsLoweredIrPipelineArtifact(loweredIr, configuration)
     }
 }
