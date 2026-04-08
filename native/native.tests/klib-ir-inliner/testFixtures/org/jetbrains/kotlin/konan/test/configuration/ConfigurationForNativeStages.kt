@@ -15,6 +15,8 @@ import org.jetbrains.kotlin.test.backend.BlackBoxCodegenSuppressor
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilderBase
 import org.jetbrains.kotlin.test.builders.firHandlersStep
+import org.jetbrains.kotlin.test.builders.irHandlersStep
+import org.jetbrains.kotlin.test.builders.loweredIrHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonCodegenConfiguration
 import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives
@@ -74,7 +76,10 @@ fun TestConfigurationBuilderBase<*, *>.commonConfigurationForNativeCodegenTest(
  * Sets up all first-stage steps from frontend till pre-serialization lowerings (included).
  * Also, sets up corresponding handlers steps for each facade step.
  */
-fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization(includeFirHandlers: Boolean = true) {
+fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization(
+    includeFirHandlers: Boolean = true,
+    addIrHandlerSteps: Boolean = false, // TODO(KT-85460): set to true and remove the parameter
+) {
     facadeStep(::FirCliNativeFacade)
     firHandlersStep {
         commonFirHandlersForCodegenTest()
@@ -90,10 +95,13 @@ fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization(incl
     }
 
     facadeStep(::Fir2IrCliNativeFacade)
-// TODO(KT-85460): uncomment and fix failing tests
-//    irHandlersStep()
+
+    if (addIrHandlerSteps) {
+        irHandlersStep()
+    }
 
     facadeStep(::NativePreSerializationLoweringCliFacade)
-// TODO(KT-85460): uncomment and fix failing tests
-//    loweredIrHandlersStep()
+    if (addIrHandlerSteps) {
+        loweredIrHandlersStep()
+    }
 }
