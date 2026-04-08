@@ -3,14 +3,9 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-@file:Suppress("DEPRECATION_ERROR")
-
 package org.jetbrains.kotlin.buildtools.internal
 
 import org.jetbrains.kotlin.buildtools.api.SourcesChanges
-import org.jetbrains.kotlin.buildtools.api.jvm.ClasspathSnapshotBasedIncrementalCompilationApproachParameters
-import org.jetbrains.kotlin.buildtools.api.jvm.ClasspathSnapshotBasedIncrementalJvmCompilationConfiguration
-import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompilationConfiguration
 import org.jetbrains.kotlin.buildtools.internal.BaseIncrementalCompilationConfigurationImpl.Companion.BACKUP_CLASSES
 import org.jetbrains.kotlin.buildtools.internal.BaseIncrementalCompilationConfigurationImpl.Companion.FORCE_RECOMPILATION
 import org.jetbrains.kotlin.buildtools.internal.BaseIncrementalCompilationConfigurationImpl.Companion.KEEP_IC_CACHES_IN_MEMORY
@@ -18,7 +13,6 @@ import org.jetbrains.kotlin.buildtools.internal.BaseIncrementalCompilationConfig
 import org.jetbrains.kotlin.buildtools.internal.BaseIncrementalCompilationConfigurationImpl.Companion.UNSAFE_INCREMENTAL_COMPILATION_FOR_MULTIPLATFORM
 import org.jetbrains.kotlin.buildtools.internal.jvm.HasSnapshotBasedIcOptionsAccessor
 import org.jetbrains.kotlin.buildtools.internal.jvm.JvmSnapshotBasedIncrementalCompilationOptionsImpl
-import org.jetbrains.kotlin.buildtools.internal.jvm.toOptions
 import org.jetbrains.kotlin.incremental.ChangedFiles
 import org.jetbrains.kotlin.incremental.ClasspathChanges
 import org.jetbrains.kotlin.incremental.ClasspathSnapshotFiles
@@ -31,9 +25,10 @@ internal val SourcesChanges.asChangedFiles
         is SourcesChanges.Unknown -> ChangedFiles.Unknown
     }
 
-internal val AggregatedIcConfiguration<ClasspathSnapshotBasedIncrementalCompilationApproachParameters>.classpathChanges: ClasspathChanges.ClasspathSnapshotEnabled
+@Suppress("DEPRECATION_ERROR")
+internal val AggregatedIcConfiguration<org.jetbrains.kotlin.buildtools.api.jvm.ClasspathSnapshotBasedIncrementalCompilationApproachParameters>.classpathChanges: ClasspathChanges.ClasspathSnapshotEnabled
     get() {
-        check(options is ClasspathSnapshotBasedIncrementalJvmCompilationConfiguration) {
+        check(options is org.jetbrains.kotlin.buildtools.api.jvm.ClasspathSnapshotBasedIncrementalJvmCompilationConfiguration) {
             "options expected to be an instance of ClasspathSnapshotBasedIncrementalJvmCompilationConfiguration"
         }
         val params = parameters
@@ -66,12 +61,15 @@ internal fun HasSnapshotBasedIcOptionsAccessor.extractIncrementalCompilationFeat
     )
 }
 
-@Suppress("DEPRECATION")
+
 internal val HasSnapshotBasedIcOptionsAccessor.classpathChanges: ClasspathChanges.ClasspathSnapshotEnabled
     get() {
         val options: HasSnapshotBasedIcOptionsAccessor = this
         val snapshotFiles =
-            ClasspathSnapshotFiles(options.dependenciesSnapshotFiles.map { it.toFile() }, options.shrunkClasspathSnapshot.toFile().parentFile)
+            ClasspathSnapshotFiles(
+                options.dependenciesSnapshotFiles.map { it.toFile() },
+                options.shrunkClasspathSnapshot.toFile().parentFile
+            )
         return when {
             !snapshotFiles.shrunkPreviousClasspathSnapshotFile.exists() -> ClasspathChanges.ClasspathSnapshotEnabled.NotAvailableDueToMissingClasspathSnapshot(
                 snapshotFiles

@@ -33,7 +33,7 @@ public interface JvmIncrementalCompilationConfiguration
  * @property sourcesChanges changes in the source files, which can be unknown, to-be-calculated, or known.
  * @property dependenciesSnapshotFiles a list of paths to dependency snapshot files produced by [org.jetbrains.kotlin.buildtools.api.jvm.operations.JvmClasspathSnapshottingOperation].
  * @property shrunkClasspathSnapshot The path to the shrunk classpath snapshot file from a previous compilation.
- * @property options an option set produced by [JvmCompilationOperation.createSnapshotBasedIcOptions]
+ * @property options is deprecated and unused
  *
  * @see JvmCompilationOperation.Builder.snapshotBasedIcConfigurationBuilder
  */
@@ -55,27 +55,28 @@ constructor(
 ) : JvmIncrementalCompilationConfiguration, BaseIncrementalCompilationConfiguration {
 
     /**
-     * This is not used in current versions of BTA, but is used to fill in the non-nullable `options` field that exists for earlier versions.
+     * When instantiating JvmSnapshotBasedIncrementalCompilationConfiguration through `snapshotBasedIcConfigurationBuilder`,
+     * the `options` property is completely unused, but we cannot remove it or change it to nullable for compatibility reasons.
+     * So, we put a dummy implementation that does nothing in there instead.
      */
     private object DUMMY_OPTIONS : JvmSnapshotBasedIncrementalCompilationOptions {
         override fun <V> get(key: JvmSnapshotBasedIncrementalCompilationOptions.Option<V>): V {
-            TODO("Not yet implemented")
+            error("Not implemented. Do not use `JvmSnapshotBasedIncrementalCompilationConfiguration.options` - it's deprecated.")
         }
 
         override fun <V> set(
             key: JvmSnapshotBasedIncrementalCompilationOptions.Option<V>,
             value: V,
         ) {
-            TODO("Not yet implemented")
+            error("Not implemented. Do not use `JvmSnapshotBasedIncrementalCompilationConfiguration.options` - it's deprecated.")
         }
 
         override fun <V> get(key: BaseIncrementalCompilationConfiguration.Option<V>): V {
-            TODO("Not yet implemented")
+            error("Not implemented. Do not use `JvmSnapshotBasedIncrementalCompilationConfiguration.options` - it's deprecated.")
         }
     }
 
     @Deprecated("Instantiating this class directly will not be possible and it will become abstract in a future release. Use `JvmCompilationOperation.snapshotBasedIcConfigurationBuilder`.")
-    @Suppress("DEPRECATION_ERROR")
     public constructor(
         workingDirectory: Path,
         sourcesChanges: SourcesChanges,
@@ -89,7 +90,6 @@ constructor(
     )
 
     @Deprecated("Instantiating this class directly will not be possible and it will become abstract in a future release. Use `JvmCompilationOperation.snapshotBasedIcConfigurationBuilder`.")
-    @Suppress("DEPRECATION_ERROR")
     public constructor(
         workingDirectory: Path,
         sourcesChanges: SourcesChanges,

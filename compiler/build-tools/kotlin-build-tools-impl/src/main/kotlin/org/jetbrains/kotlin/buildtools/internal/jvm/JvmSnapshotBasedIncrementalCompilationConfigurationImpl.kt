@@ -3,8 +3,6 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-@file:Suppress("DEPRECATION")
-
 package org.jetbrains.kotlin.buildtools.internal.jvm
 
 import org.jetbrains.kotlin.buildtools.api.BaseIncrementalCompilationConfiguration
@@ -14,12 +12,12 @@ import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompil
 import org.jetbrains.kotlin.buildtools.internal.*
 import java.nio.file.Path
 
-@Suppress("DEPRECATION_ERROR")
-internal class JvmSnapshotBasedIncrementalCompilationConfigurationImpl private constructor(
+internal class JvmSnapshotBasedIncrementalCompilationConfigurationImpl @Suppress("DEPRECATION") private constructor(
     workingDirectory: Path,
     sourcesChanges: SourcesChanges,
     dependenciesSnapshotFiles: List<Path>,
     shrunkClasspathSnapshot: Path,
+    // this can be renamed to options after we get rid of the superclass `options: JvmSnapshotBasedIncrementalCompilationOptions`
     private val options2: Options = Options(JvmSnapshotBasedIncrementalCompilationConfiguration::class),
 ) : JvmSnapshotBasedIncrementalCompilationConfiguration(
     workingDirectory,
@@ -51,6 +49,7 @@ internal class JvmSnapshotBasedIncrementalCompilationConfigurationImpl private c
 
     override fun toBuilder(): Builder = deepCopy()
 
+    @Suppress("DEPRECATION")
     override fun deepCopy(): JvmSnapshotBasedIncrementalCompilationConfigurationImpl =
         JvmSnapshotBasedIncrementalCompilationConfigurationImpl(
             workingDirectory,
@@ -142,7 +141,6 @@ internal interface HasSnapshotBasedIcOptionsAccessor {
     operator fun <V> get(key: BaseOptionWithDefault<V>): V
 }
 
-@Suppress("DEPRECATION_ERROR")
 internal fun JvmSnapshotBasedIncrementalCompilationConfiguration.toOptions(): HasSnapshotBasedIcOptionsAccessor {
 
     // In a future version of BTA, we will change the JvmSnapshotBasedIncrementalCompilationConfiguration class
@@ -192,6 +190,8 @@ internal fun JvmSnapshotBasedIncrementalCompilationConfiguration.toOptions(): Ha
                 get() = this@toOptions.sourcesChanges
             override val dependenciesSnapshotFiles: List<Path>
                 get() = this@toOptions.dependenciesSnapshotFiles
+
+            @Suppress("DEPRECATION")
             override val shrunkClasspathSnapshot: Path
                 get() = this@toOptions.shrunkClasspathSnapshot
 

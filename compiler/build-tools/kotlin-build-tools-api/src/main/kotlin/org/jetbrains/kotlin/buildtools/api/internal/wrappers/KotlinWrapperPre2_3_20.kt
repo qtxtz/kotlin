@@ -31,7 +31,7 @@ import kotlin.io.path.Path
  *
  * @param base The base implementation of `KotlinToolchains` to wrap.
  */
-@Suppress("DEPRECATION", "ClassName")
+@Suppress("ClassName")
 internal class KotlinWrapperPre2_3_20(
     private val base: KotlinToolchains,
 ) : KotlinToolchains by base {
@@ -212,7 +212,6 @@ internal class KotlinWrapperPre2_3_20(
                 )
             }
 
-            @Suppress("DEPRECATION_ERROR")
             inner class JvmSnapshotBasedIncrementalCompilationConfigurationWrapper(
                 workingDirectory: Path,
                 sourcesChanges: SourcesChanges,
