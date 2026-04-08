@@ -73,7 +73,7 @@ class NativeBoxRunnerGroupingPhase(testServices: TestServices) : GroupingPhaseHa
             executable,
             testServices,
             TestCaseId.Named("batch"),
-            addTeamCityLogger = false,
+            addTeamCityLogger = true,
             addTestFilter = false,
         )
         val testRunner = createProperTestRunner(testRun, testServices.testRunSettings) { executor, testRun ->
