@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.backend.konan.cgen.CBridgeOrigin
 import org.jetbrains.kotlin.backend.konan.ir.*
 import org.jetbrains.kotlin.backend.konan.llvm.objc.processBindClassToObjCNameAnnotations
 import org.jetbrains.kotlin.backend.konan.lower.*
+import org.jetbrains.kotlin.backend.konan.lower.ReifiedFunctionLowering.Companion.isReifiedInline
 import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.config.nativeBinaryOptions.AndroidProgramType
 import org.jetbrains.kotlin.config.nativeBinaryOptions.BinaryOptions
@@ -806,13 +807,6 @@ internal class CodeGeneratorVisitor(
                     val parameterScope = ParameterScope(declaration, functionGenerationContext)
                     using(parameterScope) usingParameterScope@{
                         using(VariableScope()) usingVariableScope@{
-                            if (declaration.isReifiedInline) {
-                                callDirect(context.symbols.throwIllegalStateExceptionWithMessage.owner,
-                                        listOf(codegen.staticData.kotlinStringLiteral(
-                                                "unsupported call of reified inlined function `${declaration.fqNameForIrSerialization}`").llvm),
-                                        Lifetime.IRRELEVANT, null)
-                                return@usingVariableScope
-                            }
                             when (body) {
                                 is IrBlockBody -> body.statements.forEach { generateStatement(it) }
                                 is IrExpressionBody -> compilationException("IrExpressionBody should've been lowered", declaration)
@@ -2262,9 +2256,6 @@ internal class CodeGeneratorVisitor(
             else
                 this.scope(startLine()).also { irFunctionSavedScope = Pair(this, it) }
             ) else null
-
-    private val IrSimpleFunction.isReifiedInline:Boolean
-        get() = isInline && typeParameters.any { it.isReified }
 
     @Suppress("UNCHECKED_CAST")
     private fun IrSimpleFunction.scope(startLine:Int): DIScopeOpaqueRef? {

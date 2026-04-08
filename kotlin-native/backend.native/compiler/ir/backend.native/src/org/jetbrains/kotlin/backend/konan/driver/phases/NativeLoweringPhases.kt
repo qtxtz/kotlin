@@ -379,6 +379,11 @@ internal val inlineAllFunctionsPhase = createFileLoweringPhase(
         name = "InlineAllFunctions",
 )
 
+private val reifiedFunctionLowering = createFileLoweringPhase(
+        lowering = ::ReifiedFunctionLowering,
+        name = "ReifiedFunctionLowering",
+)
+
 private val typeOfProcessingLowering = createFileLoweringPhase(
         lowering = ::TypeOfProcessingLowering,
         name = "TypeOfProcessingLowering",
@@ -617,6 +622,7 @@ internal fun getLoweringsUpToAndIncludingSyntheticAccessors(): LoweringList = li
 )
 
 internal fun NativeSecondStageCompilationConfig.getLoweringsAfterInlining(): LoweringList = listOfNotNull(
+        reifiedFunctionLowering,
         typeOfProcessingLowering,
         specializeSharedVariableBoxes,
         interopPhase,
