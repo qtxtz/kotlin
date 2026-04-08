@@ -11,17 +11,17 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 /**
- * Core abstraction of Platform API, represents a collection of platforms.
+ * Core abstraction of the Platform API, representing a collection of platforms.
  *
- * This is the primarily abstraction intended to use in the most part of API, as, usually,
- * pretty much anything that may have a platform, may have a several platforms as well in the
- * context of multiplatform projects.
+ * This is the primary abstraction intended to be used in the majority of the API, as, usually,
+ * anything that may have a platform may also have several platforms in the context of multiplatform
+ * projects.
  *
- * Please, use it over the [SimplePlatform] unless you're absolutely sure what you're doing.
+ * Please use it over [SimplePlatform] unless you are absolutely sure what you are doing.
  *
- * NB. Even in cases, where some part of logic makes sense only for a particular platform (e.g., JVM),
- * it still can be applicable for [TargetPlatform]s with [componentPlatforms] > 1, e.g. when it consists
- * of two version of JDK, JDK and Android, several versions of Android API, etc.
+ * NB. Even in cases where some part of the logic makes sense only for a particular platform (e.g., JVM),
+ * it still can be applicable for [TargetPlatform]s with [componentPlatforms] > 1. For example, when the
+ * platform consists of two JDK versions, JDK and Android, several versions of the Android API, and so on.
  */
 open class TargetPlatform(val componentPlatforms: Set<SimplePlatform>) : Iterable<SimplePlatform> by componentPlatforms {
     init {
@@ -49,20 +49,17 @@ open class TargetPlatform(val componentPlatforms: Set<SimplePlatform>) : Iterabl
 }
 
 /**
- * Core abstraction of Platform API, represents exactly one platform.
+ * Core abstraction of the Platform API, representing exactly one platform.
  *
  * API guarantees:
  *
- * - direct inheritors are well-known and represent three major platforms supported at the moment (JVM, JS, Native)
+ * - Direct inheritors are well-known and represent the major platforms supported at the moment (JVM, JS, Native, Wasm).
+ * - The exact enumeration of all inheritors isn't available at compile time, see [CommonPlatforms].
+ * - Each implementation should support equality in a broad sense of "absolutely the same platform."
+ * - It is _prohibited_ to create instances of [SimplePlatform] in the client's code. Use the respective factory instances such as
+ *   [JvmPlatforms] to get instances of platforms.
  *
- * - exact enumeration of all inheritors isn't available at the compile time, see [CommonPlatforms]
- *
- * - each implementation should support equality in a broad sense of "absolutely the same platform"
- *
- * - it is _prohibited_ to create instances of [SimplePlatform] in the client's code, use respective factory instance (e.g., [JvmPlatforms])
- *  to get instances of platforms
- *
- * Ideally, each specific subtype should be either a data class or singleton.
+ * Ideally, each subtype should either be a data class or a singleton.
  */
 abstract class SimplePlatform(val platformName: String) {
     override fun toString(): String {
@@ -101,7 +98,7 @@ fun TargetPlatform?.isMultiPlatform(): Boolean {
 }
 
 /**
- * Whether this is "Common" platform in its classical sense (MPP v1).
+ * Whether this is a "Common" platform in its classical sense (MPP v1).
  */
 fun TargetPlatform?.isCommon(): Boolean {
     contract { returns(true) implies (this@isCommon != null) }
