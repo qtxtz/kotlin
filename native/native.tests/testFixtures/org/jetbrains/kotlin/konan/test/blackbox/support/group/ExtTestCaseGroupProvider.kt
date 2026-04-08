@@ -315,7 +315,12 @@ private class ExtTestDataFile(
         }
 
         filesToTransform.forEach { handler ->
-            val visitor = BatchingPackageInserter.PackageNamePatcher(handler.psiFactory, oldToNewPackageNameMapping, basePackageName)
+            val visitor = BatchingPackageInserter.PackageNamePatcher(
+                handler.psiFactory,
+                oldToNewPackageNameMapping,
+                basePackageName,
+                transformHelpersPackage = false
+            )
             handler.accept(visitor, emptySet())
         }
     }

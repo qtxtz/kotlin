@@ -92,7 +92,12 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
         ktFiles.values.map { it.packageFqName }.associateWithTo(packageMapping) { packageFqName ->
             additionalBasePackage.child(packageFqName)
         }
-        val patcher = PackageNamePatcher(psiFactory, packageMapping, additionalBasePackage)
+        val patcher = PackageNamePatcher(
+            psiFactory,
+            packageMapping,
+            additionalBasePackage,
+            transformHelpersPackage = true
+        )
         ktFiles.values.forEach { it.accept(patcher, emptySet()) }
         for ((testFile, ktFile) in ktFiles) {
             filesContent[testFile] = ktFile.text
@@ -145,6 +150,7 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
         val psiFactory: KtPsiFactory, // psiFactory
         val oldToNewPackageNameMapping: Map<FqName, FqName>,
         val basePackageName: FqName,
+        val transformHelpersPackage: Boolean
     ) : KtVisitor<Unit, Set<Name>>() {
         companion object {
             private val HELPERS_PACKAGE_NAME = Name.identifier("helpers")
@@ -195,7 +201,7 @@ class BatchingPackageInserter(testServices: TestServices) : ReversibleSourceFile
             if (importedFqName == null
                 || importedFqName.startsWith(StandardNames.BUILT_INS_PACKAGE_NAME)
                 || importedFqName.startsWith(KOTLINX_PACKAGE_NAME)
-                || importedFqName.startsWith(HELPERS_PACKAGE_NAME)
+                || (!transformHelpersPackage && importedFqName.startsWith(HELPERS_PACKAGE_NAME))
                 || importedFqName.startsWith(CNAMES_PACKAGE_NAME)
                 || importedFqName.startsWith(OBJCNAMES_PACKAGE_NAME)
                 || importedFqName.startsWith(PLATFORM_PACKAGE_NAME)
