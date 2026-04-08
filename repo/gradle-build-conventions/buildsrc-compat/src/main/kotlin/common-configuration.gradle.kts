@@ -407,6 +407,7 @@ fun Project.configureTests() {
             ":wasm:wasm.ir",
             ":compiler:test-engine-sandbox",
             ":repo:test-federation-runtime",
+            ":benchmarks",
         )
         val projectPath = project.path
         val hasTestInputCheckPlugin = plugins.hasPlugin("test-inputs-check")
