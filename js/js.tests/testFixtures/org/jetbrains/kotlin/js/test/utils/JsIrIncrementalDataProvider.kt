@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImplForJsIC
 import org.jetbrains.kotlin.js.test.handlers.JsBoxRunner
 import org.jetbrains.kotlin.library.KotlinLibrary
 import org.jetbrains.kotlin.library.loader.KlibPlatformChecker
-import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.test.backend.ir.IrBackendFacade
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.model.TestFile
@@ -181,7 +181,7 @@ class JsIrIncrementalDataProvider(private val testServices: TestServices) : Test
             configuration,
             orderedLibraries,
             dirtyFiles,
-            setOf(FqName.fromSegments(listOfNotNull(testPackage, JsBoxRunner.TEST_FUNCTION))),
+            setOf(testPackage.child(Name.identifier(JsBoxRunner.TEST_FUNCTION))),
             mainArguments,
         )
 

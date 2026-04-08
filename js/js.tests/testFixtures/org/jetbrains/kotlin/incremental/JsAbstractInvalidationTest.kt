@@ -199,7 +199,7 @@ abstract class JsAbstractInvalidationTest(
                 V8JsTestChecker.checkWithTestFunctionArgs(
                     files = jsFiles,
                     testModuleName = "./$mainModuleName${projectInfo.moduleKind.jsExtension}",
-                    testPackageName = null,
+                    testPackageName = FqName.ROOT,
                     testFunctionName = BOX_FUNCTION_NAME,
                     testFunctionArgs = "$stepId, false",
                     expectedResult = "OK",

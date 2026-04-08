@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.js.test.converters.augmentWithModuleName
 import org.jetbrains.kotlin.js.test.converters.finalizePath
 import org.jetbrains.kotlin.js.test.handlers.JsBoxRunner.Companion.TEST_FUNCTION
 import org.jetbrains.kotlin.js.test.handlers.JsTypeScriptCompilationHandler
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives.NO_JS_MODULE_SYSTEM
@@ -241,9 +242,9 @@ fun getBoxFunction(testServices: TestServices): KtNamedFunction? {
     }.singleOrNull()
 }
 
-fun extractTestPackage(testServices: TestServices, ignoreEsModules: Boolean = true): String? {
+fun extractTestPackage(testServices: TestServices, ignoreEsModules: Boolean = true): FqName {
     val runPlainBoxFunction = RUN_PLAIN_BOX_FUNCTION in testServices.moduleStructure.allDirectives
-    if (runPlainBoxFunction) return null
+    if (runPlainBoxFunction) return FqName.ROOT
 
     val ktFiles = testServices.moduleStructure.modules.flatMap { module ->
         module.files
@@ -257,9 +258,9 @@ fun extractTestPackage(testServices: TestServices, ignoreEsModules: Boolean = tr
     val fileWithBoxFunction = ktFiles.find { (module, ktFile) ->
         (!ignoreEsModules || JsEnvironmentConfigurator.getModuleKind(testServices, module) != ModuleKind.ES) &&
                 ktFile.declarations.find { it is KtNamedFunction && it.name == TEST_FUNCTION } != null
-    } ?: return null
+    } ?: return FqName.ROOT
 
-    return fileWithBoxFunction.second.packageFqName.asString().takeIf { it.isNotEmpty() }
+    return fileWithBoxFunction.second.packageFqName
 }
 
 fun extractEntryModulePath(

@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.js.test.handlers
 
 import org.jetbrains.kotlin.js.test.utils.*
 import org.jetbrains.kotlin.js.testOld.V8JsTestChecker
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.defaultsProvider
@@ -45,7 +46,7 @@ class JsBoxRunner(testServices: TestServices) : AbstractJsArtifactsCollector(tes
         entryModulePath: String?,
         jsFiles: List<String>,
         testModuleName: String?,
-        testPackage: String?,
+        testPackage: FqName,
         withModuleSystem: Boolean
     ) {
         V8JsTestChecker

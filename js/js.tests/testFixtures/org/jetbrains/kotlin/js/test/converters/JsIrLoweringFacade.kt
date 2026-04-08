@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.js.test.tools.SwcRunner
 import org.jetbrains.kotlin.js.test.utils.extractTestPackage
 import org.jetbrains.kotlin.js.test.utils.jsIrIncrementalDataProvider
 import org.jetbrains.kotlin.js.test.utils.wrapWithModuleEmulationMarkers
-import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.test.backend.ir.IrBackendInput
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.model.*
@@ -127,7 +127,7 @@ class JsIrLoweringFacade(
             irBuiltIns = irBuiltIns,
             symbolTable = symbolTable,
             irLinker = deserializer,
-            exportedDeclarations = setOf(FqName.fromSegments(listOfNotNull(testPackage, JsBoxRunner.TEST_FUNCTION))),
+            exportedDeclarations = setOf(testPackage.child(Name.identifier(JsBoxRunner.TEST_FUNCTION))),
             keep = keep,
             dceRuntimeDiagnostic = null,
             safeExternalBoolean = JsEnvironmentConfigurationDirectives.SAFE_EXTERNAL_BOOLEAN in module.directives,

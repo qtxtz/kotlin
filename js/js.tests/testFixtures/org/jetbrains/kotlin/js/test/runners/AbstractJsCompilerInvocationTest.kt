@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.klib.KlibCompilerInvocationTestUtils
 import org.jetbrains.kotlin.klib.KlibCompilerInvocationTestUtils.Dependencies
 import org.jetbrains.kotlin.klib.KlibCompilerInvocationTestUtils.Dependency
 import org.jetbrains.kotlin.klib.KlibCompilerInvocationTestUtils.MAIN_MODULE_NAME
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.services.configuration.JsEnvironmentConfigurator
 import org.jetbrains.kotlin.utils.mapToSetOrEmpty
@@ -256,7 +257,7 @@ internal object JsCompilerInvocationTestBinaryRunner :
     override fun runBinary(binaryArtifact: JsCompilerInvocationTestBinaryArtifact) {
         val filePaths = binaryArtifact.jsFiles.map { it.canonicalPath }
         V8JsTestChecker.check(
-            filePaths, binaryArtifact.mainModuleName, null,
+            filePaths, binaryArtifact.mainModuleName, FqName.ROOT,
             binaryArtifact.boxFunctionFqName, "OK", withModuleSystem = false,
         )
     }

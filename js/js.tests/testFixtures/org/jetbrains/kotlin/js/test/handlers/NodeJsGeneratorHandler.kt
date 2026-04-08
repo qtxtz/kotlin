@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.js.test.handlers
 import com.intellij.openapi.util.io.FileUtil
 import org.jetbrains.kotlin.js.test.utils.extractTestPackage
 import org.jetbrains.kotlin.js.test.utils.getOnlyJsFilesForRunner
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.services.TestServices
@@ -46,7 +47,7 @@ class NodeJsGeneratorHandler(testServices: TestServices) : AbstractJsArtifactsCo
         FileUtil.writeToFile(File(nodeRunnerName), nodeRunnerText)
     }
 
-    private fun generateNodeRunner(files: Collection<String>, dir: File, moduleName: String, ignored: Boolean, testPackage: String?): String {
+    private fun generateNodeRunner(files: Collection<String>, dir: File, moduleName: String, ignored: Boolean, testPackage: FqName): String {
         val filesToLoad = files.map {
             val relativePath = when {
                 it.startsWith(dir.absolutePath) -> FileUtil.getRelativePath(dir, File(it))!!
@@ -54,7 +55,7 @@ class NodeJsGeneratorHandler(testServices: TestServices) : AbstractJsArtifactsCo
             }
             "\"${relativePath.replace(File.separatorChar, '/')}\""
         }
-        val fqn = testPackage?.let { ".$it" } ?: ""
+        val fqn = if (testPackage.isRoot) "" else ".$testPackage"
         val loadAndRun = "load([${filesToLoad.joinToString(",")}], '$moduleName')$fqn.box()"
 
         val sb = StringBuilder()
