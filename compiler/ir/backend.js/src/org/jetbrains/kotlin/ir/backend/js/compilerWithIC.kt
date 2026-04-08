@@ -69,10 +69,10 @@ class JsICContext(
         moduleName: String,
         fileArtifacts: List<SrcFileArtifact>,
         artifactsDir: File?,
-        forceRebuildJs: Boolean,
+        forceRebuild: Boolean,
         externalModuleName: String?,
     ): ModuleArtifact =
-        JsModuleArtifact(moduleName, fileArtifacts.map { it as JsSrcFileArtifact }, artifactsDir, forceRebuildJs, externalModuleName)
+        JsModuleArtifact(moduleName, fileArtifacts.map { it as JsSrcFileArtifact }, artifactsDir, forceRebuild, externalModuleName)
 }
 
 @OptIn(ObsoleteDescriptorBasedAPI::class)

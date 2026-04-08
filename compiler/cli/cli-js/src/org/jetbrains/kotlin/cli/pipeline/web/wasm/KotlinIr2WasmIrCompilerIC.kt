@@ -198,7 +198,7 @@ fun compileIncrementallyMultimodule(
     val kotlinTestArtifact = artifacts.firstOrNull { it.moduleName == "<kotlin-test>" }
 
     val (toRecompile, toDependency) = artifacts.partition { artifact ->
-        artifact.fileArtifacts.any { it.isModified() }
+        artifact.forceRebuildWasm || artifact.fileArtifacts.any { it.isModified() }
     }
 
     val builtInFragments = mutableListOf<WasmIrProgramFragmentsMultimodule>()

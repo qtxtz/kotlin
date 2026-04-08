@@ -88,7 +88,7 @@ interface PlatformDependentICContext {
         moduleName: String,
         fileArtifacts: List<SrcFileArtifact>,
         artifactsDir: File? = null,
-        forceRebuildJs: Boolean = false,
+        forceRebuild: Boolean = false,
         externalModuleName: String? = null
     ): ModuleArtifact
 }

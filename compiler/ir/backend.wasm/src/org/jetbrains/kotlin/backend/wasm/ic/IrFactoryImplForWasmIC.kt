@@ -90,10 +90,15 @@ open class WasmICContextMultimodule(
         moduleName: String,
         fileArtifacts: List<SrcFileArtifact>,
         artifactsDir: File?,
-        forceRebuildJs: Boolean,
+        forceRebuild: Boolean,
         externalModuleName: String?,
     ): ModuleArtifact =
-        WasmModuleArtifactMultimodule(fileArtifacts.map { it as WasmSrcFileArtifactMultimodule }, moduleName, externalModuleName)
+        WasmModuleArtifactMultimodule(
+            fileArtifacts = fileArtifacts.map { it as WasmSrcFileArtifactMultimodule },
+            moduleName = moduleName,
+            externalModuleName = externalModuleName,
+            forceRebuildWasm = forceRebuild
+        )
 }
 
 
@@ -127,7 +132,7 @@ open class WasmICContextSingleModule(
         moduleName: String,
         fileArtifacts: List<SrcFileArtifact>,
         artifactsDir: File?,
-        forceRebuildJs: Boolean,
+        forceRebuild: Boolean,
         externalModuleName: String?,
     ): ModuleArtifact =
         WasmModuleArtifactSingleModule(fileArtifacts.map { it as WasmSrcFileArtifactSingleModule }, moduleName, externalModuleName)
@@ -163,7 +168,7 @@ open class WasmICContextWholeWorld(
         moduleName: String,
         fileArtifacts: List<SrcFileArtifact>,
         artifactsDir: File?,
-        forceRebuildJs: Boolean,
+        forceRebuild: Boolean,
         externalModuleName: String?,
     ): ModuleArtifact =
         WasmModuleArtifact(fileArtifacts.map { it as WasmSrcFileArtifact })

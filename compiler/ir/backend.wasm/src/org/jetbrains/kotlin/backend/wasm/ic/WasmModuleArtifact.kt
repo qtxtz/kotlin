@@ -125,6 +125,7 @@ class WasmModuleArtifactMultimodule(
     override val fileArtifacts: List<WasmSrcFileArtifactMultimodule>,
     moduleName: String,
     externalModuleName: String?,
+    val forceRebuildWasm: Boolean,
 ) : WasmModuleArtifactMultimoduleBase(moduleName, externalModuleName)
 
 class WasmModuleArtifactSingleModule(
