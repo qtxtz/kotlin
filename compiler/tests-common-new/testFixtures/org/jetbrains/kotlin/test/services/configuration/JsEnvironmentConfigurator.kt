@@ -108,9 +108,6 @@ abstract class JsEnvironmentConfigurator(testServices: TestServices) : Environme
         fun getMainCallParametersForModule(module: TestModule): List<String>? {
             return when {
                 JsEnvironmentConfigurationDirectives.CALL_MAIN in module.directives -> listOf()
-                JsEnvironmentConfigurationDirectives.MAIN_ARGS in module.directives -> {
-                    module.directives[JsEnvironmentConfigurationDirectives.MAIN_ARGS].single()
-                }
                 else -> null
             }
         }
