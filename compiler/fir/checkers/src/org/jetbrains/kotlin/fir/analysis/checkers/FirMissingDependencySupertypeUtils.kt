@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.fir.resolve.toSymbol
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.types.*
+import org.jetbrains.kotlin.name.FqName
 
 context(context: CheckerContext, reporter: DiagnosticReporter)
 fun checkMissingDependencySuperTypes(
@@ -44,8 +45,9 @@ fun checkMissingDependencySuperTypes(
         reporter.reportOn(
             source,
             diagnostic,
-            superType.withArguments(emptyArray()).withNullability(nullable = false, context.session.typeContext),
-            declaration.constructType(),
+            // superType.classId should be not null, FqName.ROOT added just for safety
+            superType.classId?.asSingleFqName() ?: FqName.ROOT,
+            declaration.classId.asSingleFqName(),
         )
     }
 

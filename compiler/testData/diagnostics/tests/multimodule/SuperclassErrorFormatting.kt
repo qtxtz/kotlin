@@ -23,7 +23,7 @@ class Handler<Id, T>(
 // FILE: use.kt
 
 fun handler(t: Transport<String, Document>) {
-    <!MISSING_DEPENDENCY_SUPERCLASS("ServerWebSocketHandler; Handler<, {1}>{2}")!>Handler<!>(t)
+    <!MISSING_DEPENDENCY_SUPERCLASS("ServerWebSocketHandler; Handler")!>Handler<!>(t)
 }
 
 /* GENERATED_FIR_TAGS: classDeclaration, in, interfaceDeclaration, nullableType, out, primaryConstructor,

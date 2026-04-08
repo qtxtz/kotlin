@@ -1860,14 +1860,6 @@ private fun KaDiagnosticConverterBuilder.addConversions37() {
 }
 
 private fun KaDiagnosticConverterBuilder.addConversions38() {
-    add(FirErrors.MISSING_DEPENDENCY_SUPERCLASS_IN_TYPE_ARGUMENT) { firDiagnostic ->
-        MissingDependencySuperclassInTypeArgumentImpl(
-            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.a),
-            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.b),
-            firDiagnostic as KtPsiDiagnostic,
-            token,
-        )
-    }
     add(FirErrors.NOT_A_CLASS) { firDiagnostic ->
         NotAClassImpl(
             firDiagnostic as KtPsiDiagnostic,
@@ -5679,8 +5671,8 @@ private fun KaDiagnosticConverterBuilder.addConversions125() {
 private fun KaDiagnosticConverterBuilder.addConversions126() {
     add(FirErrors.MISSING_DEPENDENCY_SUPERCLASS) { firDiagnostic ->
         MissingDependencySuperclassImpl(
-            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.a),
-            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.b),
+            firDiagnostic.a,
+            firDiagnostic.b,
             firDiagnostic as KtPsiDiagnostic,
             token,
         )
@@ -7655,8 +7647,8 @@ private fun KaDiagnosticConverterBuilder.addConversions173() {
 private fun KaDiagnosticConverterBuilder.addConversions174() {
     add(FirErrors.MISSING_DEPENDENCY_SUPERCLASS_WARNING) { firDiagnostic ->
         MissingDependencySuperclassWarningImpl(
-            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.a),
-            firSymbolBuilder.typeBuilder.buildKtType(firDiagnostic.b),
+            firDiagnostic.a,
+            firDiagnostic.b,
             firDiagnostic as KtPsiDiagnostic,
             token,
         )
