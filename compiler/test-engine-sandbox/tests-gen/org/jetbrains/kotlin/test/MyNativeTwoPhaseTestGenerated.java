@@ -2052,6 +2052,24 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("kt84727.kt")
+    public void testKt84727() {
+      run("kt84727.kt");
+    }
+
+    @Test
+    @TestMetadata("kt84727_if.kt")
+    public void testKt84727_if() {
+      run("kt84727_if.kt");
+    }
+
+    @Test
+    @TestMetadata("kt84727_inline.kt")
+    public void testKt84727_inline() {
+      run("kt84727_inline.kt");
+    }
+
+    @Test
     @TestMetadata("missingValueClassUnboxing.kt")
     public void testMissingValueClassUnboxing() {
       run("missingValueClassUnboxing.kt");
@@ -4517,6 +4535,18 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       }
 
       @Test
+      @TestMetadata("equalsOnNonCallable.kt")
+      public void testEqualsOnNonCallable() {
+        run("equalsOnNonCallable.kt");
+      }
+
+      @Test
+      @TestMetadata("extensionFunctionEquality.kt")
+      public void testExtensionFunctionEquality() {
+        run("extensionFunctionEquality.kt");
+      }
+
+      @Test
       @TestMetadata("extensionReceiverVsDefault.kt")
       public void testExtensionReceiverVsDefault() {
         run("extensionReceiverVsDefault.kt");
@@ -4541,9 +4571,21 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       }
 
       @Test
+      @TestMetadata("lambdaNonEquality.kt")
+      public void testLambdaNonEquality() {
+        run("lambdaNonEquality.kt");
+      }
+
+      @Test
       @TestMetadata("noCoercionToUnitIfFunctionAlreadyReturnsUnit.kt")
       public void testNoCoercionToUnitIfFunctionAlreadyReturnsUnit() {
         run("noCoercionToUnitIfFunctionAlreadyReturnsUnit.kt");
+      }
+
+      @Test
+      @TestMetadata("overloadedFunctionEquality.kt")
+      public void testOverloadedFunctionEquality() {
+        run("overloadedFunctionEquality.kt");
       }
 
       @Test
@@ -4556,6 +4598,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       @TestMetadata("suspendConversion.kt")
       public void testSuspendConversion() {
         run("suspendConversion.kt");
+      }
+
+      @Test
+      @TestMetadata("suspendFunctionEquality.kt")
+      public void testSuspendFunctionEquality() {
+        run("suspendFunctionEquality.kt");
       }
 
       @Test
@@ -7897,6 +7945,57 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
   }
 
   @Nested
+  @TestMetadata("compiler/testData/codegen/box/companionBlocksAndExtensions")
+  @TestDataPath("$PROJECT_ROOT")
+  @UseDummyTestCaseGroupProvider()
+  public class CompanionBlocksAndExtensions {
+    private void run(String fileName) {
+      initTestRunnerAndCreateModuleStructure("compiler/testData/codegen/box/companionBlocksAndExtensions/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInCompanionBlocksAndExtensions() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/codegen/box/companionBlocksAndExtensions"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("callableReferences.kt")
+    public void testCallableReferences() {
+      run("callableReferences.kt");
+    }
+
+    @Test
+    @TestMetadata("companionBlock.kt")
+    public void testCompanionBlock() {
+      run("companionBlock.kt");
+    }
+
+    @Test
+    @TestMetadata("companionBlockImplicitInvoke.kt")
+    public void testCompanionBlockImplicitInvoke() {
+      run("companionBlockImplicitInvoke.kt");
+    }
+
+    @Test
+    @TestMetadata("companionExtensionImplicitInvoke.kt")
+    public void testCompanionExtensionImplicitInvoke() {
+      run("companionExtensionImplicitInvoke.kt");
+    }
+
+    @Test
+    @TestMetadata("companionExtensions.kt")
+    public void testCompanionExtensions() {
+      run("companionExtensions.kt");
+    }
+
+    @Test
+    @TestMetadata("lateinit.kt")
+    public void testLateinit() {
+      run("lateinit.kt");
+    }
+  }
+
+  @Nested
   @TestMetadata("compiler/testData/codegen/box/compatibility")
   @TestDataPath("$PROJECT_ROOT")
   @UseDummyTestCaseGroupProvider()
@@ -8949,6 +9048,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("receiversOrder.kt")
     public void testReceiversOrder() {
       run("receiversOrder.kt");
+    }
+
+    @Test
+    @TestMetadata("sameArgForContextAndExtension.kt")
+    public void testSameArgForContextAndExtension() {
+      run("sameArgForContextAndExtension.kt");
     }
 
     @Test
@@ -11748,6 +11853,18 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("suspendDoWhileContinueInsideElvis.kt")
+    public void testSuspendDoWhileContinueInsideElvis() {
+      run("suspendDoWhileContinueInsideElvis.kt");
+    }
+
+    @Test
+    @TestMetadata("suspendForLoopBreakContinueInsideElvis.kt")
+    public void testSuspendForLoopBreakContinueInsideElvis() {
+      run("suspendForLoopBreakContinueInsideElvis.kt");
+    }
+
+    @Test
     @TestMetadata("suspendFromInlineLambda.kt")
     public void testSuspendFromInlineLambda() {
       run("suspendFromInlineLambda.kt");
@@ -11829,6 +11946,24 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("suspendLambdaWithArgumentRearrangement.kt")
     public void testSuspendLambdaWithArgumentRearrangement() {
       run("suspendLambdaWithArgumentRearrangement.kt");
+    }
+
+    @Test
+    @TestMetadata("suspendTwoProblematicExpressionsInOneCoroutine.kt")
+    public void testSuspendTwoProblematicExpressionsInOneCoroutine() {
+      run("suspendTwoProblematicExpressionsInOneCoroutine.kt");
+    }
+
+    @Test
+    @TestMetadata("suspendWhileBreakContinueInsideElvis.kt")
+    public void testSuspendWhileBreakContinueInsideElvis() {
+      run("suspendWhileBreakContinueInsideElvis.kt");
+    }
+
+    @Test
+    @TestMetadata("suspendWhileContinueInsideElvisWithFinally.kt")
+    public void testSuspendWhileContinueInsideElvisWithFinally() {
+      run("suspendWhileContinueInsideElvisWithFinally.kt");
     }
 
     @Test
@@ -12527,6 +12662,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       @TestMetadata("kt47129.kt")
       public void testKt47129() {
         run("kt47129.kt");
+      }
+
+      @Test
+      @TestMetadata("kt84305.kt")
+      public void testKt84305() {
+        run("kt84305.kt");
       }
 
       @Test
@@ -14192,6 +14333,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       @TestMetadata("kt79276.kt")
       public void testKt79276() {
         run("kt79276.kt");
+      }
+
+      @Test
+      @TestMetadata("kt83372.kt")
+      public void testKt83372() {
+        run("kt83372.kt");
       }
 
       @Test
@@ -18362,6 +18509,18 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       }
 
       @Test
+      @TestMetadata("bitwiseOperations.kt")
+      public void testBitwiseOperations() {
+        run("bitwiseOperations.kt");
+      }
+
+      @Test
+      @TestMetadata("charConstructor.kt")
+      public void testCharConstructor() {
+        run("charConstructor.kt");
+      }
+
+      @Test
       @TestMetadata("constTrim.kt")
       public void testConstTrim() {
         run("constTrim.kt");
@@ -18386,6 +18545,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       }
 
       @Test
+      @TestMetadata("incDec.kt")
+      public void testIncDec() {
+        run("incDec.kt");
+      }
+
+      @Test
       @TestMetadata("kCallableName.kt")
       public void testKCallableName() {
         run("kCallableName.kt");
@@ -18407,6 +18572,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       @TestMetadata("kt58717.kt")
       public void testKt58717() {
         run("kt58717.kt");
+      }
+
+      @Test
+      @TestMetadata("lowerAndUpperCase.kt")
+      public void testLowerAndUpperCase() {
+        run("lowerAndUpperCase.kt");
       }
 
       @Test
@@ -21660,6 +21831,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("coerctionToUnitForLastExpressionWithStarProjection.kt")
     public void testCoerctionToUnitForLastExpressionWithStarProjection() {
       run("coerctionToUnitForLastExpressionWithStarProjection.kt");
+    }
+
+    @Test
+    @TestMetadata("eagerLambdaAnalysisWithNoExpectedType.kt")
+    public void testEagerLambdaAnalysisWithNoExpectedType() {
+      run("eagerLambdaAnalysisWithNoExpectedType.kt");
     }
 
     @Test
@@ -44694,6 +44871,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("directInvokeDestructuring.kt")
+    public void testDirectInvokeDestructuring() {
+      run("directInvokeDestructuring.kt");
+    }
+
+    @Test
     @TestMetadata("dontCaptureTypesWithTypeVariables.kt")
     public void testDontCaptureTypesWithTypeVariables() {
       run("dontCaptureTypesWithTypeVariables.kt");
@@ -48129,6 +48312,30 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("finally12.kt")
+    public void testFinally12() {
+      run("finally12.kt");
+    }
+
+    @Test
+    @TestMetadata("finally13.kt")
+    public void testFinally13() {
+      run("finally13.kt");
+    }
+
+    @Test
+    @TestMetadata("finally14.kt")
+    public void testFinally14() {
+      run("finally14.kt");
+    }
+
+    @Test
+    @TestMetadata("finally15.kt")
+    public void testFinally15() {
+      run("finally15.kt");
+    }
+
+    @Test
     @TestMetadata("finally2.kt")
     public void testFinally2() {
       run("finally2.kt");
@@ -48204,6 +48411,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("try4.kt")
     public void testTry4() {
       run("try4.kt");
+    }
+
+    @Test
+    @TestMetadata("try5.kt")
+    public void testTry5() {
+      run("try5.kt");
     }
   }
 
@@ -48933,6 +49146,51 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("UnitValue.kt")
     public void testUnitValue() {
       run("UnitValue.kt");
+    }
+  }
+
+  @Nested
+  @TestMetadata("compiler/testData/codegen/box/unitConversion")
+  @TestDataPath("$PROJECT_ROOT")
+  @UseDummyTestCaseGroupProvider()
+  public class UnitConversion {
+    private void run(String fileName) {
+      initTestRunnerAndCreateModuleStructure("compiler/testData/codegen/box/unitConversion/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInUnitConversion() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/codegen/box/unitConversion"), Pattern.compile("^(.+)\\.kt$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("basicUnitConversion.kt")
+    public void testBasicUnitConversion() {
+      run("basicUnitConversion.kt");
+    }
+
+    @Test
+    @TestMetadata("unitConversionForSubtype.kt")
+    public void testUnitConversionForSubtype() {
+      run("unitConversionForSubtype.kt");
+    }
+
+    @Test
+    @TestMetadata("unitConversionWithKotlinSam.kt")
+    public void testUnitConversionWithKotlinSam() {
+      run("unitConversionWithKotlinSam.kt");
+    }
+
+    @Test
+    @TestMetadata("unitConversionWithSamSubtype.kt")
+    public void testUnitConversionWithSamSubtype() {
+      run("unitConversionWithSamSubtype.kt");
+    }
+
+    @Test
+    @TestMetadata("unitConversionWithSuspend.kt")
+    public void testUnitConversionWithSuspend() {
+      run("unitConversionWithSuspend.kt");
     }
   }
 
