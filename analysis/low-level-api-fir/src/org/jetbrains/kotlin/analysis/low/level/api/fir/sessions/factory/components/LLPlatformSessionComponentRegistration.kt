@@ -5,13 +5,11 @@
 
 package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.components
 
+import org.jetbrains.kotlin.analysis.api.platform.projectStructure.KaModulePlatformKind
+import org.jetbrains.kotlin.analysis.api.platform.projectStructure.toModulePlatformKind
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
-import org.jetbrains.kotlin.platform.JsPlatform
 import org.jetbrains.kotlin.platform.TargetPlatform
-import org.jetbrains.kotlin.platform.WasmPlatform
-import org.jetbrains.kotlin.platform.jvm.JvmPlatform
-import org.jetbrains.kotlin.platform.konan.NativePlatform
 
 /**
  * Handles the registration of platform-specific session components.
@@ -51,12 +49,13 @@ internal interface LLPlatformSessionComponentRegistration {
     fun registerDanglingFileComponents(session: LLFirSession) {}
 
     companion object {
-        fun forPlatform(targetPlatform: TargetPlatform): LLPlatformSessionComponentRegistration = when {
-            targetPlatform.all { it is JvmPlatform } -> LLJvmSessionComponentRegistration
-            targetPlatform.all { it is JsPlatform } -> LLJsSessionComponentRegistration
-            targetPlatform.all { it is WasmPlatform } -> LLWasmSessionComponentRegistration
-            targetPlatform.all { it is NativePlatform } -> LLNativeSessionComponentRegistration
-            else -> LLCommonSessionComponentRegistration
-        }
+        fun forPlatform(targetPlatform: TargetPlatform): LLPlatformSessionComponentRegistration =
+            when (targetPlatform.toModulePlatformKind()) {
+                KaModulePlatformKind.METADATA -> LLCommonSessionComponentRegistration
+                KaModulePlatformKind.JVM -> LLJvmSessionComponentRegistration
+                KaModulePlatformKind.JS -> LLJsSessionComponentRegistration
+                KaModulePlatformKind.WASM -> LLWasmSessionComponentRegistration
+                KaModulePlatformKind.NATIVE -> LLNativeSessionComponentRegistration
+            }
     }
 }

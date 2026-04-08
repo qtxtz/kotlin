@@ -7,27 +7,21 @@ package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.configu
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
+import org.jetbrains.kotlin.analysis.api.platform.projectStructure.KaModulePlatformKind
+import org.jetbrains.kotlin.analysis.api.platform.projectStructure.toModulePlatformKind
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirDanglingFileSession
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.scopes.FirKotlinScopeProvider
-import org.jetbrains.kotlin.platform.JsPlatform
 import org.jetbrains.kotlin.platform.TargetPlatform
-import org.jetbrains.kotlin.platform.WasmPlatform
-import org.jetbrains.kotlin.platform.jvm.JvmPlatform
-import org.jetbrains.kotlin.platform.konan.NativePlatform
 
 /**
- * A configuration covering platform-specific options of a *main* platform.
+ * A configuration covering platform-specific options of a specific [module platform kind][KaModulePlatformKind].
  *
- * Each configuration is specific to a single "main" platform, such as JVM or Wasm. If a session has multiple platforms (e.g., both JS and
- * Wasm), a metadata configuration is used instead of a platform-specific one. Hence, the configuration is *not* composable, unlike
+ * Each configuration is specific to a single module platform kind, such as [KaModulePlatformKind.JVM] or [KaModulePlatformKind.WASM]. In
+ * case of a [metadata][KaModulePlatformKind.METADATA] module (having multiple concrete platforms such as JS *and* Wasm), a metadata
+ * configuration is used instead of a platform-specific one. Hence, the configuration is *not* composable, unlike
  * [LLPlatformSessionComponentRegistration][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.components.LLPlatformSessionComponentRegistration].
- *
- * This "main" platform approach is necessary because some aspects of a session are deeply platform-specific and cannot be composed (in
- * contrast to composable session components). For example, we create a
- * [Java symbol provider][org.jetbrains.kotlin.analysis.low.level.api.fir.symbolProviders.LLFirJavaSymbolProvider] for a JVM "main" session,
- * but not for a metadata session which covers the JVM and Native platforms, because we cannot access Java symbols from Native.
  */
 internal interface LLPlatformSessionConfiguration {
     /**
@@ -69,12 +63,13 @@ internal interface LLPlatformSessionConfiguration {
     fun createBinaryLibrarySymbolProviders(session: LLFirSession, scope: GlobalSearchScope): List<FirSymbolProvider>
 
     companion object {
-        fun forPlatform(targetPlatform: TargetPlatform, project: Project): LLPlatformSessionConfiguration = when {
-            targetPlatform.all { it is JvmPlatform } -> LLJvmSessionConfiguration(project)
-            targetPlatform.all { it is JsPlatform } -> LLJsSessionConfiguration(project)
-            targetPlatform.all { it is WasmPlatform } -> LLWasmSessionConfiguration(project)
-            targetPlatform.all { it is NativePlatform } -> LLNativeSessionConfiguration(project)
-            else -> LLCommonSessionConfiguration(project)
-        }
+        fun forPlatform(targetPlatform: TargetPlatform, project: Project): LLPlatformSessionConfiguration =
+            when (targetPlatform.toModulePlatformKind()) {
+                KaModulePlatformKind.METADATA -> LLCommonSessionConfiguration(project)
+                KaModulePlatformKind.JVM -> LLJvmSessionConfiguration(project)
+                KaModulePlatformKind.JS -> LLJsSessionConfiguration(project)
+                KaModulePlatformKind.WASM -> LLWasmSessionConfiguration(project)
+                KaModulePlatformKind.NATIVE -> LLNativeSessionConfiguration(project)
+            }
     }
 }
