@@ -75,17 +75,14 @@ class JsIrLoweringFacade(
     ): BinaryArtifacts.Js? {
         val (irModuleFragment, moduleDependencies, irBuiltIns, symbolTable, deserializer) = moduleInfo
 
-        val splitPerModule = JsEnvironmentConfigurationDirectives.SPLIT_PER_MODULE in module.directives
         val splitPerFile = JsEnvironmentConfigurationDirectives.SPLIT_PER_FILE in module.directives
-        val perModule = JsEnvironmentConfigurationDirectives.PER_MODULE in module.directives
         val keep = module.directives[JsEnvironmentConfigurationDirectives.KEEP].toSet()
 
         val moduleKind = JsEnvironmentConfigurator.getModuleKind(testServices, module)
         val granularity = when {
             !firstTimeCompilation -> JsGenerationGranularity.WHOLE_PROGRAM
             splitPerFile || moduleKind == ModuleKind.ES -> JsGenerationGranularity.PER_FILE
-            splitPerModule || perModule -> JsGenerationGranularity.PER_MODULE
-            else -> JsGenerationGranularity.WHOLE_PROGRAM
+            else -> JsGenerationGranularity.PER_MODULE
         }
 
         val testPackage = extractTestPackage(testServices, ignoreEsModules = false)

@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
-import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.directives.KlibBasedCompilerTestDirectives.IGNORE_IR_DESERIALIZATION_TEST
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.LANGUAGE
@@ -45,7 +44,6 @@ abstract class AbstractJsIrDeserializationTest(
                         "+${LanguageFeature.IrCrossModuleInlinerBeforeKlibSerialization.name}"
                     )
                 }
-                +JsEnvironmentConfigurationDirectives.PER_MODULE
                 +LanguageSettingsDirectives.ALLOW_KOTLIN_PACKAGE
                 FirDiagnosticsDirectives.FIR_PARSER with FirParser.LightTree
             }

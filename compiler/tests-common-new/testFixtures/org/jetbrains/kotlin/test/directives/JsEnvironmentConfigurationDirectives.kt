@@ -220,11 +220,6 @@ object JsEnvironmentConfigurationDirectives : SimpleDirectivesContainer() {
         applicability = DirectiveApplicability.File
     )
 
-    val PER_MODULE by directive(
-        description = "",
-        applicability = DirectiveApplicability.Global
-    )
-
     val NO_COMMON_FILES by directive(
         """
             Don't added helper files to prevent linking issues.

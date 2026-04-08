@@ -17,7 +17,10 @@ import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.TestInfrastructureInternals
 import org.jetbrains.kotlin.test.backend.handlers.IrPreprocessedInlineFunctionDumpHandler
 import org.jetbrains.kotlin.test.backend.handlers.IrTextDumpHandler
-import org.jetbrains.kotlin.test.builders.*
+import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
+import org.jetbrains.kotlin.test.builders.configureFirHandlersStep
+import org.jetbrains.kotlin.test.builders.configureJsArtifactsHandlersStep
+import org.jetbrains.kotlin.test.builders.configureLoweredIrHandlersStep
 import org.jetbrains.kotlin.test.configuration.commonFirHandlersForCodegenTest
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives.DUMP_IR_AFTER_INLINE
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives.IGNORE_BACKEND_K2_MULTI_MODULE
@@ -357,7 +360,6 @@ fun TestConfigurationBuilder.setUpDefaultDirectivesForJsBoxTest(parser: FirParse
         val runIc = getBoolean("kotlin.js.ir.icMode")
         if (runIc) +JsEnvironmentConfigurationDirectives.RUN_IC
         if (getBoolean("kotlin.js.ir.klibMainModule")) +JsEnvironmentConfigurationDirectives.KLIB_MAIN_MODULE
-        if (getBoolean("kotlin.js.ir.perModule", true)) +JsEnvironmentConfigurationDirectives.PER_MODULE
         if (getBoolean("kotlin.js.ir.dce", true)) +JsEnvironmentConfigurationDirectives.RUN_IR_DCE
         +LanguageSettingsDirectives.ALLOW_KOTLIN_PACKAGE
         -JsEnvironmentConfigurationDirectives.GENERATE_NODE_JS_RUNNER
