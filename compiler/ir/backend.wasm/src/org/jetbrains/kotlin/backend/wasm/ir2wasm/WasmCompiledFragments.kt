@@ -35,6 +35,8 @@ class WasmCompiledDeclarationsFileFragment(
     val definedRttiSuperType: MutableMap<IdSignature, IdSignature?> = mutableMapOf(),
 )
 
+data class MainFunctionWrapper(val fqName: String, val function: IdSignature)
+
 class WasmCompiledLinkerDataFileFragment(
     val globalLiterals: MutableSet<LiteralGlobalSymbol> = mutableSetOf(),
     val globalLiteralsId: MutableMap<String, WasmSymbol<Int>> = mutableMapOf(),
@@ -44,7 +46,7 @@ class WasmCompiledLinkerDataFileFragment(
     val jsModuleImports: MutableMap<IdSignature, String> = mutableMapOf(),
     val jsBuiltinsPolyfills: MutableMap<String, String> = mutableMapOf(),
     val exports: MutableList<WasmExport<*>> = mutableListOf(),
-    val mainFunctionWrappers: MutableList<IdSignature> = mutableListOf(),
+    val mainFunctionWrappers: MutableList<MainFunctionWrapper> = mutableListOf(),
     var testFunctionDeclarators: MutableList<IdSignature> = mutableListOf(),
     val equivalentFunctions: MutableList<Pair<String, IdSignature>> = mutableListOf(),
     val jsModuleAndQualifierReferences: MutableSet<JsModuleAndQualifierReference> = mutableSetOf(),

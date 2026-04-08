@@ -108,7 +108,7 @@ class WasmSerializer(outputStream: OutputStream) {
         serializeMap(jsModuleImports, ::serializeIdSignature, ::serializeString)
         serializeMap(jsBuiltinsPolyfills, ::serializeString, ::serializeString)
         serializeList(exports, ::serializeWasmExport)
-        serializeList(mainFunctionWrappers, ::serializeIdSignature)
+        serializeList(mainFunctionWrappers, ::serializeMainFunctionWrapper)
         serializeList(testFunctionDeclarators, ::serializeIdSignature)
         serializeList(equivalentFunctions) { serializePair(it, ::serializeString, ::serializeIdSignature) }
         serializeSet(jsModuleAndQualifierReferences, ::serializeJsModuleAndQualifierReference)
@@ -385,6 +385,11 @@ class WasmSerializer(outputStream: OutputStream) {
     private fun serializeWasmImportDescriptor(descriptor: WasmImportDescriptor) {
         serializeString(descriptor.moduleName)
         serializeWasmSymbolReadOnly(descriptor.declarationName, ::serializeString)
+    }
+
+    private fun serializeMainFunctionWrapper(wrapper: MainFunctionWrapper) {
+        serializeString(wrapper.fqName)
+        serializeIdSignature(wrapper.function)
     }
 
     private fun <A, B> serializePair(pair: Pair<A, B>, serializeAFunc: (A) -> Unit, serializeBFunc: (B) -> Unit) {

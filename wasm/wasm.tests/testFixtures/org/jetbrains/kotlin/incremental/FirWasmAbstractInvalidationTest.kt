@@ -42,6 +42,13 @@ abstract class AbstractFirWasmInvalidationSingleModuleTest :
     override fun modifyConfig(configuration: CompilerConfiguration) {
         configuration.wasmIncludedModuleOnly = true
     }
+
+    private val ignoredTests = setOf(
+        "mainFunctionSelect", //KT-85577 Single module mode execute all main functions in dependencies
+    )
+
+    override fun isIgnoredTest(projectInfo: ProjectInfo): Boolean =
+        super.isIgnoredTest(projectInfo) || projectInfo.name in ignoredTests
 }
 
 abstract class AbstractFirWasmInvalidationWithPLTest :

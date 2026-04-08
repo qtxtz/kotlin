@@ -414,6 +414,12 @@ class WasmDeserializer(inputStream: InputStream, private val skipLocalNames: Boo
         return WasmImportDescriptor(moduleName, declarationName)
     }
 
+    private fun deserializeMainFunctionWrapper(): MainFunctionWrapper {
+        val fqName = deserializeString()
+        val function = deserializeIdSignature()
+        return MainFunctionWrapper(fqName, function)
+    }
+
     private inline fun <A, B> deserializePair(deserializeAFunc: () -> A, deserializeBFunc: () -> B): Pair<A, B> {
         val a = deserializeAFunc()
         val b = deserializeBFunc()
@@ -706,7 +712,7 @@ class WasmDeserializer(inputStream: InputStream, private val skipLocalNames: Boo
     private fun deserializeJsModuleImports() = deserializeMap(::deserializeIdSignature, ::deserializeString)
     private fun deserializeJsBuiltinsPolyfills() = deserializeMap(::deserializeString, ::deserializeString)
     private fun deserializeExports() = deserializeList(::deserializeExport)
-    private fun deserializeMainFunctionWrappers() = deserializeList(::deserializeIdSignature)
+    private fun deserializeMainFunctionWrappers() = deserializeList(::deserializeMainFunctionWrapper)
     private fun deserializeTestFunctionDeclarators() = deserializeList(::deserializeIdSignature)
     private fun deserializeClosureCallExports() = deserializeList { deserializePair(::deserializeString, ::deserializeIdSignature) }
     private fun deserializeJsModuleAndQualifierReferences() = deserializeSet(::deserializeJsModuleAndQualifierReference)

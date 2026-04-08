@@ -77,20 +77,16 @@ class WasmCompiledModuleFragment(
 
         createAssociatedObjectGetter(definedDeclarations = definedDeclarations, wasmElements = wasmElements)
 
-        val mainFunctionSymbols = mutableListOf<WasmFunction>()
-        forEachLinkerData {
-            it.mainFunctionWrappers.mapTo(mainFunctionSymbols) { signature ->
-                definedDeclarations.functions[signature]
-                    ?: compilationException("Cannot find symbol for main wrapper", type = null)
-            }
-        }
-
         val mainFunctionsExportName = if (wasmCommandModuleInitialization)
             wasmInitializeExportName
         else
             wasmStartExportName
 
-        exports.addAll(mainFunctionSymbols.map { WasmExport.Function(mainFunctionsExportName, it) })
+        val mainFunctions = selectMainFunctions()
+        mainFunctions.forEach { mainFunction ->
+            val mainFunction = definedDeclarations.resolve(FuncSymbol(mainFunction))
+            exports.add(WasmExport.Function(mainFunctionsExportName, mainFunction))
+        }
 
         createStringPoolField(definedDeclarations, stringPoolSizeWithGlobals)
 
@@ -453,6 +449,25 @@ class WasmCompiledModuleFragment(
         }
         definedDeclarations.functions[Synthetics.Functions.masterInitFunction.value] = masterInitFunction
         return masterInitFunction
+    }
+
+    // TODO: Gets main functions which should be run on start. Basically it should single, but we have no way to decide.
+    private fun selectMainFunctions(): List<IdSignature> {
+        var mainFunctionId: String? = null
+        val mainFunctionSignatures = mutableListOf<IdSignature>()
+        forEachLinkerData { linkerData ->
+            linkerData.mainFunctionWrappers.forEach { (fqName, signature) ->
+                val currentId = mainFunctionId ?: fqName
+                if (mainFunctionId == null || fqName < currentId) {
+                    mainFunctionId = fqName
+                    mainFunctionSignatures.clear()
+                    mainFunctionSignatures.add(signature)
+                } else if (fqName == currentId) {
+                    mainFunctionSignatures.add(signature)
+                }
+            }
+        }
+        return mainFunctionSignatures
     }
 
     private fun createAssociatedObjectGetter(

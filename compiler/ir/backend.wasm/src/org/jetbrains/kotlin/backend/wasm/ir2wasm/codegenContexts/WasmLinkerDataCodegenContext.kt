@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.backend.common.serialization.cityHash64
 import org.jetbrains.kotlin.ir.declarations.IdSignatureRetriever
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
+import org.jetbrains.kotlin.ir.util.getPackageFragment
 import org.jetbrains.kotlin.wasm.ir.WasmExport
 import org.jetbrains.kotlin.wasm.ir.WasmSymbol
 import org.jetbrains.kotlin.wasm.ir.WasmType
@@ -61,7 +62,9 @@ open class WasmLinkerDataCodegenContext(
     }
 
     open fun addMainFunctionWrapper(mainFunctionWrapper: IrFunctionSymbol) {
-        wasmFileFragment.mainFunctionWrappers.add(mainFunctionWrapper.getReferenceKey())
+        val fqName = mainFunctionWrapper.owner.getPackageFragment().packageFqName.asString()
+        val reference = mainFunctionWrapper.getReferenceKey()
+        wasmFileFragment.mainFunctionWrappers.add(MainFunctionWrapper(fqName, reference))
     }
 
     open fun addTestFunDeclarator(testFunctionDeclarator: IrFunctionSymbol) {
