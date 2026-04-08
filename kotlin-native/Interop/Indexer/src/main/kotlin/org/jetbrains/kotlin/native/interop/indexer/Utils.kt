@@ -858,9 +858,7 @@ class ClangFile(val cxFile: CXFile) {
         return other is ClangFile && (clang_File_isEqual(cxFile, other.cxFile) != 0)
     }
 
-    override fun hashCode(): Int = cValue<CXFileUniqueID> {
-        clang_getFileUniqueID(cxFile, ptr)
-    }.hashCode()
+    override fun hashCode(): Int = clang_getFileUniqueIDHash(cxFile)
 
     override fun toString(): String = path
 }

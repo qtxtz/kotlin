@@ -17,6 +17,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 
 #include <llvm/ADT/StringRef.h>
 #include <clang/Basic/LLVM.h>
@@ -31,6 +32,18 @@
 #endif // LIBCLANGEXT_ENABLE
 
 using namespace clang;
+
+namespace {
+  // Hash combine function derived from boost.
+  // Copyright 2005-2014 Daniel James.
+  // https://github.com/boostorg/container_hash/blob/b2e3beea3f44ac783765503eea133df29d11c8e8/include/boost/container_hash/hash.hpp#L159
+
+  template <class T>
+  void hash_combine(std::size_t& seed, const T& v) {
+      std::hash<T> hasher;
+      seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+  }
+}  // namespace
 
 #if LIBCLANGEXT_ENABLE
 
@@ -270,5 +283,18 @@ extern "C" {
       clang_disposeString(spelling);
       return CXChildVisit_Continue;
     }, &data);
+  }
+
+  int32_t clang_getFileUniqueIDHash(CXFile file) {
+    CXFileUniqueID id;
+    if (clang_getFileUniqueID(file, &id) != 0) {
+      return 0;
+    }
+    std::size_t hash = 0;
+    for (auto part : id.data) {
+      hash_combine(hash, part);
+    }
+    static_assert(sizeof(hash) == 8);
+    return static_cast<int32_t>(hash ^ (hash >> 32));
   }
 }

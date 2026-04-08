@@ -170,6 +170,10 @@ the Kotlin IntelliJ IDEA plugin:
    - License: Boost Software License 1.0 ([license/third_party/boost_LICENSE.txt][boost])
    - Origin: Derived from boost hash functions, Copyright 2005-2014 Daniel James
 
+ - Path: kotlin-native/libclangext/src/main/cpp/ClangExt.cpp
+   - License: Boost Software License 1.0 ([license/third_party/boost_LICENSE.txt][boost])
+   - Origin: Derived from boost hash functions, Copyright 2005-2014 Daniel James
+
  - Path: prepare/compiler/
     - License: Apache 2 ([license/third_party/opentelemetry_license.txt][opentelemetry])
     - Origin: Copyright The OpenTelemetry Authors

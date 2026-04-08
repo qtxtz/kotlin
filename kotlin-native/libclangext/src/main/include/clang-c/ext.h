@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <stdint.h>
 #include <stdbool.h>
 
 #include <clang-c/Index.h>
@@ -76,6 +77,8 @@ unsigned clang_visitObjectLikeMacroDefinitions(
   MacroVisitor visitor,
   CXClientData client_data
 );
+
+int32_t clang_getFileUniqueIDHash(CXFile file);
 
 #ifdef __cplusplus
 }
