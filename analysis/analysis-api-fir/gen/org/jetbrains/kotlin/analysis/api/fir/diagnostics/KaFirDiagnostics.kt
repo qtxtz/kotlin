@@ -3278,6 +3278,10 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         override val diagnosticClass get() = UnnamedDelegatedProperty::class
     }
 
+    interface UnnamedPropertyWithImplicitUnitType : KaFirDiagnostic<PsiElement> {
+        override val diagnosticClass get() = UnnamedPropertyWithImplicitUnitType::class
+    }
+
     interface DestructuringShortFormNameMismatch : KaFirDiagnostic<KtElement> {
         override val diagnosticClass get() = DestructuringShortFormNameMismatch::class
         val destructuredName: Name

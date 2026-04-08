@@ -3935,6 +3935,11 @@ internal class UnnamedDelegatedPropertyImpl(
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.UnnamedDelegatedProperty
 
+internal class UnnamedPropertyWithImplicitUnitTypeImpl(
+    firDiagnostic: KtPsiDiagnostic,
+    token: KaLifetimeToken,
+) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.UnnamedPropertyWithImplicitUnitType
+
 internal class DestructuringShortFormNameMismatchImpl(
     override val destructuredName: Name,
     override val propertyName: Name,
