@@ -1,8 +1,5 @@
 // RUN_PIPELINE_TILL: BACKEND
-// FIR_DIFFERENCE
 // IGNORE_FIR_DIAGNOSTICS
-// The diagnostic cannot be implemented with the FIR frontend checker because it requires constant evaluation over FIR.
-// The diagnostic is implemented as a klib check over IR.
 
 fun test() {
     js(<!JSCODE_NO_JAVASCRIPT_PRODUCED!>""<!>)

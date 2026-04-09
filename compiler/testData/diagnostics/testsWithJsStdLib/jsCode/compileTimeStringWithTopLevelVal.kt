@@ -1,6 +1,4 @@
 // RUN_PIPELINE_TILL: FRONTEND
-// FIR_DIFFERENCE
-// The difference is okay: K1 and K2 report a bit differently
 
 // MODULE: lib1
 // FILE: A.kt
