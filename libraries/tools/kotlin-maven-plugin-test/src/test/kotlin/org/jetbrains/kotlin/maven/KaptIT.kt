@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.maven
 import org.jetbrains.kotlin.maven.test.*
 import org.junit.jupiter.api.DisplayName
 
+@DisplayName("KAPT annotation processing")
 class KaptIT : KotlinMavenTestBase() {
 
     @MavenTest
