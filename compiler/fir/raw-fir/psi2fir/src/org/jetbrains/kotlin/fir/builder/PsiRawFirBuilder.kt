@@ -1364,6 +1364,16 @@ open class PsiRawFirBuilder(
         }
 
         protected fun buildScriptDestructuringDeclaration(destructuringDeclaration: KtDestructuringDeclaration): FirVariable {
+            return buildDestructuringDeclaration(
+                destructuringDeclaration,
+                FirDeclarationOrigin.Synthetic.ScriptTopLevelDestructuringDeclarationContainer,
+            )
+        }
+
+        protected fun buildDestructuringDeclaration(
+            destructuringDeclaration: KtDestructuringDeclaration,
+            origin: FirDeclarationOrigin,
+        ): FirVariable {
             val initializer = destructuringDeclaration.initializer
             val firInitializer = buildOrLazyExpression(initializer?.toFirSourceElement()) {
                 initializer.toFirExpression(
@@ -1377,7 +1387,7 @@ open class PsiRawFirBuilder(
                 source = destructuringDeclaration.toFirSourceElement(),
                 specialName = "destruct",
                 initializer = firInitializer,
-                origin = FirDeclarationOrigin.Synthetic.ScriptTopLevelDestructuringDeclarationContainer,
+                origin = origin,
                 extractAnnotationsTo = { extractAnnotationsTo(it) },
             ).apply {
                 isDestructuringDeclarationContainerVariable = true
@@ -1693,16 +1703,7 @@ open class PsiRawFirBuilder(
                         add(initializer)
                     }
                     is KtDestructuringDeclaration -> {
-                        val destructuringContainerVar = generateTemporaryVariable(
-                            moduleData = baseModuleData,
-                            source = declaration.toFirSourceElement(),
-                            specialName = "destruct",
-                            initializer = declaration.initializer.toFirExpression(
-                                "Initializer required for destructuring declaration",
-                                sourceWhenInvalidExpression = declaration
-                            ),
-                            extractAnnotationsTo = { extractAnnotationsTo(it) }
-                        )
+                        val destructuringContainerVar = buildDestructuringDeclaration(declaration, origin = FirDeclarationOrigin.Source)
                         add(destructuringContainerVar)
 
                         this@PsiRawFirBuilder.addDestructuringVariables(
