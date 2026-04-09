@@ -4,7 +4,7 @@
 
 private class C
 
-private context(c: C?) fun contextC() { <!UNUSED_EXPRESSION!>c<!> }
+private context(c: C?) fun contextC() { c }
 
 private inline fun consumeWithContext() { with(null) { contextC() } }
 

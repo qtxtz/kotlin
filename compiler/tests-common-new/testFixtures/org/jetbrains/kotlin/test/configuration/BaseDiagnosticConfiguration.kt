@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.test.builders.configureFirHandlersStep
 import org.jetbrains.kotlin.test.builders.firHandlersStep
 import org.jetbrains.kotlin.test.builders.irHandlersStep
 import org.jetbrains.kotlin.test.cli.CliDirectives.CHECK_COMPILER_OUTPUT
+import org.jetbrains.kotlin.test.directives.CodegenTestDirectives.IGNORE_DEXING
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives.WITH_STDLIB
 import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives.DIAGNOSTICS
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.DISABLE_WITH_PARSER
@@ -192,10 +193,11 @@ fun TestConfigurationBuilder.configureCommonDiagnosticTestPaths() {
         }
     }
 
-    forTestsMatching("compiler/testData/diagnostics/jvmIntegration/*") {
+    forTestsMatching("compiler/testData/diagnostics/tests/jvm/*") {
         defaultDirectives {
             +WITH_STDLIB
             +CHECK_COMPILER_OUTPUT
+            +IGNORE_DEXING
         }
     }
 

@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: BACKEND
+// WITH_STDLIB
 // JDK_KIND: FULL_JDK_11
 // MODULE: main
 // FILE: test.kt

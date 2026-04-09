@@ -1,4 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
+// WITH_STDLIB
 // MODULE: lib
 // FILE: Lib.kt
 @ExposedCopyVisibility
