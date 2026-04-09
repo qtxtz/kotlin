@@ -21,7 +21,6 @@ import org.jetbrains.kotlin.test.model.TestModule
  * It allows configuring how the target platform is determined for a module based on default settings, directives and module name
  */
 abstract class TargetPlatformProvider : TestService {
-    // TODO(KT-83996): Drop the `allowMultiplatform` parameter and use `!module.isLeafModuleInHmppStructure()` in the implementation instead
     abstract fun getTargetPlatform(module: TestModule): TargetPlatform
 }
 
@@ -32,20 +31,20 @@ fun TestModule.targetPlatform(testServices: TestServices): TargetPlatform =
 
 class TargetPlatformProviderForCompilerTests(val testServices: TestServices) : TargetPlatformProvider() {
     override fun getTargetPlatform(module: TestModule): TargetPlatform {
-        val directives = module.directives
-
         @OptIn(TestInfrastructureInternals::class)
-        val defaultTargetPlatform = testServices.defaultsProvider.targetPlatform
-
-        if (!module.isLeafModuleInMppGraph(testServices) || METADATA_ONLY_COMPILATION in directives) {
-            return MetadataConfigurationUpdater.computeTargetPlatform(
-                directives[METADATA_TARGET_PLATFORMS],
-                onUnknownPlatform = { error("Unknown target platform: $it") },
-                onEmptyPlatforms = {},
-                defaultPlatform = defaultTargetPlatform,
-            )
-        }
-
-        return defaultTargetPlatform
+        return getMetadataTargetPlatformOrNull(module, testServices) ?: testServices.defaultsProvider.targetPlatform
     }
+}
+
+fun getMetadataTargetPlatformOrNull(module: TestModule, testServices: TestServices): TargetPlatform? {
+    val directives = module.directives
+
+    if (!module.isLeafModuleInMppGraph(testServices) || METADATA_ONLY_COMPILATION in directives) {
+        return MetadataConfigurationUpdater.computeTargetPlatformOrNull(
+            directives[METADATA_TARGET_PLATFORMS],
+            onUnknownPlatform = { error("Unknown target platform: $it") },
+        )
+    }
+
+    return null
 }

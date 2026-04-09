@@ -116,12 +116,10 @@ object MetadataConfigurationUpdater : ConfigurationUpdater<K2MetadataCompilerArg
         )
     }
 
-    fun computeTargetPlatform(
+    fun computeTargetPlatformOrNull(
         platformsFromArg: List<String>,
         onUnknownPlatform: (String) -> Unit,
-        onEmptyPlatforms: () -> Unit,
-        defaultPlatform: TargetPlatform
-    ): TargetPlatform {
+    ): TargetPlatform? {
         val platforms = buildSet {
             for (platformArg in platformsFromArg) {
                 val simplePlatform = platformMap[platformArg] ?: run {
@@ -131,11 +129,23 @@ object MetadataConfigurationUpdater : ConfigurationUpdater<K2MetadataCompilerArg
                 add(simplePlatform)
             }
         }
-        if (platforms.isEmpty()) {
+        return platforms.takeIf { it.isNotEmpty() }?.let { TargetPlatform(it) }
+    }
+
+    fun computeTargetPlatform(
+        platformsFromArg: List<String>,
+        onUnknownPlatform: (String) -> Unit,
+        onEmptyPlatforms: () -> Unit,
+        defaultPlatform: TargetPlatform
+    ): TargetPlatform {
+        val targetPlatform = computeTargetPlatformOrNull(platformsFromArg, onUnknownPlatform)
+
+        return if (targetPlatform != null) {
+            targetPlatform
+        } else {
             onEmptyPlatforms()
-            return defaultPlatform
+            defaultPlatform
         }
-        return TargetPlatform(platforms)
     }
 
     private fun computeTargetPlatform(platformsFromArg: List<String>, configuration: CompilerConfiguration): TargetPlatform {
