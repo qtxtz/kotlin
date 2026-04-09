@@ -6,7 +6,6 @@
 package org.jetbrains.kotlin.lombok.k2.config
 
 import org.jetbrains.kotlin.descriptors.Visibility
-import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.findArgumentByName
 import org.jetbrains.kotlin.fir.declarations.getStringArgument
@@ -17,26 +16,10 @@ import org.jetbrains.kotlin.lombok.utils.trimToNull
 import org.jetbrains.kotlin.name.Name
 
 @DirectDeclarationsAccess
-@Deprecated(
-    message = "Use getAccessLevel overload without session parameter",
-    replaceWith = ReplaceWith("getAccessLevel(name)"),
-    level = DeprecationLevel.HIDDEN
-)
-fun FirAnnotation.getAccessLevel(field: Name, session: FirSession): AccessLevel = getAccessLevel(field)
-
-@DirectDeclarationsAccess
 fun FirAnnotation.getAccessLevel(field: Name): AccessLevel {
     val value = getArgumentAsString(field) ?: return AccessLevel.PUBLIC
     return AccessLevel.valueOf(value)
 }
-
-@DirectDeclarationsAccess
-@Deprecated(
-    message = "Use getAccessLevel overload without session parameter",
-    replaceWith = ReplaceWith("getAccessLevel()"),
-    level = DeprecationLevel.HIDDEN
-)
-fun FirAnnotation.getAccessLevel(session: FirSession): AccessLevel = getAccessLevel()
 
 @DirectDeclarationsAccess
 fun FirAnnotation.getAccessLevel(): AccessLevel {
@@ -63,24 +46,9 @@ private fun FirAnnotation.getArgumentAsString(field: Name): String? {
 }
 
 @DirectDeclarationsAccess
-@Deprecated(
-    message = "Use getVisibility overload without session parameter",
-    replaceWith = ReplaceWith("getVisibility(field)"),
-    level = DeprecationLevel.HIDDEN
-)
-fun FirAnnotation.getVisibility(field: Name, session: FirSession): Visibility = getVisibility(field)
-
-@DirectDeclarationsAccess
 fun FirAnnotation.getVisibility(field: Name): Visibility {
     return getAccessLevel(field).toVisibility()
 }
-
-@Deprecated(
-    "Use getNonBlankStringArgument overload without session parameter",
-    ReplaceWith("getNonBlankStringArgument(name)"),
-    level = DeprecationLevel.HIDDEN
-)
-fun FirAnnotation.getNonBlankStringArgument(name: Name, session: FirSession): String? = getNonBlankStringArgument(name)
 
 fun FirAnnotation.getNonBlankStringArgument(name: Name): String? = getStringArgument(name)?.trimToNull()
 
