@@ -6,11 +6,9 @@
 package org.jetbrains.kotlin.lexer.kdoc;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.kotlin.test.JUnit3RunnerWithInners;
-import org.jetbrains.kotlin.test.KotlinTestUtils;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -19,23 +17,25 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("compiler/psi/psi-impl/testData/lexer/kdoc")
 @TestDataPath("$PROJECT_ROOT")
-@RunWith(JUnit3RunnerWithInners.class)
 public class KDocLexerTestGenerated extends AbstractKDocLexerTest {
-  private void runTest(String testDataFilePath) {
-    KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+  private void run(String fileName) {
+    runTest("compiler/psi/psi-impl/testData/lexer/kdoc/" + fileName);
   }
 
+  @Test
   public void testAllFilesPresentInKdoc() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kdoc"), Pattern.compile("^(.+)\\.kt$"), null, true);
   }
 
+  @Test
   @TestMetadata("codeBlocks.kt")
   public void testCodeBlocks() {
-    runTest("compiler/psi/psi-impl/testData/lexer/kdoc/codeBlocks.kt");
+    run("codeBlocks.kt");
   }
 
+  @Test
   @TestMetadata("codeBlocksWithVerticalTabs.kt")
   public void testCodeBlocksWithVerticalTabs() {
-    runTest("compiler/psi/psi-impl/testData/lexer/kdoc/codeBlocksWithVerticalTabs.kt");
+    run("codeBlocksWithVerticalTabs.kt");
   }
 }

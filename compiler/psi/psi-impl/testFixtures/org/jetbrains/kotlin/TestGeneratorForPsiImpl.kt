@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin
 
-import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.dsl.junit5.generateTestGroupSuiteWithJUnit5
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.lexer.kdoc.AbstractKDocLexerTest
@@ -33,11 +32,7 @@ fun main(args: Array<String>) {
             testClass<AbstractBlockCodeFragmentParsingTest> {
                 model("blockCodeFragment", pattern = TestGeneratorUtil.KT)
             }
-        }
-    }
 
-    generateTestGroupSuiteWithJUnit4(args) {
-        testGroup("compiler/psi/psi-impl/tests-gen", "compiler/psi/psi-impl/testData") {
             testClass<AbstractKDocLexerTest> {
                 model("lexer/kdoc")
             }

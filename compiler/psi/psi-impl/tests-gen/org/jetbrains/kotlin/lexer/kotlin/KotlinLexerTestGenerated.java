@@ -6,11 +6,10 @@
 package org.jetbrains.kotlin.lexer.kotlin;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.kotlin.test.JUnit3RunnerWithInners;
-import org.jetbrains.kotlin.test.KotlinTestUtils;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -19,193 +18,218 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin")
 @TestDataPath("$PROJECT_ROOT")
-@RunWith(JUnit3RunnerWithInners.class)
 public class KotlinLexerTestGenerated extends AbstractKotlinLexerTest {
-  private void runTest(String testDataFilePath) {
-    KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+  private void run(String fileName) {
+    runTest("compiler/psi/psi-impl/testData/lexer/kotlin/" + fileName);
   }
 
+  @Test
   public void testAllFilesPresentInKotlin() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin"), Pattern.compile("^(.+)\\.kt$"), null, true);
   }
 
+  @Nested
   @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters")
   @TestDataPath("$PROJECT_ROOT")
-  @RunWith(JUnit3RunnerWithInners.class)
-  public static class WhitespaceCharacters extends AbstractKotlinLexerTest {
-    private void runTest(String testDataFilePath) {
-      KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+  public class WhitespaceCharacters {
+    private void run(String fileName) {
+      runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/" + fileName);
     }
 
+    @Test
     public void testAllFilesPresentInWhitespaceCharacters() {
       KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters"), Pattern.compile("^(.+)\\.kt$"), null, true);
     }
 
+    @Nested
     @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/carriageReturn")
     @TestDataPath("$PROJECT_ROOT")
-    @RunWith(JUnit3RunnerWithInners.class)
-    public static class CarriageReturn extends AbstractKotlinLexerTest {
-      private void runTest(String testDataFilePath) {
-        KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    public class CarriageReturn {
+      private void run(String fileName) {
+        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/carriageReturn/" + fileName);
       }
 
+      @Test
       public void testAllFilesPresentInCarriageReturn() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/carriageReturn"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
 
+      @Test
       @TestMetadata("carriageReturn.kt")
       public void testCarriageReturn() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/carriageReturn/carriageReturn.kt");
+        run("carriageReturn.kt");
       }
 
+      @Test
       @TestMetadata("carriageReturnInComments.kt")
       public void testCarriageReturnInComments() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/carriageReturn/carriageReturnInComments.kt");
+        run("carriageReturnInComments.kt");
       }
 
+      @Test
       @TestMetadata("carriageReturnInStringLiterals.kt")
       public void testCarriageReturnInStringLiterals() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/carriageReturn/carriageReturnInStringLiterals.kt");
+        run("carriageReturnInStringLiterals.kt");
       }
     }
 
+    @Nested
     @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/lineSeparator")
     @TestDataPath("$PROJECT_ROOT")
-    @RunWith(JUnit3RunnerWithInners.class)
-    public static class LineSeparator extends AbstractKotlinLexerTest {
-      private void runTest(String testDataFilePath) {
-        KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    public class LineSeparator {
+      private void run(String fileName) {
+        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/lineSeparator/" + fileName);
       }
 
+      @Test
       public void testAllFilesPresentInLineSeparator() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/lineSeparator"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
 
+      @Test
       @TestMetadata("lineSeparator.kt")
       public void testLineSeparator() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/lineSeparator/lineSeparator.kt");
+        run("lineSeparator.kt");
       }
 
+      @Test
       @TestMetadata("lineSeparatorInComments.kt")
       public void testLineSeparatorInComments() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/lineSeparator/lineSeparatorInComments.kt");
+        run("lineSeparatorInComments.kt");
       }
 
+      @Test
       @TestMetadata("lineSeparatorInStringLiterals.kt")
       public void testLineSeparatorInStringLiterals() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/lineSeparator/lineSeparatorInStringLiterals.kt");
+        run("lineSeparatorInStringLiterals.kt");
       }
     }
 
+    @Nested
     @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/nextLine")
     @TestDataPath("$PROJECT_ROOT")
-    @RunWith(JUnit3RunnerWithInners.class)
-    public static class NextLine extends AbstractKotlinLexerTest {
-      private void runTest(String testDataFilePath) {
-        KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    public class NextLine {
+      private void run(String fileName) {
+        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/nextLine/" + fileName);
       }
 
+      @Test
       public void testAllFilesPresentInNextLine() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/nextLine"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
 
+      @Test
       @TestMetadata("nextLine.kt")
       public void testNextLine() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/nextLine/nextLine.kt");
+        run("nextLine.kt");
       }
 
+      @Test
       @TestMetadata("nextLineInComments.kt")
       public void testNextLineInComments() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/nextLine/nextLineInComments.kt");
+        run("nextLineInComments.kt");
       }
 
+      @Test
       @TestMetadata("nextLineInStringLiterals.kt")
       public void testNextLineInStringLiterals() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/nextLine/nextLineInStringLiterals.kt");
+        run("nextLineInStringLiterals.kt");
       }
     }
 
+    @Nested
     @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/pageBreak")
     @TestDataPath("$PROJECT_ROOT")
-    @RunWith(JUnit3RunnerWithInners.class)
-    public static class PageBreak extends AbstractKotlinLexerTest {
-      private void runTest(String testDataFilePath) {
-        KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    public class PageBreak {
+      private void run(String fileName) {
+        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/pageBreak/" + fileName);
       }
 
+      @Test
       public void testAllFilesPresentInPageBreak() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/pageBreak"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
 
+      @Test
       @TestMetadata("pageBreak.kt")
       public void testPageBreak() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/pageBreak/pageBreak.kt");
+        run("pageBreak.kt");
       }
 
+      @Test
       @TestMetadata("pageBreakInComments.kt")
       public void testPageBreakInComments() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/pageBreak/pageBreakInComments.kt");
+        run("pageBreakInComments.kt");
       }
 
+      @Test
       @TestMetadata("pageBreakInStringLiterals.kt")
       public void testPageBreakInStringLiterals() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/pageBreak/pageBreakInStringLiterals.kt");
+        run("pageBreakInStringLiterals.kt");
       }
     }
 
+    @Nested
     @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/paragraphSeparator")
     @TestDataPath("$PROJECT_ROOT")
-    @RunWith(JUnit3RunnerWithInners.class)
-    public static class ParagraphSeparator extends AbstractKotlinLexerTest {
-      private void runTest(String testDataFilePath) {
-        KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    public class ParagraphSeparator {
+      private void run(String fileName) {
+        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/paragraphSeparator/" + fileName);
       }
 
+      @Test
       public void testAllFilesPresentInParagraphSeparator() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/paragraphSeparator"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
 
+      @Test
       @TestMetadata("paragraphSeparator.kt")
       public void testParagraphSeparator() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/paragraphSeparator/paragraphSeparator.kt");
+        run("paragraphSeparator.kt");
       }
 
+      @Test
       @TestMetadata("paragraphSeparatorInComments.kt")
       public void testParagraphSeparatorInComments() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/paragraphSeparator/paragraphSeparatorInComments.kt");
+        run("paragraphSeparatorInComments.kt");
       }
 
+      @Test
       @TestMetadata("paragraphSeparatorInStringLiterals.kt")
       public void testParagraphSeparatorInStringLiterals() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/paragraphSeparator/paragraphSeparatorInStringLiterals.kt");
+        run("paragraphSeparatorInStringLiterals.kt");
       }
     }
 
+    @Nested
     @TestMetadata("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/verticalTab")
     @TestDataPath("$PROJECT_ROOT")
-    @RunWith(JUnit3RunnerWithInners.class)
-    public static class VerticalTab extends AbstractKotlinLexerTest {
-      private void runTest(String testDataFilePath) {
-        KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
+    public class VerticalTab {
+      private void run(String fileName) {
+        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/verticalTab/" + fileName);
       }
 
+      @Test
       public void testAllFilesPresentInVerticalTab() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/verticalTab"), Pattern.compile("^(.+)\\.kt$"), null, true);
       }
 
+      @Test
       @TestMetadata("verticalTab.kt")
       public void testVerticalTab() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/verticalTab/verticalTab.kt");
+        run("verticalTab.kt");
       }
 
+      @Test
       @TestMetadata("verticalTabInComments.kt")
       public void testVerticalTabInComments() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/verticalTab/verticalTabInComments.kt");
+        run("verticalTabInComments.kt");
       }
 
+      @Test
       @TestMetadata("verticalTabInStringLiterals.kt")
       public void testVerticalTabInStringLiterals() {
-        runTest("compiler/psi/psi-impl/testData/lexer/kotlin/whitespaceCharacters/verticalTab/verticalTabInStringLiterals.kt");
+        run("verticalTabInStringLiterals.kt");
       }
     }
   }
