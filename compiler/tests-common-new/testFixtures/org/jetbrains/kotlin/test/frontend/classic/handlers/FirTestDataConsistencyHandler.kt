@@ -12,10 +12,10 @@ import org.jetbrains.kotlin.test.directives.model.DirectivesContainer
 import org.jetbrains.kotlin.test.directives.model.RegisteredDirectives
 import org.jetbrains.kotlin.test.model.AfterAnalysisChecker
 import org.jetbrains.kotlin.test.model.TestFile
-import org.jetbrains.kotlin.test.runners.AbstractFirPsiDiagnosticsTestWithJvmIrBackend
-import org.jetbrains.kotlin.test.runners.AbstractFirPsiDiagnosticTest
-import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerTest
-import org.jetbrains.kotlin.test.services.*
+import org.jetbrains.kotlin.test.services.TestServices
+import org.jetbrains.kotlin.test.services.assertions
+import org.jetbrains.kotlin.test.services.moduleStructure
+import org.jetbrains.kotlin.test.services.sourceFileProvider
 import org.jetbrains.kotlin.test.utils.isLatestLVTestData
 import org.jetbrains.kotlin.test.utils.originalTestDataFile
 import java.io.File
@@ -56,17 +56,5 @@ open class FirTestDataConsistencyHandler(testServices: TestServices) : AfterAnal
             return content.replace("\r\n", "\n")
         }
         return content
-    }
-
-    private fun runFirTestAndGeneratedTestData(testData: File, firTestData: File) {
-        firTestData.writeText(testData.preprocessSource())
-        val test = correspondingFirTest()
-        test.initTestInfo(testServices.testInfo.copy(className = "${testServices.testInfo.className}_fir_anonymous"))
-        test.runTest(firTestData.absolutePath)
-    }
-
-    protected open fun correspondingFirTest(): AbstractKotlinCompilerTest {
-        return if ("Backend" in testServices.testInfo.className) object : AbstractFirPsiDiagnosticsTestWithJvmIrBackend() {}
-        else object : AbstractFirPsiDiagnosticTest() {}
     }
 }
