@@ -5,15 +5,5 @@
 
 package org.jetbrains.kotlin.analysis.api.fe10.test
 
-import org.jetbrains.kotlin.analysis.api.fe10.test.configurator.AnalysisApiFe10TestConfiguratorFactory
-import org.jetbrains.kotlin.generators.dsl.junit5.generateTestGroupSuiteWithJUnit5
-import org.jetbrains.kotlin.generators.tests.analysis.api.dsl.AnalysisApiTestGenerator
-import org.jetbrains.kotlin.generators.tests.analysis.api.generateAnalysisApiTests
-
-fun main(args: Array<String>) {
-    generateTestGroupSuiteWithJUnit5(args) {
-        AnalysisApiTestGenerator(this, listOf(AnalysisApiFe10TestConfiguratorFactory)).run {
-            generateAnalysisApiTests()
-        }
-    }
+fun main() {
 }
