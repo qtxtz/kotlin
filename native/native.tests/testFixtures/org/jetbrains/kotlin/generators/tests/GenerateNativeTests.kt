@@ -105,14 +105,14 @@ fun main(args: Array<String>) {
             }
 
             val macroCollectionVariants = listOf(
-                "Legacy" to AbstractNativeCInteropNoFModulesLegacyMacroCollectionTest::class.java,
-                "Libclangext" to AbstractNativeCInteropNoFModulesLibclangextMacroCollectionTest::class.java,
-                "LibclangextParallel" to AbstractNativeCInteropNoFModulesLibclangextParallelMacroCollectionTest::class.java,
+                "Legacy" to AbstractNativeCInteropFModulesLegacyMacroCollectionTest::class.java,
+                "Libclangext" to AbstractNativeCInteropFModulesLibclangextMacroCollectionTest::class.java,
+                "LibclangextParallel" to AbstractNativeCInteropFModulesLibclangextParallelMacroCollectionTest::class.java,
             )
             macroCollectionVariants.forEach { (variantName, testKClass) ->
                 testClass(
                     testKClass = testKClass,
-                    suiteTestClassName = "CInteropNoFModules${variantName}MacroCollectionTestGenerated",
+                    suiteTestClassName = "CInteropFModules${variantName}MacroCollectionTestGenerated",
                 ) {
                     model("framework.macros/macrosDefs", pattern = "^([^_](.+))$", recursive = false)
                 }
