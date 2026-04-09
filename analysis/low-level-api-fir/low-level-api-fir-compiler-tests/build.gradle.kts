@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-
 plugins {
     kotlin("jvm")
     id("java-test-fixtures")
@@ -58,6 +56,7 @@ projectTests {
     testData(project(":compiler:tests-spec").isolated, "testData/diagnostics")
     testData(project(":compiler:fir:raw-fir:psi2fir").isolated, "testData/rawBuilder")
     testData(project(":compiler:fir:raw-fir:psi2fir").isolated, "testData/rawBuilder")
+    testData(project(":compiler:fir:analysis-tests").isolated, "testData/metadataDiagnostic")
     testData(project(":compiler:fir:analysis-tests").isolated, "testData/resolve")
     testData(project(":compiler:fir:analysis-tests").isolated, "testData/resolveWithStdlib")
     testData(project(":js:js.translator").isolated, "testData/_commonFiles")
@@ -68,6 +67,7 @@ projectTests {
 
     withJvmStdlibAndReflect()
     withStdlibCommon()
+    withStdlibWeb()
     withJsRuntime()
     withWasmRuntime()
     withAnnotations()

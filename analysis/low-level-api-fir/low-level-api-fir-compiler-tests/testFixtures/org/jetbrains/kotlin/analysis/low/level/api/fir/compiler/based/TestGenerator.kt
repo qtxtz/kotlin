@@ -57,6 +57,14 @@ fun main(args: Array<String>) {
             testClass<AbstractLLPartialDiagnosticsTest>(suiteTestClassName = "LLPartialDiagnosticsFirTestGenerated") {
                 modelInit()
             }
+
+            testClass<AbstractLLMetadataDiagnosticsTest> {
+                model("metadataDiagnostic", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME.canFreezeIDE)
+            }
+
+            testClass<AbstractLLReversedMetadataDiagnosticsTest> {
+                model("metadataDiagnostic", pattern = TestGeneratorUtil.KT_WITHOUT_DOTS_IN_NAME.canFreezeIDE)
+            }
         }
 
         testGroup(generatedTestRoot, "plugins/scripting/scripting-tests/testData") {

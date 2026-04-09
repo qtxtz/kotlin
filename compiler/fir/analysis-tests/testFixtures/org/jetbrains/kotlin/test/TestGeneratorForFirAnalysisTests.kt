@@ -108,7 +108,7 @@ fun main(args: Array<String>) {
             testClass<AbstractFirLightTreeDiagnosticsWithoutAliasExpansionTest>(init = init)
 
             testClass<AbstractMetadataDiagnosticTest> {
-                model("metadataDiagnostic")
+                model("metadataDiagnostic", excludedPattern = excludedCustomTestdataPattern)
             }
         }
 
