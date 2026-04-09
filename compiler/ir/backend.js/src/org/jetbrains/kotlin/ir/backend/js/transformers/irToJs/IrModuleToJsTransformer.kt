@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -242,7 +242,8 @@ class IrModuleToJsTransformer(
 
     fun makeIrFragmentsGenerators(
         dirtyFiles: Collection<IrFile>,
-        allModules: Collection<IrModuleFragment>
+        allModules: Collection<IrModuleFragment>,
+        granularity: JsGenerationGranularity,
     ): List<() -> JsIrProgramFragments> {
         val exportData = generateExportWithExternals(
             dirtyFiles,
@@ -253,7 +254,7 @@ class IrModuleToJsTransformer(
                 )
             },
         )
-        val mode = TranslationMode.fromFlags(production = false, backendContext.granularity, minimizedMemberNames = false)
+        val mode = TranslationMode.fromFlags(production = false, granularity, minimizedMemberNames = false)
 
         doStaticMembersLowering(allModules)
 

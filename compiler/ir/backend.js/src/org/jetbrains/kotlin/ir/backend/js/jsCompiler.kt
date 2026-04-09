@@ -22,7 +22,6 @@ import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.js.config.JSConfigurationKeys
-import org.jetbrains.kotlin.js.config.JsGenerationGranularity
 import org.jetbrains.kotlin.js.config.RuntimeDiagnostic
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.util.PhaseType
@@ -54,7 +53,6 @@ fun compileIr(
     dceRuntimeDiagnostic: RuntimeDiagnostic?,
     safeExternalBoolean: Boolean,
     safeExternalBooleanDiagnostic: RuntimeDiagnostic?,
-    granularity: JsGenerationGranularity,
 ): LoweredIr {
     require(irLinker is JsIrLinker) {
         "jsCompiler needs JsIrLinker, but got ${irLinker.javaClass.name}"
@@ -74,7 +72,6 @@ fun compileIr(
         dceRuntimeDiagnostic = dceRuntimeDiagnostic,
         safeExternalBoolean = safeExternalBoolean,
         safeExternalBooleanDiagnostic = safeExternalBooleanDiagnostic,
-        granularity = granularity,
         incrementalCacheEnabled = false,
         mainCallArguments = mainCallArguments
     )

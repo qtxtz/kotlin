@@ -76,7 +76,6 @@ class Ir2JsTransformer private constructor(
                 safeExternalBooleanDiagnostic,
                 configuration
             ),
-            granularity = granularity,
         )
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2021 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -49,7 +49,6 @@ class JsICContext(
             exportedDeclarations,
             keep = emptySet(),
             configuration = configuration,
-            granularity = granularity,
             incrementalCacheEnabled = true,
             mainCallArguments = mainArguments
         )
@@ -61,7 +60,7 @@ class JsICContext(
         configuration: CompilerConfiguration,
         context: JsCommonBackendContext,
     ): IrCompilerICInterface =
-        JsIrCompilerWithIC(mainModule, mainArguments, context as JsIrBackendContext)
+        JsIrCompilerWithIC(mainModule, mainArguments, context as JsIrBackendContext, granularity)
 
     override fun createSrcFileArtifact(srcFilePath: String, fragments: IrICProgramFragments?, astArtifact: File?): SrcFileArtifact =
         JsSrcFileArtifact(srcFilePath, fragments as? JsIrProgramFragments, astArtifact)
@@ -81,6 +80,7 @@ class JsIrCompilerWithIC(
     private val mainModule: IrModuleFragment,
     private val mainArguments: List<String>?,
     private val context: JsIrBackendContext,
+    private val granularity: JsGenerationGranularity,
 ) : IrCompilerICInterface {
 
     override fun compile(allModules: Collection<IrModuleFragment>, dirtyFiles: Collection<IrFile>): List<() -> IrICProgramFragments> {
@@ -98,7 +98,7 @@ class JsIrCompilerWithIC(
         lowerPreservingTags(allModules, context, context.irFactory.stageController as WholeWorldStageController)
 
         val transformer = IrModuleToJsTransformer(context, shouldReferMainFunction = mainArguments != null)
-        return transformer.makeIrFragmentsGenerators(dirtyFiles, allModules)
+        return transformer.makeIrFragmentsGenerators(dirtyFiles, allModules, granularity)
     }
 }
 

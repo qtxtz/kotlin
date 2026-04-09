@@ -79,11 +79,6 @@ class JsIrLoweringFacade(
         val keep = module.directives[JsEnvironmentConfigurationDirectives.KEEP].toSet()
 
         val moduleKind = JsEnvironmentConfigurator.getModuleKind(testServices, module)
-        val granularity = when {
-            !firstTimeCompilation -> JsGenerationGranularity.WHOLE_PROGRAM
-            splitPerFile || moduleKind == ModuleKind.ES -> JsGenerationGranularity.PER_FILE
-            else -> JsGenerationGranularity.PER_MODULE
-        }
 
         val testPackage = extractTestPackage(testServices, ignoreEsModules = false)
         val skipRegularMode = JsEnvironmentConfigurationDirectives.SKIP_REGULAR_MODE in module.directives
@@ -134,7 +129,6 @@ class JsIrLoweringFacade(
             dceRuntimeDiagnostic = null,
             safeExternalBoolean = JsEnvironmentConfigurationDirectives.SAFE_EXTERNAL_BOOLEAN in module.directives,
             safeExternalBooleanDiagnostic = module.directives[JsEnvironmentConfigurationDirectives.SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC].singleOrNull(),
-            granularity = granularity,
         )
 
         return loweredIr2JsArtifact(module, loweredIr, mainArguments != null)
