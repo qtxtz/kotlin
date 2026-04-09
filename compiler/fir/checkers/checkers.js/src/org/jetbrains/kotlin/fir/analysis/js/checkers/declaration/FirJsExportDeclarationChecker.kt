@@ -166,9 +166,9 @@ object FirJsExportDeclarationChecker : FirBasicDeclarationChecker(MppCheckerKind
                 }
 
                 val wrongDeclaration: String? = when (declaration.classKind) {
-                    ClassKind.ANNOTATION_CLASS -> "annotation class"
+                    ClassKind.ANNOTATION_CLASS if LanguageFeature.JsAllowExportingAnnotationClasses.isDisabled() -> "annotation class"
                     ClassKind.CLASS -> when {
-                        !context.languageVersionSettings.supportsFeature(LanguageFeature.AllowInterfaceNestedClassesInJsExport) && context.isInsideInterface -> "nested class inside exported interface"
+                        LanguageFeature.AllowInterfaceNestedClassesInJsExport.isDisabled() && context.isInsideInterface -> "nested class inside exported interface"
                         LanguageFeature.JsAllowExportingValueClasses.isDisabled() && declaration.isInlineOrValue -> "value class"
                         else -> null
                     }

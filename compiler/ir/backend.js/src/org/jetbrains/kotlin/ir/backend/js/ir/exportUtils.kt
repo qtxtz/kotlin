@@ -24,18 +24,6 @@ import org.jetbrains.kotlin.utils.addToStdlib.runIf
 import org.jetbrains.kotlin.utils.filterIsInstanceAnd
 
 internal fun IrClass.exportability(): Exportability {
-    when (kind) {
-        ClassKind.ANNOTATION_CLASS ->
-            return Exportability.Prohibited("Class ${fqNameWhenAvailable} with kind: ${kind}")
-
-        ClassKind.OBJECT,
-        ClassKind.CLASS,
-        ClassKind.INTERFACE,
-        ClassKind.ENUM_CLASS,
-        ClassKind.ENUM_ENTRY -> {
-        }
-    }
-
     if (isJsImplicitExport()) {
         return Exportability.Implicit
     }
