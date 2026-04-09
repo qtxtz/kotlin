@@ -200,7 +200,12 @@ class ConstraintInjector(
             }
 
             if (constraintToIncorporate != null) {
-                constraintIncorporator.incorporate(typeVariable, constraintToIncorporate)
+                constraintIncorporator.incorporate(
+                    typeVariable,
+                    constraintToIncorporate,
+
+                    isCausedByFixation = constraint.position.initialConstraint.position is FixVariableConstraintPosition<*>
+                )
             }
         }
     }
@@ -569,6 +574,8 @@ class ConstraintInjector(
 
         override val allTypeVariablesWithConstraints: Collection<VariableWithConstraints>
             get() = c.notFixedTypeVariables.values
+        override val notFixedTypeVariables: Map<TypeConstructorMarker, VariableWithConstraints>
+            get() = c.notFixedTypeVariables
 
         override val approximatorCaches: TypeApproximatorCachesPerConfiguration
             get() = c.approximatorCaches
