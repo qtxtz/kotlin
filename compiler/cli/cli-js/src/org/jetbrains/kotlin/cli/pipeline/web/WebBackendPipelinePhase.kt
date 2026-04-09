@@ -6,7 +6,6 @@
 package org.jetbrains.kotlin.cli.pipeline.web
 
 import org.jetbrains.kotlin.cli.CliDiagnostics.JS_IC_ERROR
-import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants
 import org.jetbrains.kotlin.cli.js.IcCachesArtifacts
 import org.jetbrains.kotlin.cli.js.IcCachesConfigurationData
 import org.jetbrains.kotlin.cli.js.prepareIcCaches
@@ -42,7 +41,7 @@ abstract class WebBackendPipelinePhase<Output : WebBackendPipelineArtifact, Inte
         configuration.reportLog("Produce executable: $outputDirPath")
         configuration.reportLog("Cache directory: $cacheDirectory")
 
-        val mainCallArguments = if (configuration.callMainMode == K2JsArgumentConstants.NO_CALL) null else emptyList<String>()
+        val mainCallArguments = emptyList<String>().takeIf { configuration.callMain }
 
         if (cacheDirectory != null) {
             val cacheGuard = IncrementalCacheGuard(cacheDirectory)

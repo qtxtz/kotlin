@@ -6,7 +6,6 @@
 package org.jetbrains.kotlin.test.services.configuration
 
 import org.jetbrains.kotlin.backend.common.linkage.partial.setupPartialLinkageConfig
-import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.PartialLinkageConfig
 import org.jetbrains.kotlin.config.PartialLinkageLogLevel
@@ -34,6 +33,7 @@ open class JsSecondStageEnvironmentConfigurator(testServices: TestServices) : Js
     override fun DirectiveToConfigurationKeyExtractor.provideConfigurationKeys() {
         register(PROPERTY_LAZY_INITIALIZATION, JSConfigurationKeys.PROPERTY_LAZY_INITIALIZATION)
         register(GENERATE_INLINE_ANONYMOUS_FUNCTIONS, JSConfigurationKeys.GENERATE_INLINE_ANONYMOUS_FUNCTIONS)
+        register(CALL_MAIN, JSConfigurationKeys.CALL_MAIN)
         register(SAFE_EXTERNAL_BOOLEAN, JSConfigurationKeys.SAFE_EXTERNAL_BOOLEAN)
         register(SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC, JSConfigurationKeys.SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC)
     }
@@ -70,12 +70,6 @@ open class JsSecondStageEnvironmentConfigurator(testServices: TestServices) : Js
 
         // Enforce PL with the ERROR log level to fail any tests where PL detected any incompatibilities.
         configuration.setupPartialLinkageConfig(PartialLinkageConfig(PartialLinkageLogLevel.ERROR))
-
-        configuration.callMainMode = if (CALL_MAIN in module.directives) {
-            K2JsArgumentConstants.CALL
-        } else {
-            K2JsArgumentConstants.NO_CALL
-        }
 
         configuration.keep = module.directives[KEEP]
 

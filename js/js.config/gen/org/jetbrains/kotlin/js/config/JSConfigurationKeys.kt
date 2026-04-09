@@ -195,7 +195,7 @@ object JSConfigurationKeys {
 
     // Specify whether the 'main' function should be called upon execution.
     @JvmField
-    val CALL_MAIN_MODE = CompilerConfigurationKey.create<String>("CALL_MAIN_MODE")
+    val CALL_MAIN = CompilerConfigurationKey.create<Boolean>("CALL_MAIN")
 
     @JvmField
     val IC_CACHE_DIRECTORY = CompilerConfigurationKey.create<String>("IC_CACHE_DIRECTORY")
@@ -406,9 +406,9 @@ var CompilerConfiguration.minimizedMemberNames: Boolean
     get() = getBoolean(JSConfigurationKeys.MINIMIZED_MEMBER_NAMES)
     set(value) { put(JSConfigurationKeys.MINIMIZED_MEMBER_NAMES, value) }
 
-var CompilerConfiguration.callMainMode: String?
-    get() = get(JSConfigurationKeys.CALL_MAIN_MODE)
-    set(value) { put(JSConfigurationKeys.CALL_MAIN_MODE, requireNotNull(value) { "nullable values are not allowed" }) }
+var CompilerConfiguration.callMain: Boolean
+    get() = get(JSConfigurationKeys.CALL_MAIN, true)
+    set(value) { put(JSConfigurationKeys.CALL_MAIN, value) }
 
 var CompilerConfiguration.icCacheDirectory: String?
     get() = get(JSConfigurationKeys.IC_CACHE_DIRECTORY)

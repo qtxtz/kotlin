@@ -11,15 +11,8 @@ import org.jetbrains.kotlin.backend.common.linkage.partial.setupPartialLinkageCo
 import org.jetbrains.kotlin.cli.CliDiagnostics.WEB_ARGUMENT_ERROR
 import org.jetbrains.kotlin.cli.CliDiagnostics.WEB_ARGUMENT_WARNING
 import org.jetbrains.kotlin.cli.common.*
-import org.jetbrains.kotlin.cli.common.allowKotlinPackage
-import org.jetbrains.kotlin.cli.common.arguments.CommonJsAndWasmCompilerArguments
-import org.jetbrains.kotlin.cli.common.arguments.K2JSCompilerArguments
-import org.jetbrains.kotlin.cli.common.arguments.KotlinWasmCompilerArguments
-import org.jetbrains.kotlin.cli.common.arguments.cliArgument
+import org.jetbrains.kotlin.cli.common.arguments.*
 import org.jetbrains.kotlin.cli.common.config.addKotlinSourceRoot
-import org.jetbrains.kotlin.cli.common.createPhaseConfig
-import org.jetbrains.kotlin.cli.common.incrementalCompilationIsEnabledForJs
-import org.jetbrains.kotlin.cli.common.setupCommonKlibArguments
 import org.jetbrains.kotlin.cli.js.*
 import org.jetbrains.kotlin.cli.pipeline.AbstractConfigurationPhase
 import org.jetbrains.kotlin.cli.pipeline.ArgumentsPipelineArtifact
@@ -133,7 +126,17 @@ abstract class CommonWebConfigurationUpdater<T : CommonJsAndWasmCompilerArgument
             arguments.irProduceKlibFile?.let { configuration.produceKlibFile = it }
             arguments.irProduceKlibDir?.let { configuration.produceKlibDir = it }
         }
-        arguments.main?.let { configuration.callMainMode = it }
+
+        when (arguments.main) {
+            K2JsArgumentConstants.CALL, null -> configuration.callMain = true
+            K2JsArgumentConstants.NO_CALL -> configuration.callMain = false
+            else -> {
+                configuration.report(
+                    WEB_ARGUMENT_ERROR,
+                    "Invalid value of '${K2JSCompilerArguments::main.cliArgument}'. Valid values are '${K2JsArgumentConstants.CALL}' or '${K2JsArgumentConstants.NO_CALL}'."
+                )
+            }
+        }
         configuration.dce = arguments.irDce
 
         configuration.perModuleOutputName = arguments.irPerModuleOutputName

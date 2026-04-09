@@ -108,8 +108,8 @@ object KeysContainerGenerator {
         val keyAccess = container.keyAccessString(key)
         withIndent {
             val getterBody = when {
-                booleanFlag -> "getBoolean($keyAccess)"
                 key.defaultValue != null -> "get($keyAccess, ${key.defaultValue})"
+                booleanFlag -> "getBoolean($keyAccess)"
                 key.lazyDefaultValue != null -> "getOrDefault($keyAccess) { ${key.lazyDefaultValue} }"
                 else -> "get($keyAccess)"
             }

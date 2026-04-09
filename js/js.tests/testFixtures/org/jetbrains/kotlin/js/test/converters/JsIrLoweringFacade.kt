@@ -95,7 +95,7 @@ class JsIrLoweringFacade(
         val loweredIr = JsIrLoweringPipelinePhase.executePhase(cliInputArtifact)
             ?: return processErrorFromCliPhase(configuration, testServices)
 
-        return loweredIr2JsArtifact(module, loweredIr, JsEnvironmentConfigurationDirectives.CALL_MAIN in module.directives)
+        return loweredIr2JsArtifact(module, loweredIr, configuration.callMain)
     }
 
     private fun loweredIr2JsArtifact(

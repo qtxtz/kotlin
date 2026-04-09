@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.cli.pipeline.web.js
 
 import org.jetbrains.kotlin.backend.common.CompilationException
 import org.jetbrains.kotlin.backend.common.linkage.issues.checkNoUnboundSymbols
-import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants
 import org.jetbrains.kotlin.cli.common.reportCompilationException
 import org.jetbrains.kotlin.cli.js.resolve
 import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
@@ -60,7 +59,7 @@ object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, Js
             safeExternalBoolean = configuration.safeExternalBoolean,
             safeExternalBooleanDiagnostic = RuntimeDiagnostic.resolve(configuration.safeExternalBooleanDiagnostic, configuration),
             incrementalCacheEnabled = false,
-            mainCallArguments = emptyList<String>().takeUnless { configuration.callMainMode == K2JsArgumentConstants.NO_CALL }
+            mainCallArguments = emptyList<String>().takeIf { configuration.callMain }
         )
         // Load declarations referenced during `context` initialization
         val irProviders = listOf(element = deserializer)
