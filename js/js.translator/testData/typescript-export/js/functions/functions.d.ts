@@ -39,8 +39,8 @@ declare namespace JS_TESTS {
         function genericWithMultipleConstraints<T extends unknown/* kotlin.Comparable<T> */ & foo.SomeExternalInterface & Error>(x: T): T;
         function generic3<A, B, C, D, E>(a: A, b: B, c: C, d: D): Nullable<E>;
         function inlineFun(x: number, callback: (p0: number) => void): void;
-        function formatList(value: kotlin.collections.KtMutableList<any /*UnknownType **/>): string;
-        function createList(): kotlin.collections.KtMutableList<any /*UnknownType **/>;
+        function formatList(value: kotlin.collections.KtMutableList<any>): string;
+        function createList(): kotlin.collections.KtMutableList<any>;
         function defaultParametersAtTheBegining(a: string | undefined, b: string): string;
         function nonDefaultParameterInBetween(a: string | undefined, b: string, c?: string): string;
         class Scope1 {

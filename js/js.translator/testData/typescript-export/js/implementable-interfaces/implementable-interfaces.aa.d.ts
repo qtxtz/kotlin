@@ -8,22 +8,22 @@ declare namespace JS_TESTS {
         function makeNoRuntimeFunInterfaceWithSam(): foo.NoRuntimeFunIface;
         function callFunInterface(f: foo.FunIFace, x: string): string;
         function callNoRuntimeFunInterface(f: foo.NoRuntimeFunIface): Array<string>;
-        function callingExportedParentMethod(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function justCallFoo(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function justCallAsyncFoo(foo: foo.IFoo<any /*UnknownType **/>): Promise<string>;
-        function justCallParentAsyncMethod(foo: foo.IFoo<any /*UnknownType **/>): Promise<string>;
-        function justCallSuspendWithDefaultImplementation(foo: foo.IFoo<any /*UnknownType **/>): Promise<string>;
-        function callingWithDefaultsWithoutParameter(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function callingWithDefaultsAndDefaultImplementationWithParameter(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function callingWithDefaultsAndDefaultImplementationWithoutParameter(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function callingWithDefaultsWithParameter(foo: foo.IFoo<any /*UnknownType **/>): string;
+        function callingExportedParentMethod(foo: foo.IFoo<any>): string;
+        function justCallFoo(foo: foo.IFoo<any>): string;
+        function justCallAsyncFoo(foo: foo.IFoo<any>): Promise<string>;
+        function justCallParentAsyncMethod(foo: foo.IFoo<any>): Promise<string>;
+        function justCallSuspendWithDefaultImplementation(foo: foo.IFoo<any>): Promise<string>;
+        function callingWithDefaultsWithoutParameter(foo: foo.IFoo<any>): string;
+        function callingWithDefaultsAndDefaultImplementationWithParameter(foo: foo.IFoo<any>): string;
+        function callingWithDefaultsAndDefaultImplementationWithoutParameter(foo: foo.IFoo<any>): string;
+        function callingWithDefaultsWithParameter(foo: foo.IFoo<any>): string;
         function callingWithBridge(foo: foo.IFoo<string>): string;
         function checkIsFooInterface(foo: any): boolean;
         function checkIsExportedParentInterface(foo: any): boolean;
-        function callingWithDefaultImplementation(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function callingAnotherWithDefaultImplementation(foo: foo.IFoo<any /*UnknownType **/>): string;
-        function callGenericWithDefaultImplementation(foo: foo.IFoo<any /*UnknownType **/>, x: Nullable<any>): string;
-        function callingDelegatingToSuperDefaultImplementation(foo: foo.IFoo<any /*UnknownType **/>): string;
+        function callingWithDefaultImplementation(foo: foo.IFoo<any>): string;
+        function callingAnotherWithDefaultImplementation(foo: foo.IFoo<any>): string;
+        function callGenericWithDefaultImplementation(foo: foo.IFoo<any>, x: Nullable<any>): string;
+        function callingDelegatingToSuperDefaultImplementation(foo: foo.IFoo<any>): string;
         interface FunIFace {
             apply(x: string): string;
             readonly __doNotUseOrImplementIt: {

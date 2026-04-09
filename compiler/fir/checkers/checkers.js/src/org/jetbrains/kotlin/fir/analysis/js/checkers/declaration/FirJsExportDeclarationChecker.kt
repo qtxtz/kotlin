@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.utils.*
 import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
 import org.jetbrains.kotlin.fir.isDisabled
+import org.jetbrains.kotlin.fir.isEnabled
 import org.jetbrains.kotlin.fir.isEnumEntries
 import org.jetbrains.kotlin.fir.resolve.*
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
@@ -278,6 +279,7 @@ object FirJsExportDeclarationChecker : FirBasicDeclarationChecker(MppCheckerKind
     ): Boolean {
         // In case of other errors (like syntax error) we should not emit extra diagnostic
         if (this is ConeErrorType) return true
+        if (isStarProjection) return LanguageFeature.JsAllowExportingStarProjection.isEnabled()
         if (!currentlyProcessed.add(this)) {
             return true
         }

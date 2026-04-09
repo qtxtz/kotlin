@@ -199,6 +199,6 @@ internal class TypeExporter(private val config: TypeScriptExportConfig, private 
     context(_: KaSession)
     fun exportTypeArgument(typeArgument: KaTypeProjection): ExportedType = when (typeArgument) {
         is KaTypeArgumentWithVariance -> exportType(typeArgument.type)
-        is KaStarTypeProjection -> ErrorType("UnknownType *")
+        is KaStarTypeProjection -> Primitive.Any
     }
 }

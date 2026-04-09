@@ -825,12 +825,11 @@ class ExportModelGenerator(val context: JsIrBackendContext, val isEsModules: Boo
                 classifierOrNull != context.irBuiltIns.enumClass &&
                 (classifierOrNull?.owner as? IrDeclaration)?.isJsImplicitExport() != true
 
-    private fun exportTypeArgument(type: IrTypeArgument, typeOwner: IrDeclaration?, typeParameterScope: TypeParameterScope): ExportedType {
-        if (type is IrTypeProjection)
-            return exportType(type.type, typeParameterScope, typeOwner)
-
-        return ExportedType.ErrorType("UnknownType ${type.render()}")
-    }
+    private fun exportTypeArgument(type: IrTypeArgument, typeOwner: IrDeclaration?, typeParameterScope: TypeParameterScope): ExportedType =
+        when (type) {
+            is IrTypeProjection -> exportType(type.type, typeParameterScope, typeOwner)
+            is IrStarProjection -> ExportedType.Primitive.Any
+        }
 
     private typealias TypeParameterScope = Map<IrTypeParameterSymbol, ExportedTypeParameter>
 

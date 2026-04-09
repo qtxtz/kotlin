@@ -106,7 +106,7 @@ declare namespace JS_TESTS {
                 readonly "foo.Service": unique symbol;
             };
         }
-        interface Event<out TService extends foo.Service<TService, any /*UnknownType **/>> {
+        interface Event<out TService extends foo.Service<TService, any>> {
             readonly __doNotUseOrImplementIt: {
                 readonly "foo.Event": unique symbol;
             };

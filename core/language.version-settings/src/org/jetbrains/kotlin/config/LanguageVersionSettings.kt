@@ -527,6 +527,7 @@ enum class LanguageFeature(
     UnitConversionsOnArbitraryExpressions(sinceVersion = KOTLIN_2_5, "KT-84393"),
     InferThrowableTypeParameterToUpperBound(KOTLIN_2_5, "KT-82961"),
     JsAllowExportingAnnotationClasses(sinceVersion = KOTLIN_2_5, "KT-85599"),
+    JsAllowExportingStarProjection(sinceVersion = KOTLIN_2_5, "KT-83462"),
 
     // End of 2.* language features --------------------------------------------------
 
