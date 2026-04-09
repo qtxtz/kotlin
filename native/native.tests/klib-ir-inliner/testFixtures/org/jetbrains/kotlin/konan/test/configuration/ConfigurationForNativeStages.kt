@@ -78,7 +78,6 @@ fun TestConfigurationBuilderBase<*, *>.commonConfigurationForNativeCodegenTest(
  */
 fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization(
     includeFirHandlers: Boolean = true,
-    addIrHandlerSteps: Boolean = false, // TODO(KT-85460): set to true and remove the parameter
 ) {
     facadeStep(::FirCliNativeFacade)
     firHandlersStep {
@@ -95,13 +94,8 @@ fun TestConfigurationBuilder.setupStepsForNativeFirstStageUpToSerialization(
     }
 
     facadeStep(::Fir2IrCliNativeFacade)
-
-    if (addIrHandlerSteps) {
-        irHandlersStep()
-    }
+    irHandlersStep()
 
     facadeStep(::NativePreSerializationLoweringCliFacade)
-    if (addIrHandlerSteps) {
-        loweredIrHandlersStep()
-    }
+    loweredIrHandlersStep()
 }
