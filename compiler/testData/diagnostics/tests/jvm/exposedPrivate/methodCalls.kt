@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -NOTHING_TO_INLINE -UNUSED_PARAMETER
 
 private class C {
@@ -18,3 +19,5 @@ internal inline fun test() {
     <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>produceAndConsume()<!>
     <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>consumeOnly()<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, inline, nullableType */

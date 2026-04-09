@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // JVM_TARGET: 1.8
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
@@ -21,3 +22,6 @@ open class K : A {
         fun foo() {}
     }
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, companionObject, functionDeclaration, javaType, objectDeclaration,
+propertyDeclaration, stringLiteral */

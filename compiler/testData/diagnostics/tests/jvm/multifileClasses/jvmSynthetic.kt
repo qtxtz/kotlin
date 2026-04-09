@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // FILE: f.kt
 
@@ -31,3 +32,5 @@ fun h() {}
 package test
 
 fun z() {}
+
+/* GENERATED_FIR_TAGS: annotationUseSiteTargetFile, functionDeclaration, propertyDeclaration, stringLiteral */

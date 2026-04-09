@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -NOTHING_TO_INLINE
 // WITH_STDLIB
 
@@ -17,3 +18,6 @@ class Test {
         <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>consume()<!>
     }
 }
+
+/* GENERATED_FIR_TAGS: assignment, classDeclaration, companionObject, functionDeclaration, inline, nullableType,
+objectDeclaration, propertyDeclaration */

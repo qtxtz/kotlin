@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 
 import kotlin.reflect.*
@@ -12,3 +13,6 @@ fun test() {
     <!TYPEOF_SUSPEND_TYPE!>typeOf<suspend Int.() -> List<String>>()<!>
     <!TYPEOF_SUSPEND_TYPE!>f<suspend Unit.() -> Array<*>>()<!>
 }
+
+/* GENERATED_FIR_TAGS: functionDeclaration, functionalType, inline, nullableType, reified, starProjection, suspend,
+typeParameter, typeWithExtension */

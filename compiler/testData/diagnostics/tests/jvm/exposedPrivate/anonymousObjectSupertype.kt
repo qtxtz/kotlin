@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -NOTHING_TO_INLINE
 
 private open class C {
@@ -9,3 +10,6 @@ private inline fun privateFun() = object : C() {
 }.foo()
 
 internal inline fun test() = privateFun()
+
+/* GENERATED_FIR_TAGS: anonymousObjectExpression, classDeclaration, functionDeclaration, inline, propertyDeclaration,
+stringLiteral, superExpression */

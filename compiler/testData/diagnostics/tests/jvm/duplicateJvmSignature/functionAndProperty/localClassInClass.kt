@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 class Outer {
     fun foo() {
         class C {
@@ -6,3 +7,5 @@ class Outer {
         }
     }
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, integerLiteral, localClass, propertyDeclaration */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // JVM_TARGET: 1.8
 // WITH_STDLIB
 
@@ -17,3 +18,6 @@ open class GradleTestCase {
 // FILE: main.kt
 
 class GradleActionTest: GradleTestCase(), BaseTest // K1 & K2: ok
+
+/* GENERATED_FIR_TAGS: annotationUseSiteTargetPropertyGetter, classDeclaration, functionDeclaration,
+interfaceDeclaration, propertyDeclaration, stringLiteral */

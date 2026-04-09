@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // ISSUE: KT-66463
 // SCOPE_DUMP: B:get
@@ -22,3 +23,5 @@ public abstract class A implements CharSequence {
 class B : A() {
     override fun <!ACCIDENTAL_OVERRIDE_CLASH_BY_JVM_SIGNATURE!>get<!>(index: Int) = 'A'
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, javaType, operator, override */

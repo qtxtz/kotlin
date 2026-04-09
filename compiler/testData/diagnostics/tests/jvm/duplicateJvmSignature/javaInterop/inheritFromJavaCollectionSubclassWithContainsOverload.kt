@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // DIAGNOSTICS: -UNUSED_PARAMETER -PARAMETER_NAME_CHANGED_ON_OVERRIDE
 // FILE: A.java
@@ -10,3 +11,5 @@ abstract public class A implements java.util.Collection<String> {
 abstract class KA : A() {
     override fun <!ACCIDENTAL_OVERRIDE_CLASH_BY_JVM_SIGNATURE!>contains<!>(x: String) = false
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, javaType, operator, override */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +InlineClasses
 // ALLOW_KOTLIN_PACKAGE
 // DIAGNOSTICS: -UNUSED_PARAMETER
@@ -45,3 +46,6 @@ class C<TC : Number> {
     <!CONFLICTING_JVM_DECLARATIONS!>fun <T : Number> testNonGenericVsGeneric(x: X, y: T) {}<!>
     <!CONFLICTING_JVM_DECLARATIONS!>fun testNonGenericVsGeneric(x: X, y: TC) {}<!>
 }
+
+/* GENERATED_FIR_TAGS: annotationDeclaration, classDeclaration, funWithExtensionReceiver, functionDeclaration,
+nullableType, primaryConstructor, propertyDeclaration, typeConstraint, typeParameter, value */

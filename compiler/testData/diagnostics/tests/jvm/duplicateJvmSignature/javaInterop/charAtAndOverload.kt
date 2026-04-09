@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // SCOPE_DUMP: KA:get
 // RENDER_ALL_DIAGNOSTICS_FULL_TEXT
@@ -26,3 +27,5 @@ fun foo(a: A, ka: KA) {
     a.get(0)
     ka.get(0)
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, integerLiteral, javaFunction, javaType, operator, override */

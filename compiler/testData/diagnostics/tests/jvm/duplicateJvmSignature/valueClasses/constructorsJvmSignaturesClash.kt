@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +InlineClasses
 // ALLOW_KOTLIN_PACKAGE
 // DIAGNOSTICS: -UNUSED_PARAMETER
@@ -23,3 +24,6 @@ class TestErr1<!CONFLICTING_JVM_DECLARATIONS!>(val a: Int)<!> {
     <!CONFLICTING_JVM_DECLARATIONS!>constructor(x: X) : this(x.x, 1)<!>
     <!CONFLICTING_JVM_DECLARATIONS!>constructor(z: Z) : this(z.x, 2)<!>
 }<!>
+
+/* GENERATED_FIR_TAGS: annotationDeclaration, classDeclaration, integerLiteral, primaryConstructor, propertyDeclaration,
+secondaryConstructor, value */

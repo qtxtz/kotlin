@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 public open class A<T> {
@@ -17,3 +18,6 @@ interface D {
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>class B1 : A<A<String>>(), D<!>
 
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>interface B2 : C<A<String>>, D<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, interfaceDeclaration, nullableType, stringLiteral,
+typeParameter */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +JvmInlineMultiFieldValueClasses
 // WITH_STDLIB
 
@@ -11,3 +12,5 @@ value class A(val x: Int, val y: Int) {
     <!CONFLICTING_JVM_DECLARATIONS!>constructor(other: A) : this(other.x, other.y)<!>
     <!CONFLICTING_JVM_DECLARATIONS!>constructor(x: Int, y: Int) : this(x.toUInt(), y.toUInt())<!>
 }<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, data, primaryConstructor, propertyDeclaration, secondaryConstructor, value */

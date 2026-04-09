@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // IGNORE_ERRORS
 // DIAGNOSTICS: -UNUSED_PARAMETER -INAPPLICABLE_JVM_NAME
@@ -54,3 +55,5 @@ open class B3: A3() {
 class C3: B3() {
     <!ACCIDENTAL_OVERRIDE!>fun bar() {}<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, override, stringLiteral */

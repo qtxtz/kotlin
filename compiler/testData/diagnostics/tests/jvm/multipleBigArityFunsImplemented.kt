@@ -1,4 +1,4 @@
-
+// RUN_PIPELINE_TILL: BACKEND
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>class Fun :
         (Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int,
          Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int) -> Int,
@@ -18,3 +18,5 @@
         p30: Int, p31: Int, p32: Int
     ): Int = 333
 }<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, functionalType, integerLiteral, operator, override */

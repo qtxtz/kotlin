@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: FIR2IR
 // RENDER_ALL_DIAGNOSTICS_FULL_TEXT
 
 
@@ -21,3 +22,6 @@ class DefaultEachEntryConfiguration(val entry: Int) : I {
 }
 
 fun Int.copy() = Unit
+
+/* GENERATED_FIR_TAGS: classDeclaration, funWithExtensionReceiver, functionDeclaration, integerLiteral,
+interfaceDeclaration, objectDeclaration, override, primaryConstructor, propertyDeclaration */

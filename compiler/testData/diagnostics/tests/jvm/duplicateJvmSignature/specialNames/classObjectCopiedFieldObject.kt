@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // IGNORE_ERRORS
 
@@ -19,3 +20,5 @@ class C {
         lateinit <!CONFLICTING_JVM_DECLARATIONS!>var A: A<!>
     }
 }<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, companionObject, lateinit, objectDeclaration, propertyDeclaration */

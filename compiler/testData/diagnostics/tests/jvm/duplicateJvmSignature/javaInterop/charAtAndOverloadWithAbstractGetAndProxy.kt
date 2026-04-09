@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // ISSUE: KT-66463
 // JVM_TARGET: 1.8
 // SCOPE_DUMP: B:get
@@ -30,3 +31,5 @@ public interface Proxy {
 class B : A(), Proxy {
     override fun get(index: Int) = 'A'
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, javaType, operator, override */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // IGNORE_ERRORS
 // LANGUAGE: +InlineClasses
@@ -31,3 +32,6 @@ interface MyCloneable2: java.lang.Cloneable
 
 @JvmInline
 <!VALUE_CLASS_CANNOT_BE_CLONEABLE!>value<!> class VC3(val a: Any): MyCloneable2
+
+/* GENERATED_FIR_TAGS: annotationDeclaration, classDeclaration, interfaceDeclaration, primaryConstructor,
+propertyDeclaration, value */

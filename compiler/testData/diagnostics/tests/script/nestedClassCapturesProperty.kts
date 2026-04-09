@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: FIR2IR
 // RENDER_ALL_DIAGNOSTICS_FULL_TEXT
 
 // KT-19423 variation
@@ -9,3 +10,5 @@ class Outer {
         val property = used
     }<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, nestedClass, propertyDeclaration, stringLiteral */

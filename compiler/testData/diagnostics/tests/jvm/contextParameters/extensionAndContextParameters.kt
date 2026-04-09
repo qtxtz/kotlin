@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // IGNORE_ERRORS
 class A
@@ -25,3 +26,6 @@ val b: String
 
 val A.b: String
     <!CONFLICTING_JVM_DECLARATIONS!>get() = ""<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, funWithExtensionReceiver, functionDeclaration, functionDeclarationWithContext,
+getter, propertyDeclaration, propertyDeclarationWithContext, propertyWithExtensionReceiver, stringLiteral */

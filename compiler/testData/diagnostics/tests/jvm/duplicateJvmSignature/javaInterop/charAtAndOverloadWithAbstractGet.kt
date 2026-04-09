@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // ISSUE: KT-66463
 // SCOPE_DUMP: B:get
 
@@ -21,3 +22,5 @@ public abstract class A implements CharSequence {
 class B : A() {
     override fun get(index: Int) = 'A'
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, javaType, operator, override */

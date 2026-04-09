@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // SCOPE_DUMP: KA:get
 
 // FILE: A.java
@@ -24,3 +25,5 @@ fun foo(a: A, ka: KA) {
     a.get(0)
     ka.get(0)
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, integerLiteral, javaFunction, javaType, operator, override */

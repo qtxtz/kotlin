@@ -1,4 +1,4 @@
-
+// RUN_PIPELINE_TILL: BACKEND
 interface Foo
 
 class Bar(f: Foo) : Foo by f {
@@ -12,3 +12,6 @@ class Bar2(f: Foo) :
 
     lateinit var `$$delegate_0`: Foo
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, inheritanceDelegation, interfaceDeclaration, lateinit, nullableType,
+primaryConstructor, propertyDeclaration */

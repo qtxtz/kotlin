@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // IGNORE_ERRORS
 class A
@@ -14,3 +15,4 @@ context(a: A, b: B)
 context(a: A)
 <!CONFLICTING_JVM_DECLARATIONS!>fun bar(b: B){}<!>
 
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, functionDeclarationWithContext */

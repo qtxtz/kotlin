@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 // FILE: A.java
 
@@ -19,3 +20,6 @@ open class K : A() {
         fun foo() {}
     }
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, companionObject, functionDeclaration, integerLiteral, javaType,
+objectDeclaration, propertyDeclaration */

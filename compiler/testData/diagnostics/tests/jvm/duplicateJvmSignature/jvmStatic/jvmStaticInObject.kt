@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
@@ -8,3 +9,5 @@ open class Base {
 object Derived : Base() {
     @JvmStatic <!ACCIDENTAL_OVERRIDE!>fun foo(i: Int = 0) {}<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, integerLiteral, objectDeclaration */

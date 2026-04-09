@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 // WITH_STDLIB
 
@@ -79,3 +80,6 @@ interface SuspendRunnable {
     }<!>
     return c
 }<!>
+
+/* GENERATED_FIR_TAGS: anonymousObjectExpression, crossinline, functionDeclaration, functionalType, inline,
+interfaceDeclaration, lambdaLiteral, localProperty, override, propertyDeclaration, suspend, tryExpression */

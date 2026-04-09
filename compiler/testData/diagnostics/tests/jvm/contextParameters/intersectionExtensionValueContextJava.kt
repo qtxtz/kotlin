@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // IGNORE_ERRORS
 // FILE: JavaInterface.java
@@ -26,3 +27,7 @@ interface IntersectionWithOverride : KotlinContextAndExtensionInterface, JavaInt
     context(a: String)
     override <!ACCIDENTAL_OVERRIDE!>fun String.bar(b: String): String<!>
 }
+
+/* GENERATED_FIR_TAGS: funWithExtensionReceiver, functionDeclaration, functionDeclarationWithContext, getter,
+interfaceDeclaration, javaType, override, propertyDeclaration, propertyDeclarationWithContext,
+propertyWithExtensionReceiver, stringLiteral */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 interface T {
     fun getX() = 1
 }
@@ -6,3 +7,5 @@ interface T {
     val x: Int
         <!ACCIDENTAL_OVERRIDE!>get() = 1<!>
 }
+
+/* GENERATED_FIR_TAGS: functionDeclaration, getter, integerLiteral, interfaceDeclaration, propertyDeclaration */

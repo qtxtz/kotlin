@@ -1,4 +1,4 @@
-
+// RUN_PIPELINE_TILL: BACKEND
 class C {
     companion object {
         val X = 1
@@ -7,3 +7,5 @@ class C {
 
     <!CONFLICTING_JVM_DECLARATIONS!>val X = 1<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, companionObject, integerLiteral, objectDeclaration, propertyDeclaration */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // IGNORE_ERRORS
 // FILE: JavaBase.java
@@ -12,3 +13,5 @@ interface KotlinInterface : JavaBase {
     context(a: String)
     <!ACCIDENTAL_OVERRIDE!>fun foo(b: String): String<!>
 }
+
+/* GENERATED_FIR_TAGS: functionDeclaration, functionDeclarationWithContext, interfaceDeclaration, javaType */

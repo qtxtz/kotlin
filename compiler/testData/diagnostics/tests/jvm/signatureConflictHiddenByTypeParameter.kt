@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // ISSUE: KT-9152
 
 abstract class A {
@@ -8,3 +9,6 @@ abstract class A {
         null!!
     }
 }
+
+/* GENERATED_FIR_TAGS: checkNotNullCall, classDeclaration, functionDeclaration, localClass, nullableType, override,
+typeParameter */

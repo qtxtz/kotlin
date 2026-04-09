@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -NOTHING_TO_INLINE -UNUSED_PARAMETER
 // IGNORE_FIR_DIAGNOSTICS
 
@@ -21,3 +22,5 @@ internal inline fun bar() {
     foo3()
     foo4()
 }
+
+/* GENERATED_FIR_TAGS: anonymousObjectExpression, functionDeclaration, inline, interfaceDeclaration */

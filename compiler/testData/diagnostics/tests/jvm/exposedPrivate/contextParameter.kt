@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // DIAGNOSTICS: -NOTHING_TO_INLINE
 
@@ -10,3 +11,6 @@ private inline fun consumeWithContext() { with(null) { contextC() } }
 internal inline fun test() {
     <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>consumeWithContext()<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, functionDeclarationWithContext, inline, lambdaLiteral,
+nullableType */

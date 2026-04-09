@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 interface Foo<T> {
@@ -7,3 +8,6 @@ interface Foo<T> {
 <!CONFLICTING_JVM_DECLARATIONS!>class Bar(f: Foo<String>): Foo<String> by f {
     <!CONFLICTING_JVM_DECLARATIONS!>fun foo(l: List<Int>) {}<!>
 }<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, inheritanceDelegation, interfaceDeclaration, nullableType,
+primaryConstructor, typeParameter */

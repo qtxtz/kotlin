@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // IGNORE_ERRORS
 // FILE: JavaInterface.java
@@ -26,3 +27,6 @@ interface IntersectionWithOverride : KotlinContextInterface, JavaInterface {
     override val b: String
         <!ACCIDENTAL_OVERRIDE!>get() = ""<!>
 }
+
+/* GENERATED_FIR_TAGS: functionDeclaration, functionDeclarationWithContext, getter, interfaceDeclaration, javaType,
+override, propertyDeclaration, propertyDeclarationWithContext, stringLiteral */

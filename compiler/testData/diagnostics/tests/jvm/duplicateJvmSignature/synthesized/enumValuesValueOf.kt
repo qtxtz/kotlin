@@ -1,4 +1,4 @@
-
+// RUN_PIPELINE_TILL: BACKEND
 <!CONFLICTING_JVM_DECLARATIONS!>enum class A {
     A1,
     A2;
@@ -11,3 +11,5 @@
 
     fun values(x: String) = x
 }<!>
+
+/* GENERATED_FIR_TAGS: checkNotNullCall, enumDeclaration, enumEntry, functionDeclaration, stringLiteral */

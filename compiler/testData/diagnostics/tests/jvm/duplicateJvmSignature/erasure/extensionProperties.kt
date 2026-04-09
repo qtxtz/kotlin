@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 class G<T>
 
 val <T> G<T>.foo: Int
@@ -5,3 +6,6 @@ val <T> G<T>.foo: Int
 
 val G<String>.foo: Int
     <!CONFLICTING_JVM_DECLARATIONS!>get() = 1<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, getter, integerLiteral, nullableType, propertyDeclaration,
+propertyWithExtensionReceiver, typeParameter */

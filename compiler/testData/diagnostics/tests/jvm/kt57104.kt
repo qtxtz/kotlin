@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // JVM_TARGET: 1.8
 // WITH_STDLIB
 
@@ -19,3 +20,6 @@ open class GradleCodeInsightTestCase: GradleTestCase(), BaseTest
 // FILE: main.kt
 
 class GradleActionTest: GradleCodeInsightTestCase() // K1: ok, K2: CONFLICTING_INHERITED_JVM_DECLARATIONS
+
+/* GENERATED_FIR_TAGS: annotationUseSiteTargetPropertyGetter, classDeclaration, functionDeclaration,
+interfaceDeclaration, propertyDeclaration, stringLiteral */

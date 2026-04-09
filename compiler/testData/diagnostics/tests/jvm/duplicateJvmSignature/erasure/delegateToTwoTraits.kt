@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 interface Foo<T> {
@@ -12,3 +13,6 @@ interface Bar<T> {
     Foo<String> by f,
     Bar<Int> by b {
 }<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, inheritanceDelegation, interfaceDeclaration, nullableType,
+primaryConstructor, typeParameter */

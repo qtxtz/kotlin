@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -NOTHING_TO_INLINE -UNUSED_EXPRESSION
 // IGNORE_FIR_DIAGNOSTICS
 // WITH_STDLIB
@@ -34,3 +35,7 @@ internal inline fun test() {
     <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>putstatic()<!>
     <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>tryCatch()<!>
 }
+
+/* GENERATED_FIR_TAGS: asExpression, assignment, classDeclaration, classReference, companionObject, functionDeclaration,
+inline, isExpression, localProperty, nullableType, objectDeclaration, propertyDeclaration, reified, tryExpression,
+typeParameter */

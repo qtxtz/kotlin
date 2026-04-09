@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 
 // FILE: KotlinClass.kt
@@ -38,3 +39,6 @@ class KotlinChildWithExplicitOverride: JavaClassWithExplicitOverride() {
     override <!ACCIDENTAL_OVERRIDE!>fun foo(a: AtomicInt) {}<!>
     override <!ACCIDENTAL_OVERRIDE!>val a: AtomicInt<!> = AtomicInt(0)
 }
+
+/* GENERATED_FIR_TAGS: annotationUseSiteTargetFile, classDeclaration, classReference, functionDeclaration,
+integerLiteral, javaType, override, propertyDeclaration */

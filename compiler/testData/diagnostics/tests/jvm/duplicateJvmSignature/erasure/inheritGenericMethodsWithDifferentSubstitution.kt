@@ -1,4 +1,4 @@
-
+// RUN_PIPELINE_TILL: BACKEND
 open class GenericBaseClass<T> {
     open fun foo(x: T): T = x
     open fun ambiguous(x: T): T = x
@@ -28,3 +28,6 @@ class MixedDerivedClass<T> : GenericBaseClass<Int>(), GenericBaseInterface<T> {
     override fun ambiguous(x: Int): Int = foo(x)
     override <!ACCIDENTAL_OVERRIDE!>fun ambiguous(x: T): T = bar(x)<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, interfaceDeclaration, nullableType, override,
+superExpression, typeParameter */

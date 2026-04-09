@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +InlineClasses
 // DIAGNOSTICS: -UNUSED_PARAMETER, -INLINE_CLASS_DEPRECATED
 
@@ -35,3 +36,6 @@ class C<TC : Number> {
     <!CONFLICTING_JVM_DECLARATIONS!>fun <T : Number> testNonGenericVsGeneric(x: X, y: T) {}<!>
     <!CONFLICTING_JVM_DECLARATIONS!>fun testNonGenericVsGeneric(x: X, y: TC) {}<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, funWithExtensionReceiver, functionDeclaration, nullableType, primaryConstructor,
+propertyDeclaration, typeConstraint, typeParameter */

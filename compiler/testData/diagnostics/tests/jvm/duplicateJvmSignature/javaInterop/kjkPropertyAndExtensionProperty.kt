@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // ISSUE: KT-65373, KT-65464
 
 // FILE: J.java
@@ -68,3 +69,6 @@ class F4 : JOVerridesBoth() {
         "".a
     }
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, getter, integerLiteral, javaProperty, javaType,
+propertyDeclaration, propertyWithExtensionReceiver, stringLiteral */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 class C {
@@ -5,3 +6,5 @@ class C {
         val `this$0`: C? = null
     }
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, inner, nullableType, propertyDeclaration */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -NOTHING_TO_INLINE -UNUSED_VARIABLE
 
 private class C
@@ -15,3 +16,5 @@ internal inline fun test() {
     <!PRIVATE_TYPE_USED_IN_NON_PRIVATE_INLINE_FUNCTION_ERROR!>simple()<!>
     generic()
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, inline, localProperty, nullableType, propertyDeclaration */

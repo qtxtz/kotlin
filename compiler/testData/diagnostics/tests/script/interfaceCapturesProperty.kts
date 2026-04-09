@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: FIR2IR
 // RENDER_ALL_DIAGNOSTICS_FULL_TEXT
 
 
@@ -12,3 +13,6 @@ val life = 42
 class B : A {
     fun bar() = x
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, getter, integerLiteral, interfaceDeclaration,
+propertyDeclaration */

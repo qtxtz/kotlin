@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 
 // FILE: KotlinInterface.kt
@@ -34,3 +35,6 @@ class IntersectionWithExplicitOverride: KotlinInterface, JavaClass() {
 class IntersectionWithExplicitOverride2: KotlinInterface, JavaClass() {
     override <!ACCIDENTAL_OVERRIDE!>fun foo(a: AtomicInteger) {}<!>
 }
+
+/* GENERATED_FIR_TAGS: annotationUseSiteTargetFile, classDeclaration, classReference, functionDeclaration, getter,
+integerLiteral, interfaceDeclaration, javaType, override, propertyDeclaration */

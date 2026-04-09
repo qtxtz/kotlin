@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // FILE: A.java
 import org.jetbrains.annotations.*;
 
@@ -15,3 +16,5 @@ public interface B {
 // FILE: C.kt
 
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>interface I : A, B<!>
+
+/* GENERATED_FIR_TAGS: interfaceDeclaration, javaType */

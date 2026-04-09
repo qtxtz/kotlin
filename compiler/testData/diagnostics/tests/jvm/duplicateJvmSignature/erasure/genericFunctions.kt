@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 <!CONFLICTING_JVM_DECLARATIONS!>fun <T> test2(x: List<T>) = x<!>
 <!CONFLICTING_JVM_DECLARATIONS!>fun test2(x: List<String>) = x<!>
 
@@ -23,3 +24,6 @@ fun test6(x: Array<String>) = x
 
 fun <T> test7(x: Inv<T>) = x
 fun <T> Inv<T>.test7() {}
+
+/* GENERATED_FIR_TAGS: classDeclaration, funWithExtensionReceiver, functionDeclaration, nullableType, typeConstraint,
+typeParameter */

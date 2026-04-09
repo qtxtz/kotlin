@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -CONTEXT_RECEIVERS_DEPRECATED
 // WITH_STDLIB
 // RENDER_ALL_DIAGNOSTICS_FULL_TEXT
@@ -10,3 +11,5 @@
     @JvmField
     <!CONFLICTING_JVM_DECLARATIONS!>val INSTANCE: O? = null<!>
 }<!>
+
+/* GENERATED_FIR_TAGS: nullableType, objectDeclaration, propertyDeclaration, propertyDeclarationWithContext */

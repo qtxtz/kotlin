@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
@@ -35,3 +36,5 @@ open class K : C() {
         fun baz(i: Int) {}
     }
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, companionObject, functionDeclaration, javaType, objectDeclaration */

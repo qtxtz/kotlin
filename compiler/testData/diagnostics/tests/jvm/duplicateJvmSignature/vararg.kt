@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 <!CONFLICTING_JVM_DECLARATIONS!>fun foo(vararg x: Int) {}<!>
@@ -8,3 +9,5 @@
 
 <!CONFLICTING_JVM_DECLARATIONS!>fun foo(vararg nn: Number) {}<!>
 <!CONFLICTING_JVM_DECLARATIONS!>fun foo(nn: Array<out Number>) {}<!>
+
+/* GENERATED_FIR_TAGS: functionDeclaration, outProjection, vararg */

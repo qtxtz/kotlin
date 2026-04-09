@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // LANGUAGE: +ContextParameters
 // IGNORE_ERRORS
 class A
@@ -22,3 +23,6 @@ interface Third {
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>interface IntersectionContextWithExtension : First, Second<!>
 
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>interface IntersectionContextWithValue : First, Third<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, funWithExtensionReceiver, functionDeclaration, functionDeclarationWithContext,
+interfaceDeclaration, propertyDeclaration, propertyDeclarationWithContext, propertyWithExtensionReceiver */

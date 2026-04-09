@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 import kotlin.reflect.KProperty
@@ -16,3 +17,6 @@ class C2 {
 
 val x by 1
 lateinit var `$$delegatedProperties`: Array<KProperty<*>>
+
+/* GENERATED_FIR_TAGS: checkNotNullCall, classDeclaration, funWithExtensionReceiver, functionDeclaration, integerLiteral,
+lateinit, nullableType, operator, propertyDeclaration, propertyDelegate, starProjection */

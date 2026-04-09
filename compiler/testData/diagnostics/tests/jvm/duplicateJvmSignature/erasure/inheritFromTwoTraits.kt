@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 interface Foo<T> {
@@ -10,3 +11,6 @@ interface Bar<T> {
 
 <!CONFLICTING_INHERITED_JVM_DECLARATIONS!>class Baz(): Foo<String>, Bar<Int> {
 }<!>
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, interfaceDeclaration, nullableType, primaryConstructor,
+typeParameter */

@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // DIAGNOSTICS: -UNUSED_PARAMETER
 
 open class B<T> {
@@ -9,3 +10,5 @@ class C : B<String>() {
 
     <!ACCIDENTAL_OVERRIDE!>fun foo(o: Any) {}<!>
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, functionDeclaration, nullableType, override, typeParameter */

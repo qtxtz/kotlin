@@ -1,3 +1,4 @@
+// RUN_PIPELINE_TILL: BACKEND
 // IGNORE_FIR_DIAGNOSTICS
 // SCOPE_DUMP: Y2:removeAt
 // FILE: X.java
@@ -163,3 +164,6 @@ fun main() {
     X().remove("")
     X().removeAt(1)
 }
+
+/* GENERATED_FIR_TAGS: classDeclaration, flexibleType, functionDeclaration, integerLiteral, javaFunction, javaType,
+localProperty, override, propertyDeclaration, stringLiteral */
