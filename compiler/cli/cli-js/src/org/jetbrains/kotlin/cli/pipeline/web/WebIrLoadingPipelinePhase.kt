@@ -7,8 +7,6 @@ package org.jetbrains.kotlin.cli.pipeline.web
 
 import org.jetbrains.kotlin.backend.common.IrModuleInfo
 import org.jetbrains.kotlin.cli.js.platformChecker
-import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
-import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.cli.pipeline.ConfigurationPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
 import org.jetbrains.kotlin.config.CompilerConfiguration
@@ -27,8 +25,6 @@ import java.io.File
 abstract class WebIrLoadingPipelinePhase(
     name: String
 ) : PipelinePhase<ConfigurationPipelineArtifact, WebLoadedIrPipelineArtifact>(name) {
-    protected abstract val configFiles: EnvironmentConfigFiles
-
     protected abstract fun createIrFactory(): IrFactory
 
     protected open fun loadIr(
@@ -44,14 +40,8 @@ abstract class WebIrLoadingPipelinePhase(
         val mainLibPath = configuration.libraries.find { File(it).canonicalPath == includesPath }
             ?: error("No library with name $includes ($includesPath) found")
         val kLib = Klib(mainLibPath)
-        val environment = KotlinCoreEnvironment.createForProduction(
-            input.rootDisposable,
-            configuration,
-            configFiles
-        )
         val klibs = loadWebKlibs(configuration, configuration.platformChecker)
         val module = ModulesStructure(
-            project = environment.project,
             mainModule = kLib,
             compilerConfiguration = configuration,
             klibs = klibs,

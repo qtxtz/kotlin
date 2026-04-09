@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.cli.pipeline.web.wasm
 
 import org.jetbrains.kotlin.backend.common.IrModuleInfo
 import org.jetbrains.kotlin.backend.wasm.ic.IrFactoryImplForWasmIC
-import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
 import org.jetbrains.kotlin.cli.pipeline.web.WebIrLoadingPipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.web.wasm.WasmCompilationMode.Companion.wasmCompilationMode
 import org.jetbrains.kotlin.config.CompilerConfiguration
@@ -17,9 +16,6 @@ import org.jetbrains.kotlin.ir.backend.js.loadIrForSingleModule
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 
 object WasmIrLoadingPipelinePhase : WebIrLoadingPipelinePhase("WasmIrLoadingPipelinePhase") {
-    override val configFiles: EnvironmentConfigFiles
-        get() = EnvironmentConfigFiles.WASM_CONFIG_FILES
-
     override fun createIrFactory(): IrFactory = IrFactoryImplForWasmIC(WholeWorldStageController())
 
     override fun loadIr(configuration: CompilerConfiguration, irFactory: IrFactory, modulesStructure: ModulesStructure): IrModuleInfo =

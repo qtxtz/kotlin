@@ -5,15 +5,11 @@
 
 package org.jetbrains.kotlin.cli.pipeline.web.js
 
-import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
 import org.jetbrains.kotlin.cli.pipeline.web.WebIrLoadingPipelinePhase
 import org.jetbrains.kotlin.ir.backend.js.WholeWorldStageController
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImplForJsIC
 
 object JsIrLoadingPipelinePhase : WebIrLoadingPipelinePhase("JsIrLoadingPipelinePhase") {
-    override val configFiles: EnvironmentConfigFiles
-        get() = EnvironmentConfigFiles.JS_CONFIG_FILES
-
     override fun createIrFactory(): IrFactory = IrFactoryImplForJsIC(WholeWorldStageController())
 }
