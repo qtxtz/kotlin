@@ -9,9 +9,6 @@ import org.jetbrains.kotlin.generators.dsl.junit5.generateTestGroupSuiteWithJUni
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.spec.utils.tasks.detectDirsWithTestsMapFileOnly
 import org.jetbrains.kotlin.test.runners.AbstractFirBlackBoxCodegenTestSpec
-import org.jetbrains.kotlin.test.runners.AbstractFirLightTreeDiagnosticsTestWithJvmIrBackend
-import org.jetbrains.kotlin.test.runners.AbstractFirPsiDiagnosticsTestWithConverter
-import org.jetbrains.kotlin.test.runners.AbstractFirPsiDiagnosticsTestWithJvmIrBackend
 import org.jetbrains.kotlin.test.runners.codegen.*
 import org.jetbrains.kotlin.test.runners.ir.AbstractFirLightTreeJvmIrSourceRangesTest
 import org.jetbrains.kotlin.test.runners.ir.AbstractFirLightTreeJvmIrTextTest
@@ -99,22 +96,6 @@ fun main(args: Array<String>) {
 
             testClass<AbstractFirPsiLocalVariableTest> {
                 model("debug/localVariables")
-            }
-
-            testClass<AbstractFirPsiDiagnosticsTestWithConverter> {
-                model(
-                    "diagnostics/testsWithConverter",
-                    pattern = "^(.+)\\.kts?$",
-                    excludedPattern = excludedCustomTestdataPattern
-                )
-            }
-
-            testClass<AbstractFirPsiDiagnosticsTestWithJvmIrBackend> {
-                model("diagnostics/testsWithJvmBackend", excludedPattern = excludedCustomTestdataPattern)
-            }
-
-            testClass<AbstractFirLightTreeDiagnosticsTestWithJvmIrBackend> {
-                model("diagnostics/testsWithJvmBackend", excludedPattern = excludedCustomTestdataPattern)
             }
 
             testClass<AbstractFirPsiBytecodeListingTest> {

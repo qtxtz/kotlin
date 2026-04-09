@@ -118,7 +118,6 @@ fun main(args: Array<String>) {
                     "testData/diagnostics/tests",
                     "testData/diagnostics/testsWithAnyBackend",
                     "testData/diagnostics/testsWithStdLib",
-                    "testData/diagnostics/jvmIntegration",
                     "fir/analysis-tests/testData/resolve",
                     "fir/analysis-tests/testData/resolveWithStdlib",
                 )
