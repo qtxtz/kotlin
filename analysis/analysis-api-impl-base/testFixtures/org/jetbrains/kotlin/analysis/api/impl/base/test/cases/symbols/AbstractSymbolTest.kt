@@ -31,7 +31,6 @@ import org.jetbrains.kotlin.analysis.test.framework.services.expressionMarkerPro
 import org.jetbrains.kotlin.analysis.test.framework.test.configurators.AnalysisApiMode
 import org.jetbrains.kotlin.analysis.test.framework.test.configurators.FrontendKind
 import org.jetbrains.kotlin.analysis.test.framework.utils.executeOnPooledThreadInReadAction
-import org.jetbrains.kotlin.analysis.test.framework.utils.stripOutSnapshotVersion
 import org.jetbrains.kotlin.analysis.utils.printer.prettyPrint
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.test.directives.model.Directive
@@ -42,7 +41,6 @@ import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.assertions
 import org.jetbrains.kotlin.test.services.moduleStructure
 import org.jetbrains.kotlin.utils.addIfNotNull
-import org.jetbrains.kotlin.utils.addToStdlib.applyIf
 import org.jetbrains.kotlin.utils.addToStdlib.ifNotEmpty
 import org.jetbrains.kotlin.utils.exceptions.KotlinIllegalArgumentExceptionWithAttachments
 import org.jetbrains.kotlin.utils.mapToSetOrEmpty
@@ -240,7 +238,6 @@ abstract class AbstractSymbolTest : AbstractAnalysisApiBasedTest() {
     private fun List<PointerWithRenderedSymbol>.renderDeclarations(): String =
         mapNotNull { it.rendered.takeIf { _ -> it.shouldBeRendered } }
             .renderAsDeclarations()
-            .applyIf(configurator.frontendKind == FrontendKind.Fe10) { stripOutSnapshotVersion() }
 
     private fun List<String>.renderAsDeclarations(): String =
         if (isEmpty()) "NO_SYMBOLS"

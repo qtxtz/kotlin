@@ -88,10 +88,7 @@ fun AnalysisApiTestGroup.generateAnalysisApiTests() {
     ) {
         val singleByPsiInit: TestGroup.TestClass.(data: AnalysisApiTestConfiguratorFactoryData) -> Unit = { data ->
             val excludeDirs = buildList {
-                if (data.analysisApiMode == AnalysisApiMode.Standalone ||
-                    data.frontend == FrontendKind.Fe10 ||
-                    data.moduleKind == TestModuleKind.LibrarySource
-                ) {
+                if (data.analysisApiMode == AnalysisApiMode.Standalone || data.moduleKind == TestModuleKind.LibrarySource) {
                     add("withTestCompilerPluginEnabled")
                 }
 
@@ -209,10 +206,7 @@ private fun AnalysisApiTestGroup.generateAnalysisApiNonComponentsTests() {
     group(filter = testModuleKindIs(TestModuleKind.SourceLike)) {
         group("symbols", filter = analysisSessionModeIs(AnalysisSessionMode.Normal)) {
             fun TestGroup.TestClass.symbolsModel(data: AnalysisApiTestConfiguratorFactoryData, path: String) {
-                if (data.analysisApiMode == AnalysisApiMode.Standalone
-                    || data.frontend == FrontendKind.Fe10
-                    || data.targetPlatform != TargetPlatformEnum.JVM
-                ) {
+                if (data.analysisApiMode == AnalysisApiMode.Standalone || data.targetPlatform != TargetPlatformEnum.JVM) {
                     model(data, path, excludeDirsRecursively = listOf("withTestCompilerPluginEnabled"))
                 } else {
                     model(data, path)
