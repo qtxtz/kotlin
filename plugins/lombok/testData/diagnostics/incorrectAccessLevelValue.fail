@@ -1,0 +1,10 @@
+No enum constant org.jetbrains.kotlin.lombok.config.AccessLevel.IncorrectAccessLevel
+java.lang.IllegalArgumentException: No enum constant org.jetbrains.kotlin.lombok.config.AccessLevel.IncorrectAccessLevel
+	at java.lang.Enum.valueOf(Enum.java:238)
+	at org.jetbrains.kotlin.lombok.config.AccessLevel.valueOf(AccessLevel.kt)
+	at org.jetbrains.kotlin.lombok.k2.config.AnnotationUtilsKt.getAccessLevel(annotationUtils.kt:21)
+	at org.jetbrains.kotlin.lombok.k2.config.AnnotationUtilsKt.getAccessLevel(annotationUtils.kt:26)
+	at org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations$Getter$Companion.extract(annotationConfig.kt:111)
+	at org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations$Getter$Companion.extract(annotationConfig.kt:109)
+	at org.jetbrains.kotlin.lombok.k2.config.ConeAnnotationCompanion.getOrNull(annotationConfig.kt:59)
+	at org.jetbrains.kotlin.lombok.k2.config.LombokService$special$$inlined$createCache$3.invoke(FirCachesFactory.kt:157)
