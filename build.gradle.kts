@@ -1013,6 +1013,8 @@ tasks {
         dependsOn(":kotlin-util-klib-abi:test")
         dependsOn(":kotlinx-metadata-klib:test")
         dependsOn(":compiler:ir.validation:test")
+        dependsOn(":compiler:ir.serialization.js:test")
+        dependsOn(":compiler:ir.serialization.native:test")
         dependsOn(":generators:test")
         dependsOn(":kotlin-gradle-plugin-dsl-codegen:test")
     }
