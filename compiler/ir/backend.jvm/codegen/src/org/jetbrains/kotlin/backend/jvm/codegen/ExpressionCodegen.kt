@@ -176,6 +176,9 @@ class ExpressionCodegen(
     val lastLineNumber: Int
         get() = lineNumberMapper.getLineNumber()
 
+    val isNoLineNumberScope: Boolean
+        get() = lineNumberMapper.isNoLineNumberScope
+
     var isInsideCondition: Boolean = false
         private set
 
@@ -205,6 +208,10 @@ class ExpressionCodegen(
 
     fun noLineNumberScope(block: () -> Unit) {
         lineNumberMapper.noLineNumberScope(block)
+    }
+
+    fun noLineNumberScopeWithCondition(flag: Boolean, block: () -> Unit) {
+        lineNumberMapper.noLineNumberScopeWithCondition(flag, block)
     }
 
     fun markLineNumberAfterInlineIfNeeded(registerLineNumberAfterwards: Boolean) {
