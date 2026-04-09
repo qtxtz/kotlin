@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
                 val init: TestClass.() -> Unit = {
                     model(
                         "diagnostics/tests", pattern = TestGeneratorUtil.KT,
-                        excludeDirsRecursively = listOf("multiplatform"),
+                        excludeDirsRecursively = listOf("multiplatform", "jvm"),
                         excludedPattern = excludedCustomTestdataPattern,
                     )
                     model(
