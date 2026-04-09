@@ -18,7 +18,6 @@ package foo.impl;
 public class Impl {}
 
 // MODULE: moduleB1(moduleA)
-// KOTLINC_ARGS: -Xadd-modules=ALL-MODULE-PATH
 // ADDITIONAL_JAVA_MODULES: ALL-MODULE-PATH
 // FILE: usage.kt
 import foo.Foo

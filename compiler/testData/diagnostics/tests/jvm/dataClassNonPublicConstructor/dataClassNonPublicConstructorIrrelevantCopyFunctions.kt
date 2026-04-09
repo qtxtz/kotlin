@@ -1,6 +1,5 @@
 // RUN_PIPELINE_TILL: BACKEND
 // MODULE: lib
-// KOTLINC_ARGS: -XXLanguage:+ErrorAboutDataClassCopyVisibilityChange -XXLanguage:+DataClassCopyRespectsConstructorVisibility
 // LANGUAGE: +ErrorAboutDataClassCopyVisibilityChange :+DataClassCopyRespectsConstructorVisibility
 // FILE: Lib.kt
 data class Data private constructor(val value: String)
@@ -11,7 +10,6 @@ class IrrelevantClass {
 }
 
 // MODULE: main(lib)
-// KOTLINC_ARGS: -progressive -XXLanguage:+ErrorAboutDataClassCopyVisibilityChange -XXLanguage:+DataClassCopyRespectsConstructorVisibility
 // FILE: main.kt
 fun test(irrelevantClass: IrrelevantClass) {
     copy()

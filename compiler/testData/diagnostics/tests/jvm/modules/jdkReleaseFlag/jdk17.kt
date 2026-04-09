@@ -15,7 +15,6 @@ public class Foo {
 }
 
 // MODULE: module9
-// KOTLINC_ARGS: -Xjdk-release=9
 // JDK_RELEASE: 9
 // FILE: module-info.java
 module module9 {
@@ -31,7 +30,6 @@ public class Foo {
 }
 
 // MODULE: module11
-// KOTLINC_ARGS: -Xjdk-release=11
 // JDK_RELEASE: 11
 // FILE: module-info.java
 module module11 {
@@ -47,7 +45,6 @@ public class Foo {
 }
 
 // MODULE: module17
-// KOTLINC_ARGS: -Xjdk-release=17
 // JDK_RELEASE: 17
 // FILE: module-info.java
 module module17 {
@@ -63,7 +60,6 @@ public class Foo {
 }
 
 // MODULE: moduleSwing
-// KOTLINC_ARGS: -Xjdk-release=9
 // JDK_RELEASE: 9
 // FILE: module-info.java
 module moduleSwing {

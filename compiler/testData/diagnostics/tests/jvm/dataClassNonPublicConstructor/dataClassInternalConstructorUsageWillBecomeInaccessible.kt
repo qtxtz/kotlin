@@ -10,7 +10,6 @@ data class Foo private constructor(val x: Int) {
 }
 
 // MODULE: main(lib)
-// KOTLINC_ARGS: -progressive
 // PROGRESSIVE_MODE
 // FILE: main.kt
 fun main() {

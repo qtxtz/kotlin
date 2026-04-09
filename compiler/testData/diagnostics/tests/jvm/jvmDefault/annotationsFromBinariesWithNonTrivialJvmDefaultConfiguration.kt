@@ -1,6 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
 // MODULE: disabledJvmDefaults
-// KOTLINC_ARGS: -jvm-default=disable
 // JVM_DEFAULT_MODE: disable
 // FILE: source.kt
 interface IrGeneratorContext {
@@ -8,7 +7,6 @@ interface IrGeneratorContext {
 }
 
 // MODULE: enabledJvmDefaults(disabledJvmDefaults)
-// KOTLINC_ARGS: -jvm-default=no-compatibility
 // JVM_DEFAULT_MODE: no-compatibility
 // FILE: source.kt
 @RequiresOptIn
