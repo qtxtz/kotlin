@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.test.directives.model.RegisteredDirectives
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.*
 import org.jetbrains.kotlin.test.util.joinToArrayString
+import org.jetbrains.kotlin.utils.addToStdlib.butIf
 import java.io.File
 
 abstract class JsEnvironmentConfigurator(testServices: TestServices) : EnvironmentConfigurator(testServices),
@@ -50,24 +51,26 @@ abstract class JsEnvironmentConfigurator(testServices: TestServices) : Environme
             TranslationMode.PER_FILE_PROD_MINIMIZED_NAMES to "outPfMin"
         )
 
-        fun getJsModuleArtifactPath(testServices: TestServices, moduleName: String, translationMode: TranslationMode = TranslationMode.FULL_DEV): String {
-            return getJsArtifactsOutputDir(testServices, translationMode).absolutePath + File.separator + getJsModuleArtifactName(testServices, moduleName)
-        }
-
-        fun getRecompiledJsModuleArtifactPath(testServices: TestServices, moduleName: String, translationMode: TranslationMode = TranslationMode.FULL_DEV): String {
-            return getJsArtifactsRecompiledOutputDir(testServices, translationMode).absolutePath + File.separator + getJsModuleArtifactName(testServices, moduleName)
-        }
+        fun getJsModuleArtifactPath(
+            testServices: TestServices,
+            moduleName: String,
+            translationMode: TranslationMode = TranslationMode.FULL_DEV,
+            firstTimeCompilation: Boolean = true,
+        ): String = getJsArtifactsOutputDir(testServices, translationMode, firstTimeCompilation).absolutePath +
+                File.separator +
+                getJsModuleArtifactName(testServices, moduleName)
 
         fun getJsModuleArtifactName(testServices: TestServices, moduleName: String): String {
             return testServices.klibEnvironmentConfigurator.getKlibArtifactSimpleName(testServices, moduleName) + "_v5"
         }
 
-        fun getJsArtifactsOutputDir(testServices: TestServices, translationMode: TranslationMode = TranslationMode.FULL_DEV): File {
-            return testServices.temporaryDirectoryManager.getOrCreateTempDirectory(outputDirByMode[translationMode]!!)
-        }
-
-        fun getJsArtifactsRecompiledOutputDir(testServices: TestServices, translationMode: TranslationMode = TranslationMode.FULL_DEV): File {
-            return testServices.temporaryDirectoryManager.getOrCreateTempDirectory(outputDirByMode[translationMode]!! + "-recompiled")
+        fun getJsArtifactsOutputDir(
+            testServices: TestServices,
+            translationMode: TranslationMode = TranslationMode.FULL_DEV,
+            firstTimeCompilation: Boolean = true,
+        ): File {
+            val name = outputDirByMode[translationMode]!!.butIf(!firstTimeCompilation) { "$it-recompiled" }
+            return testServices.temporaryDirectoryManager.getOrCreateTempDirectory(name)
         }
 
         fun getMainModule(testServices: TestServices): TestModule {

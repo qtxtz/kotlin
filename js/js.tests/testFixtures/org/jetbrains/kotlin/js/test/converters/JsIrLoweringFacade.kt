@@ -91,11 +91,13 @@ class JsIrLoweringFacade(
         if (skipRegularMode) return null
 
         if (JsEnvironmentConfigurator.incrementalEnabled(testServices)) {
-            val outputFile = if (firstTimeCompilation) {
-                File(JsEnvironmentConfigurator.getJsModuleArtifactPath(testServices, module.name) + moduleKind.jsExtension)
-            } else {
-                File(JsEnvironmentConfigurator.getRecompiledJsModuleArtifactPath(testServices, module.name) + moduleKind.jsExtension)
-            }
+            val outputFile = File(
+                JsEnvironmentConfigurator.getJsModuleArtifactPath(
+                    testServices,
+                    module.name,
+                    firstTimeCompilation = firstTimeCompilation
+                ) + moduleKind.jsExtension
+            )
 
             val compiledModule = CompilerResult(
                 outputs = listOf(TranslationMode.FULL_DEV, TranslationMode.PER_MODULE_DEV).associateWith {
@@ -182,17 +184,10 @@ class JsIrLoweringFacade(
 
         if (dontSkipRegularMode) {
             for ((mode, output) in compilerResult.outputs.entries) {
-                val outputFile = if (firstTimeCompilation) {
-                    File(JsEnvironmentConfigurator.getJsModuleArtifactPath(testServices, module.name, mode).finalizePath(moduleKind))
-                } else {
-                    File(
-                        JsEnvironmentConfigurator.getRecompiledJsModuleArtifactPath(
-                            testServices,
-                            module.name,
-                            mode
-                        ).finalizePath(moduleKind)
-                    )
-                }
+                val outputFile = File(
+                    JsEnvironmentConfigurator.getJsModuleArtifactPath(testServices, module.name, mode, firstTimeCompilation)
+                        .finalizePath(moduleKind)
+                )
 
                 output.writeTo(outputFile, moduleId, moduleKind, mode.granularity)
 
