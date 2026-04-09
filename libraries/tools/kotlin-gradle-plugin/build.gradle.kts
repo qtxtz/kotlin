@@ -661,20 +661,6 @@ tasks.register<Test>("functionalTest") {
     isSmokeTest = true
 }
 
-tasks.register<Test>("functionalUnitTest") {
-    include("**/org/jetbrains/kotlin/gradle/unitTests/**")
-    systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
-    systemProperty("konanProperties", rootDir.resolve("kotlin-native/konan/konan.properties"))
-}
-
-tasks.register<Test>("functionalRegressionTest") {
-    include("**/org/jetbrains/kotlin/gradle/regressionTests/**")
-}
-
-tasks.register<Test>("functionalDependencyResolutionTest") {
-    include("**/org/jetbrains/kotlin/gradle/dependencyResolutionTests/**")
-}
-
 val acceptLicensesTask = with(androidSdkProvisioner) {
     registerAcceptLicensesTask()
 }
