@@ -60,11 +60,6 @@ object FirDiagnosticsDirectives : SimpleDirectivesContainer() {
         """.trimIndent()
     )
 
-    val FIR_IDENTICAL by directive(
-        description = "Contents of fir test data file and FE 1.0 are identical",
-        applicability = Global
-    )
-
     val LATEST_LV_DIFFERENCE by directive(
         description = """
             Diagnostics differs between latest stable and latest language version

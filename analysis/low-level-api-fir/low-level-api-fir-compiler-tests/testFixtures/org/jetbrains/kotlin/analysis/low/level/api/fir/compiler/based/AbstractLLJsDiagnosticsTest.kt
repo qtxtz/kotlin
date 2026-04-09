@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.js.test.JsAdditionalSourceProvider
 import org.jetbrains.kotlin.platform.js.JsPlatforms
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.ConfigurationDirectives
-import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.services.configuration.JsFirstStageEnvironmentConfigurator
 
 /**
@@ -30,7 +29,6 @@ abstract class AbstractLLJsDiagnosticsTest : AbstractLLDiagnosticsTest() {
 fun TestConfigurationBuilder.configureForLLJsDiagnosticsTest() {
     defaultDirectives {
         +ConfigurationDirectives.WITH_STDLIB
-        +FirDiagnosticsDirectives.FIR_IDENTICAL
     }
 
     globalDefaults {
