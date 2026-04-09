@@ -455,7 +455,6 @@ private fun AnalysisApiTestGroup.generateAnalysisApiComponentsTests() {
         }
     }
 
-    // for K1, symbols do not have a proper equality implementation, so the tests are failing
     component("containingDeclarationProvider", filter = frontendIs(FrontendKind.Fir)) {
         test<AbstractContainingDeclarationProviderByPsiTest> {
             model(it, "containingDeclarationByPsi")
