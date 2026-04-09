@@ -2,7 +2,6 @@
 // KT-85411: Supported in 2.4.0-Beta2
 // WITH_STDLIB
 // CHECK_BYTECODE_LISTING
-// FIR_IDENTICAL
 
 import kotlin.reflect.KProperty
 import kotlin.test.assertEquals

@@ -1,4 +1,3 @@
-// FIR_IDENTICAL
 package test
 
 sealed interface SealedInterface {

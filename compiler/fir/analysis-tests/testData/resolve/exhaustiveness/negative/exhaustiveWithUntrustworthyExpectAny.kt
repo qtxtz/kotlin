@@ -1,4 +1,3 @@
-// FIR_IDENTICAL
 // RUN_PIPELINE_TILL: BACKEND
 // RENDER_DIAGNOSTIC_ARGUMENTS
 // LANGUAGE: +MultiPlatformProjects +DataFlowBasedExhaustiveness

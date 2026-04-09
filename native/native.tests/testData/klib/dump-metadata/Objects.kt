@@ -1,4 +1,3 @@
-// FIR_IDENTICAL
 // B.Companion and B.C are serialized in a different order in K1 and K2
 object A {
     fun a() {}

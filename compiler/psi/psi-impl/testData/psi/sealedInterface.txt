@@ -1,6 +1,4 @@
 KtFile: sealedInterface.kt
-  PsiComment(EOL_COMMENT)('// FIR_IDENTICAL')
-  PsiWhiteSpace('\n')
   PACKAGE_DIRECTIVE
     PsiElement(package)('package')
     PsiWhiteSpace(' ')
