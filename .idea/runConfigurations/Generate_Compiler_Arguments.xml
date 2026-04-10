@@ -12,10 +12,10 @@
         <list>
           <option value=":compiler:cli-base:generateCliArguments" />
           <option value=":generators:generateCompilerArgumentsCopy" />
-          <option value=":compiler:build-tools:kotlin-build-tools-impl:generateBtaArguments" />
-          <option value=":compiler:build-tools:kotlin-build-tools-api:generateBtaArguments" />
+          <option value=":compiler:build-tools:kotlin-build-tools-impl:generateBtaSources" />
+          <option value=":compiler:build-tools:kotlin-build-tools-api:generateBtaSources" />
           <option value=":compiler:build-tools:kotlin-build-tools-api:apiDump" />
-          <option value=":compiler:build-tools:kotlin-build-tools-compat:generateBtaArguments" />
+          <option value=":compiler:build-tools:kotlin-build-tools-compat:generateBtaSources" />
         </list>
       </option>
       <option name="vmOptions" />

@@ -317,7 +317,7 @@ fun Project.configureTests() {
             ":compiler:arguments",
             ":compiler:build-tools:kotlin-build-tools-api",
             ":compiler:build-tools:kotlin-build-tools-compat",
-            ":compiler:build-tools:kotlin-build-tools-options-generator",
+            ":compiler:build-tools:kotlin-build-tools-generator",
             ":compiler:fir:modularized-tests",
             ":compiler:fir:raw-fir:light-tree2fir",
             ":compiler:fir:raw-fir:psi2fir",

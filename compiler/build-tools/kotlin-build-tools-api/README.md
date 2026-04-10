@@ -31,6 +31,6 @@ Please notice the following:
 
 This module generates files from compiler arguments descriptions located in `:compiler:arguments`.
 
-When changing compiler arguments, please regenerate the generated files using `./gradlew :compiler:build-tools:kotlin-build-tools-api:generateBtaArguments`
+When changing compiler arguments, please regenerate the generated files using `./gradlew :compiler:build-tools:kotlin-build-tools-api:generateBtaSources`
 
 Please also remember to regenerate the `./gradlew :compiler:build-tools:kotlin-build-tools-api:apiDump`

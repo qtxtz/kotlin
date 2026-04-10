@@ -29,4 +29,4 @@ Please notice the following:
 This module generates files from compiler arguments descriptions located in `:compiler:arguments`.
 
 When changing compiler arguments,
-please regenerate the generated files using `./gradlew :compiler:build-tools:kotlin-build-tools-compat:generateBtaArguments`
+please regenerate the generated files using `./gradlew :compiler:build-tools:kotlin-build-tools-compat:generateBtaSources`

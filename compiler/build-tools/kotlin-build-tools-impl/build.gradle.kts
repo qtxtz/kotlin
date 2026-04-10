@@ -76,9 +76,9 @@ kotlin {
 }
 
 generatedSourcesTask(
-    taskName = "generateBtaArguments",
-    generatorProject = ":compiler:build-tools:kotlin-build-tools-options-generator",
-    generatorMainClass = "org.jetbrains.kotlin.buildtools.options.generator.MainKt",
+    taskName = "generateBtaSources",
+    generatorProject = ":compiler:build-tools:kotlin-build-tools-generator",
+    generatorMainClass = "org.jetbrains.kotlin.buildtools.generator.MainKt",
     argsProvider = { generationRoot ->
         listOf(
             generationRoot.toString(),
