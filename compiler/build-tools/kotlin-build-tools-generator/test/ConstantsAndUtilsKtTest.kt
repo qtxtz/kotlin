@@ -4,7 +4,7 @@
  */
 
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
-import org.jetbrains.kotlin.buildtools.options.generator.getOldestSupportedVersion
+import org.jetbrains.kotlin.buildtools.generator.getOldestSupportedVersion
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

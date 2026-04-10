@@ -16,7 +16,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("org.jetbrains.kotlin.buildtools.options.generator.MainKt")
+    mainClass.set("org.jetbrains.kotlin.buildtools.generator.MainKt")
 }
 
 sourceSets {

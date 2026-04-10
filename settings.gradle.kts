@@ -606,7 +606,7 @@ include(
     ":compiler:build-tools:kotlin-build-tools-api-tests",
     ":compiler:build-tools:kotlin-build-tools-api-forward-compatibility-tests",
     ":compiler:build-tools:kotlin-build-tools-jdk-utils",
-    ":compiler:build-tools:kotlin-build-tools-options-generator",
+    ":compiler:build-tools:kotlin-build-tools-generator",
     ":compiler:build-tools:util-kotlinpoet",
     ":compiler:build-tools:kotlin-build-tools-cri-impl"
 )

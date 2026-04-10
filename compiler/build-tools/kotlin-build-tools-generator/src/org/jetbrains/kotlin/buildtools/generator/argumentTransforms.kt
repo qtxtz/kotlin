@@ -2,7 +2,7 @@
  * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
-package org.jetbrains.kotlin.buildtools.options.generator
+package org.jetbrains.kotlin.buildtools.generator
 
 import org.jetbrains.kotlin.arguments.description.actualCommonCompilerArguments
 import org.jetbrains.kotlin.arguments.description.actualCommonToolsArguments
@@ -13,8 +13,8 @@ import org.jetbrains.kotlin.arguments.description.removed.removedJvmCompilerArgu
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgument
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinCompilerArgumentsLevel
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
-import org.jetbrains.kotlin.buildtools.options.generator.BtaCompilerArgument.CustomCompilerArgument
-import org.jetbrains.kotlin.buildtools.options.generator.BtaCompilerArgument.SSoTCompilerArgument
+import org.jetbrains.kotlin.buildtools.generator.BtaCompilerArgument.CustomCompilerArgument
+import org.jetbrains.kotlin.buildtools.generator.BtaCompilerArgument.SSoTCompilerArgument
 import org.jetbrains.kotlin.cli.arguments.generator.calculateName
 
 sealed interface ArgumentTransform {
