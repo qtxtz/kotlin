@@ -46,7 +46,6 @@ class JsICContext(
             irBuiltIns,
             symbolTable,
             exportedDeclarations,
-            keep = emptySet(),
             configuration = configuration,
             incrementalCacheEnabled = true,
         )

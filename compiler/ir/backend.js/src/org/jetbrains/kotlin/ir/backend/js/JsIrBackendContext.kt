@@ -45,7 +45,6 @@ class JsIrBackendContext(
     override val irBuiltIns: IrBuiltIns,
     override val symbolTable: SymbolTable,
     val additionalExportedDeclarationNames: Set<FqName>,
-    keep: Set<String>,
     override val configuration: CompilerConfiguration, // TODO: remove configuration from backend context
     val dceRuntimeDiagnostic: RuntimeDiagnostic? = null,
     val safeExternalBoolean: Boolean = false,
@@ -60,8 +59,7 @@ class JsIrBackendContext(
     val minimizedNameGenerator: MinimizedNameGenerator =
         MinimizedNameGenerator()
 
-    val keeper: Keeper =
-        Keeper(keep)
+    val keeper: Keeper = Keeper(configuration.keep.toSet())
 
     val fieldDataCache = WeakHashMap<IrClass, Map<IrField, String>>()
 
