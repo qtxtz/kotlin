@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.konan.test.blackbox.support.settings.CacheMode
 import org.jetbrains.kotlin.konan.test.blackbox.support.settings.KotlinNativeTargets
 import org.jetbrains.kotlin.konan.test.blackbox.support.settings.OptimizationMode
 import org.jetbrains.kotlin.konan.test.blackbox.support.settings.ThreadStateChecker
-import org.jetbrains.kotlin.konan.test.blackbox.support.settings.UsedPartialLinkageConfig
 import org.jetbrains.kotlin.test.TestMetadata
 import org.jetbrains.kotlin.test.services.JUnit5Assertions.assertEquals
 import org.jetbrains.kotlin.test.services.JUnit5Assertions.assertFalse
@@ -470,6 +469,42 @@ class IncrementalCompilationTest : AbstractNativeSimpleTest() {
         runExecutableAndVerify(main1.testCase, main1.testExecutable)
     }
 
+    // This is a reproducer for #KT-81708
+    @Test
+    @TestMetadata("inlineFunSameLibAddFile")
+    fun inlineFunSameLibAddFile() = withRootDir(File("$TEST_SUITE_PATH/inlineFunSameLibAddFile")) {
+        val lib = compileLibrary("lib") {
+            "lib/lib.file1.kt" copyTo "lib.file1.kt"
+            "lib/lib.file2.kt" copyTo "lib.file2.kt"
+        }
+        val main = compileToExecutable("main", lib) { "main/main.kt" copyTo "main.kt" }
+
+        // Check, <lib> has been compiled to cache.
+        assertTrue(main.executableFile.exists())
+        val libFile1KtCacheDir = getLibraryFileCache("lib", "lib/lib.file1.kt", "test")
+        val libFile2KtCacheDir = getLibraryFileCache("lib", "lib/lib.file2.kt", "test")
+        assertTrue(libFile1KtCacheDir.exists())
+        assertTrue(libFile2KtCacheDir.exists())
+        val modified1 = libFile1KtCacheDir.lastModified()
+        val modified2 = libFile2KtCacheDir.lastModified()
+        runExecutableAndVerify(main.testCase, main.testExecutable)
+
+        val lib1 = compileLibrary("lib") {
+            "lib/lib.file1.kt" copyTo "lib.file1.kt"
+            "lib/lib.file2.1.kt" copyTo "lib.file2.kt"
+            "lib/lib.file3.kt" copyTo "lib.file3.kt"
+        }
+        val libFile3KtCacheDir = getLibraryFileCache("lib", "lib/lib.file3.kt", "test")
+        val main1 = compileToExecutable("main", lib1) { "main/main.1.kt" copyTo "main.kt" }
+        assertTrue(main1.executableFile.exists())
+        assertTrue(libFile1KtCacheDir.exists())
+        assertTrue(libFile2KtCacheDir.exists())
+        assertTrue(libFile3KtCacheDir.exists())
+        assertEquals(modified1, libFile1KtCacheDir.lastModified())
+        assertNotEquals(modified2, libFile2KtCacheDir.lastModified())
+        runExecutableAndVerify(main1.testCase, main1.testExecutable)
+    }
+
     @Test
     @TestMetadata("internalMethodFakeOverrideInFriendModule")
     fun internalMethodFakeOverrideInFriendModule() {
@@ -492,6 +527,7 @@ class IncrementalCompilationTest : AbstractNativeSimpleTest() {
             vararg dependencies: TestCompilationDependency<*>,
             block: LibraryBuilder.() -> Unit
         ) = with(LibraryBuilder(this@IncrementalCompilationTest, rootDir, targetSrc, dependencies.asList())) {
+            +"-XXLanguage:-IrIntraModuleInlinerBeforeKlibSerialization" // otherwise, it might shadow some problems with inline functions.
             block()
             build()
         }
