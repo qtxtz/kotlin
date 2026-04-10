@@ -122,7 +122,7 @@ class SmartDefaultsJvmTargetIT : KotlinMavenTestBase() {
         }
     }
 
-//    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
+    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
     @MavenTest
     @DisplayName("Explicit kotlin.compiler.jdkRelease is not overridden by maven.compiler.release")
     fun testKotlinJdkReleasePropertyOverridesRelease(mavenVersion: TestVersions.Maven) {
@@ -167,7 +167,7 @@ class SmartDefaultsJvmTargetIT : KotlinMavenTestBase() {
         }
     }
 
-//    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
+    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
     @MavenTest
     @DisplayName("Explicit jdkRelease in kotlin plugin config is not overridden by maven.compiler.release")
     fun testKotlinPluginConfigJdkReleaseOverrides(mavenVersion: TestVersions.Maven) {
@@ -197,7 +197,7 @@ class SmartDefaultsJvmTargetIT : KotlinMavenTestBase() {
         }
     }
 
-//    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
+    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
     @MavenTest
     @DisplayName("Explicit kotlin.compiler.jdkRelease is not overridden by compiler plugin config release")
     fun testKotlinPropertyOverridesCompilerPluginRelease(mavenVersion: TestVersions.Maven) {
@@ -227,7 +227,7 @@ class SmartDefaultsJvmTargetIT : KotlinMavenTestBase() {
         }
     }
 
-//    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
+    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
     @MavenTest
     @DisplayName("Explicit jdkRelease in kotlin plugin config is not overridden by compiler plugin config release")
     fun testKotlinPluginConfigJdkReleaseOverridesCompilerPluginRelease(mavenVersion: TestVersions.Maven) {
@@ -268,7 +268,7 @@ class SmartDefaultsJvmTargetIT : KotlinMavenTestBase() {
         }
     }
 
-//    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
+    @Disabled("KT-85622: setting kotlin.compiler.jdkRelease without explicit jvmTarget causes compilation failure due to conflicting default")
     @MavenTest
     @DisplayName("Explicit kotlin.compiler.jdkRelease without maven.compiler.* produces correct bytecode")
     fun testExplicitJdkReleaseWithoutMavenProperties(mavenVersion: TestVersions.Maven) {
