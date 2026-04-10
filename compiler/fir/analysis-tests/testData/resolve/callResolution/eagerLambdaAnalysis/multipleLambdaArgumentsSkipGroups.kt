@@ -1,4 +1,4 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // ISSUE: KT-85593
 // LANGUAGE: +EagerLambdaAnalysis
@@ -20,13 +20,16 @@ fun c3(a: (String) -> Unit, b: () -> String): String = ""
 
 fun main() {
     // Case 1: first group has null expectedType (Any) -> skip, second group resolves
-    val x1 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>c1<!>({}, { "" })
+    val x1 = c1({}, { "" })
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>x1<!>
 
     // Case 2: first group has different param count (0 vs 1) -> skip, second group resolves
-    val x2 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>c2<!>({}, { "" })
+    val x2 = c2({}, { "" })
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>x2<!>
 
     // Case 3: first group has different input types (Int vs String) -> skip, second group resolves
-    val x3 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>c3<!>({ <!CANNOT_INFER_IT_PARAMETER_TYPE!>_<!> -> }, { "" })
+    val x3 = c3({ _ -> }, { "" })
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>x3<!>
 }
 
 /* GENERATED_FIR_TAGS: functionDeclaration, functionalType, integerLiteral, lambdaLiteral, localProperty,

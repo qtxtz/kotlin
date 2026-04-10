@@ -16,8 +16,8 @@ fun b2(a: () -> Unit, b: () -> String): String = ""
 
 fun main() {
     // Case 1: b1 with { "" } as trailing — the () -> String overload is preferred (no unit-coercion)
-    val c1 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>b1<!>({ println("a") }) { "" }
-    <!DEBUG_INFO_EXPRESSION_TYPE("ERROR CLASS: Ambiguity: b1, [/b1, /b1]")!>c1<!>
+    val c1 = b1({ println("a") }) { "" }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c1<!>
 
     // Case 2: both overloads have unit-coercion for one lambda each -> ambiguity remains
     val c2 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>b2<!>({ "" }) { "" }

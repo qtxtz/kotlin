@@ -1,4 +1,4 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // ISSUE: KT-85593
 // LANGUAGE: +EagerLambdaAnalysis
@@ -38,22 +38,28 @@ fun main() {
     val c1single = a1 { "" }
     <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c1single<!>
 
-    val c1multi = <!OVERLOAD_RESOLUTION_AMBIGUITY!>a1<!>(b = { println("a") }) { "" }
+    val c1multi = a1(b = { println("a") }) { "" }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c1multi<!>
 
     // Case 2
-    val c2 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>a2<!>({ println("a") }) { "" }
+    val c2 = a2({ println("a") }) { "" }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c2<!>
 
     // Case 3: first lambda discriminates
-    val c3 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>a3<!>({ "" }) { println("done") }
+    val c3 = a3({ "" }) { println("done") }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c3<!>
 
     // Case 4: three lambdas, middle one discriminates
-    val c4 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>a4<!>({ println("a") }, { "" }) { println("done") }
+    val c4 = a4({ println("a") }, { "" }) { println("done") }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c4<!>
 
     // Case 5: generic first lambda, second lambda discriminates
-    val c5 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>a5<!>({ println("a") }) { "" }
+    val c5 = a5({ println("a") }) { "" }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c5<!>
 
     // Case 6: generic input types on the second lambda
-    val c6 = <!OVERLOAD_RESOLUTION_AMBIGUITY!>a6<!><Int>({ println("a") }) { "" }
+    val c6 = a6<Int>({ println("a") }) { "" }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>c6<!>
 }
 
 /* GENERATED_FIR_TAGS: functionDeclaration, functionalType, integerLiteral, lambdaLiteral, localProperty, nullableType,

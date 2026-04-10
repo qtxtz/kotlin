@@ -37,21 +37,26 @@ private fun runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(
     if (candidates.any { !it.isSuccessful || it.hasNonTrivialContracts() }) return null
     val call = candidates.first().callInfo.callSite as? FirFunctionCall ?: return null
 
-    // Currently, we only support a single lambda case.
-    // Thus, for `foo({ 1 }, { "2" })` we would return null.
-    // NB: for `lambdaAtomGroup` all the atoms refer to the same FirAnonymousFunction
-    val lambdaAtomGroup: Collection<LambdaAtomWithCandidate> = candidates.lambdaAtomGroups().singleOrNull() ?: return null
-
-    if (!lambdaAtomGroup.same { it.atom.parameterTypes.size }) return null
-    if (!lambdaAtomGroup.all { it.atom.expectedType?.isSomeFunctionType(components.session) == true }) return null
+    // NB: for each `lambdaAtomGroup` all the atoms refer to the same FirAnonymousFunction
+    val lambdaAtomGroups = candidates.lambdaAtomGroups()
+    if (lambdaAtomGroups.isEmpty()) return null
 
     val originalCalleeReference = call.calleeReference
 
+    var anyGroupAnalyzed = false
     try {
-        if (!runEagerLambdaAnalysisForLambdaAtomGroup(lambdaAtomGroup, call)) return null
+        for (lambdaAtomGroup in lambdaAtomGroups) {
+            if (!lambdaAtomGroup.same { it.atom.parameterTypes.size }) continue
+            if (!lambdaAtomGroup.all { it.atom.expectedType?.isSomeFunctionType(components.session) == true }) continue
+            if (!runEagerLambdaAnalysisForLambdaAtomGroup(lambdaAtomGroup, call)) continue
+            anyGroupAnalyzed = true
+        }
     } finally {
         call.replaceCalleeReference(originalCalleeReference)
     }
+
+    // This is mostly a fast-path, removing it should not affect semantics
+    if (!anyGroupAnalyzed) return null
 
     val errorCandidates = mutableSetOf<Candidate>()
     val successfulCandidates = mutableSetOf<Candidate>()

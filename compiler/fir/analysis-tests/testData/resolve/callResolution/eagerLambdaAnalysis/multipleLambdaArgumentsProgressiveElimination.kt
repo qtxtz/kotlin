@@ -1,4 +1,4 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // WITH_STDLIB
 // ISSUE: KT-85593
 // LANGUAGE: +EagerLambdaAnalysis
@@ -15,7 +15,8 @@ fun main() {
     // { "" } returns String -> eliminates fooIntString (a: () -> Int mismatch)
     // { "" } returns String -> eliminates fooStringInt (b: () -> Int mismatch)
     // only fooStringString survives
-    val x = <!OVERLOAD_RESOLUTION_AMBIGUITY!>foo<!>({ "" }) { "" }
+    val x = foo({ "" }) { "" }
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>x<!>
 }
 
 /* GENERATED_FIR_TAGS: functionDeclaration, functionalType, integerLiteral, lambdaLiteral, localProperty,
