@@ -100,6 +100,49 @@ fun Verifier.assertSmartDefaultsNotEnabled() {
     assertBuildLogDoesNotContain("Kotlin smart defaults are enabled")
 }
 
+/**
+ * Verifies that the build log contains "derived from maven.compiler.target" message,
+ * where [jvmTarget] is the normalized Kotlin jvmTarget (e.g. "1.8") and [mvnTarget] is the raw Maven property value (e.g. "8").
+ */
+fun Verifier.assertBuildLogJvmTargetDerivedFromMvnTarget(jvmTarget: String, mvnTarget: String) {
+    assertBuildLogContains("Using jvmTarget=$jvmTarget (derived from maven.compiler.target=$mvnTarget)")
+}
+
+/**
+ * Verifies that the build log contains "derived from maven.compiler.release" message,
+ * where [jvmTarget] is the normalized Kotlin jvmTarget (e.g. "1.8") and [mvnRelease] is the raw Maven property value (e.g. "8").
+ */
+fun Verifier.assertBuildLogJvmTargetDerivedFromMvnRelease(jvmTarget: String, mvnRelease: String) {
+    assertBuildLogContains("Using jvmTarget=$jvmTarget (derived from maven.compiler.release=$mvnRelease)")
+}
+
+/**
+ * Verifies that smart defaults derived jvmTarget from `maven.compiler.target` without setting jdkRelease.
+ * [jvmTarget] is the normalized Kotlin jvmTarget (e.g. "1.8"), [mvnTarget] is the raw Maven property value (e.g. "8").
+ * Requires `-X` flag in build args.
+ */
+fun Verifier.assertJvmTargetAutoAlignedFromTarget(jvmTarget: String, mvnTarget: String) {
+    assertBuildLogJvmTargetDerivedFromMvnTarget(jvmTarget, mvnTarget)
+    assertCompilerArgsContain("-jvm-target $jvmTarget")
+    assertCompilerArgsDoNotContain("-Xjdk-release")
+}
+
+/**
+ * Verifies that smart defaults derived both jvmTarget and jdkRelease from `maven.compiler.release`.
+ * [jvmTarget] is the normalized Kotlin jvmTarget (e.g. "1.8"), [mvnRelease] is the raw Maven property value (e.g. "8").
+ * Requires `-X` flag in build args.
+ */
+fun Verifier.assertJvmTargetAutoAlignedFromRelease(jvmTarget: String, mvnRelease: String) {
+    assertBuildLogJvmTargetDerivedFromMvnRelease(jvmTarget, mvnRelease)
+    assertCompilerArgsContain("-jvm-target $jvmTarget")
+    assertCompilerArgsContain("-Xjdk-release=$jvmTarget")
+}
+
+/** Verifies that the build log does not contain a "derived from [source]" message. */
+fun Verifier.assertBuildLogJvmTargetNotDerivedFrom(source: String) {
+    assertBuildLogDoesNotContain("derived from $source")
+}
+
 fun Verifier.assertStdlibAutoAdded() {
     assertBuildLogContains("[INFO] Added kotlin-stdlib dependency")
 }
@@ -356,6 +399,12 @@ fun Verifier.assertClassFileMajorVersion(relativePath: String, expectedMajorVers
     }, ClassReader.SKIP_CODE or ClassReader.SKIP_DEBUG or ClassReader.SKIP_FRAMES)
     assertEquals(expectedMajorVersion, majorVersion) {
         "Expected major version $expectedMajorVersion but got $majorVersion for $relativePath"
+    }
+}
+
+fun Verifier.assertClassFilesMajorVersion(expectedMajorVersion: Int, vararg relativePaths: String) {
+    for (path in relativePaths) {
+        assertClassFileMajorVersion(path, expectedMajorVersion)
     }
 }
 

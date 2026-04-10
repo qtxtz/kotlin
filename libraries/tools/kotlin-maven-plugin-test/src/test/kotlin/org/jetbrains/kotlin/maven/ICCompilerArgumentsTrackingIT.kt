@@ -147,7 +147,7 @@ class ICCompilerArgumentsTrackingIT : KotlinMavenTestBase() {
                 assertBuildLogContains(UNKNOWN_INPUTS_CHANGES_MESSAGE)
             }
 
-            addPluginLevelConfiguration("<jvmTarget>17</jvmTarget>")
+            addKotlinPluginLevelConfiguration("<jvmTarget>17</jvmTarget>")
 
             build("package", "-X") {
                 assertBuildLogContains(COMPILER_ARGUMENTS_CHANGED_MESSAGE)
@@ -171,7 +171,7 @@ class ICCompilerArgumentsTrackingIT : KotlinMavenTestBase() {
                 assertBuildLogContains(UNKNOWN_INPUTS_CHANGES_MESSAGE)
             }
 
-            addPluginLevelConfiguration(
+            addKotlinPluginLevelConfiguration(
                 """
                 <args>
                     <arg>-Werror</arg>
@@ -217,7 +217,7 @@ class ICCompilerArgumentsTrackingIT : KotlinMavenTestBase() {
                 "-Xwarning-level=USELESS_CAST:error\n"
             )
 
-            addPluginLevelConfiguration(
+            addKotlinPluginLevelConfiguration(
                 """
                 <args>
                     <arg>@compiler-warnings.argfile</arg>

@@ -85,7 +85,7 @@ fun Element.appendXmlFragment(xmlFragment: String) {
 /**
  * Adds XML content to the plugin-level `<configuration>` of kotlin-maven-plugin.
  */
-fun MavenTestProject.addPluginLevelConfiguration(xmlFragment: String, relativePomPath: String = "pom.xml") {
+fun MavenTestProject.addKotlinPluginLevelConfiguration(xmlFragment: String, relativePomPath: String = "pom.xml") {
     modifyPomXml(relativePomPath) {
         val plugin = findKotlinPlugin()
         val config = plugin.getOrCreateChild("configuration")
@@ -97,7 +97,7 @@ fun MavenTestProject.addPluginLevelConfiguration(xmlFragment: String, relativePo
  * Configures `<jdkToolchain>` on kotlin-maven-plugin to select a specific JDK version from toolchains.xml.
  */
 fun MavenTestProject.configureJdkToolchain(version: String, relativePomPath: String = "pom.xml") {
-    addPluginLevelConfiguration("<jdkToolchain><version>$version</version></jdkToolchain>", relativePomPath)
+    addKotlinPluginLevelConfiguration("<jdkToolchain><version>$version</version></jdkToolchain>", relativePomPath)
 }
 
 /**
@@ -213,5 +213,45 @@ fun MavenTestProject.addMavenProfile(profileId: String, vararg properties: Pair<
         for ((key, value) in properties) {
             props.appendXmlFragment("<$key>$value</$key>")
         }
+    }
+}
+
+/**
+ * Sets a Maven property in `<properties>`. Creates the section if absent.
+ */
+fun MavenTestProject.setMavenProperty(name: String, value: String, relativePomPath: String = "pom.xml") {
+    modifyPomXml(relativePomPath) {
+        val props = documentElement.getOrCreateChild("properties")
+        props.appendXmlFragment("<$name>$value</$name>")
+    }
+}
+
+/**
+ * Finds or creates the `maven-compiler-plugin` `<plugin>` element in `<build><plugins>`.
+ */
+fun Document.findOrCreateMavenCompilerPlugin(): Element {
+    val plugins = getElementsByTagName("plugin")
+    for (i in 0 until plugins.length) {
+        val plugin = plugins.item(i) as Element
+        val artifactId = plugin.getElementsByTagName("artifactId").item(0)?.textContent
+        if (artifactId == "maven-compiler-plugin") return plugin
+    }
+    val build = documentElement.getOrCreateChild("build")
+    val pluginsElement = build.getOrCreateChild("plugins")
+    val plugin = createElement("plugin")
+    pluginsElement.appendChild(plugin)
+    plugin.appendXmlFragment("<groupId>org.apache.maven.plugins</groupId>")
+    plugin.appendXmlFragment("<artifactId>maven-compiler-plugin</artifactId>")
+    return plugin
+}
+
+/**
+ * Adds XML content to the global `<configuration>` of `maven-compiler-plugin`.
+ */
+fun MavenTestProject.addMavenCompilerPluginConfiguration(xmlFragment: String) {
+    modifyPomXml {
+        val plugin = findOrCreateMavenCompilerPlugin()
+        val config = plugin.getOrCreateChild("configuration")
+        config.appendXmlFragment(xmlFragment)
     }
 }

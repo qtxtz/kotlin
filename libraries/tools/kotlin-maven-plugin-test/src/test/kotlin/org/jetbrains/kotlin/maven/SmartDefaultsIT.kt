@@ -194,7 +194,7 @@ class SmartDefaultsIT : KotlinMavenTestBase() {
                     executedFirst = "org.jetbrains.kotlin:kotlin-maven-plugin", goalFirst = ":test-compile",
                     executedSecond = "org.apache.maven.plugins:maven-compiler-plugin", goalSecond = ":testCompile",
                 )
-                assertTestsPassed(2)
+                assertTestsPassed(3)
             }
         }
     }

@@ -138,7 +138,6 @@ public class KotlinLifecycleParticipant extends AbstractMavenLifecycleParticipan
      * <ol>
      *   <li>{@code maven.compiler.release} (maven-compiler-plugin config or property)</li>
      *   <li>{@code maven.compiler.target}</li>
-     *   <li>JDK version requirement from {@code maven-toolchains-plugin} configuration</li>
      * </ol>
      *
      * <p>Package-private for testing.
@@ -168,7 +167,7 @@ public class KotlinLifecycleParticipant extends AbstractMavenLifecycleParticipan
         if (target != null) {
             String jvmTarget = normalizeToKotlinJvmTarget(target);
             if (jvmTarget != null) {
-                return new JvmTargetResolution(jvmTarget, false, "maven.compiler.target=" + jvmTarget);
+                return new JvmTargetResolution(jvmTarget, false, "maven.compiler.target=" + target);
             } else {
                 if (logger != null) {
                     logger.warn("maven.compiler.target=" + target + " is not supported as a Kotlin jvmTarget. Skipping auto-detection.");
