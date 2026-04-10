@@ -50,7 +50,7 @@ internal abstract class FeatureBranchDiffBuildService : BuildService<FeatureBran
             "Inferring changed fails (git diff) failed with exit code ${result.exitValue}\n" + err.toByteArray().decodeToString()
         )
 
-        return out.toByteArray().decodeToString().lines()
+        return out.toByteArray().decodeToString().lines().filter { it.isNotBlank() }
     }
 
     @Synchronized
