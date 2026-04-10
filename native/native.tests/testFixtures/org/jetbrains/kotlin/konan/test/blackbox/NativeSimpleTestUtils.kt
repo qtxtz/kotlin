@@ -65,11 +65,17 @@ internal class LibraryBuilder(
     targetSrc: String,
     dependencies: List<TestCompilationDependency<*>>
 ) : ArtifactBuilder<TestCompilationArtifact.KLIB>(test, rootDir, targetSrc, dependencies) {
+    private val freeCompilerArgs = mutableListOf<String>()
+
+    operator fun String.unaryPlus() {
+        freeCompilerArgs.add(this)
+    }
+
     override fun build(sourcesDir: File, outputDir: File, dependencies: List<TestCompilationDependency<*>>) =
         test.compileToLibrary(
             sourcesDir,
             outputDir,
-            freeCompilerArgs = TestCompilerArgs.EMPTY,
+            freeCompilerArgs = if (freeCompilerArgs.isEmpty()) TestCompilerArgs.EMPTY else TestCompilerArgs(freeCompilerArgs),
             dependencies
         )
 }
