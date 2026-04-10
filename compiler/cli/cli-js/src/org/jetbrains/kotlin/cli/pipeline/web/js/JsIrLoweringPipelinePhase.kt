@@ -52,7 +52,6 @@ object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, Js
             moduleDescriptor,
             irBuiltIns = irBuiltIns,
             symbolTable = symbolTable,
-            additionalExportedDeclarationNames = configuration.additionalExportedDeclarationNames,
             configuration = configuration,
             dceRuntimeDiagnostic = RuntimeDiagnostic.resolve(configuration.dceRuntimeDiagnostic, configuration),
             safeExternalBoolean = configuration.safeExternalBoolean,

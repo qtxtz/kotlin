@@ -21,14 +21,10 @@ import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImplForJsIC
 import org.jetbrains.kotlin.js.config.JSConfigurationKeys
 import org.jetbrains.kotlin.js.config.JsGenerationGranularity
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi2ir.descriptors.IrBuiltInsOverDescriptors
 import java.io.File
 
-class JsICContext(
-    private val granularity: JsGenerationGranularity,
-    private val exportedDeclarations: Set<FqName> = emptySet(),
-) : PlatformDependentICContext {
+class JsICContext(private val granularity: JsGenerationGranularity) : PlatformDependentICContext {
 
     override fun createIrFactory(): IrFactory =
         IrFactoryImplForJsIC(WholeWorldStageController())
@@ -45,7 +41,6 @@ class JsICContext(
             mainModule.descriptor,
             irBuiltIns,
             symbolTable,
-            exportedDeclarations,
             configuration = configuration,
             incrementalCacheEnabled = true,
         )

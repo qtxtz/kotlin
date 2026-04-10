@@ -855,7 +855,7 @@ fun rebuildCacheForDirtyFiles(
 
     val modifiedFiles = mapOf(libFile to dirtySrcFiles.associateWith { emptyMetadata })
 
-    val icContext = JsICContext(granularity = JsGenerationGranularity.PER_MODULE, exportedDeclarations)
+    val icContext = JsICContext(granularity = JsGenerationGranularity.PER_MODULE)
     val jsIrLoader = JsIrLinkerLoader(configuration, orderedLibraries, emptyList(), icContext, emptySet(), false, library)
     val loadedIr = jsIrLoader.loadIr(KotlinSourceFileMap<KotlinSourceFileExports>(modifiedFiles), true)
 

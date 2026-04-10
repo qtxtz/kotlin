@@ -148,16 +148,12 @@ abstract class JsAbstractInvalidationTest(
                 }
 
                 configuration.phaseConfig = createPhaseConfig(projStep.id, buildDir)
-                val icContext = JsICContext(
-                    granularity,
-                    setOf(FqName(BOX_FUNCTION_NAME)),
-                )
-
+                configuration.additionalExportedDeclarationNames = setOf(FqName(BOX_FUNCTION_NAME))
 
                 val cacheUpdater = CacheUpdater(
                     cacheDir = buildDir.resolve("incremental-cache").absolutePath,
                     compilerConfiguration = configuration,
-                    icContext = icContext
+                    icContext = JsICContext(granularity)
                 )
 
                 val removedModulesInfo = (projectInfo.modules - projStep.order.toSet()).map { setupTestStep(projStep, it) }
