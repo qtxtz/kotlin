@@ -19,7 +19,6 @@ Compiler:
  - compiler/config
  - compiler/config.jvm
  - compiler/container
- - compiler/contracts
  - compiler/daemon
  - compiler/fir
  - compiler/frontend
@@ -144,7 +143,6 @@ Unknown:
  - benchmarks
  - build-common
  - build.gradle.kts
- - contracts
  - dependencies
  - docs
  - generators
