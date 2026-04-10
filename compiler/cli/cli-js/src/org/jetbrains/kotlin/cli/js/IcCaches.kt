@@ -37,7 +37,6 @@ internal fun prepareIcCaches(
     icConfigurationData: IcCachesConfigurationData,
     outputDir: File,
     targetConfiguration: CompilerConfiguration,
-    mainCallArguments: List<String>?,
 ): IcCachesArtifacts {
 
     targetConfiguration.reportLog("")
@@ -53,7 +52,6 @@ internal fun prepareIcCaches(
         is IcCachesConfigurationData.Js -> {
             loadBodiesOnlyForMainModule = false
             JsICContext(
-                mainCallArguments,
                 icConfigurationData.granularity,
             )
         }

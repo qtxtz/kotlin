@@ -59,7 +59,6 @@ object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, Js
             safeExternalBoolean = configuration.safeExternalBoolean,
             safeExternalBooleanDiagnostic = RuntimeDiagnostic.resolve(configuration.safeExternalBooleanDiagnostic, configuration),
             incrementalCacheEnabled = false,
-            mainCallArguments = emptyList<String>().takeIf { configuration.callMain }
         )
         // Load declarations referenced during `context` initialization
         val irProviders = listOf(element = deserializer)

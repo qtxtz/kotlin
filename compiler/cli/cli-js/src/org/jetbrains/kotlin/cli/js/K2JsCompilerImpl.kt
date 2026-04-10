@@ -24,7 +24,6 @@ class Ir2JsTransformer private constructor(
     val module: ModulesStructure,
     val messageCollector: MessageCollector,
     val configuration: CompilerConfiguration,
-    val mainCallArguments: List<String>?,
     val granularity: JsGenerationGranularity,
     val dce: Boolean,
     val minimizedMemberNames: Boolean,
@@ -33,12 +32,10 @@ class Ir2JsTransformer private constructor(
         configuration: CompilerConfiguration,
         module: ModulesStructure,
         messageCollector: MessageCollector,
-        mainCallArguments: List<String>?,
     ) : this(
         module,
         messageCollector,
         configuration,
-        mainCallArguments,
         granularity = configuration.artifactConfiguration!!.granularity,
         dce = configuration.dce,
         minimizedMemberNames = configuration.minimizedMemberNames,
@@ -47,7 +44,7 @@ class Ir2JsTransformer private constructor(
     private val performanceManager = module.compilerConfiguration.perfManager
 
     private fun makeJsCodeGenerator(ir: JsLoweredIrPipelineArtifact): JsCodeGenerator {
-        val transformer = IrModuleToJsTransformer(ir.context, ir.moduleFragmentToUniqueName, mainCallArguments != null)
+        val transformer = IrModuleToJsTransformer(ir.context, ir.moduleFragmentToUniqueName)
 
         val mode = TranslationMode.fromFlags(dce, granularity, minimizedMemberNames)
         return transformer

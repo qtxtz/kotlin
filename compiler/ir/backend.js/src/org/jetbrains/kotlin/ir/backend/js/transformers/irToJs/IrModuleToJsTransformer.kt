@@ -165,7 +165,6 @@ class JsCodeGenerator(
 class IrModuleToJsTransformer(
     private val backendContext: JsIrBackendContext,
     moduleToName: Map<IrModuleFragment, String> = emptyMap(),
-    private val shouldReferMainFunction: Boolean = false,
     private val removeUnusedAssociatedObjects: Boolean = true,
 ) {
     private val shouldGeneratePolyfills = backendContext.configuration.getBoolean(JSConfigurationKeys.GENERATE_POLYFILLS)
@@ -478,7 +477,7 @@ class IrModuleToJsTransformer(
 
         val definitionSet = fileExports.file.declarations.toSet()
 
-        if (shouldReferMainFunction) {
+        if (backendContext.callMain) {
             JsMainFunctionDetector(backendContext).getMainFunctionOrNull(fileExports.file)
                 ?.mainFunctionWrapper
                 ?.let { result.mainFunctionTag = definitionSet.computeTag(it) }

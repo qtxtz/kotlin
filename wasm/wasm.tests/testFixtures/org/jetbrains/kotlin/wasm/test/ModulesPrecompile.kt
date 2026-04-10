@@ -94,10 +94,7 @@ internal fun precompileWasmModules(setup: PrecompileSetup) {
         }
 
         val loadedIr = WasmIrLoadingPipelinePhase.executePhase(input)
-        val parametersForCompile = WasmBackendPipelinePhase.compileNonIncrementally(
-            loadedIr,
-            mainCallArguments = null
-        ).first()
+        val parametersForCompile = WasmBackendPipelinePhase.compileNonIncrementally(loadedIr).first()
 
         val linkedModule = linkWasmIr(parametersForCompile)
         val compileResult = compileWasmIrToBinary(parametersForCompile, linkedModule)

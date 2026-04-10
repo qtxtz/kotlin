@@ -60,10 +60,7 @@ object WasmBackendPipelinePhase : WebBackendPipelinePhase<WasmBackendPipelineArt
         return fragmentCompiler(icCaches.artifacts, configuration)
     }
 
-    override fun compileNonIncrementally(
-        loadedIrArtifact: WebLoadedIrPipelineArtifact,
-        mainCallArguments: List<String>?
-    ): List<WasmIrModuleConfiguration> {
+    override fun compileNonIncrementally(loadedIrArtifact: WebLoadedIrPipelineArtifact): List<WasmIrModuleConfiguration> {
         val (loadedIr, module, configuration) = loadedIrArtifact
         val irFactory = loadedIr.bultins.irFactory as IrFactoryImplForWasmIC
         val compiler = when (configuration.wasmCompilationMode()) {

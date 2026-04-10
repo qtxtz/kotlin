@@ -95,13 +95,12 @@ class JsIrLoweringFacade(
         val loweredIr = JsIrLoweringPipelinePhase.executePhase(cliInputArtifact)
             ?: return processErrorFromCliPhase(configuration, testServices)
 
-        return loweredIr2JsArtifact(module, loweredIr, configuration.callMain)
+        return loweredIr2JsArtifact(module, loweredIr)
     }
 
     private fun loweredIr2JsArtifact(
         module: TestModule,
         loweredIr: JsLoweredIrPipelineArtifact,
-        shouldReferMainFunction: Boolean,
     ): BinaryArtifacts.Js {
         val moduleKind = JsEnvironmentConfigurator.getModuleKind(testServices, module)
         val isEsModules = moduleKind == ModuleKind.ES
@@ -117,7 +116,6 @@ class JsIrLoweringFacade(
                     "./${getJsModuleArtifactName(testServices, it.safeName)}".minifyIfNeed()
                 }
             } ?: emptyMap(),
-            shouldReferMainFunction,
         )
         val translationModes = JsEnvironmentConfigurator.getTranslationModesForTest(testServices, module)
         val compilationOut = transformer.generateModule(loweredIr.allModules, translationModes, isEsModules)

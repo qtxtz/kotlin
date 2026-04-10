@@ -149,7 +149,6 @@ abstract class JsAbstractInvalidationTest(
 
                 configuration.phaseConfig = createPhaseConfig(projStep.id, buildDir)
                 val icContext = JsICContext(
-                    mainArguments,
                     granularity,
                     setOf(FqName(BOX_FUNCTION_NAME)),
                 )

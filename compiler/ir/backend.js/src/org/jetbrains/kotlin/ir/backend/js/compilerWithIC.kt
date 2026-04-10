@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.psi2ir.descriptors.IrBuiltInsOverDescriptors
 import java.io.File
 
 class JsICContext(
-    private val mainArguments: List<String>?,
     private val granularity: JsGenerationGranularity,
     private val exportedDeclarations: Set<FqName> = emptySet(),
 ) : PlatformDependentICContext {
@@ -50,7 +49,6 @@ class JsICContext(
             keep = emptySet(),
             configuration = configuration,
             incrementalCacheEnabled = true,
-            mainCallArguments = mainArguments
         )
     }
 
@@ -60,7 +58,7 @@ class JsICContext(
         configuration: CompilerConfiguration,
         context: JsCommonBackendContext,
     ): IrCompilerICInterface =
-        JsIrCompilerWithIC(mainModule, mainArguments, context as JsIrBackendContext, granularity)
+        JsIrCompilerWithIC(mainModule, context as JsIrBackendContext, granularity)
 
     override fun createSrcFileArtifact(srcFilePath: String, fragments: IrICProgramFragments?, astArtifact: File?): SrcFileArtifact =
         JsSrcFileArtifact(srcFilePath, fragments as? JsIrProgramFragments, astArtifact)
@@ -78,7 +76,6 @@ class JsICContext(
 @OptIn(ObsoleteDescriptorBasedAPI::class)
 class JsIrCompilerWithIC(
     private val mainModule: IrModuleFragment,
-    private val mainArguments: List<String>?,
     private val context: JsIrBackendContext,
     private val granularity: JsGenerationGranularity,
 ) : IrCompilerICInterface {
@@ -97,7 +94,7 @@ class JsIrCompilerWithIC(
 
         lowerPreservingTags(allModules, context, context.irFactory.stageController as WholeWorldStageController)
 
-        val transformer = IrModuleToJsTransformer(context, shouldReferMainFunction = mainArguments != null)
+        val transformer = IrModuleToJsTransformer(context)
         return transformer.makeIrFragmentsGenerators(dirtyFiles, allModules, granularity)
     }
 }
