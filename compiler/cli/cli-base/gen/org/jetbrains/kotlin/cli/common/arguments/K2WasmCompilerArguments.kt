@@ -175,6 +175,7 @@ sealed class K2WasmCompilerArguments : CommonJsAndWasmCompilerArguments() {
 
     @Argument(
         value = "-Xwasm-target",
+        valueDescription = "{wasm-js|wasm-wasi}",
         description = "Set up the Wasm target (wasm-js or wasm-wasi).",
     )
     var wasmTarget: String? = null

@@ -8,10 +8,7 @@ package org.jetbrains.kotlin.arguments.description
 import org.jetbrains.kotlin.arguments.dsl.base.*
 import org.jetbrains.kotlin.arguments.dsl.defaultFalse
 import org.jetbrains.kotlin.arguments.dsl.defaultNull
-import org.jetbrains.kotlin.arguments.dsl.types.BooleanType
-import org.jetbrains.kotlin.arguments.dsl.types.PathType
-import org.jetbrains.kotlin.arguments.dsl.types.SearchPathType
-import org.jetbrains.kotlin.arguments.dsl.types.StringType
+import org.jetbrains.kotlin.arguments.dsl.types.*
 
 val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLevelNames.commonJsAndWasmArguments) {
     compilerArgument {
@@ -179,11 +176,13 @@ val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLe
         )
     }
 
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "main"
         description = "Specify whether the 'main' function should be called upon execution.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "{call|noCall}".asReleaseDependent()
+        argumentType = JsMainCallModeType()
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_0_0,
@@ -214,6 +213,7 @@ val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLe
         )
     }
 
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         /**
          * SourceMapEmbedSources should be null by default, since it has effect only when source maps are enabled.
@@ -223,6 +223,7 @@ val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLe
         description = "Embed source files into the source map.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "{always|never|inlining}".asReleaseDependent()
+        argumentType = SourceMapEmbedSourcesType()
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_1_4,
@@ -230,11 +231,13 @@ val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLe
         )
     }
 
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "source-map-names-policy"
         description = "Mode for mapping generated names to original names.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "{no|simple-names|fully-qualified-names}".asReleaseDependent()
+        argumentType = SourceMapNamesPolicyType()
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_8_20,
@@ -272,11 +275,13 @@ val actualCommonJsAndWasmArguments by compilerArgumentsLevel(CompilerArgumentsLe
         )
     }
 
+    @OptIn(ExperimentalArgumentApi::class)
     compilerArgument {
         name = "Xir-dce-runtime-diagnostic"
         description = "Enable runtime diagnostics instead of removing declarations when performing DCE.".asReleaseDependent()
         valueType = StringType.defaultNull
         valueDescription = "{log|exception}".asReleaseDependent()
+        argumentType = JsIrDiagnosticModeType()
 
         lifecycle(
             introducedVersion = KotlinReleaseVersion.v1_5_0,

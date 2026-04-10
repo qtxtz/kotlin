@@ -68,4 +68,34 @@ class AllKotlinArgumentTypes {
     @Serializable(with = AllDetailsVerifyIrModeSerializer::class)
     val verifyIrMode = VerifyIrMode.entries.toSet()
 
+    @Serializable(with = AllDetailsPartialLinkageModeSerializer::class)
+    val partialLinkageMode = PartialLinkageMode.entries.toSet()
+
+    @Serializable(with = AllDetailsPartialLinkageLogLevelSerializer::class)
+    val partialLinkageLogLevel = PartialLinkageLogLevel.entries.toSet()
+
+    @Serializable(with = AllDetailsDuplicatedUniqueNameStrategySerializer::class)
+    val duplicatedUniqueNameStrategy = DuplicatedUniqueNameStrategy.entries.toSet()
+
+    @Serializable(with = AllDetailsJsEcmaVersionSerializer::class)
+    val jsEcmaVersion = JsEcmaVersion.entries.toSet()
+
+    @Serializable(with = AllDetailsJsModuleKindSerializer::class)
+    val jsModuleKind = JsModuleKind.entries.toSet()
+
+    @Serializable(with = AllDetailsJsIrDiagnosticModeSerializer::class)
+    val jsIrDiagnosticMode = JsIrDiagnosticMode.entries.toSet()
+
+    @Serializable(with = AllDetailsJsMainCallModeSerializer::class)
+    val jsMainCallMode = JsMainCallMode.entries.toSet()
+
+    @Serializable(with = AllDetailsSourceMapEmbedSourcesSerializer::class)
+    val sourceMapEmbedSources = SourceMapEmbedSources.entries.toSet()
+
+    @Serializable(with = AllDetailsSourceMapNamesPolicySerializer::class)
+    val sourceMapNamesPolicy = SourceMapNamesPolicy.entries.toSet()
+
+    @Serializable(with = AllDetailsWasmTargetSerializer::class)
+    val wasmTarget = WasmTarget.entries.toSet()
+
 }

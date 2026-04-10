@@ -17,3 +17,4 @@ Another one representation is JSON-based that is bundled into a published jar as
       `WhenExpressionsMode`, `JdkRelease`, `AnnotationDefaultTargetMode`, `NameBasedDestructuringMode`, `VerifyIrMode`.
     - New argument value types: `PathType`, `StringListType`, `SearchPathType`, `PathListType`, `EnumType`.
     - Add relevant Path argumentType to some String arguments carrying paths in Klib and JS argument
+    - Add enum types to all relevant JS and Wasm arguments that carry a finite set of String values
