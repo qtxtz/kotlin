@@ -12,11 +12,7 @@ import org.jetbrains.kotlin.test.builders.LanguageVersionSettingsBuilder
 import org.jetbrains.kotlin.test.directives.AdditionalFilesDirectives
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
 import org.jetbrains.kotlin.test.directives.ModuleStructureDirectives
-import org.jetbrains.kotlin.test.directives.model.ComposedDirectivesContainer
-import org.jetbrains.kotlin.test.directives.model.ComposedRegisteredDirectives
-import org.jetbrains.kotlin.test.directives.model.Directive
-import org.jetbrains.kotlin.test.directives.model.DirectivesContainer
-import org.jetbrains.kotlin.test.directives.model.RegisteredDirectives
+import org.jetbrains.kotlin.test.directives.model.*
 import org.jetbrains.kotlin.test.model.*
 import org.jetbrains.kotlin.test.services.*
 import org.jetbrains.kotlin.test.util.joinToArrayString
@@ -244,7 +240,7 @@ class ModuleStructureExtractorImpl(
                         currentSnippetNumber++
                     }
                     currentModuleName = snippetName()
-                    currentFileName = "$currentModuleName.kts"
+                    currentFileName = "$currentModuleName.repl.kts"
                 }
                 ModuleStructureDirectives.FILE -> {
                     if (currentFileName != null) {
