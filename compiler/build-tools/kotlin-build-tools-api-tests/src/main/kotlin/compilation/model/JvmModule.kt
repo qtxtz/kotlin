@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.buildtools.api.arguments.JvmCompilerArguments.Compan
 import org.jetbrains.kotlin.buildtools.api.arguments.JvmCompilerArguments.Companion.MODULE_NAME
 import org.jetbrains.kotlin.buildtools.api.arguments.JvmCompilerArguments.Companion.NO_REFLECT
 import org.jetbrains.kotlin.buildtools.api.arguments.JvmCompilerArguments.Companion.NO_STDLIB
-import org.jetbrains.kotlin.buildtools.api.jvm.AccessibleClassSnapshot
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmPlatformToolchain.Companion.jvm
 import org.jetbrains.kotlin.buildtools.api.jvm.JvmSnapshotBasedIncrementalCompilationConfiguration
 import org.jetbrains.kotlin.buildtools.api.jvm.classpathSnapshottingOperation
@@ -97,15 +96,11 @@ class JvmModule(
             this[JvmClasspathSnapshottingOperation.GRANULARITY] = snapshotConfig.granularity
             this[PARSE_INLINED_LOCAL_CLASSES] = snapshotConfig.useInlineLambdaSnapshotting
         }
-        val snapshotResult = buildSession.executeOperation(snapshotOperation)
-        val hash = snapshotResult.classSnapshots.values
-            .filterIsInstance<AccessibleClassSnapshot>()
-            .withIndex()
-            .sumOf { (index, snapshot) -> index * 31 + snapshot.classAbiHash }
+        val snapshot = buildSession.executeOperation(snapshotOperation)
         // see details in docs for `CachedClasspathSnapshotSerializer` for details why we can't use a fixed name
-        val snapshotFile = icWorkingDir.resolve("dep-$hash.snapshot")
+        val snapshotFile = icWorkingDir.resolve("dep-${snapshot.hashCode()}.snapshot")
         snapshotFile.createParentDirectories()
-        snapshotResult.saveSnapshot(snapshotFile.toFile())
+        snapshot.saveSnapshot(snapshotFile.toFile())
         return snapshotFile
     }
 

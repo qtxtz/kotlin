@@ -41,6 +41,7 @@ dependencies {
 
     testCompileOnly(project(":compiler:cli"))
     testCompileOnly(intellijPlatformUtil())
+    testImplementation(project(":compiler:incremental-compilation-impl"))
     testImplementation(kotlinTest("junit"))
 }
 
