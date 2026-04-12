@@ -1984,6 +1984,11 @@ public class CliTestGenerated extends AbstractCliTest {
       runTest("compiler/testData/cli/js/exportKDoc.args");
     }
 
+    @TestMetadata("exportKlibToOlderAbiVersionUnsupportedLanguageVersion.args")
+    public void testExportKlibToOlderAbiVersionUnsupportedLanguageVersion() {
+      runTest("compiler/testData/cli/js/exportKlibToOlderAbiVersionUnsupportedLanguageVersion.args");
+    }
+
     @TestMetadata("extraCheckers.args")
     public void testExtraCheckers() {
       runTest("compiler/testData/cli/js/extraCheckers.args");
