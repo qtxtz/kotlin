@@ -685,7 +685,15 @@ tasks.withType<Test>().configureEach {
         events("passed", "skipped", "failed")
     }
 
-    systemProperty("resourcesPath", layout.projectDirectory.dir("src/functionalTest/resources").asFile)
+    jvmArgumentProviders += objects.newInstance<SystemPropertyClasspathProvider>().apply {
+        classpath.from(layout.projectDirectory.dir("src/functionalTest/resources"))
+        property.set("resourcesPath")
+    }
+
+    val konanProperties = rootDir.resolve("kotlin-native/konan/konan.properties")
+    inputs.file(konanProperties)
+        .withPropertyName("konanProperties")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 
     //region custom Maven Local directory
     // The Maven Local dir that Gradle uses can be customised via system property `maven.repo.local`.
