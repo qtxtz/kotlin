@@ -5,10 +5,7 @@
 
 package org.jetbrains.kotlin.cli.pipeline.web.js
 
-import org.jetbrains.kotlin.backend.common.CompilationException
-import org.jetbrains.kotlin.cli.common.reportCompilationException
 import org.jetbrains.kotlin.cli.js.IcCachesArtifacts
-import org.jetbrains.kotlin.cli.js.Ir2JsTransformer
 import org.jetbrains.kotlin.cli.pipeline.executePhaseIsolatedWithActions
 import org.jetbrains.kotlin.cli.pipeline.web.JsBackendPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.WebBackendPipelinePhase
@@ -22,7 +19,6 @@ import org.jetbrains.kotlin.ir.backend.js.ic.JsModuleArtifact
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
 import org.jetbrains.kotlin.js.config.WebArtifactConfiguration
 import org.jetbrains.kotlin.js.config.artifactConfiguration
-import org.jetbrains.kotlin.js.config.outputDir
 import java.io.File
 
 object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifact, JsBackendPipelineArtifact>(
@@ -35,12 +31,13 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
         icCaches: IcCachesArtifacts,
         configuration: CompilerConfiguration,
     ): JsBackendPipelineArtifact {
+        val artifactConfiguration = configuration.artifactConfiguration ?: error("Missing artifact configuration")
         val outputs = compileIncrementally(
             icCaches,
             configuration,
-            configuration.artifactConfiguration!!,
+            artifactConfiguration,
         )
-        return JsBackendPipelineArtifact(outputs, configuration.outputDir!!, configuration)
+        return JsBackendPipelineArtifact(outputs, artifactConfiguration, configuration)
     }
 
     private fun compileIncrementally(
@@ -73,38 +70,16 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
     }
 
     override fun compileNonIncrementally(loadedIrArtifact: WebLoadedIrPipelineArtifact): JsBackendPipelineArtifact? {
-        val configuration = loadedIrArtifact.configuration
-        val module = loadedIrArtifact.moduleStructure
-        val ir2JsTransformer = Ir2JsTransformer(configuration)
-        val outputs = compileNonIncrementally(
-            loadedIrArtifact,
-            ir2JsTransformer,
-            configuration.artifactConfiguration!!,
-        ) ?: return null
-        return JsBackendPipelineArtifact(outputs, configuration.outputDir!!, configuration)
+        val start = System.currentTimeMillis()
+        val loweredIr = JsIrLoweringPipelinePhase.executePhaseIsolatedWithActions(loadedIrArtifact) ?: return null
+        val output = JsCodegenPipelinePhase.executePhaseIsolatedWithActions(loweredIr) ?: return null
+        loadedIrArtifact.configuration.reportLog("Executable production duration: ${System.currentTimeMillis() - start}ms")
+        output.outputs.writeAll(output.artifactConfiguration)
+        return output
     }
 
     override fun compileIntermediate(
         intermediateResult: JsBackendPipelineArtifact,
         configuration: CompilerConfiguration,
     ): JsBackendPipelineArtifact = intermediateResult
-
-    private fun compileNonIncrementally(
-        loadedIr: WebLoadedIrPipelineArtifact,
-        ir2JsTransformer: Ir2JsTransformer,
-        artifactConfiguration: WebArtifactConfiguration,
-    ): CompilationOutputs? {
-        val configuration = loadedIr.configuration
-        val start = System.currentTimeMillis()
-        val loweredIr = JsIrLoweringPipelinePhase.executePhaseIsolatedWithActions(loadedIr) ?: return null
-        try {
-            val outputs = ir2JsTransformer.compileAndTransformIrNew(loweredIr)
-            configuration.reportLog("Executable production duration: ${System.currentTimeMillis() - start}ms")
-            outputs.writeAll(artifactConfiguration)
-            return outputs
-        } catch (e: CompilationException) {
-            configuration.reportCompilationException(e)
-            return null
-        }
-    }
 }

@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.ir.backend.js.JsIrBackendContext
 import org.jetbrains.kotlin.ir.backend.js.ModulesStructure
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.js.config.WebArtifactConfiguration
 import java.io.File
 
 data class WebFrontendPipelineArtifact(
@@ -86,7 +87,7 @@ sealed class WebBackendPipelineArtifact : PipelineArtifact()
 
 data class JsBackendPipelineArtifact(
     val outputs: CompilationOutputs,
-    val outputDir: File,
+    val artifactConfiguration: WebArtifactConfiguration,
     override val configuration: CompilerConfiguration,
 ) : WebBackendPipelineArtifact() {
     @CliPipelineInternals(OPT_IN_MESSAGE)
