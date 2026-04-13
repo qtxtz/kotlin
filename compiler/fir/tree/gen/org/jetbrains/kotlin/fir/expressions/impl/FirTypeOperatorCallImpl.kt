@@ -30,7 +30,6 @@ internal class FirTypeOperatorCallImpl(
     override val operation: FirOperation,
     override var conversionTypeRef: FirTypeRef,
 ) : FirTypeOperatorCall() {
-    override var argFromStubType: Boolean = false
 
     override fun <R, D> acceptChildren(visitor: FirVisitor<R, D>, data: D) {
         annotations.forEach { it.accept(visitor, data) }
@@ -74,9 +73,5 @@ internal class FirTypeOperatorCallImpl(
 
     override fun replaceConversionTypeRef(newConversionTypeRef: FirTypeRef) {
         conversionTypeRef = newConversionTypeRef
-    }
-
-    override fun replaceArgFromStubType(newArgFromStubType: Boolean) {
-        argFromStubType = newArgFromStubType
     }
 }

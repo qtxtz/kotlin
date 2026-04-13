@@ -26,7 +26,6 @@ abstract class FirTypeOperatorCall : FirExpression(), FirCall {
     abstract override val argumentList: FirArgumentList
     abstract val operation: FirOperation
     abstract val conversionTypeRef: FirTypeRef
-    abstract val argFromStubType: Boolean
 
     override fun <R, D> accept(visitor: FirVisitor<R, D>, data: D): R =
         visitor.visitTypeOperatorCall(this, data)
@@ -42,8 +41,6 @@ abstract class FirTypeOperatorCall : FirExpression(), FirCall {
     abstract override fun replaceArgumentList(newArgumentList: FirArgumentList)
 
     abstract fun replaceConversionTypeRef(newConversionTypeRef: FirTypeRef)
-
-    abstract fun replaceArgFromStubType(newArgFromStubType: Boolean)
 
     abstract override fun <D> transformAnnotations(transformer: FirTransformer<D>, data: D): FirTypeOperatorCall
 
