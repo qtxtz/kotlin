@@ -2474,6 +2474,12 @@ public class FirOutOfContentRootWithDependenciesLazyDeclarationResolveTestGenera
     }
 
     @Test
+    @TestMetadata("substitutionFakeOverrideFunctionWithContract.kt")
+    public void testSubstitutionFakeOverrideFunctionWithContract() {
+      run("substitutionFakeOverrideFunctionWithContract.kt");
+    }
+
+    @Test
     @TestMetadata("substitutionFakeOverrideFunctionWithImplicitType.kt")
     public void testSubstitutionFakeOverrideFunctionWithImplicitType() {
       run("substitutionFakeOverrideFunctionWithImplicitType.kt");
@@ -2486,6 +2492,12 @@ public class FirOutOfContentRootWithDependenciesLazyDeclarationResolveTestGenera
     }
 
     @Test
+    @TestMetadata("substitutionFakeOverrideWithContract.kt")
+    public void testSubstitutionFakeOverrideWithContract() {
+      run("substitutionFakeOverrideWithContract.kt");
+    }
+
+    @Test
     @TestMetadata("substitutionFakeOverrideWithImplicitType.kt")
     public void testSubstitutionFakeOverrideWithImplicitType() {
       run("substitutionFakeOverrideWithImplicitType.kt");
@@ -2495,6 +2507,18 @@ public class FirOutOfContentRootWithDependenciesLazyDeclarationResolveTestGenera
     @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt")
     public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiver() {
       run("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt");
+    }
+
+    @Test
+    @TestMetadata("useSiteFunctionWithContract.kt")
+    public void testUseSiteFunctionWithContract() {
+      run("useSiteFunctionWithContract.kt");
+    }
+
+    @Test
+    @TestMetadata("useSitePropertyAccessorWithContract.kt")
+    public void testUseSitePropertyAccessorWithContract() {
+      run("useSitePropertyAccessorWithContract.kt");
     }
   }
 
