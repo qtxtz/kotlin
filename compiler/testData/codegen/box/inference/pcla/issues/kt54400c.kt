@@ -1,7 +1,5 @@
 // ISSUE: KT-54400
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     build {
         typeVariableMutableProperty = {}

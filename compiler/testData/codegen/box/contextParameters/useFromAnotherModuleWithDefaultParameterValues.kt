@@ -1,5 +1,4 @@
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 // MODULE: lib
 // FILE: A.kt
 

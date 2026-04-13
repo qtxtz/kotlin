@@ -1,6 +1,5 @@
 // LANGUAGE: +CompanionBlocksAndExtensions
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 import C.o
 
 class C {

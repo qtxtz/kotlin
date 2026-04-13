@@ -1,7 +1,5 @@
 // ISSUE: KT-65300
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     build {
         class TypeInfoSourceClass: Buildee<TargetType> by this@build

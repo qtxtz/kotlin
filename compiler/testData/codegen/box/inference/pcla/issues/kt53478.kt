@@ -1,5 +1,4 @@
 // ISSUE: KT-53478
-// IGNORE_BACKEND: ANDROID
 
 class UncompilingClass<T : Any>(
     val block: (UncompilingClass<T>.() -> Unit)? = null,

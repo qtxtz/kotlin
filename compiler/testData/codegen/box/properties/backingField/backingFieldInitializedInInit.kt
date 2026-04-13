@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ExplicitBackingFields
 
 // WITH_STDLIB

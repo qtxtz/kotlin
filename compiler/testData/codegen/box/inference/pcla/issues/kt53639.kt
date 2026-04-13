@@ -1,7 +1,5 @@
 // ISSUE: KT-53639
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     val buildee = initializeAndBuild(
         { build { setTypeVariable(TargetType()) } },

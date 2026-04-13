@@ -1,5 +1,4 @@
 // ISSUE: KT-66243
-// IGNORE_BACKEND: ANDROID
 
 class A<T>
 class Test<T> {

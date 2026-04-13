@@ -1,7 +1,5 @@
 // ISSUE: KT-63733
 
-// IGNORE_BACKEND: ANDROID
-
 fun BoundedBuildee<TargetType>.setBoundedTypeVariable(arg: DifferentType) {}
 
 fun box(): String {

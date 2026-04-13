@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextParameters
 
 val a = context(x: String) fun (): String { return x }

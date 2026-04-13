@@ -1,7 +1,5 @@
 // ISSUE: KT-53553
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     val buildee = parallelBuild(
         {

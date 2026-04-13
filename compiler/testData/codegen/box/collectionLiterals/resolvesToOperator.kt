@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +CollectionLiterals
 
 enum class MyList {

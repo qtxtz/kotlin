@@ -1,5 +1,4 @@
 // LANGUAGE: +MultiPlatformProjects, +JvmInlineMultiFieldValueClasses
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-71656
 // WITH_STDLIB
 

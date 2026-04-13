@@ -1,5 +1,4 @@
 // LANGUAGE: +CompanionBlocksAndExtensions
-// IGNORE_BACKEND: ANDROID
 class C
 
 companion fun C.func(s: String) = s

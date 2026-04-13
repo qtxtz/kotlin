@@ -1,6 +1,5 @@
 // TARGET_BACKEND: JVM
-// In this test, stdlib class `public value class Result<out T>` within `kotlin` package is replaced with a custom non-generic class
-
+// kotlin package is being relocated in Android tests
 // IGNORE_BACKEND: ANDROID
 // ALLOW_KOTLIN_PACKAGE
 // WITH_STDLIB

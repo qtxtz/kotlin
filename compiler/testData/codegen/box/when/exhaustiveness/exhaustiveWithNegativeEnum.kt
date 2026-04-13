@@ -1,5 +1,4 @@
 // LANGUAGE: +DataFlowBasedExhaustiveness
-// IGNORE_BACKEND: ANDROID
 
 enum class Enum { A, B, C }
 

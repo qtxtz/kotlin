@@ -1,5 +1,4 @@
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 // KT-51271
 
 // FILE: lib.kt

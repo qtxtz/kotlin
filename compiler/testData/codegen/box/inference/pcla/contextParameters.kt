@@ -1,6 +1,5 @@
 // ISSUE: KT-67699
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 
 class Controller<E>(val e: E)
 

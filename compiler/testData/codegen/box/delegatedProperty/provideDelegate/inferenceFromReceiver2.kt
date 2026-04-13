@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 
 object Inference2 {

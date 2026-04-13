@@ -1,7 +1,6 @@
 // ISSUE: KT-57709
 // WITH_STDLIB
 
-// IGNORE_BACKEND: ANDROID
 // TARGET_BACKEND: JVM
 
 var result = ""

@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-54931
 
 class Container {

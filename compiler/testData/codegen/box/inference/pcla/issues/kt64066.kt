@@ -1,6 +1,5 @@
 // WITH_STDLIB
 // ISSUE: KT-64066
-// IGNORE_BACKEND: ANDROID
 
 fun box(): String {
     val map = buildMap {

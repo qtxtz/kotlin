@@ -1,7 +1,5 @@
 // ISSUE: KT-52757
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     build {
         typeVariableConsumer = ::consumeTargetType

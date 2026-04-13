@@ -1,6 +1,5 @@
 // LANGUAGE: +NullableNothingInReifiedPosition
 // ISSUE: KT-54227
-// IGNORE_BACKEND: ANDROID
 
 // FILE: lib.kt
 interface Intf

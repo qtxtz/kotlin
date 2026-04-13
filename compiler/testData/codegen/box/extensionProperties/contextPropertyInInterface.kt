@@ -1,5 +1,4 @@
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-75016
 
 interface I {

@@ -1,7 +1,5 @@
 // ISSUE: KT-66359
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     pcla {
         // GenericType<Xy, OTv> <: GenericType<*, OTv>

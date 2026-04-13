@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextParameters
 open class A {
     fun foo(a: String): String { return a }

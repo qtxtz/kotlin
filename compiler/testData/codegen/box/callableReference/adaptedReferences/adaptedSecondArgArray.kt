@@ -1,5 +1,4 @@
 // WITH_STDLIB
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +RefinedVarargConversionRulesForCallableReferences
 // ISSUE: KT-81913
 

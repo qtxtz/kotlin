@@ -1,5 +1,4 @@
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 // DUMP_IR
 
 fun <T> select(a: T, b: T) : T = a

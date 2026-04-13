@@ -1,6 +1,5 @@
 // ISSUE: KT-51960
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 
 class Context
 class Extended

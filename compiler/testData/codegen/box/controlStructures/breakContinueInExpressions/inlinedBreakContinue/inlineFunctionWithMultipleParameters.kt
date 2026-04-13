@@ -1,5 +1,4 @@
 // LANGUAGE: +BreakContinueInInlineLambdas
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 
 // FILE: lib.kt

@@ -1,6 +1,5 @@
 // LANGUAGE: +ContextParameters
 // TARGET_BACKEND: JVM_IR
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 
 interface NumberOperations {

@@ -1,5 +1,4 @@
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 // MODULE: m1
 // FILE: Base.kt
 abstract class Base<T> {

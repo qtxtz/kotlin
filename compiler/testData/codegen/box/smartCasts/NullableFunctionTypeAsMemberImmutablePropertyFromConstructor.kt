@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-63705
 
 fun box(): String {

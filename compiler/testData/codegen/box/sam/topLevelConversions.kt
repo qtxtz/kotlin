@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-67869
 // LANGUAGE: +ResolveTopLevelLambdasAsSyntheticCallArgument
 

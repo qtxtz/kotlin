@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +CollectionLiterals
 
 class MyList<T>(val data: Array<out T>) {

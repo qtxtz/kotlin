@@ -1,6 +1,5 @@
 // LANGUAGE: +AllowSuperCallToJavaInterface
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 // FILE: Base.java
 public interface Base {
     default int f() { return 4; }

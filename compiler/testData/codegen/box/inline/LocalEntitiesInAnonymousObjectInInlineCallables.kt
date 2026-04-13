@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // REASON: KT-25341
 
 // FILE: lib.kt

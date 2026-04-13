@@ -1,5 +1,4 @@
 // TARGET_BACKEND: JVM_IR
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextParameters
 
 fun String.self() = this

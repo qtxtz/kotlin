@@ -1,8 +1,6 @@
 // ISSUE: KT-63840
 // WITH_STDLIB
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     build {
         select(

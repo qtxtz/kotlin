@@ -1,7 +1,5 @@
 // ISSUE: KT-53422
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     buildFromValue(
         innerBuild { setInnerTypeVariable(TargetType()) },

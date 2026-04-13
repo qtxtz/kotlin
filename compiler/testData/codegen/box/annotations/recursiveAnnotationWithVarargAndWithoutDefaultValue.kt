@@ -1,5 +1,4 @@
 // ISSUE: KT-80871
-// IGNORE_BACKEND: ANDROID
 
 @Target(AnnotationTarget.TYPE)
 @Retention(AnnotationRetention.RUNTIME)

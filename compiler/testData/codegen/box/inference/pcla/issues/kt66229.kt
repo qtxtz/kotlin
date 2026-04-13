@@ -1,6 +1,5 @@
 // WITH_STDLIB
 // ISSUE: KT-66229
-// IGNORE_BACKEND: ANDROID
 
 fun foo() {
     buildMap {

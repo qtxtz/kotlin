@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextParameters
 // NO_CHECK_LAMBDA_INLINING
 // FILE: lib.kt

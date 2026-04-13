@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-65299
 
 val foo = object {

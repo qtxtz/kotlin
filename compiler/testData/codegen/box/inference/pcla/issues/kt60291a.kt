@@ -1,8 +1,6 @@
 // ISSUE: KT-60291
 // WITH_STDLIB
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     selectBuildee(
         build { setTypeVariable(TargetType()) },

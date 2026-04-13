@@ -1,5 +1,4 @@
 // LANGUAGE: +AllowReifiedTypeInCatchClause
-// IGNORE_BACKEND: ANDROID
 
 // FILE: lib.kt
 inline fun <reified E : Throwable> catch(block: () -> Nothing) {

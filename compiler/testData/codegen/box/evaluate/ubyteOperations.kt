@@ -1,5 +1,4 @@
 // LANGUAGE: +IntrinsicConstEvaluation
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 fun <T> T.id() = this
 

@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +AllowReturnInExpressionBodyWithExplicitType
 // ISSUE: KT-76926
 

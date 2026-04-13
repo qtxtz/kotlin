@@ -1,5 +1,4 @@
 // LANGUAGE: +ContextParameters
-// IGNORE_BACKEND: ANDROID
 // SKIP_NODE_JS
 // NO_CHECK_LAMBDA_INLINING
 // FILE: lib.kt

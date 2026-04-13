@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-73779
 // LANGUAGE: +ContextParameters
 class A

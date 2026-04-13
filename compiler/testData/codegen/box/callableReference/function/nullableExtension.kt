@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 var result = ""
 
 class A

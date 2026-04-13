@@ -1,7 +1,5 @@
 // ISSUE: KT-60447
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     val buildee = build {
         class ConcreteType

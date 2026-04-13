@@ -1,6 +1,5 @@
 // CHECK_TYPE_WITH_EXACT
 
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-59551
 
 class Buildee<CT> {

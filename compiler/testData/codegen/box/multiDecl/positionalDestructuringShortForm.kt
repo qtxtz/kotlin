@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +NameBasedDestructuring
 data class Tuple(val first: String, val second: Int)
 

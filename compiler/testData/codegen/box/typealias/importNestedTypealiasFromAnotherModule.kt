@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // ISSUE: KT-79519
 // LANGUAGE: +NestedTypeAliases
 

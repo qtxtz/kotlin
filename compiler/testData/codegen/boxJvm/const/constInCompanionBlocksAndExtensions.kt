@@ -1,5 +1,4 @@
 // LANGUAGE: +CompanionBlocksAndExtensions
-// IGNORE_BACKEND: ANDROID
 // TARGET_BACKEND: JVM
 // WITH_REFLECT
 

@@ -1,5 +1,4 @@
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 
 class MatchSticks {
     operator fun String.inc() = this + "|"

@@ -1,5 +1,4 @@
 // ISSUE: KT-75316
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextSensitiveResolutionUsingExpectedType
 
 enum class Problem {

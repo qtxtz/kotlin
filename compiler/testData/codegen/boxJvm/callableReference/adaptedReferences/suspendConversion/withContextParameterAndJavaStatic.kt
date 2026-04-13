@@ -1,7 +1,6 @@
 // TARGET_BACKEND: JVM
 // WITH_COROUTINES
 // WITH_STDLIB
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +ContextParameters
 // FILE: JavaClass.java
 public class JavaClass {

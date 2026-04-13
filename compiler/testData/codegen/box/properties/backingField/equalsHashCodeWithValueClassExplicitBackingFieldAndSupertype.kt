@@ -1,5 +1,3 @@
-// IGNORE_BACKEND: ANDROID
-// ^KT-83269
 // LANGUAGE: +ExplicitBackingFields
 // WORKS_WHEN_VALUE_CLASS
 

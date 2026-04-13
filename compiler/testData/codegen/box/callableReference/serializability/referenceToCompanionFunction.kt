@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // DONT_TARGET_EXACT_BACKEND: WASM_JS, WASM_WASI
 // WASM_MUTE_REASON: Wasm box test does not support disabling only K1 mode with IGNORE_BACKEND directive
 // ISSUE: KT-55909

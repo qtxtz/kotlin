@@ -1,5 +1,4 @@
 // LANGUAGE: +DataFlowBasedExhaustiveness
-// IGNORE_BACKEND: ANDROID
 
 sealed class Variants {
     object A : Variants()

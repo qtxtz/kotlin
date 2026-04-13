@@ -1,7 +1,5 @@
 // ISSUE: KT-60291
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     if (true)
         build { setTypeVariable(TargetType()) }

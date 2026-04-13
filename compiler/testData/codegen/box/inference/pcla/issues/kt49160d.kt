@@ -1,7 +1,5 @@
 // ISSUE: KT-49160
 
-// IGNORE_BACKEND: ANDROID
-
 fun box(): String {
     build outerBuild@ {
         build innerBuild@ {

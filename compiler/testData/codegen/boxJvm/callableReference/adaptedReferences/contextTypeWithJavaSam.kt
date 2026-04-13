@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // TARGET_BACKEND: JVM
 // LANGUAGE: +ContextParameters
 // FILE: Sam.java

@@ -1,6 +1,5 @@
 // ISSUE: KT-75316
 // TARGET_BACKEND: JVM_IR
-// IGNORE_BACKEND: ANDROID
 // WITH_REFLECT
 // LANGUAGE: +ContextSensitiveResolutionUsingExpectedType
 

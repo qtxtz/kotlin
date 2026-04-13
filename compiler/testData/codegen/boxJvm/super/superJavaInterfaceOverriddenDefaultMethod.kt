@@ -1,6 +1,5 @@
 // LANGUAGE: +AllowSuperCallToJavaInterface
 // TARGET_BACKEND: JVM
-// IGNORE_BACKEND: ANDROID
 // FILE: I.java
 public interface I {
     default int f() { return 1; }

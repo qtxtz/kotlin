@@ -1,5 +1,3 @@
-// IGNORE_BACKEND: ANDROID
-
 lateinit var result: String
 
 fun foo(x: Int, y: Any): Int {

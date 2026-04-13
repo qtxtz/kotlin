@@ -1,5 +1,4 @@
 // LANGUAGE: +CompanionBlocksAndExtensions
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

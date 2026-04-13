@@ -1,5 +1,4 @@
 // WITH_STDLIB
-// IGNORE_BACKEND: ANDROID
 
 annotation class A1
 annotation class A2

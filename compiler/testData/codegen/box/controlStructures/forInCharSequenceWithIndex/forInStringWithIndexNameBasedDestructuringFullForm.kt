@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +NameBasedDestructuring, +EnableNameBasedDestructuringShortForm
 // WITH_STDLIB
 

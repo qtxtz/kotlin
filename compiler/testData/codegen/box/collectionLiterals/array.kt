@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +CollectionLiterals
 // WITH_STDLIB
 // ISSUE: KT-82638

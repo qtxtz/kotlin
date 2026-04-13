@@ -1,5 +1,4 @@
 // LANGUAGE: +BreakContinueInInlineLambdas
-// IGNORE_BACKEND: ANDROID
 
 // FILE: lib.kt
 inline fun foo(block: () -> Unit) { block() }

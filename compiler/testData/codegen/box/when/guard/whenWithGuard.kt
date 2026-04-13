@@ -1,5 +1,4 @@
 // LANGUAGE: +WhenGuards
-// IGNORE_BACKEND: ANDROID
 // WITH_STDLIB
 
 enum class Problem {

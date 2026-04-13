@@ -29,17 +29,17 @@ private fun checkInlineClass() {
     val sum2 = with(a) { a.g(100) }
     if (sum2 != 106) error(sum2.toString())
 
-    for (methodName in listOf("f-impl", "g-zj4m074")) {
-        checkParameters("test.A", methodName)
-    }
+    checkParameters("test.A", "f-impl")
+    checkParameters("test.A", "g-zj4m074", "g-3dzUp6c") // Android tests relocate package
 }
 
-private fun checkParameters(className: String, methodName: String) {
+private fun checkParameters(className: String, vararg expectedMethodNames: String) {
     val methodNames = Class.forName(className).declaredMethods.map { it.name }
-    if (methodName !in methodNames) {
-        error("$methodName is not found in $methodNames")
+    if (expectedMethodNames.none { it in methodNames }) {
+        error("${expectedMethodNames.toList()} are not found in $methodNames")
     }
-    val method = Class.forName(className).declaredMethods.single { it.name == methodName }
+    val method = Class.forName(className).declaredMethods.single { it.name in expectedMethodNames }
+    val methodName = methodNames.single { it in expectedMethodNames }
     val parameters = method.getParameters()
     for ((index, parameter) in parameters.withIndex()) {
         val isLast = index == parameters.lastIndex

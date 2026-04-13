@@ -1,5 +1,3 @@
-// IGNORE_BACKEND: ANDROID
-// ^KT-83269
 // LANGUAGE: +ExplicitBackingFields
 
 // WITH_STDLIB

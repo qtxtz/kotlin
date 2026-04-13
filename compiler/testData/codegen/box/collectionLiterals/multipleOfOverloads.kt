@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: ANDROID
 // LANGUAGE: +CollectionLiterals
 
 class MyList(val data: String) {
