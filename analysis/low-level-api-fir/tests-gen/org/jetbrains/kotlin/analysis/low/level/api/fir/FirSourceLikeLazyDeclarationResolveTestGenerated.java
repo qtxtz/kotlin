@@ -1241,84 +1241,6 @@ public class FirSourceLikeLazyDeclarationResolveTestGenerated extends AbstractFi
   }
 
   @Test
-  @TestMetadata("substitutionFakeOverride.kt")
-  public void testSubstitutionFakeOverride() {
-    run("substitutionFakeOverride.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideConstructor.kt")
-  public void testSubstitutionFakeOverrideConstructor() {
-    run("substitutionFakeOverrideConstructor.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideConstructorScript.kts")
-  public void testSubstitutionFakeOverrideConstructorScript() {
-    run("substitutionFakeOverrideConstructorScript.kts");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideFunction.kt")
-  public void testSubstitutionFakeOverrideFunction() {
-    run("substitutionFakeOverrideFunction.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideFunctionScript.kts")
-  public void testSubstitutionFakeOverrideFunctionScript() {
-    run("substitutionFakeOverrideFunctionScript.kts");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideFunctionWithImplicitType.kt")
-  public void testSubstitutionFakeOverrideFunctionWithImplicitType() {
-    run("substitutionFakeOverrideFunctionWithImplicitType.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideFunctionWithImplicitTypeScript.kts")
-  public void testSubstitutionFakeOverrideFunctionWithImplicitTypeScript() {
-    run("substitutionFakeOverrideFunctionWithImplicitTypeScript.kts");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideInDifferentModules.kt")
-  public void testSubstitutionFakeOverrideInDifferentModules() {
-    run("substitutionFakeOverrideInDifferentModules.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideScript.kts")
-  public void testSubstitutionFakeOverrideScript() {
-    run("substitutionFakeOverrideScript.kts");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideWithImplicitType.kt")
-  public void testSubstitutionFakeOverrideWithImplicitType() {
-    run("substitutionFakeOverrideWithImplicitType.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt")
-  public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiver() {
-    run("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiverScript.kts")
-  public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiverScript() {
-    run("substitutionFakeOverrideWithImplicitTypeAndReceiverScript.kts");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideWithImplicitTypeScript.kts")
-  public void testSubstitutionFakeOverrideWithImplicitTypeScript() {
-    run("substitutionFakeOverrideWithImplicitTypeScript.kts");
-  }
-
-  @Test
   @TestMetadata("superQualifierTypeArgsInDelegatedConstructorInnerClass.kt")
   public void testSuperQualifierTypeArgsInDelegatedConstructorInnerClass() {
     run("superQualifierTypeArgsInDelegatedConstructorInnerClass.kt");
@@ -3693,6 +3615,98 @@ public class FirSourceLikeLazyDeclarationResolveTestGenerated extends AbstractFi
     @TestMetadata("targetUsageWithVarargPreresolved.kt")
     public void testTargetUsageWithVarargPreresolved() {
       run("targetUsageWithVarargPreresolved.kt");
+    }
+  }
+
+  @Nested
+  @TestMetadata("analysis/low-level-api-fir/testData/lazyResolve/substitutedCallables")
+  @TestDataPath("$PROJECT_ROOT")
+  public class SubstitutedCallables {
+    private void run(String fileName) {
+      runTest("analysis/low-level-api-fir/testData/lazyResolve/substitutedCallables/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInSubstitutedCallables() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("analysis/low-level-api-fir/testData/lazyResolve/substitutedCallables"), Pattern.compile("^(.+)\\.(kt|kts)$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverride.kt")
+    public void testSubstitutionFakeOverride() {
+      run("substitutionFakeOverride.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideConstructor.kt")
+    public void testSubstitutionFakeOverrideConstructor() {
+      run("substitutionFakeOverrideConstructor.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideConstructorScript.kts")
+    public void testSubstitutionFakeOverrideConstructorScript() {
+      run("substitutionFakeOverrideConstructorScript.kts");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideFunction.kt")
+    public void testSubstitutionFakeOverrideFunction() {
+      run("substitutionFakeOverrideFunction.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideFunctionScript.kts")
+    public void testSubstitutionFakeOverrideFunctionScript() {
+      run("substitutionFakeOverrideFunctionScript.kts");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideFunctionWithImplicitType.kt")
+    public void testSubstitutionFakeOverrideFunctionWithImplicitType() {
+      run("substitutionFakeOverrideFunctionWithImplicitType.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideFunctionWithImplicitTypeScript.kts")
+    public void testSubstitutionFakeOverrideFunctionWithImplicitTypeScript() {
+      run("substitutionFakeOverrideFunctionWithImplicitTypeScript.kts");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideInDifferentModules.kt")
+    public void testSubstitutionFakeOverrideInDifferentModules() {
+      run("substitutionFakeOverrideInDifferentModules.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideScript.kts")
+    public void testSubstitutionFakeOverrideScript() {
+      run("substitutionFakeOverrideScript.kts");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideWithImplicitType.kt")
+    public void testSubstitutionFakeOverrideWithImplicitType() {
+      run("substitutionFakeOverrideWithImplicitType.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt")
+    public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiver() {
+      run("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiverScript.kts")
+    public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiverScript() {
+      run("substitutionFakeOverrideWithImplicitTypeAndReceiverScript.kts");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideWithImplicitTypeScript.kts")
+    public void testSubstitutionFakeOverrideWithImplicitTypeScript() {
+      run("substitutionFakeOverrideWithImplicitTypeScript.kts");
     }
   }
 

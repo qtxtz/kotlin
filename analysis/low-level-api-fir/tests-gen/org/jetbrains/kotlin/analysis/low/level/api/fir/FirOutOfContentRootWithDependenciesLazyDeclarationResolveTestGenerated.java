@@ -701,48 +701,6 @@ public class FirOutOfContentRootWithDependenciesLazyDeclarationResolveTestGenera
   }
 
   @Test
-  @TestMetadata("substitutionFakeOverride.kt")
-  public void testSubstitutionFakeOverride() {
-    run("substitutionFakeOverride.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideConstructor.kt")
-  public void testSubstitutionFakeOverrideConstructor() {
-    run("substitutionFakeOverrideConstructor.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideFunction.kt")
-  public void testSubstitutionFakeOverrideFunction() {
-    run("substitutionFakeOverrideFunction.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideFunctionWithImplicitType.kt")
-  public void testSubstitutionFakeOverrideFunctionWithImplicitType() {
-    run("substitutionFakeOverrideFunctionWithImplicitType.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideInDifferentModules.kt")
-  public void testSubstitutionFakeOverrideInDifferentModules() {
-    run("substitutionFakeOverrideInDifferentModules.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideWithImplicitType.kt")
-  public void testSubstitutionFakeOverrideWithImplicitType() {
-    run("substitutionFakeOverrideWithImplicitType.kt");
-  }
-
-  @Test
-  @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt")
-  public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiver() {
-    run("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt");
-  }
-
-  @Test
   @TestMetadata("superQualifierTypeArgsInDelegatedConstructorInnerClass.kt")
   public void testSuperQualifierTypeArgsInDelegatedConstructorInnerClass() {
     run("superQualifierTypeArgsInDelegatedConstructorInnerClass.kt");
@@ -2481,6 +2439,62 @@ public class FirOutOfContentRootWithDependenciesLazyDeclarationResolveTestGenera
     @TestMetadata("targetUsageWithVarargPreresolved.kt")
     public void testTargetUsageWithVarargPreresolved() {
       run("targetUsageWithVarargPreresolved.kt");
+    }
+  }
+
+  @Nested
+  @TestMetadata("analysis/low-level-api-fir/testData/lazyResolve/substitutedCallables")
+  @TestDataPath("$PROJECT_ROOT")
+  public class SubstitutedCallables {
+    private void run(String fileName) {
+      runTest("analysis/low-level-api-fir/testData/lazyResolve/substitutedCallables/" + fileName);
+    }
+
+    @Test
+    public void testAllFilesPresentInSubstitutedCallables() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("analysis/low-level-api-fir/testData/lazyResolve/substitutedCallables"), Pattern.compile("^(.+)\\.(kt)$"), null, true);
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverride.kt")
+    public void testSubstitutionFakeOverride() {
+      run("substitutionFakeOverride.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideConstructor.kt")
+    public void testSubstitutionFakeOverrideConstructor() {
+      run("substitutionFakeOverrideConstructor.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideFunction.kt")
+    public void testSubstitutionFakeOverrideFunction() {
+      run("substitutionFakeOverrideFunction.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideFunctionWithImplicitType.kt")
+    public void testSubstitutionFakeOverrideFunctionWithImplicitType() {
+      run("substitutionFakeOverrideFunctionWithImplicitType.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideInDifferentModules.kt")
+    public void testSubstitutionFakeOverrideInDifferentModules() {
+      run("substitutionFakeOverrideInDifferentModules.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideWithImplicitType.kt")
+    public void testSubstitutionFakeOverrideWithImplicitType() {
+      run("substitutionFakeOverrideWithImplicitType.kt");
+    }
+
+    @Test
+    @TestMetadata("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt")
+    public void testSubstitutionFakeOverrideWithImplicitTypeAndReceiver() {
+      run("substitutionFakeOverrideWithImplicitTypeAndReceiver.kt");
     }
   }
 
