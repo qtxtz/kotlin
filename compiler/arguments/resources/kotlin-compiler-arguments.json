@@ -551,6 +551,15 @@
                         "deprecatedVersion": null,
                         "removedVersion": null
                     }
+                },
+                {
+                    "name": "2.6",
+                    "releaseVersionsMetadata": {
+                        "introducedVersion": "2.4.20",
+                        "stabilizedVersion": null,
+                        "deprecatedVersion": null,
+                        "removedVersion": null
+                    }
                 }
             ]
         },
