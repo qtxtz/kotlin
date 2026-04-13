@@ -52,9 +52,9 @@ fun main(args: Array<String>) {
     val implArguments: Array<String>? = implArgsStart?.let { args.copyOfRange(implArgsStart, args.size) }
 
     val generatedFiles = buildList {
-        addAll(generateCompilerArguments(listOfNotNull(apiArguments, implArguments), genDir, kotlinVersion))
+        addAll(generateBtaOptions(listOfNotNull(apiArguments, implArguments), genDir, kotlinVersion))
         if (apiArguments != null) {
-            addAll(generateLibraryVersion(apiArguments, genDir, kotlinVersion))
+            addAll(generateBtaVersion(apiArguments, genDir, kotlinVersion))
         }
     }
 
@@ -66,7 +66,7 @@ fun main(args: Array<String>) {
     }
 }
 
-private fun generateCompilerArguments(arguments: List<Array<String>>, genDir: Path, kotlinVersion: KotlinReleaseVersion): List<Path>{
+private fun generateBtaOptions(arguments: List<Array<String>>, genDir: Path, kotlinVersion: KotlinReleaseVersion): List<Path>{
     val generatedFiles = mutableListOf<Path>()
 
     arguments.map { localArgs ->
@@ -90,10 +90,10 @@ private fun generateCompilerArguments(arguments: List<Array<String>>, genDir: Pa
 
         when (localArgs[0]) {
             "api" -> {
-                BtaApiGenerator(targetPackage ?: API_ARGUMENTS_PACKAGE, skipXX = true, kotlinVersion) to allowedLevels
+                BtaApiOptionsGenerator(targetPackage ?: API_ARGUMENTS_PACKAGE, skipXX = true, kotlinVersion) to allowedLevels
             }
             "impl" -> {
-                BtaImplGenerator(
+                BtaImplOptionsGenerator(
                     targetPackage ?: IMPL_ARGUMENTS_PACKAGE,
                     skipXX = false,
                     kotlinVersion,
@@ -124,7 +124,7 @@ private fun generateCompilerArguments(arguments: List<Array<String>>, genDir: Pa
     return generatedFiles
 }
 
-private fun generateLibraryVersion(localArgs: Array<String>, genDir: Path, kotlinVersion: KotlinReleaseVersion): List<Path> {
+private fun generateBtaVersion(localArgs: Array<String>, genDir: Path, kotlinVersion: KotlinReleaseVersion): List<Path> {
     require(localArgs[0] == "api")
 
     val generatedFiles = mutableListOf<Path>()
@@ -149,7 +149,7 @@ private fun generateLibraryVersion(localArgs: Array<String>, genDir: Path, kotli
     return generatedFiles
 }
 
-internal interface BtaGenerator {
+internal interface BtaOptionsGenerator {
     fun generateArgumentsForLevel(
         level: KotlinCompilerArgumentsLevel,
         parentClass: ClassName? = null,

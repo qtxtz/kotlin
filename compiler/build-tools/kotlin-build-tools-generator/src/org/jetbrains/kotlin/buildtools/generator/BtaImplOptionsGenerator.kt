@@ -27,7 +27,7 @@ internal data class CompatLayerConfig(
 )
 
 @OptIn(ExperimentalArgumentApi::class)
-internal class BtaImplGenerator(
+internal class BtaImplOptionsGenerator(
     private val targetPackage: String,
     private val skipXX: Boolean,
     /**
@@ -38,7 +38,7 @@ internal class BtaImplGenerator(
      */
     private val kotlinVersion: KotlinReleaseVersion,
     private val compatLayerConfig: CompatLayerConfig? = null,
-) : BtaGenerator {
+) : BtaOptionsGenerator {
 
     private val generateCompatLayer = compatLayerConfig != null
 

@@ -17,11 +17,11 @@ import kotlin.io.path.Path
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 
-internal class BtaApiGenerator(
+internal class BtaApiOptionsGenerator(
     private val targetPackage: String,
     private val skipXX: Boolean,
     private val kotlinVersion: KotlinReleaseVersion,
-) : BtaGenerator {
+) : BtaOptionsGenerator {
     private val outputs = mutableListOf<Pair<Path, String>>()
 
     override fun generateArgumentsForLevel(level: KotlinCompilerArgumentsLevel, parentClass: ClassName?): GeneratorOutputs {
