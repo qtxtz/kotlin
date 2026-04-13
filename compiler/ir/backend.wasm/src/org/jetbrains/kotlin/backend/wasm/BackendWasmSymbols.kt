@@ -28,6 +28,10 @@ class BackendWasmSymbols(
     irBuiltIns: IrBuiltIns,
     configuration: CompilerConfiguration,
 ) : PreSerializationWasmSymbols by PreSerializationWasmSymbols.Impl(irBuiltIns), BackendWebSymbols(irBuiltIns) {
+
+    override val getWithoutBoundCheckName: Name = Name.identifier("getWithoutBoundCheck")
+    override val setWithoutBoundCheckName: Name = Name.identifier("setWithoutBoundCheck")
+
     internal inner class WasmReflectionSymbols : ReflectionSymbols {
         override val createKType: IrSimpleFunctionSymbol = CallableIds.createKType.functionSymbol()
         override val getKClass: IrSimpleFunctionSymbol = CallableIds.getKClass.functionSymbol()

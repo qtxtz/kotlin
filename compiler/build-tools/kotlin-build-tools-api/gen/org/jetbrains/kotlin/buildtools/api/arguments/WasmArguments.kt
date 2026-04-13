@@ -122,6 +122,16 @@ public interface WasmArguments : CommonJsAndWasmArguments {
         WasmArgument("X_WASM_DEBUGGER_CUSTOM_FORMATTERS", KotlinReleaseVersion(2, 1, 20))
 
     /**
+     * Disable bounds check elimination for provably-safe array accesses in for-loops. Only effective when -Xwasm-enable-array-range-checks is also enabled.
+     *
+     * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
+     */
+    @JvmField
+    @ExperimentalCompilerArgument
+    public val X_WASM_DISABLE_ARRAY_RANGE_CHECKS_SAFE_ELIMINATION: WasmArgument<Boolean> =
+        WasmArgument("X_WASM_DISABLE_ARRAY_RANGE_CHECKS_SAFE_ELIMINATION", KotlinReleaseVersion(2, 4, 0))
+
+    /**
      * Turn on range checks for array access functions.
      *
      * WARNING: this option is EXPERIMENTAL and it may be changed in the future without notice or may be removed entirely.
