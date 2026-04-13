@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.findArgumentByName
 import org.jetbrains.kotlin.fir.declarations.getStringArgument
 import org.jetbrains.kotlin.fir.expressions.*
+import org.jetbrains.kotlin.fir.references.impl.FirSimpleNamedReference
 import org.jetbrains.kotlin.fir.symbols.impl.FirEnumEntrySymbol
 import org.jetbrains.kotlin.lombok.config.AccessLevel
 import org.jetbrains.kotlin.lombok.utils.trimToNull
@@ -33,7 +34,7 @@ private fun FirAnnotation?.getArgumentAsString(field: Name): String? {
             if (symbol is FirEnumEntrySymbol) {
                 symbol.callableId.callableName.identifier
             } else {
-                null
+                (argument.calleeReference as? FirSimpleNamedReference)?.name?.identifier
             }
         }
         else -> null
