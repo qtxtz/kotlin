@@ -574,6 +574,7 @@ object FirFakeOverrideGenerator {
             replaceAnnotations(this@buildCopy.annotations)
         }
         else -> buildPropertyAccessorCopy(this) {
+            this.contractDescription = null
             this.source = newSource
             this.symbol = FirPropertyAccessorSymbol()
             this.moduleData = moduleData
