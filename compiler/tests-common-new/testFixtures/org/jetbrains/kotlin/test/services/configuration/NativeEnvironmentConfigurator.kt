@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.konan.config.konanHome
 import org.jetbrains.kotlin.konan.config.konanLibraries
 import org.jetbrains.kotlin.konan.config.konanNoDefaultLibs
 import org.jetbrains.kotlin.konan.config.konanNoStdlib
+import org.jetbrains.kotlin.konan.config.konanTarget
 import org.jetbrains.kotlin.konan.library.KlibNativeDistributionLibraryProvider
 import org.jetbrains.kotlin.konan.library.isFromKotlinNativeDistribution
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -135,6 +136,10 @@ abstract class NativeEnvironmentConfigurator(
         configuration.konanNoDefaultLibs = NativeEnvironmentConfigurationDirectives.WITH_PLATFORM_LIBS !in module.directives
         configuration.konanLibraries = runtimeDependencies + dependencies + friends
         configuration.konanFriendLibraries = friends
+        // Warning: getNativeTarget() does not respect @EnforcedHostTarget on test classes. Should it be needed in the future,
+        // it can be done in a new environment configurator in `native/native.tests` module (to avoid import cycle):
+        //            configuration.konanTarget = testServices.testRunSettings.get<KotlinNativeTargets>().testTarget.name
+        configuration.konanTarget = getNativeTarget(module).name
     }
 }
 
