@@ -29,8 +29,16 @@ Please notice the following:
  
 # Generated files
 
-This module generates files from compiler arguments descriptions located in `:compiler:arguments`.
+This module generates two kinds of files:
 
-When changing compiler arguments, please regenerate the generated files using `./gradlew :compiler:build-tools:kotlin-build-tools-api:generateBtaSources`
+**Compiler arguments and Build Tools API version** from descriptions in `:compiler:arguments`:
 
-Please also remember to regenerate the `./gradlew :compiler:build-tools:kotlin-build-tools-api:apiDump`
+```
+./gradlew :compiler:build-tools:kotlin-build-tools-api:generateBtaSources
+```
+
+After regenerating, remember to update the API dump:
+
+```
+./gradlew :compiler:build-tools:kotlin-build-tools-api:apiDump
+```

@@ -44,14 +44,32 @@ fun main(args: Array<String>) {
             parseLastKotlinReleaseVersion(argVersionString)
         }
     }
+
     val apiArgsStart = args.indexOf("api").let { if (it == -1) null else it }
     val implArgsStart = args.indexOf("impl").let { if (it == -1) null else it }
 
+    val apiArguments: Array<String>? = apiArgsStart?.let { args.copyOfRange(apiArgsStart, implArgsStart ?: args.size) }
+    val implArguments: Array<String>? = implArgsStart?.let { args.copyOfRange(implArgsStart, args.size) }
+
+    val generatedFiles = buildList {
+        addAll(generateCompilerArguments(listOfNotNull(apiArguments, implArguments), genDir, kotlinVersion))
+        if (apiArguments != null) {
+            addAll(generateLibraryVersion(apiArguments, genDir, kotlinVersion))
+        }
+    }
+
+    genDir.walk().filter { it.isRegularFile() }.forEach {
+        if (it !in generatedFiles) {
+            GeneratorsFileUtil.writeFileIfContentChanged(it.toFile(), "", logNotChanged = false)
+            it.deleteExisting()
+        }
+    }
+}
+
+private fun generateCompilerArguments(arguments: List<Array<String>>, genDir: Path, kotlinVersion: KotlinReleaseVersion): List<Path>{
     val generatedFiles = mutableListOf<Path>()
-    listOfNotNull(
-        apiArgsStart?.let { args.copyOfRange(apiArgsStart, implArgsStart ?: args.size) },
-        implArgsStart?.let { args.copyOfRange(implArgsStart, args.size) }
-    ).map { localArgs ->
+
+    arguments.map { localArgs ->
         val allowedLevels = if (localArgs[1] == "*") {
             null
         } else {
@@ -102,12 +120,33 @@ fun main(args: Array<String>) {
             levelsToProcess += currentLevel.level.nestedLevels.map { LevelWithParent(it, output.argumentTypeName) }
         }
     }
-    genDir.walk().filter { it.isRegularFile() }.forEach {
-        if (it !in generatedFiles) {
-            GeneratorsFileUtil.writeFileIfContentChanged(it.toFile(), "", logNotChanged = false)
-            it.deleteExisting()
-        }
+
+    return generatedFiles
+}
+
+private fun generateLibraryVersion(localArgs: Array<String>, genDir: Path, kotlinVersion: KotlinReleaseVersion): List<Path> {
+    require(localArgs[0] == "api")
+
+    val generatedFiles = mutableListOf<Path>()
+    val targetPackage = if (localArgs.size > 2) {
+        localArgs[2]
+    } else null
+
+    BtaApiVersionGenerator(
+        kotlinVersion,
+        targetPackage ?: API_PACKAGE
+    ).generate().forEach { (path, content) ->
+        val genFile = genDir.resolve(path)
+        GeneratorsFileUtil.writeFileIfContentChanged(
+            file = genFile.toFile(),
+            newText = content,
+            logNotChanged = false,
+            forbidGenerationOnTeamcity = false
+        )
+        generatedFiles.add(genFile)
     }
+
+    return generatedFiles
 }
 
 internal interface BtaGenerator {

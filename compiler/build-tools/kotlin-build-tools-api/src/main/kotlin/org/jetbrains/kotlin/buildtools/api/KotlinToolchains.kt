@@ -191,6 +191,14 @@ public interface KotlinToolchains {
         public fun loadImplementation(classpath: List<Path>): KotlinToolchains =
             loadImplementation(URLClassLoader(classpath.map { it.toUri().toURL() }.toTypedArray(), SharedApiClassesClassLoader()))
 
+        /**
+         * Returns the version of the Build Tools API library.
+         *
+         * @return A string representing the version of the library, for example `2.3.0`.
+         * @since 2.4.20
+         */
+        @JvmStatic
+        public fun getVersion(): String = BuildToolsApiVersion.get()
     }
 }
 

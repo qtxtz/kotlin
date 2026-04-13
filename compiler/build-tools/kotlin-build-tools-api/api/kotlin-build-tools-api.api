@@ -207,6 +207,7 @@ public abstract interface class org/jetbrains/kotlin/buildtools/api/KotlinToolch
 	public abstract fun daemonExecutionPolicyBuilder ()Lorg/jetbrains/kotlin/buildtools/api/ExecutionPolicy$WithDaemon$Builder;
 	public abstract fun getCompilerVersion ()Ljava/lang/String;
 	public abstract fun getToolchain (Ljava/lang/Class;)Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains$Toolchain;
+	public static fun getVersion ()Ljava/lang/String;
 	public static fun loadImplementation (Ljava/lang/ClassLoader;)Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains;
 	public static fun loadImplementation (Ljava/util/List;)Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains;
 }
@@ -221,6 +222,7 @@ public abstract interface class org/jetbrains/kotlin/buildtools/api/KotlinToolch
 }
 
 public final class org/jetbrains/kotlin/buildtools/api/KotlinToolchains$Companion {
+	public final fun getVersion ()Ljava/lang/String;
 	public final fun loadImplementation (Ljava/lang/ClassLoader;)Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains;
 	public final fun loadImplementation (Ljava/util/List;)Lorg/jetbrains/kotlin/buildtools/api/KotlinToolchains;
 }
