@@ -654,7 +654,6 @@ functionalTestCompilation.associateWith(testFixturesCompilation)
 
 tasks.register<Test>("functionalTest") {
     systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
-    systemProperty("konanProperties", rootDir.resolve("kotlin-native/konan/konan.properties"))
     useJUnitPlatform()
 
     @OptIn(TemporaryTestFederationApi::class)
@@ -685,15 +684,15 @@ tasks.withType<Test>().configureEach {
         events("passed", "skipped", "failed")
     }
 
-    jvmArgumentProviders += objects.newInstance<SystemPropertyClasspathProvider>().apply {
-        classpath.from(layout.projectDirectory.dir("src/functionalTest/resources"))
-        property.set("resourcesPath")
-    }
+    addClasspathProperty(
+        project.files(layout.projectDirectory.dir("src/functionalTest/resources")),
+        "resourcesPath"
+    )
 
-    val konanProperties = rootDir.resolve("kotlin-native/konan/konan.properties")
-    inputs.file(konanProperties)
-        .withPropertyName("konanProperties")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
+    addFileProperty(
+        rootProject.layout.projectDirectory.file("kotlin-native/konan/konan.properties"),
+        "konanProperties"
+    )
 
     //region custom Maven Local directory
     // The Maven Local dir that Gradle uses can be customised via system property `maven.repo.local`.
