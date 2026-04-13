@@ -5,23 +5,26 @@
 
 package org.jetbrains.kotlin.arguments.dsl.types
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersionLifecycle
 import org.jetbrains.kotlin.arguments.dsl.base.WithKotlinReleaseVersionsMetadata
-import org.jetbrains.kotlin.arguments.serialization.json.KotlinPartialLinkageModeAsNameSerializer
 
-@Serializable(with = KotlinPartialLinkageModeAsNameSerializer::class)
+@Serializable
 enum class PartialLinkageMode(
     val modeName: String,
     override val releaseVersionsMetadata: KotlinReleaseVersionLifecycle,
 ) : WithKotlinReleaseVersionsMetadata, WithStringRepresentation {
+    @SerialName("enable")
     ENABLE(
         modeName = "enable",
         releaseVersionsMetadata = KotlinReleaseVersionLifecycle(
             introducedVersion = KotlinReleaseVersion.v2_0_20,
         )
     ),
+
+    @SerialName("disable")
     DISABLE(
         modeName = "disable",
         releaseVersionsMetadata = KotlinReleaseVersionLifecycle(

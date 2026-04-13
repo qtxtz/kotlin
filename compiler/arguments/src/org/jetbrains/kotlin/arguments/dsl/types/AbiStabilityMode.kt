@@ -5,23 +5,26 @@
 
 package org.jetbrains.kotlin.arguments.dsl.types
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersion
 import org.jetbrains.kotlin.arguments.dsl.base.KotlinReleaseVersionLifecycle
 import org.jetbrains.kotlin.arguments.dsl.base.WithKotlinReleaseVersionsMetadata
-import org.jetbrains.kotlin.arguments.serialization.json.KotlinAbiStabilityModeAsNameSerializer
 
-@Serializable(with = KotlinAbiStabilityModeAsNameSerializer::class)
+@Serializable
 enum class AbiStabilityMode(
     val modeName: String,
     override val releaseVersionsMetadata: KotlinReleaseVersionLifecycle,
 ) : WithKotlinReleaseVersionsMetadata, WithStringRepresentation {
+    @SerialName("stable")
     STABLE(
         modeName = "stable",
         releaseVersionsMetadata = KotlinReleaseVersionLifecycle(
             introducedVersion = KotlinReleaseVersion.v1_4_30,
         )
     ),
+
+    @SerialName("unstable")
     UNSTABLE(
         modeName = "unstable",
         releaseVersionsMetadata = KotlinReleaseVersionLifecycle(

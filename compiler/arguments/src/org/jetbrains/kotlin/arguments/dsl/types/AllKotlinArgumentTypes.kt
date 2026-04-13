@@ -5,97 +5,53 @@
 
 package org.jetbrains.kotlin.arguments.dsl.types
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import org.jetbrains.kotlin.arguments.serialization.json.*
+import org.jetbrains.kotlin.arguments.dsl.base.ExperimentalArgumentApi
 
 /**
  * Class containing all non-primitive compiler argument types which are serialized in more detailed form.
  */
+@OptIn(ExperimentalArgumentApi::class)
 @Suppress("unused")
 @Serializable
 class AllKotlinArgumentTypes {
-    @Serializable(with = AllDetailsKotlinVersionSerializer::class)
-    val kotlinVersions = KotlinVersion.entries.toSet()
-
-    @Serializable(with = AllDetailsJvmTargetSerializer::class)
-    val jvmTargets = JvmTarget.entries.toSet()
-
-    @Serializable(with = AllDetailsExplicitApiModeSerializer::class)
-    val explicitApiModes = ExplicitApiMode.entries.toSet()
-
-    @Serializable(with = AllDetailsReturnValueCheckerModeSerializer::class)
-    val returnValueCheckerMode = ReturnValueCheckerMode.entries.toSet()
-
-    @Serializable(with = AllDetailsKlibIrInlinerModeSerializer::class)
-    val klibIrInlinerMode = KlibIrInlinerMode.entries.toSet()
-
-    @Serializable(with = AllDetailsJvmDefaultModeSerializer::class)
-    val jvmDefaultMode = JvmDefaultMode.entries.toSet()
-
-    @Serializable(with = AllDetailsAbiStabilityModeSerializer::class)
-    val abiStabilityMode = AbiStabilityMode.entries.toSet()
-
-    @Serializable(with = AllDetailsAssertionsModeSerializer::class)
-    val assertionsMode = AssertionsMode.entries.toSet()
-
-    @Serializable(with = AllDetailsJspecifyAnnotationsModeSerializer::class)
-    val jspecifyAnnotationsMode = JspecifyAnnotationsMode.entries.toSet()
-
-    @Serializable(with = AllDetailsLambdasModeSerializer::class)
-    val lambdasMode = LambdasMode.entries.toSet()
-
-    @Serializable(with = AllDetailsSamConversionsModeSerializer::class)
-    val samConversionsMode = SamConversionsMode.entries.toSet()
-
-    @Serializable(with = AllDetailsStringConcatModeSerializer::class)
-    val stringConcatMode = StringConcatMode.entries.toSet()
-
-    @Serializable(with = AllDetailsCompatqualAnnotationsModeSerializer::class)
-    val compatqualAnnotationsMode = CompatqualAnnotationsMode.entries.toSet()
-
-    @Serializable(with = AllDetailsWhenExpressionsModeSerializer::class)
-    val whenExpressionsMode = WhenExpressionsMode.entries.toSet()
-
-    @Serializable(with = AllDetailsJdkReleaseSerializer::class)
-    val jdkRelease = JdkRelease.entries.toSet()
-
-    @Serializable(with = AllDetailsAnnotationDefaultTargetModeSerializer::class)
-    val annotationDefaultTarget = AnnotationDefaultTargetMode.entries.toSet()
-
-    @Serializable(with = AllDetailsNameBasedDestructuringModeSerializer::class)
-    val nameBasedDestructuring = NameBasedDestructuringMode.entries.toSet()
-
-    @Serializable(with = AllDetailsVerifyIrModeSerializer::class)
-    val verifyIrMode = VerifyIrMode.entries.toSet()
-
-    @Serializable(with = AllDetailsPartialLinkageModeSerializer::class)
-    val partialLinkageMode = PartialLinkageMode.entries.toSet()
-
-    @Serializable(with = AllDetailsPartialLinkageLogLevelSerializer::class)
-    val partialLinkageLogLevel = PartialLinkageLogLevel.entries.toSet()
-
-    @Serializable(with = AllDetailsDuplicatedUniqueNameStrategySerializer::class)
-    val duplicatedUniqueNameStrategy = DuplicatedUniqueNameStrategy.entries.toSet()
-
-    @Serializable(with = AllDetailsJsEcmaVersionSerializer::class)
-    val jsEcmaVersion = JsEcmaVersion.entries.toSet()
-
-    @Serializable(with = AllDetailsJsModuleKindSerializer::class)
-    val jsModuleKind = JsModuleKind.entries.toSet()
-
-    @Serializable(with = AllDetailsJsIrDiagnosticModeSerializer::class)
-    val jsIrDiagnosticMode = JsIrDiagnosticMode.entries.toSet()
-
-    @Serializable(with = AllDetailsJsMainCallModeSerializer::class)
-    val jsMainCallMode = JsMainCallMode.entries.toSet()
-
-    @Serializable(with = AllDetailsSourceMapEmbedSourcesSerializer::class)
-    val sourceMapEmbedSources = SourceMapEmbedSources.entries.toSet()
-
-    @Serializable(with = AllDetailsSourceMapNamesPolicySerializer::class)
-    val sourceMapNamesPolicy = SourceMapNamesPolicy.entries.toSet()
-
-    @Serializable(with = AllDetailsWasmTargetSerializer::class)
-    val wasmTarget = WasmTarget.entries.toSet()
+    val kotlinVersions = TypeWithEntries<KotlinVersionType, KotlinVersion>()
+    val jvmTargets = TypeWithEntries<KotlinJvmTargetType, JvmTarget>()
+    val explicitApiModes = TypeWithEntries<KotlinExplicitApiModeType, ExplicitApiMode>()
+    val returnValueCheckerMode = TypeWithEntries<ReturnValueCheckerModeType, ReturnValueCheckerMode>()
+    val klibIrInlinerMode = TypeWithEntries<KlibIrInlinerModeType, KlibIrInlinerMode>()
+    val jvmDefaultMode = TypeWithEntries<JvmDefaultModeType, JvmDefaultMode>()
+    val abiStabilityMode = TypeWithEntries<AbiStabilityModeType, AbiStabilityMode>()
+    val assertionsMode = TypeWithEntries<AssertionsModeType, AssertionsMode>()
+    val jspecifyAnnotationsMode = TypeWithEntries<JspecifyAnnotationsModeType, JspecifyAnnotationsMode>()
+    val lambdasMode = TypeWithEntries<LambdasModeType, LambdasMode>()
+    val samConversionsMode = TypeWithEntries<SamConversionsModeType, SamConversionsMode>()
+    val stringConcatMode = TypeWithEntries<StringConcatModeType, StringConcatMode>()
+    val compatqualAnnotationsMode = TypeWithEntries<CompatqualAnnotationsModeType, CompatqualAnnotationsMode>()
+    val whenExpressionsMode = TypeWithEntries<WhenExpressionsModeType, WhenExpressionsMode>()
+    val jdkRelease = TypeWithEntries<JdkReleaseType, JdkRelease>()
+    val annotationDefaultTarget = TypeWithEntries<AnnotationDefaultTargetModeType, AnnotationDefaultTargetMode>()
+    val nameBasedDestructuring = TypeWithEntries<NameBasedDestructuringModeType, NameBasedDestructuringMode>()
+    val verifyIrMode = TypeWithEntries<VerifyIrModeType, VerifyIrMode>()
+    val partialLinkageMode = TypeWithEntries<PartialLinkageModeType, PartialLinkageMode>()
+    val partialLinkageLogLevel = TypeWithEntries<PartialLinkageLogLevelType, PartialLinkageLogLevel>()
+    val duplicatedUniqueNameStrategy = TypeWithEntries<DuplicatedUniqueNameStrategyType, DuplicatedUniqueNameStrategy>()
+    val jsEcmaVersion = TypeWithEntries<JsEcmaVersionType, JsEcmaVersion>()
+    val jsModuleKind = TypeWithEntries<JsModuleKindType, JsModuleKind>()
+    val jsIrDiagnosticMode = TypeWithEntries<JsIrDiagnosticModeType, JsIrDiagnosticMode>()
+    val jsMainCallMode = TypeWithEntries<JsMainCallModeType, JsMainCallMode>()
+    val sourceMapEmbedSources = TypeWithEntries<SourceMapEmbedSourcesType, SourceMapEmbedSources>()
+    val sourceMapNamesPolicy = TypeWithEntries<SourceMapNamesPolicyType, SourceMapNamesPolicy>()
+    val wasmTarget = TypeWithEntries<WasmTargetType, WasmTarget>()
 
 }
+
+@Serializable
+class TypeWithEntries<T>(
+    val type: String,
+    val values: Set<T>,
+)
+
+private inline fun <reified S, reified T> TypeWithEntries() where T : Enum<T>, T : WithStringRepresentation =
+    TypeWithEntries<@Contextual T>(S::class.java.name, T::class.java.enumConstants.toSet())
