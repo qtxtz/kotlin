@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
-import org.jetbrains.kotlin.lombok.config.AccessLevel
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Accessors
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Getter
@@ -72,13 +71,17 @@ class AccessorGenerator(session: FirSession) : FirDeclarationGenerationExtension
                 val localAccessors = lombokService.getAccessorsIfAnnotated(field.symbol)
 
                 val getterName = getter?.let { computeAccessorName(field, it, localAccessors, globalAccessors) }
+                val getterVisibility = getter?.visibility
 
-                if (getterName != null && explicitlyDeclaredFunctions[getterName]?.valueParameterSymbols?.isEmpty() != true) {
+                if (getterName != null &&
+                    explicitlyDeclaredFunctions[getterName]?.valueParameterSymbols?.isEmpty() != true &&
+                    getterVisibility != null
+                ) {
                     val function = classSymbol.createJavaMethod(
                         name = getterName,
                         valueParameters = emptyList(),
                         returnTypeRef = field.returnTypeRef,
-                        visibility = getter.visibility.toVisibility(),
+                        visibility = getterVisibility,
                         modality = Modality.OPEN,
                         dispatchReceiverType = dispatchReceiverType,
                         isStatic = field.isStatic,
@@ -88,8 +91,12 @@ class AccessorGenerator(session: FirSession) : FirDeclarationGenerationExtension
                 }
 
                 val setterName = setter?.let { computeAccessorName(field, it, localAccessors, globalAccessors) }
+                val setterVisibility = setter?.visibility
 
-                if (setterName != null && explicitlyDeclaredFunctions[setterName].let { it?.valueParameterSymbols?.size != 1 }) {
+                if (setterName != null &&
+                    explicitlyDeclaredFunctions[setterName].let { it?.valueParameterSymbols?.size != 1 } &&
+                    setterVisibility != null
+                ) {
                     val returnTypeRef = if (
                         localAccessors?.chain ?: globalAccessors.chain ?: false ||
                         localAccessors?.fluent ?: globalAccessors.fluent ?: false
@@ -103,7 +110,7 @@ class AccessorGenerator(session: FirSession) : FirDeclarationGenerationExtension
                         name = setterName,
                         valueParameters = listOf(ConeLombokValueParameter(field.name, field.returnTypeRef)),
                         returnTypeRef = returnTypeRef,
-                        visibility = setter.visibility.toVisibility(),
+                        visibility = setterVisibility,
                         modality = Modality.OPEN,
                         dispatchReceiverType = dispatchReceiverType,
                         isStatic = field.isStatic,
@@ -167,7 +174,7 @@ class AccessorGenerator(session: FirSession) : FirDeclarationGenerationExtension
         localAccessors: Accessors?,
         globalAccessors: Accessors,
     ): Name? {
-        if (accessorInfo.visibility == AccessLevel.NONE) return null
+        if (accessorInfo.visibility == null) return null
 
         val prefixes = localAccessors?.prefix ?: globalAccessors.prefix ?: emptyList()
         // Don't generate the accessor if the field doesn't match any provided prefix

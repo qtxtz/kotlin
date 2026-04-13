@@ -16,19 +16,14 @@ import org.jetbrains.kotlin.lombok.utils.trimToNull
 import org.jetbrains.kotlin.name.Name
 
 @DirectDeclarationsAccess
-fun FirAnnotation.getAccessLevel(field: Name): AccessLevel {
-    val value = getArgumentAsString(field) ?: return AccessLevel.PUBLIC
-    return AccessLevel.valueOf(value)
+fun FirAnnotation?.getVisibility(field: Name, defaultAccessLevel: AccessLevel = AccessLevel.PUBLIC): Visibility? {
+    val value = getArgumentAsString(field)?.let { AccessLevel.valueOf(it) } ?: defaultAccessLevel
+    return value.toVisibility()
 }
 
 @DirectDeclarationsAccess
-fun FirAnnotation.getAccessLevel(): AccessLevel {
-    return getAccessLevel(LombokConfigNames.VALUE)
-}
-
-@DirectDeclarationsAccess
-private fun FirAnnotation.getArgumentAsString(field: Name): String? {
-    val argument = findArgumentByName(field) ?: return null
+private fun FirAnnotation?.getArgumentAsString(field: Name): String? {
+    val argument = this?.findArgumentByName(field) ?: return null
     return when (argument) {
         is FirLiteralExpression -> argument.value as? String
         is FirEnumEntryDeserializedAccessExpression -> argument.enumEntryName.identifier
@@ -43,11 +38,6 @@ private fun FirAnnotation.getArgumentAsString(field: Name): String? {
         }
         else -> null
     }
-}
-
-@DirectDeclarationsAccess
-fun FirAnnotation.getVisibility(field: Name): Visibility {
-    return getAccessLevel(field).toVisibility()
 }
 
 fun FirAnnotation.getNonBlankStringArgument(name: Name): String? = getStringArgument(name)?.trimToNull()

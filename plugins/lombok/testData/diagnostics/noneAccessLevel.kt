@@ -12,5 +12,5 @@ public class NoneAccessLevel {
 // FILE: test.kt
 
 fun usage() {
-    <!INVISIBLE_REFERENCE!>NoneAccessLevel<!>(1);
+    NoneAccessLevel(<!TOO_MANY_ARGUMENTS!>1<!>);
 }
