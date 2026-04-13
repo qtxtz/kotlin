@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.cli.pipeline.web.WebIrLoadingPipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
 import org.jetbrains.kotlin.cli.reportLog
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.config.messageCollector
 import org.jetbrains.kotlin.ir.backend.js.SourceMapsInfo
 import org.jetbrains.kotlin.ir.backend.js.ic.JsExecutableProducer
 import org.jetbrains.kotlin.ir.backend.js.ic.JsModuleArtifact
@@ -76,7 +75,7 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
     override fun compileNonIncrementally(loadedIrArtifact: WebLoadedIrPipelineArtifact): JsBackendPipelineArtifact? {
         val configuration = loadedIrArtifact.configuration
         val module = loadedIrArtifact.moduleStructure
-        val ir2JsTransformer = Ir2JsTransformer(configuration, configuration.messageCollector)
+        val ir2JsTransformer = Ir2JsTransformer(configuration)
         val outputs = compileNonIncrementally(
             loadedIrArtifact,
             ir2JsTransformer,

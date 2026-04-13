@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.cli.js
 
-import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.perfManager
@@ -17,27 +16,21 @@ import org.jetbrains.kotlin.js.config.JsGenerationGranularity
 import org.jetbrains.kotlin.js.config.artifactConfiguration
 import org.jetbrains.kotlin.js.config.dce
 import org.jetbrains.kotlin.js.config.minimizedMemberNames
+import org.jetbrains.kotlin.util.PerformanceManager
 import org.jetbrains.kotlin.util.PhaseType
 
 class Ir2JsTransformer private constructor(
-    val messageCollector: MessageCollector,
-    val configuration: CompilerConfiguration,
-    val granularity: JsGenerationGranularity,
-    val dce: Boolean,
-    val minimizedMemberNames: Boolean,
+    private val granularity: JsGenerationGranularity,
+    private val dce: Boolean,
+    private val minimizedMemberNames: Boolean,
+    private val performanceManager: PerformanceManager?,
 ) {
-    constructor(
-        configuration: CompilerConfiguration,
-        messageCollector: MessageCollector,
-    ) : this(
-        messageCollector,
-        configuration,
+    constructor(configuration: CompilerConfiguration) : this(
         granularity = configuration.artifactConfiguration!!.granularity,
         dce = configuration.dce,
         minimizedMemberNames = configuration.minimizedMemberNames,
+        performanceManager = configuration.perfManager
     )
-
-    private val performanceManager = configuration.perfManager
 
     private fun makeJsCodeGenerator(ir: JsLoweredIrPipelineArtifact): JsCodeGenerator {
         val transformer = IrModuleToJsTransformer(ir.context, ir.moduleFragmentToUniqueName)
