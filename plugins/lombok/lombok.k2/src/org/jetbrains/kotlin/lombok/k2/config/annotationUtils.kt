@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.name.Name
 
 @DirectDeclarationsAccess
 fun FirAnnotation?.getVisibility(field: Name, defaultAccessLevel: AccessLevel = AccessLevel.PUBLIC): Visibility? {
-    val value = getArgumentAsString(field)?.let { AccessLevel.valueOf(it) } ?: defaultAccessLevel
+    val value = getArgumentAsString(field)?.let { arg -> AccessLevel.entries.find { it.name == arg } } ?: defaultAccessLevel
     return value.toVisibility()
 }
 
