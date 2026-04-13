@@ -76,7 +76,7 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
     override fun compileNonIncrementally(loadedIrArtifact: WebLoadedIrPipelineArtifact): JsBackendPipelineArtifact? {
         val configuration = loadedIrArtifact.configuration
         val module = loadedIrArtifact.moduleStructure
-        val ir2JsTransformer = Ir2JsTransformer(configuration, module, configuration.messageCollector)
+        val ir2JsTransformer = Ir2JsTransformer(configuration, configuration.messageCollector)
         val outputs = compileNonIncrementally(
             loadedIrArtifact,
             ir2JsTransformer,
