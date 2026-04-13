@@ -37,6 +37,8 @@ where advanced options include:
                              Disable bounds check elimination for provably-safe array accesses in for-loops. Only effective when -Xwasm-enable-array-range-checks is also enabled.
   -Xwasm-enable-array-range-checks
                              Turn on range checks for array access functions.
+  -Xwasm-enable-array-range-checks-safe-elimination
+                             Enable bounds check elimination for provably-safe array accesses in for-loops. Only effective when -Xwasm-enable-array-range-checks is also enabled.
   -Xwasm-enable-asserts      Turn on asserts.
   -Xwasm-generate-closed-world-multimodule
                              Compile modules in multi-module closed-world mode using module passed in `-include` argument as main module
