@@ -36,7 +36,6 @@ internal interface JvmCompilerArgumentValueAdapter : CommonCompilerArgumentValue
     fun <T, V> mapTo(value: V, key: JvmCompilerArguments.JvmCompilerArgument<V>): T
 
     companion object {
-        //TODO(KT-84598): Expose API Version via Public Property
         private val requiresPre240ForwardCompatibility: Boolean =
             JvmPlatformToolchain::class.functions.none { it.name == "discoverScriptExtensionsOperationBuilder" }
 
