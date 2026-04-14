@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.cli.common.arguments.CommonCompilerArguments
 import org.jetbrains.kotlin.cli.common.arguments.K2NativeCompilerArguments
 import org.jetbrains.kotlin.cli.common.arguments.cliArgument
 import org.jetbrains.kotlin.config.LanguageFeature
+import org.jetbrains.kotlin.konan.config.konanTarget
 import org.jetbrains.kotlin.konan.test.blackbox.support.AssertionsMode
 import org.jetbrains.kotlin.konan.test.blackbox.support.TestDirectives.ASSERTIONS_MODE
 import org.jetbrains.kotlin.konan.test.blackbox.support.TestDirectives.FILECHECK_STAGE
@@ -25,8 +26,10 @@ import org.jetbrains.kotlin.test.directives.NativeEnvironmentConfigurationDirect
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerException
 import org.jetbrains.kotlin.test.klib.CustomKlibCompilerSecondStageFacade
 import org.jetbrains.kotlin.test.model.*
+import org.jetbrains.kotlin.test.services.CompilationStage
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.artifactsProvider
+import org.jetbrains.kotlin.test.services.compilerConfigurationProvider
 import org.jetbrains.kotlin.test.services.configuration.NativeEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.moduleStructure
 import org.jetbrains.kotlin.test.services.temporaryDirectoryManager
@@ -61,6 +64,12 @@ class NativeCompilerSecondStageFacade private constructor(
             friendDependencies: Set<String>,
         ): BinaryArtifacts.Native {
             val facade = NativeCompilerSecondStageFacade(testServices, customNativeCompilerSettings)
+            val compilerConfiguration = testServices.compilerConfigurationProvider.getCompilerConfiguration(module, CompilationStage.SECOND)
+            require(compilerConfiguration.konanTarget == facade.kotlinNativeTargets.testTarget.name) {
+                "Internal error: konanTargets in `compilerConfiguration`(${compilerConfiguration.konanTarget}) " +
+                        "and `facade.kotlinNativeTargets`(${facade.kotlinNativeTargets.testTarget.name}) don't match.\n" +
+                        "Check, if NativeSecondStageEnvironmentConfigurator has calculated `konanTarget` properly."
+            }
             val (exitCode, output, executableFile) = facade.runCli(
                 dirName = File(mainLibrary).name,
                 executableFileName = module.name + ".kexe",
@@ -188,7 +197,7 @@ class NativeCompilerSecondStageFacade private constructor(
                     K2NativeCompilerArguments::autoCacheableFrom.cliArgument(nativeHome.resolve("klib").absolutePath)
                         .takeIf { cacheMode.useStaticCacheForDistributionLibraries },
                     K2NativeCompilerArguments::enableAssertions.cliArgument.takeIf { enableAssertions },
-                    K2NativeCompilerArguments::target.cliArgument, kotlinNativeTargets.testTarget.name,
+                    K2NativeCompilerArguments::target.cliArgument, kotlinNativeTargets.testTarget.name, // consider getting it from compilerConfiguration
                     K2NativeCompilerArguments::nodefaultlibs.cliArgument.takeIf {
                         !(this.withPlatformLibs || withPlatformLibs)
                     },
