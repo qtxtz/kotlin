@@ -10,13 +10,13 @@ class MyList<T> {
 fun Int.expectedMyListInt(): MyList<Int> {
     when (this) {
         0 -> {
-            return <!UNRESOLVED_REFERENCE!>[1, 2, 3]<!>
+            return [1, 2, 3]
         }
         1 -> {
-            return <!UNRESOLVED_REFERENCE!>[]<!>
+            return []
         }
         else -> {
-            return <!UNRESOLVED_REFERENCE!>["!"]<!>
+            return [<!ARGUMENT_TYPE_MISMATCH!>"!"<!>]
         }
     }
 }
@@ -24,16 +24,16 @@ fun Int.expectedMyListInt(): MyList<Int> {
 fun test() {
     fun <T> accept(x: MyList<T>) { }
 
-    <!CANNOT_INFER_PARAMETER_TYPE!>accept<!>(<!UNRESOLVED_REFERENCE!>[]<!>)
-    <!CANNOT_INFER_PARAMETER_TYPE!>accept<!>(<!UNRESOLVED_REFERENCE!>[1, 2, 3]<!>)
-    <!CANNOT_INFER_PARAMETER_TYPE!>accept<!>(<!UNRESOLVED_REFERENCE!>["!"]<!>)
-    <!CANNOT_INFER_PARAMETER_TYPE!>accept<!>(<!UNRESOLVED_REFERENCE!>[1L, 2, 3.toByte()]<!>)
+    <!CANNOT_INFER_PARAMETER_TYPE!>accept<!>(<!CANNOT_INFER_PARAMETER_TYPE!>[]<!>)
+    accept([1, 2, 3])
+    accept(["!"])
+    accept([1L, 2, 3.toByte()])
 
-    accept<String>(<!UNRESOLVED_REFERENCE!>[]<!>)
-    accept<String>(<!UNRESOLVED_REFERENCE!>[1, 2, 3]<!>)
-    accept<String>(<!UNRESOLVED_REFERENCE!>["!"]<!>)
+    accept<String>([])
+    accept<String>([<!ARGUMENT_TYPE_MISMATCH!>1<!>, <!ARGUMENT_TYPE_MISMATCH!>2<!>, <!ARGUMENT_TYPE_MISMATCH!>3<!>])
+    accept<String>(["!"])
 
-    val nullable: MyList<*>? = <!UNRESOLVED_REFERENCE!>[1, 2, 3]<!>
+    val nullable: MyList<*>? = [1, 2, 3]
 }
 
 /* GENERATED_FIR_TAGS: classDeclaration, equalityExpression, funWithExtensionReceiver, functionDeclaration,

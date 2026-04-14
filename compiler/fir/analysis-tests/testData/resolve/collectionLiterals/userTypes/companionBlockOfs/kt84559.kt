@@ -13,8 +13,8 @@ class C {
 }
 
 fun test() {
-    val a: C <!INITIALIZER_TYPE_MISMATCH!>=<!> @OptIn(MyExperimental::class) [1, 2, 3]
-    val b: C <!INITIALIZER_TYPE_MISMATCH!>=<!> @<!UNRESOLVED_REFERENCE!>Unresolved<!> [1, 2, 3]
+    val a: C = @OptIn(MyExperimental::class) [1, 2, 3]
+    val b: C = @<!UNRESOLVED_REFERENCE!>Unresolved<!> <!OPT_IN_USAGE_ERROR!>[1, 2, 3]<!>
 }
 
 /* GENERATED_FIR_TAGS: annotationDeclaration, classDeclaration, functionDeclaration, integerLiteral, localProperty,

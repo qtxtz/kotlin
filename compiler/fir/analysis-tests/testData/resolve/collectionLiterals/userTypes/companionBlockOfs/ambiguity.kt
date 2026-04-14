@@ -23,13 +23,13 @@ fun Int.test() {
     val x = when (this) {
         0 -> A()
         1 -> B()
-        else -> <!UNRESOLVED_REFERENCE!>[1, 2, 3]<!>
+        else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[1, 2, 3]<!>
     }
 
     val y = when (this) {
         0 -> A()
         1 -> C()
-        else -> [1, 2, 3]
+        else -> <!AMBIGUOUS_COLLECTION_LITERAL!>[1, 2, 3]<!>
     }
 }
 

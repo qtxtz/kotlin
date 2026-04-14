@@ -7,13 +7,17 @@ package org.jetbrains.kotlin.fir.resolve
 
 import org.jetbrains.kotlin.KtFakeSourceElementKind
 import org.jetbrains.kotlin.builtins.StandardNames
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.fakeElement
+import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.declarations.isDeprecationLevelHidden
-import org.jetbrains.kotlin.fir.declarations.processAllDeclaredCallables
+import org.jetbrains.kotlin.fir.declarations.staticScope
 import org.jetbrains.kotlin.fir.declarations.utils.isOperator
+import org.jetbrains.kotlin.fir.declarations.utils.isStatic
 import org.jetbrains.kotlin.fir.diagnostics.ConeDiagnostic
 import org.jetbrains.kotlin.fir.expressions.*
 import org.jetbrains.kotlin.fir.expressions.builder.buildFunctionCall
+import org.jetbrains.kotlin.fir.languageVersionSettings
 import org.jetbrains.kotlin.fir.references.builder.buildSimpleNamedReference
 import org.jetbrains.kotlin.fir.resolve.calls.ConeAtomWithCandidate
 import org.jetbrains.kotlin.fir.resolve.calls.ConeCollectionLiteralAtom
@@ -26,10 +30,13 @@ import org.jetbrains.kotlin.fir.resolve.calls.candidate.ImplicitInvokeMode
 import org.jetbrains.kotlin.fir.resolve.calls.candidate.createErrorReferenceWithErrorCandidate
 import org.jetbrains.kotlin.fir.resolve.calls.stages.ArgumentCheckingProcessor
 import org.jetbrains.kotlin.fir.resolve.inference.CollectionLiteralBounds
+import org.jetbrains.kotlin.fir.scopes.FirScope
+import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.visibilityChecker
 import org.jetbrains.kotlin.resolve.CollectionNames
 import org.jetbrains.kotlin.util.OperatorNameConventions
+import org.jetbrains.kotlin.utils.addToStdlib.runIf
 
 context(context: ResolutionContext, outerCandidateContext: CollectionLiteralOuterCandidateContext)
 fun runCollectionLiteralResolution(
@@ -212,25 +219,23 @@ abstract class CollectionLiteralResolutionStrategy(protected val context: Resolu
 private class CollectionLiteralResolutionStrategyThroughCompanion(context: ResolutionContext) :
     CollectionLiteralResolutionStrategy(context) {
 
-    private fun FirCallableSymbol<*>.isOperatorOf(): Boolean {
-        return this is FirNamedFunctionSymbol && this.isOperator && name == OperatorNameConventions.OF
-    }
-
     private fun FirCallableSymbol<*>.isVisible(receiver: FirResolvedQualifier): Boolean {
+        val staticQualifierClassForCallable = runIf(isStatic) { (receiver.symbol as? FirRegularClassSymbol)?.fir }
         return context.session.visibilityChecker.isVisible(
             fir,
             context.session,
             context.bodyResolveComponents.file,
             context.bodyResolveComponents.containingDeclarations,
             dispatchReceiver = receiver,
+            staticQualifierClassForCallable = staticQualifierClassForCallable,
         )
     }
 
-    private fun FirRegularClassSymbol.declaresVisibleOf(receiver: FirResolvedQualifier): Boolean {
+    private fun FirScope.declaresVisibleOf(receiver: FirResolvedQualifier): Boolean {
         var result: Boolean? = null
-        processAllDeclaredCallables(context.session) { declaration ->
-            if (result != null) return@processAllDeclaredCallables
-            if (declaration.isOperatorOf() && !declaration.isDeprecationLevelHidden(context.session)) {
+        processFunctionsByName(OperatorNameConventions.OF) { declaration ->
+            if (result != null) return@processFunctionsByName
+            if (declaration.isOperator && !declaration.isDeprecationLevelHidden(context.session)) {
                 result = declaration.isVisible(receiver)
             }
         }
@@ -241,13 +246,26 @@ private class CollectionLiteralResolutionStrategyThroughCompanion(context: Resol
         expectedClass: FirRegularClassSymbol?,
         collectionLiteral: FirCollectionLiteral?,
     ): FirResolvedQualifier? {
-        val companionObjectSymbol = expectedClass?.resolvedCompanionObjectSymbol ?: return null
-        val companionAsImplicitReceiver = companionObjectSymbol.toImplicitResolvedQualifierReceiver(
-            components,
-            collectionLiteral?.source?.fakeElement(KtFakeSourceElementKind.DesugaredReceiverForOperatorOfCall),
-        )
+        if (expectedClass == null) return null
+        val companionObjectSymbol = expectedClass.resolvedCompanionObjectSymbol
 
-        return companionAsImplicitReceiver.takeIf { companionObjectSymbol.declaresVisibleOf(it) }
+        val implicitReceiverSource = collectionLiteral?.source?.fakeElement(KtFakeSourceElementKind.DesugaredReceiverForOperatorOfCall)
+
+        companionObjectSymbol?.toImplicitResolvedQualifierReceiver(components, implicitReceiverSource)?.let {
+            if (companionObjectSymbol.declaredMemberScope(context.session, FirResolvePhase.STATUS).declaresVisibleOf(it)) {
+                return it
+            }
+        }
+
+        if (context.session.languageVersionSettings.supportsFeature(LanguageFeature.CompanionBlocksAndExtensions)) {
+            expectedClass.toImplicitResolvedQualifierReceiver(components, implicitReceiverSource).let {
+                if (expectedClass.staticScope(context.bodyResolveComponents)?.declaresVisibleOf(it) == true) {
+                    return it
+                }
+            }
+        }
+
+        return null
     }
 
     override fun declaresOperatorOf(expectedType: FirRegularClassSymbol): Boolean {

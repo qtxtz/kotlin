@@ -1,5 +1,5 @@
 // LANGUAGE: +CollectionLiterals +CompanionBlocksAndExtensions
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 
 class E<T>(val t: T) {
     companion {
@@ -9,11 +9,11 @@ class E<T>(val t: T) {
 
 
 class WithEbf {
-    <!INCONSISTENT_BACKING_FIELD_TYPE!>val ebf: E<*><!>
-        field = <!UNRESOLVED_REFERENCE!>[1, 2, 3]<!>
+    val ebf: E<*>
+        field = [1, 2, 3]
 
     fun member() {
-        val asLong = ebf.t.<!UNRESOLVED_REFERENCE!>toLong<!>()
+        val asLong = ebf.t.toLong()
     }
 }
 
