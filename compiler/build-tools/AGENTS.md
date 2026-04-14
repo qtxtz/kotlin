@@ -6,18 +6,18 @@ accessing compiler internals directly.
 
 ## Modules
 
-| Module                                                                                                     | Purpose                                                                                        |
-|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| [`kotlin-build-tools-api`](kotlin-build-tools-api)                                                         | Public interfaces only; no implementation; `explicitApi()`; API dump checked in                |
-| [`kotlin-build-tools-impl`](kotlin-build-tools-impl)                                                       | Default implementation; version-coupled to the compiler; must run in isolated ClassLoader      |
-| [`kotlin-build-tools-compat`](kotlin-build-tools-compat)                                                   | Adapter for compilers < 2.3.0 (wraps deprecated `CompilationService`)                          |
-| [`kotlin-build-tools-cri-impl`](kotlin-build-tools-cri-impl)                                               | Protobuf serialization for Compiler Reference Index; shipped as shadow JAR                     |
-| [`kotlin-build-tools-jdk-utils`](kotlin-build-tools-jdk-utils)                                             | Internal utility for Java 9+ platform ClassLoader detection; do not use outside BTA modules    |
-| [`kotlin-build-tools-options-generator`](kotlin-build-tools-options-generator)                             | KotlinPoet-based code generator producing compiler argument classes from `:compiler:arguments` |
-| [`kotlin-build-statistics`](kotlin-build-statistics)                                                       | Shared library for build metric collection (times, performance, GC, attributes); used by impl and KGP |
-| [`util-kotlinpoet`](util-kotlinpoet)                                                                       | KotlinPoet utility helpers shared by code generators in the BTA area                           |
-| [`kotlin-build-tools-api-tests`](kotlin-build-tools-api-tests)                                             | Main integration test suite (JUnit 5, multiple named test suites)                              |
-| [`kotlin-build-tools-api-forward-compatibility-tests`](kotlin-build-tools-api-forward-compatibility-tests) | Tests the forward compatibility guarantee (X+1)                                                |
+| Module                                                                                                     | Purpose                                                                                                             |
+|------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| [`kotlin-build-tools-api`](kotlin-build-tools-api)                                                         | Public interfaces only; no implementation; `explicitApi()`; API dump checked in                                     |
+| [`kotlin-build-tools-impl`](kotlin-build-tools-impl)                                                       | Default implementation; version-coupled to the compiler; must run in isolated ClassLoader                           |
+| [`kotlin-build-tools-compat`](kotlin-build-tools-compat)                                                   | Adapter for compilers < 2.3.0 (wraps deprecated `CompilationService`)                                               |
+| [`kotlin-build-tools-cri-impl`](kotlin-build-tools-cri-impl)                                               | Protobuf serialization for Compiler Reference Index; shipped as shadow JAR                                          |
+| [`kotlin-build-tools-jdk-utils`](kotlin-build-tools-jdk-utils)                                             | Internal utility for Java 9+ platform ClassLoader detection; do not use outside BTA modules                         |
+| [`kotlin-build-tools-generator`](kotlin-build-tools-generator)                                             | KotlinPoet-based code generator producing compiler argument classes from `:compiler:arguments` and API version file |
+| [`kotlin-build-statistics`](kotlin-build-statistics)                                                       | Shared library for build metric collection (times, performance, GC, attributes); used by impl and KGP               |
+| [`util-kotlinpoet`](util-kotlinpoet)                                                                       | KotlinPoet utility helpers shared by code generators in the BTA area                                                |
+| [`kotlin-build-tools-api-tests`](kotlin-build-tools-api-tests)                                             | Main integration test suite (JUnit 5, multiple named test suites)                                                   |
+| [`kotlin-build-tools-api-forward-compatibility-tests`](kotlin-build-tools-api-forward-compatibility-tests) | Tests the forward compatibility guarantee (X+1)                                                                     |
 
 ## Architecture: ClassLoader Isolation
 
@@ -27,10 +27,13 @@ The impl JAR must be loaded in an isolated ClassLoader to prevent classpath conf
 val toolchains = KotlinToolchains.loadImplementation(implClasspath)  // implClasspath: List<Path>
 ```
 
-- `loadImplementation(List<Path>)` — preferred API; wraps the classpath in a `URLClassLoader` backed by `SharedApiClassesClassLoader` automatically
-- `loadImplementation(ClassLoader)` — lower-level overload for custom ClassLoader setups; the ClassLoader's parent should be `SharedApiClassesClassLoader`
+- `loadImplementation(List<Path>)` — preferred API; wraps the classpath in a `URLClassLoader` backed by `SharedApiClassesClassLoader`
+  automatically
+- `loadImplementation(ClassLoader)` — lower-level overload for custom ClassLoader setups; the ClassLoader's parent should be
+  `SharedApiClassesClassLoader`
 - The impl JAR version must match the compiler version (`kotlin-build-tools-impl` is version-coupled to the compiler)
-- For compilers < 2.3.0, include `kotlin-build-tools-compat` in the impl classpath → see [`kotlin-build-tools-compat/README.md`](kotlin-build-tools-compat/README.md)
+- For compilers < 2.3.0, include `kotlin-build-tools-compat` in the impl classpath → see [
+  `kotlin-build-tools-compat/README.md`](kotlin-build-tools-compat/README.md)
 
 ## Key Abstractions
 
@@ -50,10 +53,10 @@ Do not edit generated files manually — regenerate them with the tasks below.
 Two kinds — both must be regenerated after relevant changes:
 
 ```bash
-# Regenerate compiler argument classes (after changing compiler arguments in :compiler:arguments)
-./gradlew :compiler:build-tools:kotlin-build-tools-api:generateBtaArguments
-./gradlew :compiler:build-tools:kotlin-build-tools-impl:generateBtaArguments
-./gradlew :compiler:build-tools:kotlin-build-tools-compat:generateBtaArguments
+# Regenerate generated sources (compiler argument classes and API version file; after changing compiler arguments in :compiler:arguments)
+./gradlew :compiler:build-tools:kotlin-build-tools-api:generateBtaSources
+./gradlew :compiler:build-tools:kotlin-build-tools-impl:generateBtaSources
+./gradlew :compiler:build-tools:kotlin-build-tools-compat:generateBtaSources
 
 # Regenerate API binary compatibility dump (after any public API change)
 ./gradlew :compiler:build-tools:kotlin-build-tools-api:apiDump
@@ -113,4 +116,4 @@ See [`kotlin-build-tools-api-tests/README.md`](kotlin-build-tools-api-tests/READ
 - Every public API addition in `kotlin-build-tools-api` must include KDoc documentation
 - Do not add implementation dependencies to `kotlin-build-tools-api` — it must stay implementation-free
 - Do not use `kotlin-build-tools-jdk-utils` outside BTA modules (requires `@KotlinBuildToolsInternalJdkUtils` opt-in)
-- After changing compiler arguments, always regenerate both `generateBtaArguments` and `apiDump`
+- After changing compiler arguments, always regenerate both `generateBtaSources` and `apiDump`
