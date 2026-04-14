@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.codegen.AbstractIrCustomScriptCodegenTest
 import org.jetbrains.kotlin.generators.dsl.junit4.generateTestGroupSuiteWithJUnit4
 import org.jetbrains.kotlin.generators.util.TestGeneratorUtil
 import org.jetbrains.kotlin.multiplatform.AbstractMultiPlatformIntegrationTest
-import org.jetbrains.kotlin.repl.AbstractReplInterpreterTest
 import org.jetbrains.kotlin.test.TargetBackend
 
 fun main(args: Array<String>) {
@@ -53,10 +52,6 @@ fun main(args: Array<String>) {
         testGroup("compiler/tests-integration/tests-gen", "compiler/tests-integration/testData") {
             testClass<AbstractMultiPlatformIntegrationTest> {
                 model("multiplatform", extension = null, recursive = true, excludeParentDirs = true)
-            }
-
-            testClass<AbstractReplInterpreterTest> {
-                model("repl", extension = "repl")
             }
         }
     }
