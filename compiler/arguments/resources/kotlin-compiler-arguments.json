@@ -10733,20 +10733,38 @@
                                         "shortName": null,
                                         "deprecatedName": null,
                                         "description": {
-                                            "current": "Generate an unpacked klib into the parent directory of the output JS file.",
-                                            "valueInVersions": []
+                                            "current": "Generate an unpacked klib into the directory specified by '-ir-output-dir'.\n\nThis argument is deprecated.\n \nThe '-nopack' argument should be used to determine if a packed klib file will be produced.\nSetting this argument to something other than `null` overrides the value from '-nopack'.",
+                                            "valueInVersions": [
+                                                {
+                                                    "minReleaseVersion": "1.3.70",
+                                                    "maxReleaseVersion": "2.4.20",
+                                                    "value": "Generate an unpacked klib into the parent directory of the output JS file."
+                                                }
+                                            ]
                                         },
                                         "delimiter": null,
                                         "affectsCompilationOutcome": true,
                                         "valueType": {
                                             "type": "org.jetbrains.kotlin.arguments.dsl.types.BooleanType",
                                             "isNullable": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": true,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             },
                                             "defaultValue": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": null,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             }
                                         },
                                         "valueDescription": {
@@ -10756,18 +10774,30 @@
                                         "releaseVersionsMetadata": {
                                             "introducedVersion": "1.3.70",
                                             "stabilizedVersion": null,
-                                            "deprecatedVersion": null,
+                                            "deprecatedVersion": "2.4.20",
                                             "removedVersion": null
                                         },
                                         "argumentType": {
                                             "type": "org.jetbrains.kotlin.arguments.dsl.types.BooleanType",
                                             "isNullable": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": true,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             },
                                             "defaultValue": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": null,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             }
                                         }
                                     },
@@ -10776,20 +10806,38 @@
                                         "shortName": null,
                                         "deprecatedName": null,
                                         "description": {
-                                            "current": "Generate a packed klib into the directory specified by '-ir-output-dir'.",
-                                            "valueInVersions": []
+                                            "current": "Generate a packed klib into the directory specified by '-ir-output-dir'.\n\nThis argument is deprecated. Producing a packed klib is now the default behavior. \n\nThe '-nopack' argument can be used instead to determine if a packed klib file will be produced.\nSetting this argument to something other than `null` overrides the value from '-nopack'.",
+                                            "valueInVersions": [
+                                                {
+                                                    "minReleaseVersion": "1.3.70",
+                                                    "maxReleaseVersion": "2.4.20",
+                                                    "value": "Generate a packed klib into the directory specified by '-ir-output-dir'."
+                                                }
+                                            ]
                                         },
                                         "delimiter": null,
                                         "affectsCompilationOutcome": true,
                                         "valueType": {
                                             "type": "org.jetbrains.kotlin.arguments.dsl.types.BooleanType",
                                             "isNullable": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": true,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             },
                                             "defaultValue": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": null,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             }
                                         },
                                         "valueDescription": {
@@ -10799,18 +10847,30 @@
                                         "releaseVersionsMetadata": {
                                             "introducedVersion": "1.3.70",
                                             "stabilizedVersion": null,
-                                            "deprecatedVersion": null,
+                                            "deprecatedVersion": "2.4.20",
                                             "removedVersion": null
                                         },
                                         "argumentType": {
                                             "type": "org.jetbrains.kotlin.arguments.dsl.types.BooleanType",
                                             "isNullable": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": true,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             },
                                             "defaultValue": {
-                                                "current": false,
-                                                "valueInVersions": []
+                                                "current": null,
+                                                "valueInVersions": [
+                                                    {
+                                                        "minReleaseVersion": "1.3.70",
+                                                        "maxReleaseVersion": "2.4.20",
+                                                        "value": false
+                                                    }
+                                                ]
                                             }
                                         }
                                     },
@@ -11068,6 +11128,49 @@
                                             },
                                             "defaultValue": {
                                                 "current": null,
+                                                "valueInVersions": []
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "nopack",
+                                        "shortName": null,
+                                        "deprecatedName": null,
+                                        "description": {
+                                            "current": "Don't pack the library into a klib file.",
+                                            "valueInVersions": []
+                                        },
+                                        "delimiter": null,
+                                        "affectsCompilationOutcome": true,
+                                        "valueType": {
+                                            "type": "org.jetbrains.kotlin.arguments.dsl.types.BooleanType",
+                                            "isNullable": {
+                                                "current": false,
+                                                "valueInVersions": []
+                                            },
+                                            "defaultValue": {
+                                                "current": false,
+                                                "valueInVersions": []
+                                            }
+                                        },
+                                        "valueDescription": {
+                                            "current": null,
+                                            "valueInVersions": []
+                                        },
+                                        "releaseVersionsMetadata": {
+                                            "introducedVersion": "2.4.20",
+                                            "stabilizedVersion": null,
+                                            "deprecatedVersion": null,
+                                            "removedVersion": null
+                                        },
+                                        "argumentType": {
+                                            "type": "org.jetbrains.kotlin.arguments.dsl.types.BooleanType",
+                                            "isNullable": {
+                                                "current": false,
+                                                "valueInVersions": []
+                                            },
+                                            "defaultValue": {
+                                                "current": false,
                                                 "valueInVersions": []
                                             }
                                         }

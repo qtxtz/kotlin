@@ -23,8 +23,6 @@ abstract class AbstractIncrementalK1JsKlibMultiModuleCompilerRunnerTest :
             outputDir = destinationDir.path
             moduleName = testDir.name
             sourceMap = false
-            irProduceKlibDir = false
-            irProduceKlibFile = true
             languageVersion = "1.9"
         }
 

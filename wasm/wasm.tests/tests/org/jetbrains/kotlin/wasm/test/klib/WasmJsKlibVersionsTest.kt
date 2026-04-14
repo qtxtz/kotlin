@@ -36,7 +36,7 @@ class WasmJsKlibVersionsTest : AbstractWebKlibVersionsTest() {
 
         val args = arrayOf(
             KotlinWasmCompilerArguments::wasmTarget.cliArgument("wasm-js"),
-            KotlinWasmCompilerArguments::irProduceKlibDir.cliArgument,
+            KotlinWasmCompilerArguments::nopack.cliArgument,
             KotlinWasmCompilerArguments::libraries.cliArgument, libraries,
             KotlinWasmCompilerArguments::outputDir.cliArgument, outputFile.absolutePath,
             KotlinWasmCompilerArguments::moduleName.cliArgument, outputFile.nameWithoutExtension,

@@ -18,10 +18,7 @@ import org.jetbrains.kotlin.cli.js.K2JSCompiler
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.cli.jvm.compiler.configureSourceRoots
 import org.jetbrains.kotlin.cli.jvm.config.JvmClasspathRoot
-import org.jetbrains.kotlin.cli.pipeline.jvm.JvmCliPipeline
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.modules.JavaRootPath
-import org.jetbrains.kotlin.modules.Module
 import org.jetbrains.kotlin.test.services.StandardLibrariesPathProviderForKotlinProject
 import org.jetbrains.kotlin.utils.PathUtil
 import org.jetbrains.kotlin.utils.fileUtils.descendantRelativeTo
@@ -238,11 +235,10 @@ class FilePathNormalizationTest : KotlinIntegrationTestBase() {
 
             val args = buildList {
                 if (outputFile.extension == "klib") {
-                    this += K2JSCompilerArguments::irProduceKlibFile.cliArgument
                     this += K2JSCompilerArguments::outputDir.cliArgument
                     this += outputFile.parentFile.path
                 } else {
-                    this += K2JSCompilerArguments::irProduceKlibDir.cliArgument
+                    this += K2JSCompilerArguments::nopack.cliArgument
                     this += K2JSCompilerArguments::outputDir.cliArgument
                     this += outputFile.path
                 }

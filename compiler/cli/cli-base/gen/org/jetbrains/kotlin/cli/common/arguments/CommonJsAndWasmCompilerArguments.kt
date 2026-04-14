@@ -134,21 +134,33 @@ sealed class CommonJsAndWasmCompilerArguments : CommonKlibBasedCompilerArguments
             field = value
         }
 
+    @Deprecated("Use '-nopack' instead to determine if a packed klib file will be produced.")
     @Argument(
         value = "-Xir-produce-klib-dir",
-        description = "Generate an unpacked klib into the parent directory of the output JS file.",
+        description = """Generate an unpacked klib into the directory specified by '-ir-output-dir'.
+
+This argument is deprecated.
+ 
+The '-nopack' argument should be used to determine if a packed klib file will be produced.
+Setting this argument to something other than `null` overrides the value from '-nopack'.""",
     )
-    var irProduceKlibDir: Boolean = false
+    var irProduceKlibDir: Boolean? = null
         set(value) {
             checkFrozen()
             field = value
         }
 
+    @Deprecated("Producing a packed klib is now the default behavior. The '-nopack' argument can be used instead to determine if a packed klib file will be produced.")
     @Argument(
         value = "-Xir-produce-klib-file",
-        description = "Generate a packed klib into the directory specified by '-ir-output-dir'.",
+        description = """Generate a packed klib into the directory specified by '-ir-output-dir'.
+
+This argument is deprecated. Producing a packed klib is now the default behavior. 
+
+The '-nopack' argument can be used instead to determine if a packed klib file will be produced.
+Setting this argument to something other than `null` overrides the value from '-nopack'.""",
     )
-    var irProduceKlibFile: Boolean = false
+    var irProduceKlibFile: Boolean? = null
         set(value) {
             checkFrozen()
             field = value
@@ -215,6 +227,16 @@ sealed class CommonJsAndWasmCompilerArguments : CommonKlibBasedCompilerArguments
         set(value) {
             checkFrozen()
             field = if (value.isNullOrEmpty()) null else value
+        }
+
+    @Argument(
+        value = "-nopack",
+        description = "Don't pack the library into a klib file.",
+    )
+    var nopack: Boolean = false
+        set(value) {
+            checkFrozen()
+            field = value
         }
 
     @Argument(

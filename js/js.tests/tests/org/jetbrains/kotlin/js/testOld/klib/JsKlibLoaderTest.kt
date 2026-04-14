@@ -42,10 +42,9 @@ class JsKlibLoaderTest : AbstractKlibLoaderTest() {
     ) {
         runJsCompiler {
             if (asFile) {
-                irProduceKlibFile = true
                 outputDir = klibLocation.parent
             } else {
-                irProduceKlibDir = true
+                nopack = true
                 outputDir = klibLocation.path
             }
             libraries = stdlib

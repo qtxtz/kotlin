@@ -103,7 +103,6 @@ internal class JsCompilerInvocationTestArtifactBuilder(
         runCompilerViaCLI(
             compilerEdition,
             listOf(
-                K2JSCompilerArguments::irProduceKlibFile.cliArgument,
                 K2JSCompilerArguments::outputDir.cliArgument, module.klibFile.parentFile.absolutePath,
                 K2JSCompilerArguments::moduleName.cliArgument, module.moduleInfo.moduleName,
             ),

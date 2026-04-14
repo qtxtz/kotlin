@@ -125,9 +125,14 @@ abstract class CommonWebConfigurationUpdater<T : CommonJsAndWasmCompilerArgument
                 configuration.report(WEB_ARGUMENT_ERROR, "Could not resolve output directory")
             }
         }
-
-        configuration.produceKlibFile = arguments.irProduceKlibFile
-        configuration.produceKlibDir = arguments.irProduceKlibDir
+        @Suppress("DEPRECATION")
+        if (arguments.irProduceKlibFile == null && arguments.irProduceKlibDir == null) {
+            configuration.produceKlibFile = !arguments.nopack
+            configuration.produceKlibDir = arguments.nopack
+        } else {
+            arguments.irProduceKlibFile?.let { configuration.produceKlibFile = it }
+            arguments.irProduceKlibDir?.let { configuration.produceKlibDir = it }
+        }
         arguments.main?.let { configuration.callMainMode = it }
         configuration.dce = arguments.irDce
 

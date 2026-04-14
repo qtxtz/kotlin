@@ -75,7 +75,7 @@ class JsManifestWritingTest : TestCaseWithTmpdir() {
             K2JSCompilerArguments::outputDir.cliArgument(outputFile.path),
             K2JSCompilerArguments::moduleName.cliArgument(outputFile.nameWithoutExtension),
             K2JSCompilerArguments::languageVersion.cliArgument(LanguageVersion.LATEST_STABLE.versionString),
-            K2JSCompilerArguments::irProduceKlibDir.cliArgument,
+            K2JSCompilerArguments::nopack.cliArgument,
         )
         CompilerTestUtil.executeCompilerAssertSuccessful(compiler, args + extras, messageRenderer)
     }

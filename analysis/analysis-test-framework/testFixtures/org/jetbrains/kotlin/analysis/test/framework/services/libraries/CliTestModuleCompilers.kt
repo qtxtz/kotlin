@@ -200,7 +200,6 @@ object JsKlibTestModuleCompiler : CliTestModuleCompiler() {
         val commands = buildList {
             add(K2JSCompilerArguments::moduleName.cliArgument); add(libraryOutputPath.nameWithoutExtension)
             add(K2JSCompilerArguments::outputDir.cliArgument); add(libraryOutputPath.parent.absolutePathString())
-            add(K2JSCompilerArguments::irProduceKlibFile.cliArgument)
             sourceFiles.mapTo(this) { it.absolutePath }
             addAll(options)
         }

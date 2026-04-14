@@ -43,8 +43,18 @@ where advanced options include:
   -Xir-module-name=<name>    Specify the name of the compilation module for the IR backend.
   -Xir-per-module-output-name Add a custom output name to the split .js files.
   -Xir-produce-js            Generate a JS file using the IR backend.
-  -Xir-produce-klib-dir      Generate an unpacked klib into the parent directory of the output JS file.
+  -Xir-produce-klib-dir      Generate an unpacked klib into the directory specified by '-ir-output-dir'.
+
+                             This argument is deprecated.
+
+                             The '-nopack' argument should be used to determine if a packed klib file will be produced.
+                             Setting this argument to something other than `null` overrides the value from '-nopack'.
   -Xir-produce-klib-file     Generate a packed klib into the directory specified by '-ir-output-dir'.
+
+                             This argument is deprecated. Producing a packed klib is now the default behavior.
+
+                             The '-nopack' argument can be used instead to determine if a packed klib file will be produced.
+                             Setting this argument to something other than `null` overrides the value from '-nopack'.
   -Xir-property-lazy-initialization
                              Perform lazy initialization for properties.
   -Xstrict-implicit-export-types Generate strict types for implicitly exported entities inside d.ts files.

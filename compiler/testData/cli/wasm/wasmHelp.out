@@ -4,6 +4,7 @@ where possible options include:
   -ir-output-name            Base name of generated files.
   -libraries <path>          Paths to Kotlin libraries with .meta.js and .kjsm files, separated by the system path separator.
   -main {call|noCall}        Specify whether the 'main' function should be called upon execution.
+  -nopack                    Don't pack the library into a klib file.
   -source-map                Generate a source map.
   -source-map-base-dirs <path> Base directories for calculating relative paths to source files in the source map.
   -source-map-embed-sources {always|never|inlining}

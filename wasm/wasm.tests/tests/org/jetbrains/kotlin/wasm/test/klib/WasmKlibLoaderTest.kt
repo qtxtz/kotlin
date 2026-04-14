@@ -53,10 +53,9 @@ abstract class AbstractWasmKlibLoaderTest(private val target: WasmTarget) : Abst
     ) {
         val args = KotlinWasmCompilerArguments().apply {
             if (asFile) {
-                irProduceKlibFile = true
                 outputDir = klibLocation.parent
             } else {
-                irProduceKlibDir = true
+                nopack = true
                 outputDir = klibLocation.path
             }
             wasmTarget = this@AbstractWasmKlibLoaderTest.target.alias

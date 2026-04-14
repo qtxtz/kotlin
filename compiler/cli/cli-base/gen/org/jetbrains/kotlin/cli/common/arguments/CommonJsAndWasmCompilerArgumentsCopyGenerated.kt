@@ -22,12 +22,15 @@ fun copyCommonJsAndWasmCompilerArguments(from: CommonJsAndWasmCompilerArguments,
     to.irModuleName = from.irModuleName
     to.irPerModuleOutputName = from.irPerModuleOutputName
     to.irProduceJs = from.irProduceJs
+    @Suppress("DEPRECATION")
     to.irProduceKlibDir = from.irProduceKlibDir
+    @Suppress("DEPRECATION")
     to.irProduceKlibFile = from.irProduceKlibFile
     to.irPropertyLazyInitialization = from.irPropertyLazyInitialization
     to.libraries = from.libraries
     to.main = from.main
     to.moduleName = from.moduleName
+    to.nopack = from.nopack
     to.outputDir = from.outputDir
     to.sourceMap = from.sourceMap
     to.sourceMapBaseDirs = from.sourceMapBaseDirs

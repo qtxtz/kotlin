@@ -128,7 +128,6 @@ internal class WasmCompilerInvocationTestArtifactBuilder(
         // Build KLIB:
         runCompilerViaCLI(
             listOf(
-                KotlinWasmCompilerArguments::irProduceKlibFile.cliArgument,
                 KotlinWasmCompilerArguments::outputDir.cliArgument, module.klibFile.parentFile.absolutePath,
                 KotlinWasmCompilerArguments::moduleName.cliArgument, module.moduleInfo.moduleName,
             ),

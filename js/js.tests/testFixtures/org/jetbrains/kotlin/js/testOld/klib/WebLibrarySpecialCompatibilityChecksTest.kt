@@ -48,6 +48,7 @@ abstract class WebLibrarySpecialCompatibilityChecksTest : LibrarySpecialCompatib
             this.libraries = (context.additionalLibraries + context.fakeLibraryPath).joinToString(File.pathSeparator)
             this.outputDir = context.outputDir.absolutePath
             this.moduleName = context.moduleName
+            @Suppress("DEPRECATION")
             this.irProduceKlibFile = true
             this.irModuleName = context.moduleName
             if (context.exportKlibToOlderAbiVersion) {
