@@ -147,6 +147,7 @@ fun main(args: Array<String>) {
                     "diagnostics/tests",
                     excludedPattern = CUSTOM_TEST_DATA_EXTENSION_PATTERN,
                     pattern = KT_OR_KTS,
+                    excludeDirs = listOf("jvm")
                 )
                 model(
                     "diagnostics/testsWithStdLib",
