@@ -10,12 +10,11 @@ import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.fir.FirAnnotationContainer
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
+import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.fir.declarations.getBooleanArgument
 import org.jetbrains.kotlin.fir.declarations.getStringArgument
 import org.jetbrains.kotlin.fir.declarations.getStringArrayArgument
 import org.jetbrains.kotlin.fir.expressions.FirAnnotation
-import org.jetbrains.kotlin.fir.types.classLikeLookupTagIfAny
-import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.lombok.config.LombokConfig
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.ACCESS
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.BUILDER_CLASS_NAME
@@ -46,16 +45,12 @@ import org.jetbrains.kotlin.name.ClassId
  *
  */
 
-fun List<FirAnnotation>.findAnnotation(classId: ClassId): FirAnnotation? {
-    return firstOrNull { it.annotationTypeRef.coneType.classLikeLookupTagIfAny?.classId == classId }
-}
-
 abstract class ConeAnnotationCompanion<T>(val name: ClassId) {
 
     abstract fun extract(annotation: FirAnnotation, session: FirSession): T
 
     fun getOrNull(annotated: FirAnnotationContainer, session: FirSession): T? {
-        return annotated.annotations.findAnnotation(name)?.let { this.extract(it, session) }
+        return annotated.annotations.getAnnotationByClassId(name, session)?.let { this.extract(it, session) }
     }
 }
 
@@ -67,13 +62,13 @@ abstract class ConeAnnotationAndConfigCompanion<T>(val annotationName: ClassId) 
      * Get from annotation or config or default
      */
     fun get(annotated: FirAnnotationContainer, config: LombokConfig, session: FirSession): T =
-        extract(annotated.annotations.findAnnotation(annotationName), config, session)
+        extract(annotated.getAnnotationByClassId(annotationName, session), config, session)
 
     /**
      * If element is annotated, get from it or config or default
      */
     fun getIfAnnotated(annotated: FirAnnotationContainer, config: LombokConfig, session: FirSession): T? =
-        annotated.annotations.findAnnotation(annotationName)?.let { annotation ->
+        annotated.annotations.getAnnotationByClassId(annotationName, session)?.let { annotation ->
             extract(annotation, config, session)
         }
 
