@@ -1,5 +1,5 @@
 // WITH_STDLIB
-// LANGUAGE: +InlineClassImplementationByDelegation, +GenericInlineClassParameter
+// LANGUAGE: +InlineClassImplementationByDelegation
 
 interface I {
     fun ok(): String

@@ -1152,12 +1152,6 @@ private fun KaDiagnosticConverterBuilder.addConversions21() {
             token,
         )
     }
-    add(FirJvmErrors.SYNCHRONIZED_ON_SUSPEND.warningFactory) { firDiagnostic ->
-        SynchronizedOnSuspendWarningImpl(
-            firDiagnostic as KtPsiDiagnostic,
-            token,
-        )
-    }
     add(FirJvmErrors.JVM_RECORD_NOT_LAST_VARARG_PARAMETER) { firDiagnostic ->
         JvmRecordNotLastVarargParameterImpl(
             firDiagnostic as KtPsiDiagnostic,
@@ -8321,7 +8315,7 @@ private fun KaDiagnosticConverterBuilder.addConversions191() {
             token,
         )
     }
-    add(FirJvmErrors.SYNCHRONIZED_ON_SUSPEND.errorFactory) { firDiagnostic ->
+    add(FirJvmErrors.SYNCHRONIZED_ON_SUSPEND_ERROR) { firDiagnostic ->
         SynchronizedOnSuspendErrorImpl(
             firDiagnostic as KtPsiDiagnostic,
             token,

@@ -6000,11 +6000,6 @@ internal class SynchronizedOnSuspendErrorImpl(
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<KtAnnotationEntry>(firDiagnostic, token), KaFirDiagnostic.SynchronizedOnSuspendError
 
-internal class SynchronizedOnSuspendWarningImpl(
-    firDiagnostic: KtPsiDiagnostic,
-    token: KaLifetimeToken,
-) : KaAbstractFirDiagnostic<KtAnnotationEntry>(firDiagnostic, token), KaFirDiagnostic.SynchronizedOnSuspendWarning
-
 internal class OverloadsWithoutDefaultArgumentsImpl(
     firDiagnostic: KtPsiDiagnostic,
     token: KaLifetimeToken,

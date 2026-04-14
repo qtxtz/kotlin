@@ -4995,10 +4995,6 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         override val diagnosticClass get() = SynchronizedOnSuspendError::class
     }
 
-    interface SynchronizedOnSuspendWarning : KaFirDiagnostic<KtAnnotationEntry> {
-        override val diagnosticClass get() = SynchronizedOnSuspendWarning::class
-    }
-
     interface OverloadsWithoutDefaultArguments : KaFirDiagnostic<KtAnnotationEntry> {
         override val diagnosticClass get() = OverloadsWithoutDefaultArguments::class
     }
