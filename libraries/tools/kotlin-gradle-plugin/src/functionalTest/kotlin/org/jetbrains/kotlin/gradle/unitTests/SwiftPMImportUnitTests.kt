@@ -654,7 +654,10 @@ private fun ProjectInternal.assertLocalPackageTasksConfigured(expectedPackageDir
         message = "${ComputeLocalPackageDependencyInputFiles::class.java.simpleName}.${ComputeLocalPackageDependencyInputFiles::localPackages.name} should match configured local packages"
     )
 
-    val fetchTask = tasks.withType(FetchSyntheticImportProjectPackages::class.java).single()
+    val fetchTask = tasks.withType(FetchSyntheticImportProjectPackages::class.java).single {
+        it.name.equals(FetchSyntheticImportProjectPackages.TASK_NAME, ignoreCase = true)
+    }
+
     val expectedManifests = expectedDirs.map { it.resolve("Package.swift").normalizedAbsoluteFile() }.toSet()
     val manifestFiles = fetchTask.localPackageManifests.files.map { it.normalizedAbsoluteFile() }.toSet()
     assertEquals(
