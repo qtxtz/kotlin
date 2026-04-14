@@ -94,7 +94,8 @@ internal class InlineFunctionDeserializer(
         private val linker: KonanIrLinker,
 ) {
     private val inlineFunctionReferences: Map<IdSignature, SerializedInlineFunctionReference> by lazy {
-        val cache = cachedLibraries.getLibraryCache(deserializer.klib) ?: error("No cache for ${deserializer.klib.location}")
+        val cache = cachedLibraries.getLibraryCache(deserializer.klib, allowIncomplete = true)
+                ?: error("No cache for ${deserializer.klib.location}")
         cache.serializedInlineFunctionBodies.associateBy {
             with(deserializer) {
                 val symbolDeserializer = it.file.deserializationState.declarationDeserializer.symbolDeserializer
@@ -157,7 +158,7 @@ internal class CachedEagerInitializedFiles(
         private val deserializer: KonanPartialModuleDeserializer,
 ) {
     val eagerInitializedFiles: List<IrFile> by lazy {
-        val cache = cachedLibraries.getLibraryCache(klib)
+        val cache = cachedLibraries.getLibraryCache(klib, allowIncomplete = true)
                 ?: error("No cache for ${klib.location}") // KT-54668
         cache.serializedEagerInitializedFiles
                 .map { with(deserializer) { it.file.deserializationState.file } }
@@ -310,7 +311,8 @@ internal class ClassFieldsDeserializer(
     }
 
     private val classesFields by lazy {
-        val cache = cachedLibraries.getLibraryCache(deserializer.klib) ?: error("No cache for ${deserializer.klib.location}")
+        val cache = cachedLibraries.getLibraryCache(deserializer.klib, allowIncomplete = true)
+                ?: error("No cache for ${deserializer.klib.location}")
         cache.serializedClassFields.associateBy {
             it.classSignature
         }
