@@ -9,8 +9,8 @@ annotation class MyExperimental
 object A
 
 fun test() {
-    val lst1 = @Unresolved [42]
-    val lst2 = @OptIn(MyExperimental::class) <!OPT_IN_USAGE_ERROR!>[<!OPT_IN_USAGE_ERROR!>A<!>, <!OPT_IN_USAGE_ERROR!>A<!>]<!>
+    val lst1 = @<!UNRESOLVED_REFERENCE!>Unresolved<!> [42]
+    val lst2 = @OptIn(MyExperimental::class) [A, A]
 }
 
 /* GENERATED_FIR_TAGS: annotationDeclaration, functionDeclaration, integerLiteral, localProperty, objectDeclaration,
