@@ -143,21 +143,15 @@ object FirReifiedChecker : FirQualifiedAccessExpressionChecker(MppCheckerKind.Co
                     )
                 }
             }
-            typeArgument is ConeDefinitelyNotNullType -> {
-                checkArgumentAndReport(typeArgument.original, typeParameter, source, isExplicit, isArray, isPlaceHolder)
-                if (isExplicit) {
-                    // We sometimes infer type arguments to DNN types, which seems to be ok. Only report explicit DNN types written by user.
-                    reporter.reportOn(source, FirErrors.DEFINITELY_NON_NULLABLE_AS_REIFIED)
-                }
+            typeArgument is ConeDefinitelyNotNullType && isExplicit -> {
+                // We sometimes infer type arguments to DNN types, which seems to be ok. Only report explicit DNN types written by user.
+                reporter.reportOn(source, FirErrors.DEFINITELY_NON_NULLABLE_AS_REIFIED)
             }
             typeArgument.cannotBeReified(context.languageVersionSettings) -> {
                 reporter.reportOn(source, FirErrors.REIFIED_TYPE_FORBIDDEN_SUBSTITUTION, typeArgument)
             }
             typeArgument is ConeIntersectionType -> {
                 reporter.reportOn(source, FirErrors.TYPE_INTERSECTION_AS_REIFIED, typeParameter, typeArgument.intersectedTypes)
-            }
-            typeArgument is ConeFlexibleType -> {
-                checkArgumentAndReport(typeArgument.lowerBound, typeParameter, source, isExplicit, isArray, isPlaceHolder)
             }
         }
     }

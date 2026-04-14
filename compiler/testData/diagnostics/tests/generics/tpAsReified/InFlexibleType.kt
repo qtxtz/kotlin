@@ -1,4 +1,4 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // ISSUE: KT-74516
 
 // FILE: J.java
@@ -15,7 +15,7 @@ inline fun <reified R> inline(r: R, any: Any): R? {
 }
 
 fun <T> foo(t: T): T? {
-    return <!TYPE_PARAMETER_AS_REIFIED!>inline<!>(J.identity(t), "")
+    return inline(J.identity(t), "")
 }
 
 fun main() {

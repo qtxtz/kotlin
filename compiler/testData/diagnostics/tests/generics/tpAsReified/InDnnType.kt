@@ -1,4 +1,4 @@
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 // ISSUE: KT-74516
 
 inline fun <reified R> inline(r: R, any: Any): R? {
@@ -7,7 +7,7 @@ inline fun <reified R> inline(r: R, any: Any): R? {
 }
 
 fun <T> bad(x: T): T? {
-    if (x != null) return <!TYPE_PARAMETER_AS_REIFIED!>inline<!>(x, "")
+    if (x != null) return inline(x, "")
     return null
 }
 
