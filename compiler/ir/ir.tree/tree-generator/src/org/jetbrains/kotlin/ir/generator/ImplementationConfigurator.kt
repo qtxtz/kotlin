@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.generators.tree.printer.printFunctionWithBlockBody
 import org.jetbrains.kotlin.generators.tree.printer.printPropertyDeclaration
 import org.jetbrains.kotlin.ir.generator.IrSymbolTree.propertySymbol
 import org.jetbrains.kotlin.ir.generator.IrSymbolTree.simpleFunctionSymbol
+import org.jetbrains.kotlin.ir.generator.IrTree.propertyWithLateBinding
 import org.jetbrains.kotlin.ir.generator.config.AbstractIrTreeImplementationConfigurator
 import org.jetbrains.kotlin.ir.generator.model.Element
 import org.jetbrains.kotlin.ir.generator.model.ListField
@@ -437,6 +438,13 @@ object ImplementationConfigurator : AbstractIrTreeImplementationConfigurator() {
                 println("assert(_symbol == null) { \"\$this already has symbol _symbol\" }")
                 println("_symbol = symbol")
                 println("symbol.bind(this)")
+
+                if (implementation.element == propertyWithLateBinding) {
+                    println("backingField?.correspondingPropertySymbol = symbol")
+                    println("getter?.correspondingPropertySymbol = symbol")
+                    println("setter?.correspondingPropertySymbol = symbol")
+                }
+
                 println("return this")
             }
         }

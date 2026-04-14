@@ -72,6 +72,9 @@ class IrPropertyWithLateBindingImpl @IrImplementationDetail constructor(
         assert(_symbol == null) { "$this already has symbol _symbol" }
         _symbol = symbol
         symbol.bind(this)
+        backingField?.correspondingPropertySymbol = symbol
+        getter?.correspondingPropertySymbol = symbol
+        setter?.correspondingPropertySymbol = symbol
         return this
     }
 }

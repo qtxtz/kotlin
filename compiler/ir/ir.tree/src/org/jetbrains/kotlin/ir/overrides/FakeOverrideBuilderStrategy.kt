@@ -153,15 +153,10 @@ abstract class FakeOverrideBuilderStrategy {
             property.acquireSymbol(IrPropertySymbolImpl())
 
             property.getter?.let {
-                it.correspondingPropertySymbol = property.symbol
                 linkFunctionFakeOverride(it as? IrFunctionWithLateBinding ?: error("Unexpected fake override getter: $it"), manglerCompatibleMode)
             }
             property.setter?.let {
-                it.correspondingPropertySymbol = property.symbol
                 linkFunctionFakeOverride(it as? IrFunctionWithLateBinding ?: error("Unexpected fake override setter: $it"), manglerCompatibleMode)
-            }
-            property.backingField?.let {
-                it.correspondingPropertySymbol = property.symbol
             }
         }
 

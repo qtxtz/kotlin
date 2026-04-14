@@ -170,21 +170,16 @@ private class IrLinkerFakeOverrideBuilderStrategy(
         }
 
         property.getter?.let { getter ->
-            getter.correspondingPropertySymbol = property.symbol
             linkFunctionFakeOverride(
                 getter as? IrFunctionWithLateBinding ?: error("Unexpected fake override getter: $getter"),
                 manglerCompatibleMode
             )
         }
         property.setter?.let { setter ->
-            setter.correspondingPropertySymbol = property.symbol
             linkFunctionFakeOverride(
                 setter as? IrFunctionWithLateBinding ?: error("Unexpected fake override setter: $setter"),
                 manglerCompatibleMode
             )
-        }
-        property.backingField?.let { backingField ->
-            backingField.correspondingPropertySymbol = property.symbol
         }
     }
 
