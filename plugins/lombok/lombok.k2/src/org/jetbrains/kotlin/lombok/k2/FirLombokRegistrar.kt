@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.lombok.k2
 
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
+import org.jetbrains.kotlin.lombok.k2.checkers.FirLombokCheckersExtension
 import org.jetbrains.kotlin.lombok.k2.config.LombokService
 import org.jetbrains.kotlin.lombok.k2.generators.*
 import java.io.File
@@ -21,7 +22,9 @@ class FirLombokRegistrar(private val lombokConfigFile: File?) : FirExtensionRegi
         +::DeclarationWithValueAnnStatusTransformer
 
         +::LoggerGenerator
+        +::FirLombokCheckersExtension
 
-        registerDiagnosticContainers(LombokDiagnostics)
+        registerDiagnosticContainers(LombokCliDiagnostics)
+        registerDiagnosticContainers(LombokFirDiagnostics)
     }
 }
