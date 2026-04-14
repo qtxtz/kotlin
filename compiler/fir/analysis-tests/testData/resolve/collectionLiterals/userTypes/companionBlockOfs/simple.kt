@@ -3,7 +3,7 @@
 
 class MyList<T> {
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun <T> of(vararg x: T): MyList<T> = MyList()
+        operator fun <T> of(vararg x: T): MyList<T> = MyList()
     }
 }
 

@@ -8,7 +8,7 @@ annotation class MyExperimental
 class C {
     companion {
         @MyExperimental
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg i: Int) = C()
+        operator fun of(vararg i: Int) = C()
     }
 }
 

@@ -1,5 +1,5 @@
 // LANGUAGE: +CompanionBlocksAndExtensions +CollectionLiterals
-// RUN_PIPELINE_TILL: FRONTEND
+// RUN_PIPELINE_TILL: BACKEND
 
 class HiddenSetInObject {
     companion object {
@@ -11,8 +11,8 @@ class HiddenSetInObject {
     }
 
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Int): HiddenSetInObject = HiddenSetInObject()
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(x: Int): HiddenSetInObject = HiddenSetInObject()
+        operator fun of(vararg x: Int): HiddenSetInObject = HiddenSetInObject()
+        operator fun of(x: Int): HiddenSetInObject = HiddenSetInObject()
     }
 }
 
@@ -26,15 +26,15 @@ class HiddenSetInBlock {
     }
 
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Int): HiddenSetInBlock = HiddenSetInBlock()
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(x: Int): HiddenSetInBlock = HiddenSetInBlock()
+        operator fun of(vararg x: Int): HiddenSetInBlock = HiddenSetInBlock()
+        operator fun of(x: Int): HiddenSetInBlock = HiddenSetInBlock()
     }
 }
 
 class HiddenPartsOfTheSameSetInBlock {
     companion {
         @Deprecated("", level = DeprecationLevel.HIDDEN)
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of() = HiddenPartsOfTheSameSetInBlock()
+        operator fun of() = HiddenPartsOfTheSameSetInBlock()
     }
 
     companion object {
@@ -49,8 +49,8 @@ class HiddenPartsOfTheSameSetInObject {
     }
 
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of() = HiddenPartsOfTheSameSetInObject()
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg i: Int) = HiddenPartsOfTheSameSetInObject()
+        operator fun of() = HiddenPartsOfTheSameSetInObject()
+        operator fun of(vararg i: Int) = HiddenPartsOfTheSameSetInObject()
     }
 }
 

@@ -3,7 +3,7 @@
 
 class E<T>(val t: T) {
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun <T> of(vararg ts: T): E<T> = E(ts[0])
+        operator fun <T> of(vararg ts: T): E<T> = E(ts[0])
     }
 }
 

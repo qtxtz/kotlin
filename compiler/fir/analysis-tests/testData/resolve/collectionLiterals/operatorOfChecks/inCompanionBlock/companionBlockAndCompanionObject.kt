@@ -10,40 +10,40 @@ class EmptyCompanionBlock {
 
 class EmptyCompanionObject {
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: String): EmptyCompanionObject = EmptyCompanionObject()
+        operator fun of(vararg x: String): EmptyCompanionObject = EmptyCompanionObject()
     }
     companion object
 }
 
 class TwoSetsOfSingleSame {
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Int): <!UNRESOLVED_REFERENCE!>TwoSetsOfSingle<!> = <!UNRESOLVED_REFERENCE!>TwoSetsOfSingle<!>()
+        <!MULTIPLE_VARARG_OVERLOADS_OF_OPERATOR_OF!>operator fun of(vararg x: Int): <!UNRESOLVED_REFERENCE!>TwoSetsOfSingle<!><!> = <!UNRESOLVED_REFERENCE!>TwoSetsOfSingle<!>()
     }
 
     companion object {
-        operator fun of(vararg x: Int): TwoSetsOfSingleSame = TwoSetsOfSingleSame()
+        <!MULTIPLE_VARARG_OVERLOADS_OF_OPERATOR_OF!>operator fun of(vararg x: Int): TwoSetsOfSingleSame<!> = TwoSetsOfSingleSame()
     }
 }
 
 class TwoSetsOfSingleDifferent {
     companion object {
-        operator fun of(vararg x: Int): TwoSetsOfSingleDifferent = TwoSetsOfSingleDifferent()
+        <!MULTIPLE_VARARG_OVERLOADS_OF_OPERATOR_OF!>operator fun of(vararg x: Int): TwoSetsOfSingleDifferent<!> = TwoSetsOfSingleDifferent()
     }
 
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Long): TwoSetsOfSingleDifferent = TwoSetsOfSingleDifferent()
+        <!MULTIPLE_VARARG_OVERLOADS_OF_OPERATOR_OF!>operator fun of(vararg x: Long): TwoSetsOfSingleDifferent<!> = TwoSetsOfSingleDifferent()
     }
 }
 
 class TwoSetsOfMultiple {
     companion object {
-        operator fun of(vararg x: Int): TwoSetsOfMultiple = TwoSetsOfMultiple()
+        <!MULTIPLE_VARARG_OVERLOADS_OF_OPERATOR_OF!>operator fun of(vararg x: Int): TwoSetsOfMultiple<!> = TwoSetsOfMultiple()
         operator fun of(): TwoSetsOfMultiple = TwoSetsOfMultiple()
     }
 
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Long): TwoSetsOfMultiple = TwoSetsOfMultiple()
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(): TwoSetsOfMultiple = TwoSetsOfMultiple()
+        <!MULTIPLE_VARARG_OVERLOADS_OF_OPERATOR_OF!>operator fun of(vararg x: Long): TwoSetsOfMultiple<!> = TwoSetsOfMultiple()
+        operator fun of(): TwoSetsOfMultiple = TwoSetsOfMultiple()
     }
 }
 
@@ -53,7 +53,7 @@ class OneSetDistributed {
     }
 
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(): OneSetDistributed = OneSetDistributed()
+        <!OF_OVERLOADS_IN_BLOCK_AND_OBJECT!>operator fun of(): OneSetDistributed<!> = OneSetDistributed()
     }
 }
 

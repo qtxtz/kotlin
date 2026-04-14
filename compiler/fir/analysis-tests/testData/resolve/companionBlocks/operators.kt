@@ -45,8 +45,7 @@ class C {
 
         <!INAPPLICABLE_OPERATOR_MODIFIER("must be a member or an extension function")!>operator<!> fun provideDelegate(thisRef: Any?, property: kotlin.reflect.KProperty<*>) = lazy { 1 }
 
-        // KT-84295
-        <!INAPPLICABLE_OPERATOR_MODIFIER("must be a member of companion")!>operator<!> fun of(vararg x: Int) = C()
+        operator fun of(vararg x: Int) = C()
 
         operator fun invoke() {}
     }

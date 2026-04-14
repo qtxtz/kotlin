@@ -677,6 +677,10 @@ object DIAGNOSTICS_LIST : DiagnosticList("FirErrors") {
             parameter<String>("overloadSuspendability")
             parameter<String>("mainOverloadSuspendability")
         }
+        val OF_OVERLOADS_IN_BLOCK_AND_OBJECT by error<KtNamedFunction>(PositioningStrategy.DECLARATION_SIGNATURE_OR_DEFAULT) {
+            parameter<String>("overloadOrigin")
+            parameter<String>("mainOrigin")
+        }
         val INCONSISTENT_TYPE_PARAMETERS_IN_OF_OVERLOADS by error<KtNamedFunction>(PositioningStrategy.TYPE_PARAMETERS_LIST) {
             parameter<FirNamedFunctionSymbol>("mainOverload")
         }

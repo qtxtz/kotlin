@@ -644,6 +644,7 @@ import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.NULLABLE_TYPE_IN_
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.NULLABLE_TYPE_OF_ANNOTATION_MEMBER
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.NULL_FOR_NONNULL_TYPE
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.NUMERIC_CAST_NEVER_SUCCEEDS_BUT_CAN_BE_REPLACED_WITH_TO_CALL
+import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.OF_OVERLOADS_IN_BLOCK_AND_OBJECT
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.ONLY_ONE_CLASS_BOUND_ALLOWED
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.OPERATOR_CALL_ON_CONSTRUCTOR
 import org.jetbrains.kotlin.fir.analysis.diagnostics.FirErrors.OPERATOR_MODIFIER_REQUIRED
@@ -1707,6 +1708,12 @@ object FirErrorsDefaultMessages : BaseDiagnosticRendererFactory() {
         )
         map.put(
             INCONSISTENT_SUSPEND_IN_OF_OVERLOADS,
+            "Overload of operator ''of'' is {0} while the overload with ''vararg'' parameter is {1}.",
+            STRING,
+            STRING,
+        )
+        map.put(
+            OF_OVERLOADS_IN_BLOCK_AND_OBJECT,
             "Overload of operator ''of'' is {0} while the overload with ''vararg'' parameter is {1}.",
             STRING,
             STRING,

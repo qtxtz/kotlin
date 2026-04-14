@@ -3,13 +3,13 @@
 
 class A {
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Int): A = A()
+        operator fun of(vararg x: Int): A = A()
     }
 }
 
 class B {
     companion {
-        <!INAPPLICABLE_OPERATOR_MODIFIER!>operator<!> fun of(vararg x: Int): B = B()
+        operator fun of(vararg x: Int): B = B()
     }
 }
 

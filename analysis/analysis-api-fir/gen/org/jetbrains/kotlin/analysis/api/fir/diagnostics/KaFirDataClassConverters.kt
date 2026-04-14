@@ -5365,6 +5365,14 @@ private fun KaDiagnosticConverterBuilder.addConversions120() {
             token,
         )
     }
+    add(FirErrors.OF_OVERLOADS_IN_BLOCK_AND_OBJECT) { firDiagnostic ->
+        OfOverloadsInBlockAndObjectImpl(
+            firDiagnostic.a,
+            firDiagnostic.b,
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
     add(FirErrors.CANNOT_INFER_PARAMETER_TYPE) { firDiagnostic ->
         CannotInferParameterTypeImpl(
             firSymbolBuilder.classifierBuilder.buildTypeParameterSymbol(firDiagnostic.a),

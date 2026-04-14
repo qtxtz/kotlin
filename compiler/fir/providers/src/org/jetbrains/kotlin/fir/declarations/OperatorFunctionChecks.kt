@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.fir.declarations
 
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.containingClassForStaticMemberAttr
 import org.jetbrains.kotlin.fir.containingClassLookupTag
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanionBlockMember
@@ -289,11 +290,15 @@ private object Checks {
                     }
                 }
             ) { function, session ->
-                val dispatch = function.dispatchReceiverType?.toRegularClassSymbol(session)
-                if (dispatch?.isCompanion != true)
+                val outerClass = if (function.isCompanionBlockMember && !function.isJavaOrEnhancement) {
+                    function.containingClassForStaticMemberAttr?.toRegularClassSymbol(session)
+                } else {
+                    val dispatch = function.dispatchReceiverType?.toRegularClassSymbol(session)
+                    dispatch?.takeIf { it.isCompanion }?.getContainingClassSymbol() as? FirRegularClassSymbol
+                }
+                if (outerClass == null) {
                     return@full OperatorDiagnostic.IllegalOperatorDiagnostic("must be a member of companion")
-
-                val outerClass = dispatch.getContainingClassSymbol() as? FirRegularClassSymbol ?: return@full null
+                }
                 val returnType = function.returnTypeRef.coneType.fullyExpandedType(session)
                 val lowerBound = returnType.lowerBoundIfFlexible()
 

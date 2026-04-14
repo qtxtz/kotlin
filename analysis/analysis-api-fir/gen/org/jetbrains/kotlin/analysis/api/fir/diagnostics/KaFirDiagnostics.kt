@@ -1516,6 +1516,12 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         val mainOverloadSuspendability: String
     }
 
+    interface OfOverloadsInBlockAndObject : KaFirDiagnostic<KtNamedFunction> {
+        override val diagnosticClass get() = OfOverloadsInBlockAndObject::class
+        val overloadOrigin: String
+        val mainOrigin: String
+    }
+
     interface InconsistentTypeParametersInOfOverloads : KaFirDiagnostic<KtNamedFunction> {
         override val diagnosticClass get() = InconsistentTypeParametersInOfOverloads::class
         val mainOverload: KaFunctionSymbol
