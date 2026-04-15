@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-package org.jetbrains.kotlin.analysis.api.fir
+package org.jetbrains.kotlin.analysis.api.fir.imports
 
 import org.jetbrains.kotlin.analysis.api.impl.base.imports.KaBaseDefaultImportsProvider
 import org.jetbrains.kotlin.analysis.api.platform.projectStructure.KaModulePlatformKind
