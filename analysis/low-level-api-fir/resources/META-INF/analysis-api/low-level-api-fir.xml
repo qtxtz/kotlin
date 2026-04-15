@@ -42,7 +42,7 @@
         serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.services.LLRealFirElementByPsiElementChooser"
     />
 
-    <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.projectStructure.LLFirBuiltinsSessionFactory"/>
+    <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirBuiltinsSessionFactory"/>
     <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionCache"/>
     <projectService serviceImplementation="org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.cache.LLFirSessionInvalidationService"/>
     <projectService

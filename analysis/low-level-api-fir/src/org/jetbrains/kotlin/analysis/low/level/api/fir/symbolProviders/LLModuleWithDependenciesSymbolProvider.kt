@@ -222,7 +222,7 @@ internal class LLDependenciesSymbolProvider(
      *
      * 1. The builtins from the stdlib library symbol provider.
      * 2. The fallback builtins from the symbol provider created in
-     *    [LLFirBuiltinsSessionFactory][org.jetbrains.kotlin.analysis.low.level.api.fir.projectStructure.LLFirBuiltinsSessionFactory].
+     *    [LLFirBuiltinsSessionFactory][org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.LLFirBuiltinsSessionFactory].
      *
      * In contrast to class symbols where we return the first match, for callables we query all symbol providers and build a list of all
      * candidates. Callables declared in the same facade class, but provided by two different symbol providers, are essentially duplicates.
