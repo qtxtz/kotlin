@@ -455,6 +455,7 @@ class FirCallCompletionResultsWriterTransformer(
             val functionIsInline =
                 (symbol as? FirNamedFunctionSymbol)?.fir?.isInline == true || symbol.isArrayConstructorWithLambda
             for ((argument, parameter) in newArgumentList.mapping) {
+                session.lookupTracker?.recordTypeResolveAsLookup(parameter.returnTypeRef, argument.source, context.file.source)
                 val lambda = (argument.unwrapArgument() as? FirAnonymousFunctionExpression)?.anonymousFunction ?: continue
                 lambda.transformInlineStatus(parameter, functionIsInline, session)
             }
