@@ -6,11 +6,9 @@
 package org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.factory.components
 
 import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
+import org.jetbrains.kotlin.analysis.low.level.api.fir.util.forEachComponentPlatform
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
-import org.jetbrains.kotlin.platform.*
-import org.jetbrains.kotlin.platform.jvm.JvmPlatform
-import org.jetbrains.kotlin.platform.wasm.WasmPlatformWithTarget
-import org.jetbrains.kotlin.platform.wasm.WasmTarget
+import org.jetbrains.kotlin.platform.TargetPlatform
 
 /**
  * Handles the registration of platform-specific session components.
@@ -50,26 +48,14 @@ internal interface LLPlatformSessionComponentRegistration {
     fun registerDanglingFileComponents(session: LLFirSession) {}
 
     companion object {
-        fun forPlatform(targetPlatform: TargetPlatform): List<LLPlatformSessionComponentRegistration> = buildList {
-            if (targetPlatform.has<JvmPlatform>()) {
-                add(LLJvmSessionComponentRegistration)
+        fun forPlatform(targetPlatform: TargetPlatform): List<LLPlatformSessionComponentRegistration> =
+            buildList {
+                targetPlatform.forEachComponentPlatform(
+                    onJvm = { add(LLJvmSessionComponentRegistration) },
+                    onJs = { add(LLJsSessionComponentRegistration) },
+                    onWasm = { add(LLWasmSessionComponentRegistration(it)) },
+                    onNative = { add(LLNativeSessionComponentRegistration) },
+                )
             }
-
-            if (targetPlatform.has<JsPlatform>()) {
-                add(LLJsSessionComponentRegistration)
-            }
-
-            if (targetPlatform.has<WasmPlatform>()) {
-                val wasmTargets = targetPlatform.subplatformsOfType<WasmPlatform>().mapTo(mutableSetOf()) { platform ->
-                    (platform as? WasmPlatformWithTarget)?.target ?: WasmTarget.JS
-                }
-
-                wasmTargets.forEach { add(LLWasmSessionComponentRegistration(it)) }
-            }
-
-            if (targetPlatform.has<NativePlatform>()) {
-                add(LLNativeSessionComponentRegistration)
-            }
-        }
     }
 }

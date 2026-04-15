@@ -68,8 +68,7 @@ abstract class LLFirSession(
      *
      * It should not be confused with the [ktModule]'s [TargetPlatform][org.jetbrains.kotlin.platform.TargetPlatform].
      */
-    internal val platformKind: KaModulePlatformKind
-        get() = ktModule.platformKind
+    internal val platformKind: KaModulePlatformKind = ktModule.platformKind
 
     /**
      * Whether the [LLFirSession] is a metadata session.
