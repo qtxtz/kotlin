@@ -1,5 +1,5 @@
 // RUN_PIPELINE_TILL: BACKEND
-// LANGUAGE: +UnitConversionsOnArbitraryExpressions +SuspendConversion
+// LANGUAGE: +UnitConversionsOnArbitraryExpressions
 // ISSUE: KT-84393
 // DIAGNOSTICS: -UNUSED_PARAMETER
 

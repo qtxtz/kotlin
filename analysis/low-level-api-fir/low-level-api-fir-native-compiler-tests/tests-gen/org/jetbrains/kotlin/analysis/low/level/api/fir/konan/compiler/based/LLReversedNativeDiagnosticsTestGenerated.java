@@ -109,12 +109,6 @@ public class LLReversedNativeDiagnosticsTestGenerated extends AbstractLLReversed
   }
 
   @Test
-  @TestMetadata("isInitializedError.kt")
-  public void testIsInitializedError() {
-    run("isInitializedError.kt");
-  }
-
-  @Test
   @TestMetadata("localClassesInInlineFunctionsNative.kt")
   public void testLocalClassesInInlineFunctionsNative() {
     run("localClassesInInlineFunctionsNative.kt");

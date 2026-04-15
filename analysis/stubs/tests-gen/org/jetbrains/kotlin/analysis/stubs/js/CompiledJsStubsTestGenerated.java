@@ -323,12 +323,6 @@ public class CompiledJsStubsTestGenerated extends AbstractCompiledJsStubsTest {
   }
 
   @Test
-  @TestMetadata("diagnosticTags_ERR.kt")
-  public void testDiagnosticTags_ERR() {
-    run("diagnosticTags_ERR.kt");
-  }
-
-  @Test
   @TestMetadata("DocCommentAfterFileAnnotations.kt")
   public void testDocCommentAfterFileAnnotations() {
     run("DocCommentAfterFileAnnotations.kt");

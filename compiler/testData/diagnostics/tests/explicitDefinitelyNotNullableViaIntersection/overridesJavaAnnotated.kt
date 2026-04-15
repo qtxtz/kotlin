@@ -1,5 +1,4 @@
 // RUN_PIPELINE_TILL: FRONTEND
-// LANGUAGE: +DefinitelyNonNullableTypes
 
 // FILE: A.java
 import org.jetbrains.annotations.*;

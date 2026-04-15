@@ -1,5 +1,4 @@
 // RUN_PIPELINE_TILL: FRONTEND
-// LANGUAGE: +JvmRecordSupport
 
 // FILE: MyRecord.java
 public record MyRecord(String str) {}
