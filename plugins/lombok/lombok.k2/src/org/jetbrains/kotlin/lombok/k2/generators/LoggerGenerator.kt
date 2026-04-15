@@ -50,6 +50,10 @@ import org.jetbrains.kotlin.name.SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT
 import org.jetbrains.kotlin.types.ConstantValueKind
 import org.jetbrains.kotlin.utils.addIfNotNull
 
+data object LoggerGeneratorKey : GeneratedDeclarationKey()
+
+val FirDeclarationOrigin.isLogger get() = this is FirDeclarationOrigin.Plugin && this.key == LoggerGeneratorKey
+
 class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
     companion object {
         private val LOGGING_FQ_NAME = FqName("java.util.logging")
@@ -59,10 +63,6 @@ class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
 
         private val PREDICATE = DeclarationPredicate.create { annotated(listOf(LombokNames.LOG)) }
     }
-
-    data object LoggerGeneratorKey : GeneratedDeclarationKey()
-
-    val loggerOrigin = FirDeclarationOrigin.Plugin(LoggerGeneratorKey)
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(PREDICATE)
@@ -112,7 +112,7 @@ class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
 
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         return buildSet {
-            if ((classSymbol.origin as? FirDeclarationOrigin.Plugin)?.key == LoggerGeneratorKey) {
+            if (classSymbol.origin.isLogger) {
                 add(SpecialNames.INIT) // Generated companion needs a constructor
             }
             addIfNotNull(logPropertiesCache.getValue(classSymbol, context)?.name)

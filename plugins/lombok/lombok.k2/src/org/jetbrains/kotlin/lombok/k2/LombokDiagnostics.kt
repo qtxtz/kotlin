@@ -11,13 +11,17 @@ import org.jetbrains.kotlin.diagnostics.error0
 import org.jetbrains.kotlin.diagnostics.errorWithoutSource
 import org.jetbrains.kotlin.diagnostics.rendering.BaseDiagnosticRendererFactory
 import org.jetbrains.kotlin.diagnostics.rendering.BaseSourcelessDiagnosticRendererFactory
+import org.jetbrains.kotlin.diagnostics.rendering.CommonRenderers
 import org.jetbrains.kotlin.diagnostics.warning0
+import org.jetbrains.kotlin.diagnostics.warning1
 import org.jetbrains.kotlin.diagnostics.warningWithoutSource
 import org.jetbrains.kotlin.lombok.k2.LombokCliDiagnostics.LOMBOK_CONFIG_IS_MISSING
 import org.jetbrains.kotlin.lombok.k2.LombokCliDiagnostics.LOMBOK_PLUGIN_IS_EXPERIMENTAL
 import org.jetbrains.kotlin.lombok.k2.LombokCliDiagnostics.UNKNOWN_PLUGIN_OPTION
+import org.jetbrains.kotlin.lombok.k2.LombokFirDiagnostics.LOG_PROPERTY_ALREADY_EXISTS
 import org.jetbrains.kotlin.lombok.k2.LombokFirDiagnostics.LOG_FLAG_USAGE_ERROR
 import org.jetbrains.kotlin.lombok.k2.LombokFirDiagnostics.LOG_FLAG_USAGE_WARNING
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
 import kotlin.getValue
 
@@ -32,6 +36,7 @@ object LombokCliDiagnostics : KtDiagnosticsContainer() {
 object LombokFirDiagnostics : KtDiagnosticsContainer() {
     val LOG_FLAG_USAGE_WARNING by warning0<KtAnnotationEntry>()
     val LOG_FLAG_USAGE_ERROR by error0<KtAnnotationEntry>()
+    val LOG_PROPERTY_ALREADY_EXISTS by warning1<KtAnnotationEntry, Name>()
 
     override fun getRendererFactory(): BaseDiagnosticRendererFactory = LombokFirDiagnosticsMessages
 }
@@ -49,5 +54,6 @@ object LombokFirDiagnosticsMessages : BaseDiagnosticRendererFactory() {
     override val MAP by KtDiagnosticFactoryToRendererMap("FIR") { map ->
         map.put(LOG_FLAG_USAGE_WARNING, LOG_FLAG_USAGE_MESSAGE)
         map.put(LOG_FLAG_USAGE_ERROR, LOG_FLAG_USAGE_MESSAGE)
+        map.put(LOG_PROPERTY_ALREADY_EXISTS, "Property ''{0}'' already exists.", CommonRenderers.NAME)
     }
 }

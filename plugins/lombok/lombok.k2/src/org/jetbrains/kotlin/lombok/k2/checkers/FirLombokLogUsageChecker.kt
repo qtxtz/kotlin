@@ -9,17 +9,17 @@ import org.jetbrains.kotlin.diagnostics.DiagnosticReporter
 import org.jetbrains.kotlin.diagnostics.reportOn
 import org.jetbrains.kotlin.fir.analysis.checkers.MppCheckerKind
 import org.jetbrains.kotlin.fir.analysis.checkers.context.CheckerContext
-import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirClassChecker
-import org.jetbrains.kotlin.fir.declarations.FirClass
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirRegularClassChecker
+import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
 import org.jetbrains.kotlin.lombok.k2.LombokFirDiagnostics
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Log.FlagUsageValue
 import org.jetbrains.kotlin.lombok.k2.config.lombokService
 import org.jetbrains.kotlin.lombok.utils.LombokNames
 
-object FirLombokLogUsageChecker : FirClassChecker(MppCheckerKind.Common) {
+object FirLombokLogUsageChecker : FirRegularClassChecker(MppCheckerKind.Common) {
     context(context: CheckerContext, reporter: DiagnosticReporter)
-    override fun check(declaration: FirClass) {
+    override fun check(declaration: FirRegularClass) {
         val log = context.session.lombokService.getLog(declaration.symbol) ?: return
         val flagUsage = log.flagUsage ?: return
         val source = declaration.annotations.getAnnotationByClassId(LombokNames.LOG_ID, context.session)?.source
