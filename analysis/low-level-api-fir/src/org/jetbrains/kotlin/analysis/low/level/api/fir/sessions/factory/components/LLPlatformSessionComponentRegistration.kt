@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 import org.jetbrains.kotlin.analysis.low.level.api.fir.util.forEachComponentPlatform
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.platform.TargetPlatform
+import org.jetbrains.kotlin.resolve.DefaultImportsProvider
 
 /**
  * Handles the registration of platform-specific session components.
@@ -46,6 +47,13 @@ internal interface LLPlatformSessionComponentRegistration {
      * Registers components specific to dangling file sessions.
      */
     fun registerDanglingFileComponents(session: LLFirSession) {}
+
+    /**
+     * The [DefaultImportsProvider] that is registered by [registerComponents] for this platform.
+     *
+     * The property is needed to retrieve the [DefaultImportsProvider] for a [TargetPlatform] without actually setting up a session.
+     */
+    val defaultImportsProvider: DefaultImportsProvider
 
     companion object {
         fun forPlatform(targetPlatform: TargetPlatform): List<LLPlatformSessionComponentRegistration> =

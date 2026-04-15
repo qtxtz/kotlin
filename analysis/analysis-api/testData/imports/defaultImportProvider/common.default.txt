@@ -1,5 +1,5 @@
 LOW:
-  <EMPTY>
+  import java.lang.*
 HIGH:
   import kotlin.*
   import kotlin.annotation.*

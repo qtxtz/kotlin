@@ -5,17 +5,10 @@
 
 package org.jetbrains.kotlin.analysis.low.level.api.fir.util
 
-import org.jetbrains.kotlin.analysis.api.KaImplementationDetail
 import org.jetbrains.kotlin.platform.*
 import org.jetbrains.kotlin.platform.jvm.JvmPlatform
 import org.jetbrains.kotlin.platform.wasm.WasmPlatformWithTarget
 import org.jetbrains.kotlin.platform.wasm.WasmTarget
-
-@KaImplementationDetail
-fun TargetPlatform.getWasmTarget(): WasmTarget {
-    val platform = singleOrNull()
-    return (platform as? WasmPlatformWithTarget)?.target ?: WasmTarget.JS
-}
 
 /**
  * Iterates over each component platform kind present in this [TargetPlatform], invoking the corresponding callback for each.

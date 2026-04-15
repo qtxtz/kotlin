@@ -10,13 +10,22 @@ import org.jetbrains.kotlin.fir.SessionConfiguration
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.session.FirWasmSessionFactory
 import org.jetbrains.kotlin.platform.wasm.WasmTarget
+import org.jetbrains.kotlin.resolve.DefaultImportsProvider
 
 @OptIn(SessionConfiguration::class)
 internal class LLWasmSessionComponentRegistration(private val wasmTarget: WasmTarget) : LLPlatformSessionComponentRegistration {
+    /**
+     * We have to distinguish between WasmJS and WasmWasi to pick the correct session factory.
+     */
+    private val firSessionFactory: FirWasmSessionFactory
+        get() = FirWasmSessionFactory.of(wasmTarget)
+
     override fun registerComponents(session: LLFirSession, platformSpecificSymbolProviders: List<FirSymbolProvider>) = with(session) {
-        // We have to distinguish between WasmJS and WasmWasi and pick the correct session factory.
-        with(FirWasmSessionFactory.of(wasmTarget)) {
+        with(firSessionFactory) {
             registerWasmComponents()
         }
     }
+
+    override val defaultImportsProvider: DefaultImportsProvider
+        get() = firSessionFactory.defaultImportsProvider
 }

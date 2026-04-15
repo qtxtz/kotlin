@@ -11,6 +11,8 @@ import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 import org.jetbrains.kotlin.fir.scopes.FirOverrideChecker
 import org.jetbrains.kotlin.fir.scopes.impl.FirStandardOverrideChecker
 import org.jetbrains.kotlin.fir.session.FirNativeSessionFactory
+import org.jetbrains.kotlin.resolve.DefaultImportsProvider
+import org.jetbrains.kotlin.resolve.konan.platform.NativeDefaultImportsProvider
 
 @OptIn(SessionConfiguration::class)
 internal object LLNativeSessionComponentRegistration : LLPlatformSessionComponentRegistration {
@@ -33,4 +35,7 @@ internal object LLNativeSessionComponentRegistration : LLPlatformSessionComponen
         // of the native overload checker. Hence, we use the standard override checker instead.
         register(FirOverrideChecker::class, FirStandardOverrideChecker(this))
     }
+
+    override val defaultImportsProvider: DefaultImportsProvider
+        get() = NativeDefaultImportsProvider
 }
