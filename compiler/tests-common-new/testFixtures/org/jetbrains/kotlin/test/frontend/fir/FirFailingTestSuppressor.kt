@@ -5,20 +5,40 @@
 
 package org.jetbrains.kotlin.test.frontend.fir
 
-import org.jetbrains.kotlin.test.frontend.AbstractFailingFacadeSuppressor
+import org.jetbrains.kotlin.test.WrappedException
+import org.jetbrains.kotlin.test.model.AfterAnalysisChecker
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.model.TestArtifactKind
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.moduleStructure
-import org.jetbrains.kotlin.test.utils.firTestDataFile
-import java.io.File
+import org.jetbrains.kotlin.test.utils.isLLFirTestData
 
-class FirFailingTestSuppressor(testServices: TestServices) : AbstractFailingFacadeSuppressor(testServices) {
-
-    override fun testFile(): File {
-        return testServices.moduleStructure.originalTestDataFiles.first().firTestDataFile
-    }
-
-    override val facadeKind: TestArtifactKind<*>
+class FirFailingTestSuppressor(testServices: TestServices) : AfterAnalysisChecker(testServices) {
+    private val facadeKind: TestArtifactKind<*>
         get() = FrontendKinds.FIR
+
+    override val order: Order
+        get() = Order.P5
+
+    override fun suppressIfNeeded(failedAssertions: List<WrappedException>): List<WrappedException> {
+        val testFile = testServices.moduleStructure.originalTestDataFiles.first()
+        val failFile = testFile.parentFile.resolve("${testFile.nameWithoutExtension}.fail").takeIf { it.exists() }
+            ?: return failedAssertions
+        val (suppressible, notSuppressible) = failedAssertions.partition {
+            when (it) {
+                is WrappedException.FromFacade -> it.facade.outputKind == facadeKind
+                is WrappedException.FromHandler -> it.handler.artifactKind == facadeKind
+                is WrappedException.FromMetaInfoHandler -> true
+                else -> false
+            }
+        }
+
+        return when {
+            suppressible.isNotEmpty() -> notSuppressible
+
+            // do not mute ll tests as they might behave differently
+            testServices.moduleStructure.originalTestDataFiles.first().isLLFirTestData -> failedAssertions
+            else -> failedAssertions + AssertionError("Fail file exists but no exceptions was thrown. Please remove ${failFile.name}").wrap()
+        }
+    }
 }
