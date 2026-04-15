@@ -505,6 +505,49 @@ class IncrementalCompilationTest : AbstractNativeSimpleTest() {
         runExecutableAndVerify(main1.testCase, main1.testExecutable)
     }
 
+    // This is a reproducer for #KT-82899
+    @Test
+    @TestMetadata("inlineFunSameLibRemoveFunctions")
+    fun inlineFunSameLibRemoveFunctions() = withRootDir(File("$TEST_SUITE_PATH/inlineFunSameLibRemoveFunctions")) {
+        val lib = compileLibrary("lib") {
+            "lib/lib.file1.kt" copyTo "lib.file1.kt"
+            "lib/lib.file2.kt" copyTo "lib.file2.kt"
+            "lib/lib.file3.kt" copyTo "lib.file3.kt"
+        }
+        val main = compileToExecutable("main", lib) { "main/main.kt" copyTo "main.kt" }
+
+        assertTrue(main.executableFile.exists())
+        val libFile1KtCacheDir = getLibraryFileCache("lib", "lib/lib.file1.kt", "test")
+        val libFile2KtCacheDir = getLibraryFileCache("lib", "lib/lib.file2.kt", "test")
+        val libFile3KtCacheDir = getLibraryFileCache("lib", "lib/lib.file3.kt", "test")
+        assertTrue(libFile1KtCacheDir.exists())
+        assertTrue(libFile2KtCacheDir.exists())
+        assertTrue(libFile3KtCacheDir.exists())
+        val modified1 = libFile1KtCacheDir.lastModified()
+        val modified2 = libFile2KtCacheDir.lastModified()
+        val modified3 = libFile3KtCacheDir.lastModified()
+        runExecutableAndVerify(main.testCase, main.testExecutable)
+
+        // IC step: file1 loses most inline functions, file2 unchanged, file3 updated accordingly.
+        // After file1 has been changed, it's inline function bodies index (stored in a separate file in the cache directory)
+        // becomes invalid as a lot of signatures have been removed.
+        val lib1 = compileLibrary("lib") {
+            "lib/lib.file1.1.kt" copyTo "lib.file1.kt"
+            "lib/lib.file2.kt" copyTo "lib.file2.kt"
+            "lib/lib.file3.1.kt" copyTo "lib.file3.kt"
+        }
+        val main1 = compileToExecutable("main", lib1) { "main/main.1.kt" copyTo "main.kt" }
+        assertTrue(main1.executableFile.exists())
+        assertTrue(libFile1KtCacheDir.exists())
+        assertTrue(libFile2KtCacheDir.exists())
+        assertTrue(libFile3KtCacheDir.exists())
+        // file2.kt was not modified, so its cache should remain untouched.
+        assertNotEquals(modified1, libFile1KtCacheDir.lastModified())
+        assertEquals(modified2, libFile2KtCacheDir.lastModified())
+        assertNotEquals(modified3, libFile3KtCacheDir.lastModified())
+        runExecutableAndVerify(main1.testCase, main1.testExecutable)
+    }
+
     @Test
     @TestMetadata("internalMethodFakeOverrideInFriendModule")
     fun internalMethodFakeOverrideInFriendModule() {
