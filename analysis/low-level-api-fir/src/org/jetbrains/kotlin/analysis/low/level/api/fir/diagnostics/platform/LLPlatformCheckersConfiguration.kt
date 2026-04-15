@@ -26,6 +26,10 @@ internal interface LLPlatformCheckersConfiguration {
     val expressionCheckers: List<ExpressionCheckers>
     val typeCheckers: List<TypeCheckers>
 
+    val extraDeclarationCheckers: List<DeclarationCheckers> get() = emptyList()
+    val extraExpressionCheckers: List<ExpressionCheckers> get() = emptyList()
+    val extraTypeCheckers: List<TypeCheckers> get() = emptyList()
+
     companion object {
         fun forPlatform(targetPlatform: TargetPlatform): List<LLPlatformCheckersConfiguration> =
             buildList {

@@ -154,6 +154,10 @@ internal class LLCheckersFactory(val session: LLFirSession) : FirSessionComponen
 
         if (filter.runExtraCheckers) {
             add(ExtraDeclarationCheckers)
+
+            platformCheckersConfigurations
+                .flatMap { it.extraDeclarationCheckers }
+                .forEach { add(it.onlyEnabledCheckers()) }
         }
     }
 
@@ -177,6 +181,10 @@ internal class LLCheckersFactory(val session: LLFirSession) : FirSessionComponen
 
         if (filter.runExtraCheckers) {
             add(ExtraExpressionCheckers)
+
+            platformCheckersConfigurations
+                .flatMap { it.extraExpressionCheckers }
+                .forEach { add(it.onlyEnabledCheckers()) }
         }
 
         if (filter.runExperimentalCheckers) {
@@ -200,6 +208,12 @@ internal class LLCheckersFactory(val session: LLFirSession) : FirSessionComponen
                 .forEach { add(it.onlyEnabledCheckers()) }
 
             addAll(extensionCheckers.map { it.typeCheckers })
+        }
+
+        if (filter.runExtraCheckers) {
+            platformCheckersConfigurations
+                .flatMap { it.extraTypeCheckers }
+                .forEach { add(it.onlyEnabledCheckers()) }
         }
 
         if (filter.runExperimentalCheckers) {
