@@ -2240,6 +2240,12 @@ public class FirStandaloneNormalAnalysisSourceModuleResolveSymbolTestGenerated e
     }
 
     @Test
+    @TestMetadata("companionBlockOf.kt")
+    public void testCompanionBlockOf() {
+      run("companionBlockOf.kt");
+    }
+
+    @Test
     @TestMetadata("customGenericCollection.kt")
     public void testCustomGenericCollection() {
       run("customGenericCollection.kt");
