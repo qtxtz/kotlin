@@ -10,7 +10,6 @@ enum class MyEnum {
 }
 
 // MODULE: caller(lib)
-// LANGUAGE: +EnumEntries
 // FILE: Box.kt
 @OptIn(ExperimentalStdlibApi::class)
 fun box(): String {

@@ -523,10 +523,6 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         override val diagnosticClass get() = AbstractSuperCall::class
     }
 
-    interface AbstractSuperCallWarning : KaFirDiagnostic<PsiElement> {
-        override val diagnosticClass get() = AbstractSuperCallWarning::class
-    }
-
     interface InstanceAccessBeforeSuperCall : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = InstanceAccessBeforeSuperCall::class
         val target: String
@@ -813,10 +809,6 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         override val diagnosticClass get() = CycleInAnnotationParameterError::class
     }
 
-    interface CycleInAnnotationParameterWarning : KaFirDiagnostic<KtParameter> {
-        override val diagnosticClass get() = CycleInAnnotationParameterWarning::class
-    }
-
     interface AnnotationClassConstructorCall : KaFirDiagnostic<KtElement> {
         override val diagnosticClass get() = AnnotationClassConstructorCall::class
     }
@@ -1046,10 +1038,6 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
 
     interface WrongExtensionFunctionType : KaFirDiagnostic<KtAnnotationEntry> {
         override val diagnosticClass get() = WrongExtensionFunctionType::class
-    }
-
-    interface WrongExtensionFunctionTypeWarning : KaFirDiagnostic<KtAnnotationEntry> {
-        override val diagnosticClass get() = WrongExtensionFunctionTypeWarning::class
     }
 
     interface AnnotationInWhereClauseError : KaFirDiagnostic<KtAnnotationEntry> {
@@ -4591,10 +4579,6 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
 
     interface ModifierFormForNonBuiltInSuspendFunError : KaFirDiagnostic<PsiElement> {
         override val diagnosticClass get() = ModifierFormForNonBuiltInSuspendFunError::class
-    }
-
-    interface ModifierFormForNonBuiltInSuspendFunWarning : KaFirDiagnostic<PsiElement> {
-        override val diagnosticClass get() = ModifierFormForNonBuiltInSuspendFunWarning::class
     }
 
     interface ReturnForBuiltInSuspend : KaFirDiagnostic<KtReturnExpression> {

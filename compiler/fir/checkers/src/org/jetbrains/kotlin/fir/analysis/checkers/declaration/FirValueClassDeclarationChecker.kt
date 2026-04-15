@@ -100,14 +100,6 @@ sealed class FirValueClassDeclarationChecker(mppKind: MppCheckerKind) : FirRegul
                     primaryConstructorParametersByName = innerDeclaration.valueParameterSymbols.associateBy { it.name }
                     primaryConstructorParametersSymbolsSet = primaryConstructorParametersByName.values.toSet()
                 }
-
-                innerDeclaration.hasBody && !context.languageVersionSettings.supportsFeature(
-                    LanguageFeature.ValueClassesSecondaryConstructorWithBody
-                ) -> {
-                    reporter.reportOn(
-                        innerDeclaration.bodySource!!, FirErrors.SECONDARY_CONSTRUCTOR_WITH_BODY_INSIDE_VALUE_CLASS
-                    )
-                }
             }
         }
         declaration.processAllDeclarations(context.session) { innerDeclaration ->

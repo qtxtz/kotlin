@@ -1,4 +1,4 @@
-// LANGUAGE: +StrictJavaNullabilityAssertions +ProhibitUsingNullableTypeParameterAgainstNotNullAnnotated +DefinitelyNonNullableTypes
+// LANGUAGE: +StrictJavaNullabilityAssertions +DefinitelyNonNullableTypes
 // TARGET_BACKEND: JVM
 
 // FILE: box.kt

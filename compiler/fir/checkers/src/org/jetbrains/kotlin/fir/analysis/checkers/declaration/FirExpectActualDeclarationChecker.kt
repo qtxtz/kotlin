@@ -81,9 +81,7 @@ object FirExpectActualDeclarationChecker : FirBasicDeclarationChecker(MppChecker
         if (declaration is FirProperty) {
             checkExpectPropertyAccessorsModifiers(declaration)
         }
-        if (LanguageFeature.MultiplatformRestrictions.isEnabled() &&
-            declaration is FirFunction && declaration.isTailRec
-        ) {
+        if (declaration is FirFunction && declaration.isTailRec) {
             reporter.reportOn(declaration.source, FirErrors.EXPECTED_TAILREC_FUNCTION)
         }
     }
@@ -116,9 +114,7 @@ object FirExpectActualDeclarationChecker : FirBasicDeclarationChecker(MppChecker
     private fun checkExpectDeclarationHasNoExternalModifier(
         declaration: FirMemberDeclaration,
     ) {
-        if (LanguageFeature.MultiplatformRestrictions.isEnabled() &&
-            declaration.isExternal
-        ) {
+        if (declaration.isExternal) {
             reporter.reportOn(declaration.source, FirErrors.EXPECTED_EXTERNAL_DECLARATION)
         }
     }

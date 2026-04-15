@@ -1,5 +1,5 @@
 // RUN_PIPELINE_TILL: FRONTEND
-// LANGUAGE: +DefinitelyNonNullableTypes +ProhibitUsingNullableTypeParameterAgainstNotNullAnnotated
+// LANGUAGE: +DefinitelyNonNullableTypes
 
 // FILE: A.java
 import org.jetbrains.annotations.*;
