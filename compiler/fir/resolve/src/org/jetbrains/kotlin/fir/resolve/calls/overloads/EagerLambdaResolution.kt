@@ -26,55 +26,63 @@ import org.jetbrains.kotlin.utils.addToStdlib.same
 fun runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(
     candidates: Set<Candidate>,
     components: BodyResolveComponents,
-): Set<Candidate>? = context(components) {
+): Set<Candidate> = context(components) {
     runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(candidates)
 }
 
 context(components: BodyResolveComponents)
-private fun runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(
+private tailrec fun runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(
     candidates: Set<Candidate>,
-): Set<Candidate>? {
-    if (candidates.any { !it.isSuccessful || it.hasNonTrivialContracts() }) return null
-    val call = candidates.first().callInfo.callSite as? FirFunctionCall ?: return null
+): Set<Candidate> {
+    check(candidates.isNotEmpty())
+    if (candidates.size == 1) return candidates
+
+    // No lambda can be analyzed
+    if (!runEagerLambdaAnalysisForFirstReadyLambda(candidates)) return candidates
+
+    val remainingSuccessfulCandidates =
+        candidates.filterTo(mutableSetOf()) { it.isSuccessful }
+
+    // Some candidates are still successful and there might be other ready lambdas, so repeat ELA again
+    if (remainingSuccessfulCandidates.isNotEmpty()) {
+        return runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(remainingSuccessfulCandidates)
+    }
+
+    // If only unsuccessful candidates remain, return the first one.
+    // We might also return all of them to report OVERLOAD_RESOLUTION_AMBIGUITY, but we preserve the current test data behavior
+    // where we report RETURN_TYPE_MISMATCH on the first candidate.
+    return setOf(candidates.first())
+}
+
+/**
+ * @returns false if no lambda has been analyzed
+ */
+
+context(components: BodyResolveComponents)
+private fun runEagerLambdaAnalysisForFirstReadyLambda(
+    candidates: Set<Candidate>,
+): Boolean {
+    if (candidates.any { !it.isSuccessful || it.hasNonTrivialContracts() }) return false
+    val call = candidates.first().callInfo.callSite as? FirFunctionCall ?: return false
 
     // NB: for each `lambdaAtomGroup` all the atoms refer to the same FirAnonymousFunction
     val lambdaAtomGroups = candidates.lambdaAtomGroups()
-    if (lambdaAtomGroups.isEmpty()) return null
+    if (lambdaAtomGroups.isEmpty()) return false
 
     val originalCalleeReference = call.calleeReference
 
-    var anyGroupAnalyzed = false
     try {
         for (lambdaAtomGroup in lambdaAtomGroups) {
             if (!lambdaAtomGroup.same { it.atom.parameterTypes.size }) continue
             if (!lambdaAtomGroup.all { it.atom.expectedType?.isSomeFunctionType(components.session) == true }) continue
             if (!runEagerLambdaAnalysisForLambdaAtomGroup(lambdaAtomGroup, call)) continue
-            anyGroupAnalyzed = true
+            return true
         }
     } finally {
         call.replaceCalleeReference(originalCalleeReference)
     }
 
-    // This is mostly a fast-path, removing it should not affect semantics
-    if (!anyGroupAnalyzed) return null
-
-    val errorCandidates = mutableSetOf<Candidate>()
-    val successfulCandidates = mutableSetOf<Candidate>()
-
-    for (candidate in candidates) {
-        if (candidate.isSuccessful) {
-            successfulCandidates += candidate
-        } else {
-            // TODO: Use for reporting RETURN_TYPE_MISMATCH to avoid test data changes
-            if (errorCandidates.isEmpty()) {
-                errorCandidates += candidate
-            }
-        }
-    }
-    return when {
-        successfulCandidates.isNotEmpty() -> successfulCandidates
-        else -> errorCandidates
-    }
+    return false
 }
 
 /**

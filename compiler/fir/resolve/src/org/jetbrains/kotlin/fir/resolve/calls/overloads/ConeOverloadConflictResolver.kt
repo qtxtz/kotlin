@@ -92,7 +92,7 @@ class ConeOverloadConflictResolver(
                 candidates
 
         // The same logic as at
-        var current = filterOverrides(fixedCandidates)
+        val filteredOverrides = filterOverrides(fixedCandidates)
         // noCompatibilityMode == true in K2 by default
         val noCompatibilityMode = with(transformerComponents) { disableCompatibilityModeForNewInference() }
         val discriminationFlags = DiscriminationFlags(
@@ -109,26 +109,20 @@ class ConeOverloadConflictResolver(
 
         if (LanguageFeature.EagerLambdaAnalysis.isDisabled()) {
             return chooseMaximallySpecificCandidates(
-                current,
+                filteredOverrides,
                 discriminationFlags
             )
         }
 
-        while (true) {
-            val reduced =
-                runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(current, components = transformerComponents) ?: current
+        val afterELA = runEagerLambdaAnalysisAndFilterOutInapplicableCandidates(filteredOverrides, components = transformerComponents)
 
-            // Fast-path
-            if (reduced.size == 1) return reduced
+        // Fast-path
+        if (afterELA.size == 1) return afterELA
 
-            val next = chooseMaximallySpecificCandidates(
-                reduced,
-                discriminationFlags
-            )
-
-            if (next.size <= 1 || current.size == next.size) return next
-            current = next
-        }
+        return chooseMaximallySpecificCandidates(
+            afterELA,
+            discriminationFlags
+        )
     }
 
     /**
