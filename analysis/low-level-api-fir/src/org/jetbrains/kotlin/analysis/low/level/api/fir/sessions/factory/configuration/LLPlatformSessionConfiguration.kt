@@ -65,7 +65,7 @@ internal interface LLPlatformSessionConfiguration {
     companion object {
         fun forPlatform(targetPlatform: TargetPlatform, project: Project): LLPlatformSessionConfiguration =
             when (targetPlatform.toModulePlatformKind()) {
-                KaModulePlatformKind.METADATA -> LLCommonSessionConfiguration(project)
+                KaModulePlatformKind.METADATA -> LLMetadataSessionConfiguration(project)
                 KaModulePlatformKind.JVM -> LLJvmSessionConfiguration(project)
                 KaModulePlatformKind.JS -> LLJsSessionConfiguration(project)
                 KaModulePlatformKind.WASM -> LLWasmSessionConfiguration(project)

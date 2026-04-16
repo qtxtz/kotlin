@@ -11,10 +11,10 @@ import org.jetbrains.kotlin.analysis.low.level.api.fir.sessions.LLFirSession
 import org.jetbrains.kotlin.analysis.low.level.api.fir.symbolProviders.factories.LLLibrarySymbolProviderFactory
 import org.jetbrains.kotlin.fir.resolve.providers.FirSymbolProvider
 
-internal class LLCommonSessionConfiguration(private val project: Project) : LLPlatformSessionConfiguration {
+internal class LLMetadataSessionConfiguration(private val project: Project) : LLPlatformSessionConfiguration {
     override fun createBinaryLibrarySymbolProviders(session: LLFirSession, scope: GlobalSearchScope): List<FirSymbolProvider> =
         createSymbolProvidersWithOptionalAnnotationClassesProvider(session, scope) { packagePartProvider ->
-            LLLibrarySymbolProviderFactory.fromSettings(project).createCommonLibrarySymbolProvider(
+            LLLibrarySymbolProviderFactory.fromSettings(project).createMetadataLibrarySymbolProvider(
                 session,
                 packagePartProvider,
                 scope,
