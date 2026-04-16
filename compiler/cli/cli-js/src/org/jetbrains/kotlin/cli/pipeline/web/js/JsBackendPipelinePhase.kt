@@ -49,14 +49,13 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
 
         val jsArtifacts = icCaches.artifacts.filterIsInstance<JsModuleArtifact>()
         val jsExecutableProducer = JsExecutableProducer(
-            mainModuleName = artifactConfiguration.moduleName,
-            moduleKind = artifactConfiguration.moduleKind,
+            artifactConfiguration,
             sourceMapsInfo = SourceMapsInfo.from(configuration),
             caches = jsArtifacts,
             relativeRequirePath = true
         )
-        val (outputs, rebuiltModules) = jsExecutableProducer.buildExecutable(artifactConfiguration.granularity, outJsProgram = false)
-        outputs.writeAll(artifactConfiguration)
+        val (outputs, rebuiltModules) = jsExecutableProducer.buildExecutable(outJsProgram = false)
+        outputs.writeAll()
 
         configuration.reportLog("Executable production duration (IC): ${System.currentTimeMillis() - beforeIc2Js}ms")
         for ((event, duration) in jsExecutableProducer.getStopwatchLaps()) {
@@ -74,7 +73,7 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
         val loweredIr = JsIrLoweringPipelinePhase.executePhaseIsolatedWithActions(loadedIrArtifact) ?: return null
         val output = JsCodegenPipelinePhase.executePhaseIsolatedWithActions(loweredIr) ?: return null
         loadedIrArtifact.configuration.reportLog("Executable production duration: ${System.currentTimeMillis() - start}ms")
-        output.outputs.writeAll(output.artifactConfiguration)
+        output.outputs.writeAll()
         return output
     }
 

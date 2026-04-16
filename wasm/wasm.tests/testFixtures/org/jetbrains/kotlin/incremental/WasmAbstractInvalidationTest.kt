@@ -168,6 +168,7 @@ abstract class WasmAbstractInvalidationTest(
         allLibraries: List<String>,
         friendLibraries: List<String>,
         includedLibrary: String?,
+        outputDir: File,
     ): CompilerConfiguration {
         val config = super.createConfiguration(
             moduleName = moduleName,
@@ -175,7 +176,8 @@ abstract class WasmAbstractInvalidationTest(
             languageFeatures = languageFeatures,
             allLibraries = allLibraries,
             friendLibraries = friendLibraries,
-            includedLibrary = includedLibrary
+            includedLibrary = includedLibrary,
+            outputDir = outputDir
         )
         config.wasmCompilation = true
         config.wasmTarget = WasmTarget.JS
@@ -291,6 +293,7 @@ abstract class WasmAbstractInvalidationTest(
                     allLibraries = testInfo.mapTo(mutableListOf(stdlibKLib, kotlinTestKLib)) { it.modulePath },
                     friendLibraries = mainModuleInfo.friends,
                     includedLibrary = mainModuleInfo.modulePath,
+                    outputDir = jsDir,
                 )
 
                 val removedModulesInfo = (projectInfo.modules - projStep.order.toSet()).map { setupTestStep(projStep, it) }

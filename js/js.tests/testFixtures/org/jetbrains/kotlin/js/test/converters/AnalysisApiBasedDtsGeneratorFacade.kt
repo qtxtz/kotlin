@@ -48,6 +48,8 @@ class AnalysisApiBasedDtsGeneratorFacade(
                 outputName = outputFile.nameWithoutExtension,
                 granularity = JsGenerationGranularity.WHOLE_PROGRAM,
                 tsCompilationStrategy = TsCompilationStrategy.MERGED,
+                production = false, // irrelevant
+                minimizedMemberNames = false, // irrelevant
             ),
             compileLongAsBigInt = JsEnvironmentConfigurationDirectives.ES6_MODE in module.directives,
         )

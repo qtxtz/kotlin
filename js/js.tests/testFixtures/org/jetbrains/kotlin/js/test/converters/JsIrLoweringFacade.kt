@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.js.JsIrLoweringPipelinePhase
 import org.jetbrains.kotlin.config.CommonConfigurationKeys
+import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.ir.backend.js.SourceMapsInfo
 import org.jetbrains.kotlin.ir.backend.js.ic.JsExecutableProducer
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.*
@@ -71,15 +72,14 @@ class JsIrLoweringFacade(
             )
 
             val compiledModule = CompilerResult(
-                outputs = listOf(TranslationMode.FULL_DEV, TranslationMode.PER_MODULE_DEV).associateWith {
+                outputs = listOf(TranslationMode.FULL_DEV, TranslationMode.PER_MODULE_DEV).associateWith { mode ->
                     val jsExecutableProducer = JsExecutableProducer(
-                        mainModuleName = configuration.getNotNull(CommonConfigurationKeys.MODULE_NAME),
-                        moduleKind = configuration.get(JSConfigurationKeys.MODULE_KIND, ModuleKind.PLAIN),
+                        artifactConfiguration = createArtifactConfiguration(configuration, mode, module),
                         sourceMapsInfo = SourceMapsInfo.from(configuration),
                         caches = testServices.jsIrIncrementalDataProvider.getCaches(),
                         relativeRequirePath = false
                     )
-                    jsExecutableProducer.buildExecutable(it.granularity, true).compilationOut
+                    jsExecutableProducer.buildExecutable(true).compilationOut
                 }
             )
             return BinaryArtifacts.Js.JsIrArtifact(
@@ -96,6 +96,33 @@ class JsIrLoweringFacade(
             ?: return processErrorFromCliPhase(configuration, testServices)
 
         return loweredIr2JsArtifact(module, loweredIr)
+    }
+
+    private fun createArtifactConfiguration(
+        configuration: CompilerConfiguration,
+        mode: TranslationMode,
+        module: TestModule,
+    ): WebArtifactConfiguration {
+        val outputFile = File(
+            JsEnvironmentConfigurator.getJsModuleArtifactPath(testServices, module.name, mode, firstTimeCompilation)
+                .finalizePath(JsEnvironmentConfigurator.getModuleKind(testServices, module))
+        )
+        val rootDir = outputFile.parentFile
+
+        // CompilationOutputs keeps the `outputDir` clean by removing all outdated JS and other unknown files.
+        // To ensure that useful files around `outputFile`, such as irdump, are not removed, use `tmpBuildDir` instead.
+        val tmpBuildDir = rootDir.resolve("tmp-build")
+
+        return WebArtifactConfiguration(
+            moduleName = configuration.getNotNull(CommonConfigurationKeys.MODULE_NAME),
+            moduleKind = configuration.moduleKind ?: ModuleKind.PLAIN,
+            outputDirectory = tmpBuildDir,
+            outputName = outputFile.nameWithoutExtension,
+            granularity = mode.granularity,
+            tsCompilationStrategy = TsCompilationStrategy.NONE,
+            production = mode.production,
+            minimizedMemberNames = mode.minimizedMemberNames,
+        )
     }
 
     private fun loweredIr2JsArtifact(
@@ -117,8 +144,12 @@ class JsIrLoweringFacade(
                 }
             } ?: emptyMap(),
         )
-        val translationModes = JsEnvironmentConfigurator.getTranslationModesForTest(testServices, module)
-        val compilationOut = transformer.generateModule(loweredIr.allModules, translationModes, isEsModules)
+        val artifactConfigurations = JsEnvironmentConfigurator
+            .getTranslationModesForTest(testServices, module)
+            .map {
+                createArtifactConfiguration(loweredIr.configuration, it, module)
+            }
+        val compilationOut = transformer.generateModule(loweredIr.allModules, artifactConfigurations, isEsModules)
         return BinaryArtifacts.Js.JsIrArtifact(outputFile, compilationOut).dump(module)
     }
 
@@ -149,10 +180,10 @@ class JsIrLoweringFacade(
                         .finalizePath(moduleKind)
                 )
 
-                output.writeTo(outputFile, moduleId, moduleKind, mode.granularity)
+                output.writeTo(outputFile)
 
                 if (delegateTranspilationToExternalTool) {
-                    SwcRunner.exec(outputFile.parentFile, moduleKind, mode, sourceMapsEnabled)
+                    SwcRunner.exec(output.rootDir, moduleKind, mode, sourceMapsEnabled)
                 }
             }
         }
@@ -185,36 +216,22 @@ class JsIrLoweringFacade(
             }
     }
 
-    private fun CompilationOutputs.writeTo(
-        outputFile: File,
-        moduleId: String,
-        moduleKind: ModuleKind,
-        granularity: JsGenerationGranularity,
-    ) {
-        val rootDir = outputFile.parentFile
-        val tmpBuildDir = rootDir.resolve("tmp-build")
-        // CompilationOutputs keeps the `outputDir` clean by removing all outdated JS and other unknown files.
-        // To ensure that useful files around `outputFile`, such as irdump, are not removed, use `tmpBuildDir` instead.
-        val artifactConfiguration = WebArtifactConfiguration(
-            moduleKind,
-            moduleId,
-            tmpBuildDir,
-            outputFile.nameWithoutExtension,
-            granularity,
-            TsCompilationStrategy.NONE
-        )
-        val allJsFiles = writeAll(artifactConfiguration).filter {
+    private val CompilationOutputs.rootDir: File
+        get() = artifactConfiguration.outputDirectory.parentFile
+
+    private fun CompilationOutputs.writeTo(outputFile: File) {
+        val allJsFiles = writeAll().filter {
             it.extension == "js" || it.extension == "mjs"
         }
 
         val mainModuleFile = allJsFiles.last()
-        mainModuleFile.fixJsFile(rootDir, outputFile, moduleId, moduleKind)
+        mainModuleFile.fixJsFile(rootDir, outputFile, artifactConfiguration.moduleName, artifactConfiguration.moduleKind)
 
         dependencies.map { it.first }.zip(allJsFiles.dropLast(1)).forEach { (depModuleId, builtJsFilePath) ->
             val newFile = outputFile.augmentWithModuleName(depModuleId)
-            builtJsFilePath.fixJsFile(rootDir, newFile, depModuleId, moduleKind)
+            builtJsFilePath.fixJsFile(rootDir, newFile, depModuleId, artifactConfiguration.moduleKind)
         }
-        tmpBuildDir.deleteRecursively()
+        artifactConfiguration.outputDirectory.deleteRecursively()
     }
 
     private fun File.write(text: String) {
