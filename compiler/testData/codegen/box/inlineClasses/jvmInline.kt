@@ -1,16 +1,6 @@
 // WITH_STDLIB
-// The test uses 'kotlin' package, which is being moved in Android tests
-// IGNORE_BACKEND: ANDROID
 // WORKS_WHEN_VALUE_CLASS
 // LANGUAGE: +JvmInlineMultiFieldValueClasses
-
-// FILE: 1.kt
-
-package kotlin.jvm
-
-annotation class JvmInline
-
-// FILE: 2.kt
 
 import kotlin.jvm.JvmInline
 import kotlin.coroutines.*
