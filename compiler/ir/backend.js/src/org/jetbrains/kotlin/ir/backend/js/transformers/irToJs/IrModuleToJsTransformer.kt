@@ -208,6 +208,7 @@ class IrModuleToJsTransformer(
         modules: Iterable<IrModuleFragment>,
         artifactConfigurations: List<WebArtifactConfiguration>,
         relativeRequirePath: Boolean,
+        outJsProgram: Boolean,
     ): CompilerResult {
         val exportData = associateIrAndExport(modules)
         doStaticMembersLowering(modules)
@@ -215,7 +216,7 @@ class IrModuleToJsTransformer(
         val result = EnumMap<TranslationMode, CompilationOutputs>(TranslationMode::class.java)
 
         artifactConfigurations.filter { !it.production }.forEach {
-            result[it.translationMode] = makeJsCodeGeneratorFromIr(exportData, it).generateJsCode(relativeRequirePath, true)
+            result[it.translationMode] = makeJsCodeGeneratorFromIr(exportData, it).generateJsCode(relativeRequirePath, outJsProgram)
         }
 
         if (artifactConfigurations.any { it.production }) {
@@ -223,21 +224,10 @@ class IrModuleToJsTransformer(
         }
 
         artifactConfigurations.filter { it.production }.forEach {
-            result[it.translationMode] = makeJsCodeGeneratorFromIr(exportData, it).generateJsCode(relativeRequirePath, true)
+            result[it.translationMode] = makeJsCodeGeneratorFromIr(exportData, it).generateJsCode(relativeRequirePath, outJsProgram)
         }
 
         return CompilerResult(result)
-    }
-
-    fun makeJsCodeGenerator(modules: Iterable<IrModuleFragment>, artifactConfiguration: WebArtifactConfiguration): JsCodeGenerator {
-        val exportData = associateIrAndExport(modules)
-        doStaticMembersLowering(modules)
-
-        if (artifactConfiguration.production) {
-            optimizeProgramByIr(modules, backendContext, moduleKind, removeUnusedAssociatedObjects)
-        }
-
-        return makeJsCodeGeneratorFromIr(exportData, artifactConfiguration)
     }
 
     fun makeIrFragmentsGenerators(

@@ -228,6 +228,12 @@ abstract class WasmAbstractInvalidationTest(
             val cacheUpdater = CacheUpdater(
                 cacheDir = cacheDir.absolutePath,
                 compilerConfiguration = configuration,
+                artifactConfiguration = WebArtifactConfiguration.fromFlags(
+                    configuration,
+                    isPerModule = false,
+                    isPerFile = false,
+                    generateDts = false
+                )!!,
                 icContext = icContext,
                 checkForClassStructuralChanges = true,
                 loadBodiesOnlyForMainModule = wasmCompilationMode == WasmCompilationMode.SINGLE_MODULE,

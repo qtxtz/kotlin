@@ -149,7 +149,8 @@ class JsIrLoweringFacade(
             .map {
                 createArtifactConfiguration(loweredIr.configuration, it, module)
             }
-        val compilationOut = transformer.generateModule(loweredIr.allModules, artifactConfigurations, isEsModules)
+        val compilationOut =
+            transformer.generateModule(loweredIr.allModules, artifactConfigurations, relativeRequirePath = isEsModules, outJsProgram = true)
         return BinaryArtifacts.Js.JsIrArtifact(outputFile, compilationOut).dump(module)
     }
 

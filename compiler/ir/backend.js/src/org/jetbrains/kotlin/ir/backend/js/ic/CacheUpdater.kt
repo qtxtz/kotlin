@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.js.config.JsGenerationGranularity
+import org.jetbrains.kotlin.js.config.WebArtifactConfiguration
 import org.jetbrains.kotlin.js.config.includes
 import org.jetbrains.kotlin.js.config.wasmCompilation
 import org.jetbrains.kotlin.library.KotlinLibrary
@@ -108,6 +109,7 @@ interface PlatformDependentICContext {
 class CacheUpdater(
     cacheDir: String,
     private val compilerConfiguration: CompilerConfiguration,
+    artifactConfiguration: WebArtifactConfiguration,
     private val icContext: PlatformDependentICContext,
     checkForClassStructuralChanges: Boolean = false,
     private val loadBodiesOnlyForMainModule: Boolean = false,
@@ -123,7 +125,7 @@ class CacheUpdater(
     private val irInterner = IrInterningService()
 
     private val cacheRootDir = run {
-        val configHash = icHasher.calculateConfigHash(compilerConfiguration)
+        val configHash = icHasher.calculateConfigHash(compilerConfiguration, artifactConfiguration)
         File(cacheDir, "version.${configHash.hash.lowBytes.toString(Character.MAX_RADIX)}")
     }
 

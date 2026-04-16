@@ -17,8 +17,10 @@ import org.jetbrains.kotlin.ir.backend.js.SourceMapsInfo
 import org.jetbrains.kotlin.ir.backend.js.ic.JsExecutableProducer
 import org.jetbrains.kotlin.ir.backend.js.ic.JsModuleArtifact
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilerResult
+import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.translationMode
 import org.jetbrains.kotlin.js.config.WebArtifactConfiguration
-import org.jetbrains.kotlin.js.config.artifactConfiguration
+import org.jetbrains.kotlin.js.config.artifactConfigurations
 import java.io.File
 
 object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifact, JsBackendPipelineArtifact>(
@@ -31,13 +33,10 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
         icCaches: IcCachesArtifacts,
         configuration: CompilerConfiguration,
     ): JsBackendPipelineArtifact {
-        val artifactConfiguration = configuration.artifactConfiguration ?: error("Missing artifact configuration")
-        val outputs = compileIncrementally(
-            icCaches,
-            configuration,
-            artifactConfiguration,
-        )
-        return JsBackendPipelineArtifact(outputs, artifactConfiguration, configuration)
+        val outputs = configuration
+            .artifactConfigurations
+            .associateBy({ it.translationMode }, { compileIncrementally(icCaches, configuration, it) })
+        return JsBackendPipelineArtifact(CompilerResult(outputs), configuration)
     }
 
     private fun compileIncrementally(
@@ -73,7 +72,9 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
         val loweredIr = JsIrLoweringPipelinePhase.executePhaseIsolatedWithActions(loadedIrArtifact) ?: return null
         val output = JsCodegenPipelinePhase.executePhaseIsolatedWithActions(loweredIr) ?: return null
         loadedIrArtifact.configuration.reportLog("Executable production duration: ${System.currentTimeMillis() - start}ms")
-        output.outputs.writeAll()
+        for (outputs in output.result.outputs.values) {
+            outputs.writeAll()
+        }
         return output
     }
 

@@ -131,8 +131,9 @@ abstract class JsAbstractInvalidationTest(
                     error("module ${it.moduleName} has friends, but only main module may have the friends")
                 }
 
+                val moduleName = projStep.order.last()
                 val configuration = createConfiguration(
-                    moduleName = projStep.order.last(),
+                    moduleName = moduleName,
                     moduleKind = projectInfo.moduleKind,
                     languageFeatures = projStep.language,
                     allLibraries = testInfo.mapTo(mutableListOf(stdlibKLib, kotlinTestKLib)) { it.modulePath },
@@ -152,9 +153,21 @@ abstract class JsAbstractInvalidationTest(
                 configuration.phaseConfig = createPhaseConfig(projStep.id, buildDir)
                 configuration.additionalExportedDeclarationNames = setOf(FqName(BOX_FUNCTION_NAME))
 
+                val artifactConfiguration = WebArtifactConfiguration(
+                    moduleKind = projectInfo.moduleKind,
+                    moduleName = moduleName,
+                    outputDirectory = jsDir,
+                    outputName = moduleName,
+                    granularity = granularity,
+                    tsCompilationStrategy = dtsStrategy,
+                    production = false,
+                    minimizedMemberNames = false,
+                )
+
                 val cacheUpdater = CacheUpdater(
                     cacheDir = buildDir.resolve("incremental-cache").absolutePath,
                     compilerConfiguration = configuration,
+                    artifactConfiguration = artifactConfiguration,
                     icContext = JsICContext(granularity)
                 )
 
@@ -164,17 +177,9 @@ abstract class JsAbstractInvalidationTest(
                 verifyCacheUpdateStats(projStep.id, cacheUpdater.getDirtyFileLastStats(), testInfo + removedModulesInfo)
 
                 val mainModuleName = icCaches.last().moduleExternalName
+
                 val jsExecutableProducer = JsExecutableProducer(
-                    artifactConfiguration = WebArtifactConfiguration(
-                        moduleKind = projectInfo.moduleKind,
-                        moduleName = mainModuleName,
-                        outputDirectory = jsDir,
-                        outputName = mainModuleName,
-                        granularity = granularity,
-                        tsCompilationStrategy = dtsStrategy,
-                        production = false,
-                        minimizedMemberNames = false,
-                    ),
+                    artifactConfiguration = artifactConfiguration,
                     sourceMapsInfo = SourceMapsInfo.from(configuration),
                     caches = icCaches,
                     relativeRequirePath = true

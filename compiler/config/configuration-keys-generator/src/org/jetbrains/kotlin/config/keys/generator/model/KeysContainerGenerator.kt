@@ -49,7 +49,7 @@ object KeysContainerGenerator {
     private fun SmartPrinter.generateKeysContainingClass(container: KeysContainer) {
         printBlock("object ${container.className}") {
             for (key in container.keys) {
-                key.comment?.let {
+                key.comment?.lines()?.forEach {
                     println("// $it")
                 }
                 when (key) {

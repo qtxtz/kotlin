@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.web.JsBackendPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.IrModuleToJsTransformer
-import org.jetbrains.kotlin.js.config.artifactConfiguration
+import org.jetbrains.kotlin.js.config.artifactConfigurations
 
 object JsCodegenPipelinePhase : PipelinePhase<JsLoweredIrPipelineArtifact, JsBackendPipelineArtifact>(
     name = "JsCodegenPipelinePhase",
@@ -29,10 +29,13 @@ object JsCodegenPipelinePhase : PipelinePhase<JsLoweredIrPipelineArtifact, JsBac
 
     private fun runCodegen(input: JsLoweredIrPipelineArtifact): JsBackendPipelineArtifact {
         val configuration = input.configuration
-        val artifactConfiguration = configuration.artifactConfiguration ?: error("Missing artifact configuration")
         val transformer = IrModuleToJsTransformer(input.context, input.moduleFragmentToUniqueName)
-        val codeGenerator = transformer.makeJsCodeGenerator(input.allModules, artifactConfiguration)
-        val outputs = codeGenerator.generateJsCode(relativeRequirePath = true, outJsProgram = false)
-        return JsBackendPipelineArtifact(outputs, artifactConfiguration, configuration)
+        val result = transformer.generateModule(
+            input.allModules,
+            configuration.artifactConfigurations,
+            relativeRequirePath = true,
+            outJsProgram = false,
+        )
+        return JsBackendPipelineArtifact(result, configuration)
     }
 }
