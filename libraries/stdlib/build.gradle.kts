@@ -328,6 +328,7 @@ kotlin {
         commonWasmTargetConfiguration()
     }
 
+    // FIXME: KT-85818 Avoid using isInIdeaSync in stdlib/build.gradle.kts in kotlin.git
     if (kotlinBuildProperties.isInIdeaSync.get()) {
         val hostOs = System.getProperty("os.name")
         val isMingwX64 = hostOs.startsWith("Windows")
@@ -630,13 +631,19 @@ kotlin {
 dependencies {
     val jvmMainApi by configurations.getting
     val metadataCompilationApi by configurations.getting
-    val nativeApiElements = configurations.maybeCreate("nativeApiElements")
+
+    // native target is declared only when "ideaSync" is on,
+    // FIXME: KT-85818 Avoid using isInIdeaSync in stdlib/build.gradle.kts in kotlin.git
+    val nativeMainApi = configurations.findByName("nativeMainApi") ?: configurations.dependencyScope("nativeMainApi").get()
+    val nativeApiElements = configurations.findByName("nativeApiElements") ?: configurations.consumable("nativeApiElements").get()
+    nativeApiElements.extendsFrom(nativeMainApi)
+
     constraints {
         // there is no dependency anymore from kotlin-stdlib to kotlin-stdlib-common,
         // but use this constraint to align it if another library brings it transitively
         jvmMainApi(project(":kotlin-stdlib-common"))
         metadataCompilationApi(project(":kotlin-stdlib-common"))
-        nativeApiElements(project(":kotlin-stdlib-common"))
+        nativeMainApi(project(":kotlin-stdlib-common"))
         // to avoid split package and duplicate classes on classpath after moving them from these artifacts in 1.8.0
         jvmMainApi("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")
         jvmMainApi("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
