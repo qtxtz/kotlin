@@ -132,7 +132,7 @@ internal fun checkPropertyInitializer(
         propertySymbol.hasInitializer -> {
             propertySymbol.initializerSource?.let {
                 when {
-                    inInterface -> {
+                    inInterface && !propertySymbol.isStatic -> {
                         reporter.reportOn(it, FirErrors.PROPERTY_INITIALIZER_IN_INTERFACE)
                     }
                     isExpect -> {
