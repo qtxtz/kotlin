@@ -51,16 +51,14 @@ dependencies {
     testImplementation(intellijCore())
 }
 
-optInToK1Deprecation()
-
 val runCommonizer by tasks.registering(JavaExec::class) {
     classpath(configurations.compileOnly, sourceSets.main.get().runtimeClasspath)
-    mainClass.set("org.jetbrains.kotlin.commonizer.cli.CommonizerCLI")
+    mainClass = "org.jetbrains.kotlin.commonizer.cli.CommonizerCLI"
 }
 
 sourceSets {
-    "main" { projectDefault() }
-    "test" { projectDefault() }
+    main { projectDefault() }
+    test { projectDefault() }
 }
 
 projectTests {
@@ -77,8 +75,8 @@ projectTests {
 }
 
 runtimeJar()
-sourcesJar { includeEmptyDirs = false; eachFile { exclude() } } // empty Jar, no public sources
-javadocJar { includeEmptyDirs = false; eachFile { exclude() } } // empty Jar, no public javadocs
+emptySourcesJar()
+emptyJavadocJar()
 
 tasks.test.configure {
     // Use the bootstrap K/N stdlib for compiling test code samples.
@@ -90,6 +88,6 @@ tasks.test.configure {
         )
 
         classpath.from(compilerDirectory)
-        property.set("kotlin.internal.native.test.nativeHome")
+        property = "kotlin.internal.native.test.nativeHome"
     }
 }
