@@ -9,10 +9,10 @@ import org.jetbrains.kotlin.backend.common.CompilationException
 import org.jetbrains.kotlin.backend.common.linkage.issues.checkNoUnboundSymbols
 import org.jetbrains.kotlin.cli.common.reportCompilationException
 import org.jetbrains.kotlin.cli.js.resolve
+import org.jetbrains.kotlin.cli.pipeline.PerformanceNotifications
 import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
-import org.jetbrains.kotlin.config.perfManager
 import org.jetbrains.kotlin.config.phaser.PhaserState
 import org.jetbrains.kotlin.ir.backend.js.*
 import org.jetbrains.kotlin.ir.backend.js.lower.collectNativeImplementations
@@ -21,12 +21,11 @@ import org.jetbrains.kotlin.ir.backend.js.lower.moveBodilessDeclarationsToSepara
 import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsIrLinker
 import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
 import org.jetbrains.kotlin.js.config.*
-import org.jetbrains.kotlin.util.PhaseType
-import org.jetbrains.kotlin.util.PotentiallyIncorrectPhaseTimeMeasurement
-import org.jetbrains.kotlin.util.tryMeasurePhaseTime
 
 object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, JsLoweredIrPipelineArtifact>(
     name = "JsIrLoweringPipelinePhase",
+    preActions = setOf(PerformanceNotifications.IrLoweringStarted),
+    postActions = setOf(PerformanceNotifications.IrLoweringFinished),
 ) {
     override fun executePhase(input: WebLoadedIrPipelineArtifact): JsLoweredIrPipelineArtifact? =
         try {
@@ -47,7 +46,6 @@ object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, Js
         val moduleDescriptor = moduleFragment.descriptor
         val irFactory = symbolTable.irFactory
         val shouldGeneratePolyfills = configuration.getBoolean(JSConfigurationKeys.GENERATE_POLYFILLS)
-        val performanceManager = configuration.perfManager
         val context = JsIrBackendContext(
             moduleDescriptor,
             irBuiltIns = irBuiltIns,
@@ -79,20 +77,18 @@ object JsIrLoweringPipelinePhase : PipelinePhase<WebLoadedIrPipelineArtifact, Js
         }
         // TODO should be done incrementally
         generateJsTests(context, allModules.last())
-        @OptIn(PotentiallyIncorrectPhaseTimeMeasurement::class)
-        performanceManager?.notifyCurrentPhaseFinishedIfNeeded() // It should be `notifyTranslationToIRFinished`, but this phase not always started or already finished
-        performanceManager.tryMeasurePhaseTime(PhaseType.IrLowering) {
-            (irFactory.stageController as? WholeWorldStageController)?.let {
-                lowerPreservingTags(allModules, context, it)
-            } ?: run {
-                val phaserState = PhaserState()
-                jsLowerings.forEachIndexed { _, lowering ->
-                    allModules.forEach { module ->
-                        lowering.invoke(context.phaseConfig, phaserState, context, module)
-                    }
+
+        (irFactory.stageController as? WholeWorldStageController)?.let {
+            lowerPreservingTags(allModules, context, it)
+        } ?: run {
+            val phaserState = PhaserState()
+            jsLowerings.forEachIndexed { _, lowering ->
+                allModules.forEach { module ->
+                    lowering.invoke(context.phaseConfig, phaserState, context, module)
                 }
             }
         }
+
         return JsLoweredIrPipelineArtifact(
             context,
             mainModule = moduleFragment,

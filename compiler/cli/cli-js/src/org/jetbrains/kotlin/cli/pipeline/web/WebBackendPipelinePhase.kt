@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.cli.js.prepareIcCaches
 import org.jetbrains.kotlin.cli.pipeline.CheckCompilationErrors
 import org.jetbrains.kotlin.cli.pipeline.ConfigurationPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
+import org.jetbrains.kotlin.cli.pipeline.executePhaseIsolatedWithActions
 import org.jetbrains.kotlin.cli.pipeline.web.wasm.WasmCompilationMode.Companion.wasmCompilationMode
 import org.jetbrains.kotlin.cli.report
 import org.jetbrains.kotlin.cli.reportInfo
@@ -48,7 +49,8 @@ abstract class WebBackendPipelinePhase<Output : WebBackendPipelineArtifact, Inte
                 backendIr?.let { compileIntermediate(it, configuration) }
             }
         } else {
-            val loadedKlibArtifact = klibLoadingPhase.executePhase(input)
+            configuration.perfManager?.notifyPhaseFinished(PhaseType.Initialization)
+            val loadedKlibArtifact = klibLoadingPhase.executePhaseIsolatedWithActions(input) ?: return null
             val backendIr = compileNonIncrementally(loadedKlibArtifact)
             return backendIr?.let { compileIntermediate(it, configuration) }
         }

@@ -97,9 +97,9 @@ object PerformanceNotifications {
             c: PipelineContext,
         ) {
             if (start) {
-                c.performanceManager.notifyPhaseStarted(phaseType)
+                c.performanceManager?.notifyPhaseStarted(phaseType)
             } else {
-                c.performanceManager.notifyPhaseFinished(phaseType)
+                c.performanceManager?.notifyPhaseFinished(phaseType)
             }
         }
     }
