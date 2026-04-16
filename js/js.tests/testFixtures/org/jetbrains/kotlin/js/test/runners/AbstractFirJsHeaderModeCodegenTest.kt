@@ -7,7 +7,7 @@ package org.jetbrains.kotlin.js.test.runners
 
 import org.jetbrains.kotlin.js.test.converters.Fir2IrCliWebFacade
 import org.jetbrains.kotlin.js.test.converters.FirCliWebFacade
-import org.jetbrains.kotlin.js.test.converters.FirKlibSerializerCliWebFacade
+import org.jetbrains.kotlin.js.test.converters.FirKlibSerializerCliJsFacade
 import org.jetbrains.kotlin.js.test.converters.JsIrPreSerializationLoweringFacade
 import org.jetbrains.kotlin.test.Constructor
 import org.jetbrains.kotlin.test.FirParser
@@ -40,7 +40,7 @@ abstract class AbstractFirJsHeaderModeCodegenTestBase(
             ::FirCliWebFacade,
             ::Fir2IrCliWebFacade,
             ::JsIrPreSerializationLoweringFacade,
-            ::FirKlibSerializerCliWebFacade,
+            ::FirKlibSerializerCliJsFacade,
         )
 
         configureJsHeaderModeHandlers(
