@@ -380,7 +380,6 @@ fun Project.configureTests() {
             ":libraries:tools:abi-validation:abi-tools-tests",
             ":libraries:tools:abi-validation:kgp-integration-tests",
             ":libraries:tools:analysis-api-based-klib-reader",
-            ":native:kotlin-klib-commonizer",
             ":native:kotlin-klib-commonizer-api",
             ":native:kotlin-native-utils",
             ":native:native.tests:driver",

@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.utils.NativeCompilerDownloader
 plugins {
     kotlin("jvm")
     id("project-tests-convention")
+    id("test-inputs-check")
 }
 
 description = "Kotlin KLIB Library Commonizer"
@@ -64,8 +65,15 @@ sourceSets {
 
 projectTests {
     testTask(parallel = true, jUnitMode = JUnitMode.JUnit4) {
-        workingDir = rootDir
+        testInputsCheck {
+            with(extraPermissions) {
+                // There is empty junit.properties in project dir to let JUnit 4 discover it and stop scanning
+                add("permission java.io.FilePermission \"junit.properties\", \"read\";")
+            }
+        }
     }
+    testData(project.isolated, "testData")
+    withMockJdkRuntime()
 }
 
 runtimeJar()
