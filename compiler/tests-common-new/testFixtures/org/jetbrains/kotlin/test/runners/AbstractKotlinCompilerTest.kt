@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.types.AbstractTypeChecker
 import org.jetbrains.kotlin.types.FlexibleTypeImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInfo
+import org.jetbrains.kotlin.konan.test.blackbox.support.EnforcedHostTarget
 import kotlin.jvm.optionals.getOrNull
 
 abstract class AbstractKotlinCompilerTest {
@@ -136,6 +137,6 @@ fun TestInfo.toKotlinTestInfo(): KotlinTestInfo {
         className = testClass?.name ?: "_undefined_",
         methodName = this.testMethod.getOrNull()?.name ?: "_testUndefined_",
         tags = this.tags,
-        enforcedHostTarget = testClass?.annotations?.any { it.annotationClass.qualifiedName == "org.jetbrains.kotlin.konan.test.blackbox.support.EnforcedHostTarget" } ?: false,
+        enforcedHostTarget = testClass?.isAnnotationPresent(EnforcedHostTarget::class.java) ?: false,
     )
 }
