@@ -96,8 +96,6 @@ projectTests {
     withDist()
 }
 
-testsJar()
-
 allprojects {
     tasks.withType<KotlinJvmCompile>().configureEach {
         compilerOptions.optIn.addAll(

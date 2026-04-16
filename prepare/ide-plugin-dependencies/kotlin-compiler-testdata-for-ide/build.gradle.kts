@@ -1,5 +1,0 @@
-idePluginDependency {
-    apply<JavaPlugin>()
-
-    publish()
-}
