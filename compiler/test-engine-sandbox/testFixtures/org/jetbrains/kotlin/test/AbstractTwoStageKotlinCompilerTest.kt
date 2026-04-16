@@ -11,13 +11,13 @@ import org.jetbrains.kotlin.test.builders.TwoPhaseTestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.ModuleStructureDirectives.ESCAPE_MODULE_NAME
 import org.jetbrains.kotlin.test.model.ResultingArtifact
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerTest
+import org.jetbrains.kotlin.test.runners.toKotlinTestInfo
 import org.jetbrains.kotlin.test.services.ApplicationDisposableProvider
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.KotlinTestInfo
 import org.jetbrains.kotlin.test.services.StandardLibrariesPathProviderForKotlinProject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInfo
-import kotlin.jvm.optionals.getOrNull
 
 abstract class AbstractTwoStageKotlinCompilerTest {
     val configurationBuilder: TwoPhaseTestConfigurationBuilder.() -> Unit = {
@@ -90,12 +90,4 @@ abstract class AbstractTwoStageKotlinCompilerTest {
         initTestRunners(filePath)
         nonGroupingRunner.prepareModuleStructure(filePath)
     }
-}
-
-fun TestInfo.toKotlinTestInfo(): KotlinTestInfo {
-    return KotlinTestInfo(
-        className = this.testClass.getOrNull()?.name ?: "_undefined_",
-        methodName = this.testMethod.getOrNull()?.name ?: "_testUndefined_",
-        tags = this.tags
-    )
 }

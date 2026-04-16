@@ -131,9 +131,11 @@ abstract class AbstractKotlinCompilerTest {
 }
 
 fun TestInfo.toKotlinTestInfo(): KotlinTestInfo {
+    val testClass = this.testClass.getOrNull()
     return KotlinTestInfo(
-        className = this.testClass.getOrNull()?.name ?: "_undefined_",
+        className = testClass?.name ?: "_undefined_",
         methodName = this.testMethod.getOrNull()?.name ?: "_testUndefined_",
-        tags = this.tags
+        tags = this.tags,
+        enforcedHostTarget = testClass?.annotations?.any { it.annotationClass.qualifiedName == "org.jetbrains.kotlin.konan.test.blackbox.support.EnforcedHostTarget" } ?: false,
     )
 }

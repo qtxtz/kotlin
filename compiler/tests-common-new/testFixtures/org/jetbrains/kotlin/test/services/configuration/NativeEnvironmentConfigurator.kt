@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.test.directives.NativeEnvironmentConfigurationDirect
 import org.jetbrains.kotlin.test.directives.model.DirectivesContainer
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.*
+import org.jetbrains.kotlin.test.services.testInfo
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 import org.jetbrains.kotlin.utils.addToStdlib.runIf
 import java.io.File
@@ -136,10 +137,11 @@ abstract class NativeEnvironmentConfigurator(
         configuration.konanNoDefaultLibs = NativeEnvironmentConfigurationDirectives.WITH_PLATFORM_LIBS !in module.directives
         configuration.konanLibraries = runtimeDependencies + dependencies + friends
         configuration.konanFriendLibraries = friends
-        // Warning: getNativeTarget() does not respect @EnforcedHostTarget on test classes. Should it be needed in the future,
-        // it can be done in a new environment configurator in `native/native.tests` module (to avoid import cycle):
-        //            configuration.konanTarget = testServices.testRunSettings.get<KotlinNativeTargets>().testTarget.name
-        configuration.konanTarget = getNativeTarget(module).name
+        // If `host target` is enforced in testrunner, so dependent native libraries(atomicfu, cinterop, etc) will have a target equal to host.
+        // Should konanTarget be set to not host, Klib Loader would reject such libraries and test would fail due to unresolved symbols.
+        if (!testServices.testInfo.enforcedHostTarget) {
+            configuration.konanTarget = getNativeTarget(module).name
+        }
     }
 }
 
