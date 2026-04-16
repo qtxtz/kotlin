@@ -303,7 +303,7 @@ internal class LLFirSessionFactory(
             registerModuleData(moduleData)
             registerIdeComponents(project, languageVersionSettings, contentScope)
             register(FirLazyDeclarationResolver::class, FirDummyCompilerLazyDeclarationResolver)
-            registerCommonComponents(languageVersionSettings, isMetadataCompilation = false)
+            registerCommonComponents(languageVersionSettings, isMetadataCompilation = session.isMetadataSession)
             registerCommonComponentsAfterExtensionsAreConfigured()
             registerKdocDeserializer()
 
@@ -745,7 +745,7 @@ internal class LLFirSessionFactory(
         annotationSearchScope: GlobalSearchScope,
     ) {
         registerIdeComponents(project, languageVersionSettings, annotationSearchScope)
-        registerCommonComponents(languageVersionSettings, isMetadataCompilation = false)
+        registerCommonComponents(languageVersionSettings, isMetadataCompilation = isMetadataSession)
         registerResolveComponents(KtRegisteredDiagnosticFactoriesStorage())
     }
 
