@@ -6,17 +6,12 @@
 package org.jetbrains.kotlin.lombok.k2.generators
 
 import org.jetbrains.kotlin.GeneratedDeclarationKey
-import org.jetbrains.kotlin.descriptors.EffectiveVisibility
-import org.jetbrains.kotlin.descriptors.Modality
-import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.descriptors.isObject
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.FirCache
 import org.jetbrains.kotlin.fir.caches.firCachesFactory
+import org.jetbrains.kotlin.fir.caches.getValue
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
-import org.jetbrains.kotlin.fir.declarations.builder.buildProperty
-import org.jetbrains.kotlin.fir.declarations.impl.FirDefaultPropertyGetter
-import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
 import org.jetbrains.kotlin.fir.declarations.utils.isLocal
 import org.jetbrains.kotlin.fir.expressions.FirExpression
@@ -30,9 +25,9 @@ import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
 import org.jetbrains.kotlin.fir.extensions.predicate.DeclarationPredicate
 import org.jetbrains.kotlin.fir.plugin.createCompanionObject
 import org.jetbrains.kotlin.fir.plugin.createDefaultPrivateConstructor
+import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
-import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.providers.getClassDeclaredPropertySymbols
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.resolve.toSymbol
@@ -40,7 +35,6 @@ import org.jetbrains.kotlin.fir.scopes.getFunctions
 import org.jetbrains.kotlin.fir.scopes.processAllClassifiers
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
-import org.jetbrains.kotlin.fir.toEffectiveVisibility
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.lowerBoundIfFlexible
@@ -193,75 +187,58 @@ class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
                 function
             } ?: return null
 
-        val loggerClassType = LOGGER_CLASS_ID.constructClassLikeType()
-
         val topicExpression = tryGeneratingTopicExpression(log, logContainingClassId) ?: return null
 
-        val logPropertySymbol = FirRegularPropertySymbol(CallableId(logContainingClassId, logPropertyName))
-        return buildProperty {
-            moduleData = logContainingClass.moduleData
-            origin = loggerOrigin
-            symbol = logPropertySymbol
-            name = logPropertyName
-            isLocal = false
-            isVar = false
-            returnTypeRef = LOGGER_CLASS_ID.constructClassLikeType().toFirResolvedTypeRef()
-
-            val logFieldVisibility = log.visibility
-            status = FirResolvedDeclarationStatusImpl(
-                logFieldVisibility,
-                Modality.FINAL,
-                logFieldVisibility.toEffectiveVisibility(logContainingClass),
-            )
-            dispatchReceiverType = logContainingClass.defaultType()
-            getter = FirDefaultPropertyGetter(
-                source = null,
-                moduleData,
-                origin = loggerOrigin,
-                propertyTypeRef = this@buildProperty.returnTypeRef,
-                propertySymbol = logPropertySymbol,
-                status = FirResolvedDeclarationStatusImpl(
-                    Visibilities.Public,
-                    Modality.FINAL,
-                    EffectiveVisibility.Public,
-                )
-            )
-
+        return createMemberProperty(
+            owner = logContainingClass,
+            key = LoggerGeneratorKey,
+            name = logPropertyName,
+            returnType = LOGGER_CLASS_ID.constructClassLikeType(),
+        ) {
+            visibility = log.visibility
+        }.also { logProperty ->
             if (log.fieldIsStatic) {
                 // Add `@JvmStatic` annotation call
-                annotations += buildAnnotationCall {
-                    annotationTypeRef =
-                        JvmStandardClassIds.Annotations.JvmStatic.constructClassLikeType().toFirResolvedTypeRef()
-                    calleeReference = buildResolvedNamedReference {
-                        name = JvmStandardClassIds.Annotations.JvmStatic.shortClassName
-                        resolvedSymbol =
-                            session.symbolProvider.getClassLikeSymbolByClassId(JvmStandardClassIds.Annotations.JvmStatic)
-                                ?: return null
-                    }
-                    containingDeclarationSymbol = logPropertySymbol
-                }
+                logProperty.replaceAnnotations(
+                    listOf(
+                        buildAnnotationCall {
+                            annotationTypeRef =
+                                JvmStandardClassIds.Annotations.JvmStatic.constructClassLikeType().toFirResolvedTypeRef()
+                            calleeReference = buildResolvedNamedReference {
+                                name = JvmStandardClassIds.Annotations.JvmStatic.shortClassName
+                                resolvedSymbol =
+                                    session.symbolProvider.getClassLikeSymbolByClassId(JvmStandardClassIds.Annotations.JvmStatic)
+                                        ?: return null
+                            }
+                            containingDeclarationSymbol = logProperty.symbol
+                        }
+                    )
+                )
             }
 
             // Finalize the property initializer with `= ClassWithLogger.getLogger(ClassWithLogger::class.qualifiedName)`
-            initializer = buildFunctionCall {
-                calleeReference = buildResolvedNamedReference {
-                    name = GET_LOGGER_METHOD_NAME
-                    resolvedSymbol = getLoggerFunctionSymbol
-                }
-                dispatchReceiver = buildResolvedQualifier {
-                    packageFqName = LOGGER_CLASS_ID.packageFqName
-                    relativeClassFqName = LOGGER_CLASS_ID.relativeClassName
-                    symbol = loggerSymbol
-                    resolvedToCompanionObject = false
+            val loggerClassType = LOGGER_CLASS_ID.constructClassLikeType()
+            logProperty.replaceInitializer(
+                buildFunctionCall {
+                    calleeReference = buildResolvedNamedReference {
+                        name = GET_LOGGER_METHOD_NAME
+                        resolvedSymbol = getLoggerFunctionSymbol
+                    }
+                    dispatchReceiver = buildResolvedQualifier {
+                        packageFqName = LOGGER_CLASS_ID.packageFqName
+                        relativeClassFqName = LOGGER_CLASS_ID.relativeClassName
+                        symbol = loggerSymbol
+                        resolvedToCompanionObject = false
+                        coneTypeOrNull = loggerClassType
+                    }
                     coneTypeOrNull = loggerClassType
-                }
-                coneTypeOrNull = loggerClassType
 
-                argumentList = buildResolvedArgumentList(
-                    original = null,
-                    linkedMapOf(topicExpression to getLoggerFunctionSymbol.valueParameterSymbols.single().fir)
-                )
-            }
+                    argumentList = buildResolvedArgumentList(
+                        original = null,
+                        linkedMapOf(topicExpression to getLoggerFunctionSymbol.valueParameterSymbols.single().fir)
+                    )
+                }
+            )
         }.symbol
     }
 

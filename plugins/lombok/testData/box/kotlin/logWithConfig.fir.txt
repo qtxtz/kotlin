@@ -9,7 +9,7 @@ FILE: test.kt
         }
 
         private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogExample|).R|kotlin/reflect/KClass.qualifiedName|)
-            public get(): R|java/util/logging/Logger|
+            private get(): R|java/util/logging/Logger|
 
     }
     public open class Base : R|kotlin/Any| {
@@ -31,7 +31,7 @@ FILE: test.kt
         }
 
         private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|Derived|).R|kotlin/reflect/KClass.qualifiedName|)
-            public get(): R|java/util/logging/Logger|
+            private get(): R|java/util/logging/Logger|
 
     }
     public final class LogOnNestedClass : R|kotlin/Any| {
@@ -49,7 +49,7 @@ FILE: test.kt
             }
 
             private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnNestedClass.Nested|).R|kotlin/reflect/KClass.qualifiedName|)
-                public get(): R|java/util/logging/Logger|
+                private get(): R|java/util/logging/Logger|
 
         }
 
@@ -69,7 +69,7 @@ FILE: test.kt
             }
 
             private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnInnerClass.Inner|).R|kotlin/reflect/KClass.qualifiedName|)
-                public get(): R|java/util/logging/Logger|
+                private get(): R|java/util/logging/Logger|
 
         }
 
@@ -84,7 +84,7 @@ FILE: test.kt
         }
 
         private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnObject|).R|kotlin/reflect/KClass.qualifiedName|)
-            public get(): R|java/util/logging/Logger|
+            private get(): R|java/util/logging/Logger|
 
     }
     @R|lombok/extern/java/Log|() public final enum class LogOnEnum : R|kotlin/Enum<LogOnEnum>| {
@@ -107,7 +107,7 @@ FILE: test.kt
             public static get(): R|kotlin/enums/EnumEntries<LogOnEnum>|
 
         private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnEnum|).R|kotlin/reflect/KClass.qualifiedName|)
-            public get(): R|java/util/logging/Logger|
+            private get(): R|java/util/logging/Logger|
 
     }
     public final fun box(): R|kotlin/String| {

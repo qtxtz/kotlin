@@ -31,7 +31,7 @@ FILE: log.kt
             }
 
             @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogExampleWithExistingCompanion.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
-                public get(): R|java/util/logging/Logger|
+                private get(): R|java/util/logging/Logger|
 
         }
 
@@ -71,7 +71,7 @@ FILE: log.kt
 
         public final companion object Companion : R|kotlin/Any| {
             @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(String(custom topic))
-                public get(): R|java/util/logging/Logger|
+                private get(): R|java/util/logging/Logger|
 
             private constructor(): R|LogExampleWithTopic.Companion| {
                 super<R|kotlin/Any|>()
@@ -95,7 +95,7 @@ FILE: log.kt
             }
 
             @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnCompanion.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
-                public get(): R|java/util/logging/Logger|
+                private get(): R|java/util/logging/Logger|
 
         }
 
@@ -116,7 +116,7 @@ FILE: log.kt
 
             public final companion object Companion : R|kotlin/Any| {
                 @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnNestedClass.Nested.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
-                    public get(): R|java/util/logging/Logger|
+                    private get(): R|java/util/logging/Logger|
 
                 private constructor(): R|LogOnNestedClass.Nested.Companion| {
                     super<R|kotlin/Any|>()
@@ -143,7 +143,7 @@ FILE: log.kt
 
             public final companion object Companion : R|kotlin/Any| {
                 @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnInnerClass.Inner.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
-                    public get(): R|java/util/logging/Logger|
+                    private get(): R|java/util/logging/Logger|
 
                 private constructor(): R|LogOnInnerClass.Inner.Companion| {
                     super<R|kotlin/Any|>()
@@ -164,7 +164,7 @@ FILE: log.kt
         }
 
         @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnObject|).R|kotlin/reflect/KClass.qualifiedName|)
-            public get(): R|java/util/logging/Logger|
+            private get(): R|java/util/logging/Logger|
 
     }
     @R|lombok/extern/java/Log|() public final enum class LogOnEnum : R|kotlin/Enum<LogOnEnum>| {
@@ -188,7 +188,7 @@ FILE: log.kt
 
         public final companion object Companion : R|kotlin/Any| {
             @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnEnum.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
-                public get(): R|java/util/logging/Logger|
+                private get(): R|java/util/logging/Logger|
 
             private constructor(): R|LogOnEnum.Companion| {
                 super<R|kotlin/Any|>()
