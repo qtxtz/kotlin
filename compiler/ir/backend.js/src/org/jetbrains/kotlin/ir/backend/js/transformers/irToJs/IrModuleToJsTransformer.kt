@@ -625,21 +625,15 @@ private fun generateMultiWrappedModuleBody(
         )
     }
 
-    mainModule.dependencies = buildList(moduleToRef.size) {
-        while (moduleToRef.isNotEmpty()) {
-            moduleToRef.removeFirst().let { (module, moduleRef) ->
-                val moduleName = module.externalModuleName
-                val moduleCompilationOutput = generateSingleWrappedModuleBody(
-                    artifactConfiguration.copy(moduleName = moduleName, outputName = moduleName),
-                    module.fragments,
-                    sourceMapsInfo,
-                    generateCallToMain = false,
-                    moduleRef,
-                    outJsProgram
-                )
-                add(moduleName to moduleCompilationOutput)
-            }
-        }
+    mainModule.dependencies = moduleToRef.map { (module, moduleRef) ->
+        generateSingleWrappedModuleBody(
+            artifactConfiguration.copy(moduleName = module.externalModuleName, outputName = module.externalModuleName),
+            module.fragments,
+            sourceMapsInfo,
+            generateCallToMain = false,
+            moduleRef,
+            outJsProgram,
+        )
     }
 
     return mainModule

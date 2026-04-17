@@ -70,7 +70,7 @@ class JsIrRecompiledArtifactsIdentityHandler(testServices: TestServices) : JsBin
 }
 
 private fun Js.JsIrArtifact.allFiles(): Collection<File> {
-    return listOf(outputFile) + compilerResult.outputs[TranslationMode.FULL_DEV]!!.dependencies.map { (moduleId, _) ->
-        outputFile.augmentWithModuleName(moduleId)
+    return listOf(outputFile) + compilerResult.outputs[TranslationMode.FULL_DEV]!!.dependencies.map {
+        outputFile.augmentWithModuleName(it.artifactConfiguration.moduleName)
     }.sortedBy { it.name }
 }

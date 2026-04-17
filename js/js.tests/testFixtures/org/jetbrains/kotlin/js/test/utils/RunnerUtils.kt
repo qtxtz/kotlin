@@ -184,8 +184,8 @@ fun getAllFilesForRunner(
             // Need to sort modules in the reverse topological order to avoid problems in V8 with loading JS files
             // before loading their dependency JS files.
             val dependenciesMap: MutableMap</* module ID */ String, /* JS file path */ String> =
-                outputs.dependencies.associateTo(LinkedHashMap()) { (moduleId, _) ->
-                    moduleId to outputFile.augmentWithModuleName(moduleId)
+                outputs.dependencies.associateTo(LinkedHashMap()) {
+                    it.artifactConfiguration.moduleName to outputFile.augmentWithModuleName(it.artifactConfiguration.moduleName)
                 }
 
             // These are only paths represented by the existing `TestModule`s.
@@ -201,7 +201,7 @@ fun getAllFilesForRunner(
 
             paths += pathsOfAuxiliaryLibraries + pathsOfTestModules
         } else {
-            paths += outputs.dependencies.map { (moduleId, _) -> outputFile.augmentWithModuleName(moduleId) }
+            paths += outputs.dependencies.map { outputFile.augmentWithModuleName(it.artifactConfiguration.moduleName) }
         }
 
         paths += outputFile

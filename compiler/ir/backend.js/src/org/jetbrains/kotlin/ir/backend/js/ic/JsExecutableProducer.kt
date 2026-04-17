@@ -106,7 +106,7 @@ class JsExecutableProducer(
             .compileModule(artifactConfiguration.moduleName, artifactConfiguration.outputName, isMainModule = true)
             .apply {
                 dependencies += cachedOtherModules.map {
-                    it.jsIrHeader.externalModuleName to it.compileModule(it.jsIrHeader.externalModuleName, it.jsIrHeader.externalModuleName, isMainModule = false)
+                    it.compileModule(it.jsIrHeader.externalModuleName, it.jsIrHeader.externalModuleName, isMainModule = false)
                 }
             }
 

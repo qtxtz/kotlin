@@ -5,7 +5,7 @@
 package org.jetbrains.kotlin.js.test.handlers
 
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.TranslationMode
-import org.jetbrains.kotlin.js.parser.sourcemaps.*
+import org.jetbrains.kotlin.js.parser.sourcemaps.ECMA426BasedSourceMapParser
 import org.jetbrains.kotlin.js.test.converters.augmentWithModuleName
 import org.jetbrains.kotlin.js.test.utils.getModeOutputFilePath
 import org.jetbrains.kotlin.test.directives.JsEnvironmentConfigurationDirectives
@@ -54,8 +54,8 @@ class JsSourceMapValidator(testServices: TestServices) : AbstractJsArtifactsColl
         compilerResult.outputs.entries.forEach { (mode, outputs) ->
             val outputFile = getModeOutputFilePath(testServices, module, mode)
 
-            result[mode] = outputs.dependencies.mapTo(mutableListOf("${outputFile}.map")) { (moduleId, _) ->
-                "${outputFile.augmentWithModuleName(moduleId)}.map"
+            result[mode] = outputs.dependencies.mapTo(mutableListOf("${outputFile}.map")) {
+                "${outputFile.augmentWithModuleName(it.artifactConfiguration.moduleName)}.map"
             }
         }
 

@@ -18,7 +18,7 @@ abstract class CompilationOutputs {
     /**
      * The transitive closure of this module's dependencies. The first element in the pair is the name of the module dependency.
      */
-    var dependencies: Collection<Pair<String, CompilationOutputs>> = emptyList()
+    var dependencies: Collection<CompilationOutputs> = emptyList()
 
     abstract val artifactConfiguration: WebArtifactConfiguration
 
@@ -51,7 +51,7 @@ abstract class CompilationOutputs {
             }
         }
 
-        for ((_, content) in dependencies) {
+        for (content in dependencies) {
             writeOutputFiles(content)
         }
 
@@ -75,7 +75,7 @@ abstract class CompilationOutputs {
     }
 
     fun getFullTsDefinition(moduleName: String, moduleKind: ModuleKind): String {
-        val allTsDefinitions = dependencies.mapNotNull { it.second.tsDefinitions } + listOfNotNull(tsDefinitions)
+        val allTsDefinitions = dependencies.mapNotNull { it.tsDefinitions } + listOfNotNull(tsDefinitions)
         return allTsDefinitions.toTypeScript(moduleName, moduleKind)
     }
 

@@ -48,8 +48,8 @@ internal class JsLineNumberHandler(testServices: TestServices) : JsBinaryArtifac
                     module: TestModule,
                     compilationOutputs: CompilationOutputs,
                 ) {
-                    for ((moduleId, dependencyOutputs) in compilationOutputs.dependencies) {
-                        moduleId2TestModule[moduleId]?.let {
+                    for (dependencyOutputs in compilationOutputs.dependencies) {
+                        moduleId2TestModule[dependencyOutputs.artifactConfiguration.moduleName]?.let {
                             verifyModulesRecursively(it, dependencyOutputs)
                         }
                     }

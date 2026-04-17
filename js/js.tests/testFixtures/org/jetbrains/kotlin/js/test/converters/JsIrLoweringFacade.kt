@@ -227,7 +227,7 @@ class JsIrLoweringFacade(
         val mainModuleFile = allJsFiles.last()
         mainModuleFile.fixJsFile(rootDir, outputFile, artifactConfiguration.moduleName, artifactConfiguration.moduleKind)
 
-        dependencies.map { it.first }.zip(allJsFiles.dropLast(1)).forEach { (depModuleId, builtJsFilePath) ->
+        dependencies.map { it.artifactConfiguration.moduleName }.zip(allJsFiles.dropLast(1)).forEach { (depModuleId, builtJsFilePath) ->
             val newFile = outputFile.augmentWithModuleName(depModuleId)
             builtJsFilePath.fixJsFile(rootDir, newFile, depModuleId, artifactConfiguration.moduleKind)
         }
