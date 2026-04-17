@@ -24,6 +24,7 @@ object LombokNames {
     val BUILDER = FqName("lombok.Builder")
     val SUPER_BUILDER = FqName("lombok.experimental.SuperBuilder")
     val SINGULAR = FqName("lombok.Singular")
+    val LOG = FqName("lombok.extern.java.Log")
 
     val TABLE = FqName("Table".guavaPackage())
 
@@ -43,6 +44,8 @@ object LombokNames {
     val TABLE_CLASS_ID = ClassId.topLevel(TABLE)
 
     val CAN_EQUAL = Name.identifier("canEqual")
+
+    val LOG_ID = ClassId.topLevel(LOG)
 
     //taken from idea lombok plugin
     val NON_NULL_ANNOTATIONS = listOf(

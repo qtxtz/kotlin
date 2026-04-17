@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.fir.declarations.getBooleanArgument
 import org.jetbrains.kotlin.fir.declarations.getStringArgument
 import org.jetbrains.kotlin.fir.declarations.getStringArrayArgument
 import org.jetbrains.kotlin.fir.expressions.FirAnnotation
+import org.jetbrains.kotlin.lombok.config.AccessLevel
 import org.jetbrains.kotlin.lombok.config.LombokConfig
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.ACCESS
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.BUILDER_CLASS_NAME
@@ -23,6 +24,9 @@ import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.BUILDER_METHOD_NA
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.BUILD_METHOD_NAME
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.CHAIN
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.CHAIN_CONFIG
+import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.FIELD_IS_STATIC_CONFIG
+import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.FIELD_NAME_CONFIG
+import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.FLAG_USAGE_CONFIG
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.FLUENT
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.FLUENT_CONFIG
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.IGNORE_NULL_COLLECTIONS
@@ -32,6 +36,7 @@ import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.PREFIX_CONFIG
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.SETTER_PREFIX
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.STATIC_CONSTRUCTOR
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.STATIC_NAME
+import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.TOPIC
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.TO_BUILDER
 import org.jetbrains.kotlin.lombok.k2.config.LombokConfigNames.VALUE
 import org.jetbrains.kotlin.lombok.utils.LombokNames
@@ -306,6 +311,36 @@ object ConeLombokAnnotations {
                 return Singular(
                     singularName = annotation.getStringArgument(VALUE),
                     allowNull = annotation.getBooleanArgument(IGNORE_NULL_COLLECTIONS) ?: false
+                )
+            }
+        }
+    }
+
+    class Log(
+        val visibility: Visibility?,
+        val topic: String,
+        val fieldName: String,
+        val fieldIsStatic: Boolean,
+        val flagUsage: FlagUsageValue?,
+    ) {
+        enum class FlagUsageValue {
+            Warning,
+            Error,
+        }
+
+        companion object : ConeAnnotationAndConfigCompanion<Log>(LombokNames.LOG_ID) {
+            override fun extract(
+                annotation: FirAnnotation?,
+                config: LombokConfig,
+                session: FirSession,
+            ): Log {
+                return Log(
+                    visibility = annotation.getVisibility(ACCESS, defaultAccessLevel = AccessLevel.PRIVATE),
+                    topic = annotation?.getStringArgument(TOPIC) ?: "",
+                    fieldName = config.getString(FIELD_NAME_CONFIG) ?: "log",
+                    fieldIsStatic = config.getBoolean(FIELD_IS_STATIC_CONFIG) ?: true,
+                    flagUsage = config.getString(FLAG_USAGE_CONFIG)
+                        ?.let { str -> FlagUsageValue.entries.find { it.name.equals(str, ignoreCase = true) } },
                 )
             }
         }

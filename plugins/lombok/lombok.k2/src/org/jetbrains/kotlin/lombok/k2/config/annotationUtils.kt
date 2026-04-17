@@ -58,11 +58,14 @@ object LombokConfigNames {
     val TO_BUILDER = Name.identifier("toBuilder")
     val SETTER_PREFIX = Name.identifier("setterPrefix")
     val IGNORE_NULL_COLLECTIONS = Name.identifier("ignoreNullCollections")
-
+    val TOPIC = Name.identifier("topic")
 
     const val FLUENT_CONFIG = "lombok.accessors.fluent"
     const val CHAIN_CONFIG = "lombok.accessors.chain"
     const val PREFIX_CONFIG = "lombok.accessors.prefix"
     const val NO_IS_PREFIX_CONFIG = "lombok.getter.noIsPrefix"
     const val BUILDER_CLASS_NAME_CONFIG = "lombok.builder.className"
+    const val FIELD_NAME_CONFIG = "lombok.log.fieldName"
+    const val FIELD_IS_STATIC_CONFIG = "lombok.log.fieldIsStatic"
+    const val FLAG_USAGE_CONFIG = "lombok.log.flagUsage"
 }

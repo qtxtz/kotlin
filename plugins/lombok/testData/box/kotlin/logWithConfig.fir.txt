@@ -1,0 +1,41 @@
+FILE: test.kt
+    @R|lombok/extern/java/Log|() public final class LogExample : R|kotlin/Any| {
+        public constructor(): R|LogExample| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final fun test(): R|kotlin/Unit| {
+            this@R|/LogExample|.R|/LogExample.myLog|.R|java/util/logging/Logger.info|(String(Test nonstatic logger with custom name))
+        }
+
+        private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogExample|).R|kotlin/reflect/KClass.qualifiedName|)
+            public get(): R|java/util/logging/Logger|
+
+    }
+    public open class Base : R|kotlin/Any| {
+        public constructor(): R|Base| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final val myLog: R|kotlin/String| = String(no log)
+            public get(): R|kotlin/String|
+
+    }
+    @R|lombok/extern/java/Log|() public final class Derived : R|Base| {
+        public constructor(): R|Derived| {
+            super<R|Base|>()
+        }
+
+        public final fun test(): R|kotlin/Unit| {
+            this@R|/Derived|.R|/Derived.myLog|.R|java/util/logging/Logger.info|(String(test Derived))
+        }
+
+        private final val myLog: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|Derived|).R|kotlin/reflect/KClass.qualifiedName|)
+            public get(): R|java/util/logging/Logger|
+
+    }
+    public final fun box(): R|kotlin/String| {
+        R|/LogExample.LogExample|().R|/LogExample.test|()
+        R|/Derived.Derived|().R|/Derived.test|()
+        ^box String(OK)
+    }

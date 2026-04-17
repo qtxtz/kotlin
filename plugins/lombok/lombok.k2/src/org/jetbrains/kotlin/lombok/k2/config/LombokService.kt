@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.AllArgsConstr
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Builder
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Data
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Getter
+import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Log
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.NoArgsConstructor
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.RequiredArgsConstructor
 import org.jetbrains.kotlin.lombok.k2.config.ConeLombokAnnotations.Setter
@@ -92,6 +93,10 @@ class LombokService(session: FirSession, configFile: File?) : FirExtensionSessio
         Singular.getOrNull(symbol.fir, session)
     }
 
+    private val logCache: Cache<Log?> = cachesFactory.createCache { symbol ->
+        Log.getIfAnnotated(symbol.fir, config, session)
+    }
+
     fun getAccessors(symbol: FirBasedSymbol<*>): Accessors = accessorsCache.getValue(symbol)
     fun getAccessorsIfAnnotated(symbol: FirBasedSymbol<*>): Accessors? = accessorsIfAnnotatedCache.getValue(symbol)
     fun getGetter(symbol: FirBasedSymbol<*>): Getter? = getterCache.getValue(symbol)
@@ -105,6 +110,7 @@ class LombokService(session: FirSession, configFile: File?) : FirExtensionSessio
     fun getBuilder(symbol: FirBasedSymbol<*>): Builder? = builderCache.getValue(symbol)
     fun getSuperBuilder(symbol: FirBasedSymbol<*>): SuperBuilder? = superBuilderCache.getValue(symbol)
     fun getSingular(symbol: FirBasedSymbol<*>): Singular? = singularCache.getValue(symbol)
+    fun getLog(symbol: FirBasedSymbol<*>): Log? = logCache.getValue(symbol)
 }
 
 private typealias Cache<T> = FirCache<FirBasedSymbol<*>, T, Nothing?>
