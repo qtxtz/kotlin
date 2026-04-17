@@ -2142,6 +2142,18 @@ public class DecompiledJsTextTestGenerated extends AbstractDecompiledJsTextTest 
     }
 
     @Test
+    @TestMetadata("mixOfRegularAndStaticCompanionMethods.kt")
+    public void testMixOfRegularAndStaticCompanionMethods() {
+      run("mixOfRegularAndStaticCompanionMethods.kt");
+    }
+
+    @Test
+    @TestMetadata("mixOfRegularAndStaticMethods.kt")
+    public void testMixOfRegularAndStaticMethods() {
+      run("mixOfRegularAndStaticMethods.kt");
+    }
+
+    @Test
     @TestMetadata("smoke.kt")
     public void testSmoke() {
       run("smoke.kt");
