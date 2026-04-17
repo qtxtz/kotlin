@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants.SOURCE_MA
 import org.jetbrains.kotlin.cli.common.arguments.cliArgument
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputsBuilt
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilerResult
-import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.TranslationMode
 import org.jetbrains.kotlin.js.config.JsGenerationGranularity
 import org.jetbrains.kotlin.js.config.ModuleKind
 import org.jetbrains.kotlin.js.config.TsCompilationStrategy
@@ -98,8 +97,8 @@ class CustomJsCompilerSecondStageFacade(
             return BinaryArtifacts.Js.JsIrArtifact(
                 outputFile = jsArtifactFile,
                 compilerResult = CompilerResult(
-                    mapOf(
-                        TranslationMode.FULL_DEV to CompilationOutputsBuilt(
+                    listOf(
+                        CompilationOutputsBuilt(
                             artifactConfiguration = WebArtifactConfiguration(
                                 moduleKind = ModuleKind.PLAIN,
                                 moduleName = module.name,

@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.ir.backend.js.ic.JsExecutableProducer
 import org.jetbrains.kotlin.ir.backend.js.ic.JsModuleArtifact
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilationOutputs
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.CompilerResult
-import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.translationMode
 import org.jetbrains.kotlin.js.config.WebArtifactConfiguration
 import org.jetbrains.kotlin.js.config.artifactConfigurations
 import java.io.File
@@ -35,7 +34,7 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
     ): JsBackendPipelineArtifact {
         val outputs = configuration
             .artifactConfigurations
-            .associateBy({ it.translationMode }, { compileIncrementally(icCaches, configuration, it) })
+            .map { compileIncrementally(icCaches, configuration, it) }
         return JsBackendPipelineArtifact(CompilerResult(outputs), configuration)
     }
 

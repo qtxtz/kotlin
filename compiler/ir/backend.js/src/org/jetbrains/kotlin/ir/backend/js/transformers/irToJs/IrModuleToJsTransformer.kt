@@ -51,9 +51,9 @@ val IrModuleFragment.safeName: String
 
 private typealias JsIrModules = JsArtifactProducer.ArtifactModules<JsIrModule>
 
-class CompilerResult(
-    val outputs: Map<TranslationMode, CompilationOutputs>,
-)
+class CompilerResult(val outputs: Map<TranslationMode, CompilationOutputs>) {
+    constructor(outputs: Iterable<CompilationOutputs>) : this(outputs.associateBy { it.artifactConfiguration.translationMode })
+}
 
 fun generateProxyIrModuleWith(
     safeName: String,
