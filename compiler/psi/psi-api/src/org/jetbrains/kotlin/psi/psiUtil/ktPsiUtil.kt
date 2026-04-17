@@ -534,6 +534,22 @@ val KtDeclaration.containingClassOrObject: KtClassOrObject?
     }
 
 /**
+ * Whether this declaration is declared inside a companion object block.
+ *
+ * ### Example
+ *
+ * class Foo {
+ *   companion {
+ *     fun static1() {} // true
+ *   }
+ *
+ *   fun regular() {} // false
+ */
+@KtExperimentalApi
+val KtDeclaration.isFromCompanionBlock: Boolean
+    get() = (parent as? KtClassBody)?.parent is KtCompanionBlock
+
+/**
  * The containing script for top-level declarations.
  *
  * @see containingClassOrObject

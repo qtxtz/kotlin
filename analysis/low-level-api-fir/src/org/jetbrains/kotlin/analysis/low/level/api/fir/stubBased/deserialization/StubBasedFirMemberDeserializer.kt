@@ -37,6 +37,7 @@ import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.name.*
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.hasExpectModifier
+import org.jetbrains.kotlin.psi.psiUtil.isFromCompanionBlock
 import org.jetbrains.kotlin.psi.stubs.KotlinConstructorStub
 import org.jetbrains.kotlin.psi.stubs.KotlinModifierListStub
 import org.jetbrains.kotlin.psi.stubs.impl.KotlinModifierListStubImpl
@@ -183,6 +184,7 @@ internal class StubBasedFirDeserializationContext(
     }
 }
 
+@OptIn(KtExperimentalApi::class)
 internal class StubBasedFirMemberDeserializer(
     private val c: StubBasedFirDeserializationContext,
     private val initialOrigin: FirDeclarationOrigin,
@@ -388,7 +390,7 @@ internal class StubBasedFirMemberDeserializer(
                 isConst = property.hasModifier(KtTokens.CONST_KEYWORD)
                 isLateInit = property.hasModifier(KtTokens.LATEINIT_KEYWORD)
                 isExternal = property.hasModifier(KtTokens.EXTERNAL_KEYWORD)
-                isStatic = property.hasModifier(KtTokens.COMPANION_KEYWORD)
+                isStatic = property.hasModifier(KtTokens.COMPANION_KEYWORD) || property.isFromCompanionBlock
                 setSpecialFlags(property.modifierList)
             }
 
@@ -576,7 +578,7 @@ internal class StubBasedFirMemberDeserializer(
                 isTailRec = function.hasModifier(KtTokens.TAILREC_KEYWORD)
                 isExternal = function.hasModifier(KtTokens.EXTERNAL_KEYWORD)
                 isSuspend = function.hasModifier(KtTokens.SUSPEND_KEYWORD)
-                isStatic = function.hasModifier(KtTokens.COMPANION_KEYWORD)
+                isStatic = function.hasModifier(KtTokens.COMPANION_KEYWORD) || function.isFromCompanionBlock
                 setSpecialFlags(function.modifierList)
             }
             isLocal = false
