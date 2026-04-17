@@ -5,7 +5,9 @@
 
 package org.jetbrains.kotlin.test.services.configuration
 
+import org.jetbrains.kotlin.backend.common.serialization.cityHash64
 import org.jetbrains.kotlin.cli.common.config.addKotlinSourceRoot
+import org.jetbrains.kotlin.cli.common.isWindows
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.config.phaser.PhaseConfig
@@ -95,4 +97,28 @@ fun extractTestPackage(testServices: TestServices, ignoreEsModules: Boolean = tr
     } ?: return FqName.ROOT
 
     return fileWithBoxFunction.second.packageFqName
+}
+
+fun String.finalizePath(moduleKind: ModuleKind): String {
+    return plus(moduleKind.jsExtension).minifyPathForWindowsIfNeeded()
+}
+
+/**
+ * D8 ignores Windows settings related to extending of maximum path symbols count
+ * The hack should be deleted when D8 fixes the bug.
+ * The issue is here: https://bugs.chromium.org/p/v8/issues/detail?id=13318
+*/
+fun String.minifyPathForWindowsIfNeeded(): String {
+    if (!isWindows) return this
+    val delimiter = if (contains('\\')) '\\' else '/'
+    val directoryPath = substringBeforeLast(delimiter)
+    val fileFullName = substringAfterLast(delimiter)
+    val fileName = fileFullName.substringBeforeLast('.')
+
+    if (fileName.length <= 80) return this
+
+    val fileExtension = fileFullName.substringAfterLast('.')
+    val extensionPart = if (fileExtension.isEmpty()) "" else ".$fileExtension"
+
+    return "$directoryPath$delimiter${fileName.cityHash64().toULong().toString(16)}$extensionPart"
 }

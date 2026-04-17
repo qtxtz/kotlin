@@ -5,8 +5,6 @@
 
 package org.jetbrains.kotlin.js.test.converters
 
-import org.jetbrains.kotlin.backend.common.serialization.cityHash64
-import org.jetbrains.kotlin.cli.common.isWindows
 import org.jetbrains.kotlin.cli.pipeline.web.JsLoweredIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.WebLoadedIrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.web.js.JsIrLoweringPipelinePhase
@@ -30,6 +28,8 @@ import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.compilerConfigurationProvider
 import org.jetbrains.kotlin.test.services.configuration.JsEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.JsEnvironmentConfigurator.Companion.getJsModuleArtifactName
+import org.jetbrains.kotlin.test.services.configuration.finalizePath
+import org.jetbrains.kotlin.test.services.configuration.minifyPathForWindowsIfNeeded
 import org.jetbrains.kotlin.test.services.defaultsProvider
 import org.jetbrains.kotlin.utils.addToStdlib.runIf
 import org.jetbrains.kotlin.utils.fileUtils.withReplacedExtensionOrNull
@@ -140,7 +140,7 @@ class JsIrLoweringFacade(
             loweredIr.context,
             moduleToName = runIf(isEsModules) {
                 loweredIr.allModules.associateWith {
-                    "./${getJsModuleArtifactName(testServices, it.safeName)}".minifyIfNeed()
+                    "./${getJsModuleArtifactName(testServices, it.safeName)}".minifyPathForWindowsIfNeeded()
                 }
             } ?: emptyMap(),
         )
@@ -249,32 +249,10 @@ fun String.augmentWithModuleName(moduleName: String): String {
     }
 
     return if (suffix == ESM_EXTENSION) {
-        replaceAfterLast(File.separator, moduleName.minifyIfNeed().replace("./", "")).removeSuffix(suffix) + suffix
+        replaceAfterLast(File.separator, moduleName.minifyPathForWindowsIfNeeded().replace("./", "")).removeSuffix(suffix) + suffix
     } else {
         return removeSuffix("_v5$suffix") + "-${moduleName}_v5$suffix"
     }
-}
-
-fun String.finalizePath(moduleKind: ModuleKind): String {
-    return plus(moduleKind.jsExtension).minifyIfNeed()
-}
-
-// D8 ignores Windows settings related to extending of maximum path symbols count
-// The hack should be deleted when D8 fixes the bug.
-// The issue is here: https://bugs.chromium.org/p/v8/issues/detail?id=13318
-fun String.minifyIfNeed(): String {
-    if (!isWindows) return this
-    val delimiter = if (contains('\\')) '\\' else '/'
-    val directoryPath = substringBeforeLast(delimiter)
-    val fileFullName = substringAfterLast(delimiter)
-    val fileName = fileFullName.substringBeforeLast('.')
-
-    if (fileName.length <= 80) return this
-
-    val fileExtension = fileFullName.substringAfterLast('.')
-    val extensionPart = if (fileExtension.isEmpty()) "" else ".$fileExtension"
-
-    return "$directoryPath$delimiter${fileName.cityHash64().toULong().toString(16)}$extensionPart"
 }
 
 fun File.augmentWithModuleName(moduleName: String): File = File(absolutePath.augmentWithModuleName(moduleName))
