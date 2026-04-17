@@ -49,6 +49,9 @@ dependencies {
     testImplementation(project(":kotlin-tooling-core"))
     testImplementation(project(":native:native.config"))
     testImplementation(intellijCore())
+
+    testRuntimeOnly(libs.junit.vintage.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 val runCommonizer by tasks.registering(JavaExec::class) {
@@ -62,14 +65,7 @@ sourceSets {
 }
 
 projectTests {
-    testTask(parallel = true, jUnitMode = JUnitMode.JUnit4) {
-        testInputsCheck {
-            with(extraPermissions) {
-                // There is empty junit.properties in project dir to let JUnit 4 discover it and stop scanning
-                add("permission java.io.FilePermission \"junit.properties\", \"read\";")
-            }
-        }
-    }
+    testTask(jUnitMode = JUnitMode.JUnit5)
     testData(project.isolated, "testData")
     withMockJdkRuntime()
 }
