@@ -375,7 +375,6 @@ fun Project.configureTests() {
             ":kotlin-tooling-metadata",
             ":kotlin-util-klib",
             ":kotlinx-metadata-klib",
-            ":kotlinx-serialization-compiler-plugin",
             ":libraries:tools:abi-validation:abi-tools",
             ":libraries:tools:abi-validation:abi-tools-api",
             ":libraries:tools:abi-validation:abi-tools-tests",
