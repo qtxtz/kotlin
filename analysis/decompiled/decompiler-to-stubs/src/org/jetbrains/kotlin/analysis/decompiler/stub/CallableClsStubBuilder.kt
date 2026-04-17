@@ -226,20 +226,25 @@ private class FunctionClsStubBuilder(
     }
 
     override fun createModifierListStub() {
-        val modalityModifier = if (isTopLevel) listOf() else listOf(MODALITY)
         val flags = functionProto.flags
         val modifierListStubImpl = createModifierListStubForCallableDeclaration(
             flags = flags,
-            flagsToTranslate = listOf(
-                VISIBILITY,
-                OPERATOR,
-                INFIX,
-                EXTERNAL_FUN,
-                INLINE,
-                TAILREC,
-                SUSPEND,
-                EXPECT_FUNCTION,
-            ) + modalityModifier,
+            flagsToTranslate = buildList {
+                add(VISIBILITY)
+                add(OPERATOR)
+                add(INFIX)
+                add(EXTERNAL_FUN)
+                add(INLINE)
+                add(TAILREC)
+                add(SUSPEND)
+                add(EXPECT_FUNCTION)
+
+                if (isTopLevel) {
+                    add(STATIC_FUNCTION)
+                } else {
+                    add(MODALITY)
+                }
+            },
             returnValueStatus = Flags.RETURN_VALUE_STATUS_FUNCTION,
         )
 
@@ -310,11 +315,23 @@ private class PropertyClsStubBuilder(
 
     override fun createModifierListStub() {
         val flags = propertyProto.flags
-        val constModifier = if (isVar) listOf() else listOf(CONST)
-        val modalityModifier = if (isTopLevel || Flags.IS_CONST[flags]) listOf() else listOf(MODALITY)
         val modifierListStubImpl = createModifierListStubForCallableDeclaration(
             flags = flags,
-            flagsToTranslate = listOf(VISIBILITY, LATEINIT, EXTERNAL_PROPERTY, EXPECT_PROPERTY) + constModifier + modalityModifier,
+            flagsToTranslate = buildList {
+                add(VISIBILITY)
+                add(LATEINIT)
+                add(EXTERNAL_PROPERTY)
+                add(EXPECT_PROPERTY)
+                if (!isVar) {
+                    add(CONST)
+                }
+
+                if (isTopLevel) {
+                    add(STATIC_PROPERTY)
+                } else if (!Flags.IS_CONST[flags]) {
+                    add(MODALITY)
+                }
+            },
             returnValueStatus = Flags.RETURN_VALUE_STATUS_PROPERTY,
         )
 

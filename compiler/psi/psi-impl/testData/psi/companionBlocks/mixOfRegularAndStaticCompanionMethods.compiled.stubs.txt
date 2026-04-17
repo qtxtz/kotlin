@@ -18,7 +18,7 @@ MixOfRegularAndStaticCompanionMethodsKt.class:
     IMPORT_LIST
     PROPERTY[fqName=static1, hasBackingField=false, hasDelegate=false, hasDelegateExpression=false, hasInitializer=false, hasReturnTypeRef=true, isExtension=true, isTopLevel=true, isVar=false, name=static1]
       origin: Facade(className=MixOfRegularAndStaticCompanionMethodsKt, jvmClassName=null)
-      MODIFIER_LIST[public]
+      MODIFIER_LIST[public companion]
       TYPE_REFERENCE
         USER_TYPE
           REFERENCE_EXPRESSION[referencedName=Foo]
@@ -46,7 +46,7 @@ MixOfRegularAndStaticCompanionMethodsKt.class:
         VALUE_PARAMETER_LIST
     PROPERTY[fqName=static2, hasBackingField=false, hasDelegate=false, hasDelegateExpression=false, hasInitializer=false, hasReturnTypeRef=true, isExtension=true, isTopLevel=true, isVar=false, name=static2]
       origin: Facade(className=MixOfRegularAndStaticCompanionMethodsKt, jvmClassName=null)
-      MODIFIER_LIST[public]
+      MODIFIER_LIST[public companion]
       TYPE_REFERENCE
         USER_TYPE
           REFERENCE_EXPRESSION[referencedName=Foo]
@@ -84,7 +84,7 @@ MixOfRegularAndStaticCompanionMethodsKt.class:
           REFERENCE_EXPRESSION[referencedName=Unit]
     FUN[fqName=static3, hasBody=true, hasNoExpressionBody=true, hasTypeParameterListBeforeFunctionName=false, isExtension=true, isTopLevel=true, mayHaveContract=false, name=static3]
       origin: Facade(className=MixOfRegularAndStaticCompanionMethodsKt, jvmClassName=null)
-      MODIFIER_LIST[public]
+      MODIFIER_LIST[public companion]
       TYPE_REFERENCE
         USER_TYPE
           REFERENCE_EXPRESSION[referencedName=Foo]

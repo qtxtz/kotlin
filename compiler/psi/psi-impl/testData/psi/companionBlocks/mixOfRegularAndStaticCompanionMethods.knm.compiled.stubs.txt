@@ -2,7 +2,7 @@ FILE[kind=File[packageFqName=<root>]]
   PACKAGE_DIRECTIVE
   IMPORT_LIST
   PROPERTY[fqName=static1, hasBackingField=null, hasDelegate=false, hasDelegateExpression=false, hasInitializer=false, hasReturnTypeRef=true, isExtension=true, isTopLevel=true, isVar=false, name=static1]
-    MODIFIER_LIST[public]
+    MODIFIER_LIST[public companion]
     TYPE_REFERENCE
       USER_TYPE
         REFERENCE_EXPRESSION[referencedName=Foo]
@@ -28,7 +28,7 @@ FILE[kind=File[packageFqName=<root>]]
       MODIFIER_LIST[public final]
       VALUE_PARAMETER_LIST
   PROPERTY[fqName=static2, hasBackingField=null, hasDelegate=false, hasDelegateExpression=false, hasInitializer=false, hasReturnTypeRef=true, isExtension=true, isTopLevel=true, isVar=false, name=static2]
-    MODIFIER_LIST[public]
+    MODIFIER_LIST[public companion]
     TYPE_REFERENCE
       USER_TYPE
         REFERENCE_EXPRESSION[referencedName=Foo]
@@ -63,7 +63,7 @@ FILE[kind=File[packageFqName=<root>]]
           REFERENCE_EXPRESSION[referencedName=kotlin]
         REFERENCE_EXPRESSION[referencedName=Unit]
   FUN[fqName=static3, hasBody=true, hasNoExpressionBody=true, hasTypeParameterListBeforeFunctionName=false, isExtension=true, isTopLevel=true, mayHaveContract=false, name=static3]
-    MODIFIER_LIST[public]
+    MODIFIER_LIST[public companion]
     TYPE_REFERENCE
       USER_TYPE
         REFERENCE_EXPRESSION[referencedName=Foo]
