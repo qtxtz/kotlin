@@ -35,7 +35,7 @@ class JsAstHandler(testServices: TestServices) : JsBinaryArtifactHandler(testSer
 
         val jsProgram = (info.unwrap() as? BinaryArtifacts.Js.JsIrArtifact)
             ?.compilerResult
-            ?.outputs[mode]
+            ?.get(mode)
             ?.jsProgram
             ?: return
         processJsProgram(jsProgram, ktFiles, testServices.defaultsProvider.targetBackend!!)

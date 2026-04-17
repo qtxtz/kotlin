@@ -175,7 +175,7 @@ class JsIrLoweringFacade(
 
 
         if (dontSkipRegularMode) {
-            for ((mode, output) in compilerResult.outputs.entries) {
+            for ((mode, output) in compilerResult.entries) {
                 val outputFile = File(
                     JsEnvironmentConfigurator.getJsModuleArtifactPath(testServices, module.name, mode, firstTimeCompilation)
                         .finalizePath(moduleKind)
@@ -190,7 +190,7 @@ class JsIrLoweringFacade(
         }
 
         if (generateDts) {
-            val tsFiles = compilerResult.outputs.entries.associate { it.value.getFullTsDefinition(moduleId, moduleKind) to it.key }
+            val tsFiles = compilerResult.entries.associate { it.value.getFullTsDefinition(moduleId, moduleKind) to it.key }
             val tsDefinitions = tsFiles.entries.singleOrNull()?.key
                 ?: error("[${tsFiles.values.joinToString { it.name }}] make different TypeScript")
 

@@ -172,7 +172,7 @@ fun getAllFilesForRunner(
         .single()
     val result = mutableMapOf<TranslationMode, List<String>>()
 
-    compilerResult.outputs.entries.forEach { (mode, outputs) ->
+    compilerResult.entries.forEach { (mode, outputs) ->
         val outputFile = getModeOutputFilePath(testServices, module, mode)
         val (inputJsFilesBefore, inputJsFilesAfter) = extractJsFiles(testServices, testServices.moduleStructure.modules, mode)
         val additionalFiles = getAdditionalFilePaths(testServices, mode)

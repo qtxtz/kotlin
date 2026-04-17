@@ -58,7 +58,7 @@ internal class JsLineNumberHandler(testServices: TestServices) : JsBinaryArtifac
                     verifiedModuleCount += 1
                 }
 
-                verifyModulesRecursively(module, artifact.compilerResult.outputs[translationModeForIr]!!)
+                verifyModulesRecursively(module, artifact.compilerResult[translationModeForIr]!!)
 
                 // Just a sanity check to make sure we indeed verify all the needed modules.
                 assert(verifiedModuleCount == testModules.size) {

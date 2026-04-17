@@ -51,7 +51,7 @@ class JsSourceMapValidator(testServices: TestServices) : AbstractJsArtifactsColl
             .mapNotNull { (m, c) -> (c as? BinaryArtifacts.Js.JsIrArtifact)?.let { m to c.compilerResult } }
             .single()
 
-        compilerResult.outputs.entries.forEach { (mode, outputs) ->
+        compilerResult.entries.forEach { (mode, outputs) ->
             val outputFile = getModeOutputFilePath(testServices, module, mode)
 
             result[mode] = outputs.dependencies.mapTo(mutableListOf("${outputFile}.map")) {
