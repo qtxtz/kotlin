@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -388,6 +388,7 @@ internal class StubBasedFirMemberDeserializer(
                 isConst = property.hasModifier(KtTokens.CONST_KEYWORD)
                 isLateInit = property.hasModifier(KtTokens.LATEINIT_KEYWORD)
                 isExternal = property.hasModifier(KtTokens.EXTERNAL_KEYWORD)
+                isStatic = property.hasModifier(KtTokens.COMPANION_KEYWORD)
                 setSpecialFlags(property.modifierList)
             }
 
@@ -575,6 +576,7 @@ internal class StubBasedFirMemberDeserializer(
                 isTailRec = function.hasModifier(KtTokens.TAILREC_KEYWORD)
                 isExternal = function.hasModifier(KtTokens.EXTERNAL_KEYWORD)
                 isSuspend = function.hasModifier(KtTokens.SUSPEND_KEYWORD)
+                isStatic = function.hasModifier(KtTokens.COMPANION_KEYWORD)
                 setSpecialFlags(function.modifierList)
             }
             isLocal = false
