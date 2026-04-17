@@ -223,6 +223,12 @@ class FirDiagnosticsHandler(testServices: TestServices) : FirAnalysisHandler(tes
                     reportCSRMightBeUsed(element, element.nonFatalDiagnostics)
                 }
 
+                if (element is FirTypeOperatorCall) {
+                    if (ContextSensitiveResolutionMightBeUsed in element.nonFatalDiagnostics) {
+                        consumer.report(KtDebugInfoDiagnostics.CSR_MIGHT_BE_USED, element.conversionTypeRef.source)
+                    }
+                }
+
                 if (shouldRenderDynamic && element is FirResolvable) {
                     reportDynamic(element)
                 }

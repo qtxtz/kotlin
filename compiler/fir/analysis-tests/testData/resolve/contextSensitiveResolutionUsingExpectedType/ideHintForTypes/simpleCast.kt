@@ -13,8 +13,8 @@ sealed class A {
 import test.A
 
 fun foo(a: A) {
-    val x = a as A.X
-    val y = a <!CAST_NEVER_SUCCEEDS!>as?<!> A.Y
+    val x = a as <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.X<!>
+    val y = a <!CAST_NEVER_SUCCEEDS!>as?<!> <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Y<!>
     x.v
     y?.v
 }

@@ -20,21 +20,21 @@ import test.Outer
 
 fun testOuter(o: Outer) {
     when (o) {
-        is Outer.Mid1 -> {}
-        is Outer.Mid2 -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>Outer.Mid1<!> -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>Outer.Mid2<!> -> {}
     }
 }
 
 fun testMid(m: Outer.Mid1) {
     when (m) {
-        is Outer.Mid1.Leaf1 -> {}
-        is Outer.Mid1.Leaf2 -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>Outer.Mid1.Leaf1<!> -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>Outer.Mid1.Leaf2<!> -> {}
     }
 }
 
 fun testCast(o: Outer) {
-    val mid = o as Outer.Mid1
-    val leaf = mid as? Outer.Mid1.Leaf1
+    val mid = o as <!DEBUG_INFO_CSR_MIGHT_BE_USED!>Outer.Mid1<!>
+    val leaf = mid as? <!DEBUG_INFO_CSR_MIGHT_BE_USED!>Outer.Mid1.Leaf1<!>
 }
 
 /* GENERATED_FIR_TAGS: asExpression, classDeclaration, functionDeclaration, isExpression, localProperty, nestedClass,

@@ -51,6 +51,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirVariableSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.builder.buildErrorTypeRef
+import org.jetbrains.kotlin.fir.types.builder.buildUserTypeRef
 import org.jetbrains.kotlin.fir.visitors.*
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
@@ -1259,6 +1260,11 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
 
         resolved.resolveConversionTypeRefInContextSensitiveModeIfNecessary()
 
+        if (AnalysisFlags.ideMode.isSet()) {
+            @OptIn(FirIdeOnly::class)
+            resolved.prepareCSRHintForTypeOperatorIfNeeded()
+        }
+
         val conversionTypeRef = resolved.conversionTypeRef.withTypeArgumentsForBareType(resolved.argument, typeOperatorCall.operation)
         resolved.transformChildren(object : FirDefaultTransformer<Any?>() {
             override fun <E : FirElement> transformElement(element: E, data: Any?): E {
@@ -1341,6 +1347,67 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
 
         val argument = argumentList.arguments.singleOrNull() ?: error("Not a single argument: ${this.render()}")
 
+        val resultingTypeRef = tryResolveTypeRefViaCSR(userTypeRef, argument) ?: return
+        replaceConversionTypeRef(resultingTypeRef)
+    }
+
+    /**
+     * In IDE mode, for type operator calls whose conversion type ref was resolved normally via a qualified name (e.g., `A.X`),
+     * checks whether context-sensitive resolution could also resolve just the simple name.
+     * If so, appends [ContextSensitiveResolutionMightBeUsed] to [FirTypeOperatorCall.nonFatalDiagnostics].
+     */
+    @FirIdeOnly
+    private fun FirTypeOperatorCall.prepareCSRHintForTypeOperatorIfNeeded() {
+        // Only applicable when the type was resolved normally (not via CSR)
+        val resolvedTypeRef = conversionTypeRef as? FirResolvedTypeRef ?: return
+        if (resolvedTypeRef is FirErrorTypeRef) return
+        if (resolvedTypeRef.resolvedSymbolOrigin == FirResolvedSymbolOrigin.ContextSensitive) return
+
+        // Only applicable when the user wrote a qualified name (qualifier.size > 1)
+        val userTypeRef = resolvedTypeRef.delegatedTypeRef as? FirUserTypeRef ?: return
+        if (userTypeRef.qualifier.size <= 1) return
+
+        val argument = argumentList.arguments.singleOrNull() ?: return
+
+        val lastQualifierPart = userTypeRef.qualifier.last()
+        val simpleNameTypeRef = buildUserTypeRef {
+            source = userTypeRef.source
+            isMarkedNullable = userTypeRef.isMarkedNullable
+            qualifier.add(lastQualifierPart)
+        }
+
+        // First, check that the simple name does NOT resolve normally (i.e., no visible class with that name in scope).
+        // If it does resolve, the user can already use the simple name without CSR — no hint needed.
+        // If it resolves to some other visible class, CSR wouldn't apply.
+        val normalResolution = typeResolverTransformer.withBareTypes {
+            typeResolverTransformer.transformTypeRef(
+                simpleNameTypeRef,
+                TypeResolutionConfiguration(
+                    components.createCurrentScopeList(),
+                    context.containingClassDeclarations,
+                    context.file,
+                    context.topContainerForTypeResolution,
+                )
+            )
+        }
+        if (normalResolution !is FirErrorTypeRef || !normalResolution.diagnostic.meansAbsenceOfVisibleClass()) return
+
+        val csrResolvedTypeRef = tryResolveTypeRefViaCSR(simpleNameTypeRef, argument) ?: return
+        val resolvedClass = resolvedTypeRef.coneType.fullyExpandedType().toClassLikeSymbol(session) ?: return
+        val csrResolvedClass = csrResolvedTypeRef.coneType.fullyExpandedType().toClassLikeSymbol(session) ?: return
+
+        if (resolvedClass == csrResolvedClass) {
+            replaceNonFatalDiagnostics(nonFatalDiagnostics + ContextSensitiveResolutionMightBeUsed)
+        }
+    }
+
+    /**
+     * Tries to resolve a single-qualifier [userTypeRef] via context-sensitive resolution using the [argument]'s type
+     * to determine the sealed parent chain.
+     *
+     * @return the successfully resolved type ref, or null if CSR resolution failed
+     */
+    private fun tryResolveTypeRefViaCSR(userTypeRef: FirUserTypeRef, argument: FirExpression): FirResolvedTypeRef? {
         for (classToLookAt in argument.resolvedType.getParentChainForContextSensitiveResolutionOfTypes(session)) {
             val resultingTypeRef = typeResolverTransformer.withBareTypes {
                 typeResolverTransformer.transformTypeRef(
@@ -1355,10 +1422,11 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
             }
 
             if (resultingTypeRef !is FirErrorTypeRef && resultingTypeRef.coneType !is ConeErrorType) {
-                replaceConversionTypeRef(resultingTypeRef)
-                break
+                return resultingTypeRef
             }
         }
+
+        return null
     }
 
     @OptIn(UnresolvedExpressionTypeAccess::class)

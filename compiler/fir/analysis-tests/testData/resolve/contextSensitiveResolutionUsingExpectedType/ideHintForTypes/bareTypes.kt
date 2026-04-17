@@ -14,16 +14,16 @@ import test.A
 
 fun foo(a: A<String>) {
     // Bare types — type arguments omitted
-    if (a is A.X) {
+    if (a is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.X<!>) {
         "".hashCode()
     }
 
     when (a) {
-        is A.X -> {}
-        is A.Y -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.X<!> -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Y<!> -> {}
     }
 
-    val x = a as A.X
+    val x = a as <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.X<!>
 }
 
 /* GENERATED_FIR_TAGS: asExpression, classDeclaration, functionDeclaration, ifExpression, isExpression, localProperty,

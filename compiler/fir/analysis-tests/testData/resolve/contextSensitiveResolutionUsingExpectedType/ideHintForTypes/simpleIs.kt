@@ -13,11 +13,11 @@ sealed class A {
 import test.A
 
 fun foo(a: A) {
-    if (a is A.X) {
+    if (a is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.X<!>) {
         "".hashCode()
     }
 
-    if (a !is A.Y) {
+    if (a !is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Y<!>) {
         "".hashCode()
     }
 }

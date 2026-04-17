@@ -23,7 +23,7 @@ fun foo(a: A) {
 
     when (a) {
         is A.X -> {}
-        is A.Y -> {}
+        is <!DEBUG_INFO_CSR_MIGHT_BE_USED!>A.Y<!> -> {}
     }
 }
 
