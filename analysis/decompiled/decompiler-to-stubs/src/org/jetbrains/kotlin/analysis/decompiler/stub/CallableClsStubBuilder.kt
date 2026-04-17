@@ -11,6 +11,7 @@ import com.intellij.psi.stubs.StubElement
 import com.intellij.util.io.StringRef
 import org.jetbrains.kotlin.analysis.decompiler.stub.flags.*
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationUseSiteTarget
+import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.library.metadata.KlibMetadataProtoBuf
 import org.jetbrains.kotlin.metadata.ProtoBuf
 import org.jetbrains.kotlin.metadata.ProtoBuf.MemberKind
@@ -18,8 +19,7 @@ import org.jetbrains.kotlin.metadata.ProtoBuf.Modality
 import org.jetbrains.kotlin.metadata.deserialization.*
 import org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf
 import org.jetbrains.kotlin.protobuf.MessageLite
-import org.jetbrains.kotlin.psi.KtContextParameterList
-import org.jetbrains.kotlin.psi.KtParameterList
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.stubs.KotlinPropertyStub
 import org.jetbrains.kotlin.psi.stubs.elements.KtStubElementTypes
 import org.jetbrains.kotlin.psi.stubs.impl.*
@@ -40,6 +40,7 @@ fun createPackageDeclarationsStubs(
     createTypeAliasesStubs(parentStub, outerContext, protoContainer, packageProto.typeAliasList)
 }
 
+@OptIn(KtExperimentalApi::class)
 fun createDeclarationsStubs(
     parentStub: StubElement<out PsiElement>,
     outerContext: ClsStubBuilderContext,
@@ -47,25 +48,67 @@ fun createDeclarationsStubs(
     functionProtos: List<ProtoBuf.Function>,
     propertyProtos: List<ProtoBuf.Property>,
 ) {
+    val isInsideClassBody = parentStub.elementType == KtStubElementTypes.CLASS_BODY
+    var currentCompanionBlockBody: StubElement<out PsiElement>? = null
+    fun wrapIntoCompanionBlockOnDemand(
+        flags: Int,
+        flagField: Flags.BooleanFlagField,
+        action: (parentStub: StubElement<out PsiElement>) -> Unit,
+    ) {
+        val parentStub = when {
+            !isInsideClassBody -> parentStub
+            flagField[flags] -> currentCompanionBlockBody
+                ?: buildCompanionBlockWithBody(parentStub).also {
+                    currentCompanionBlockBody = it
+                }
+
+            else -> {
+                currentCompanionBlockBody = null
+                parentStub
+            }
+        }
+
+        action(parentStub)
+    }
+
     for (propertyProto in propertyProtos) {
         ProgressManager.checkCanceled()
 
-        if (mustNotBeWrittenToStubs(propertyProto.flags)) {
+        val flags = propertyProto.flags
+        if (mustNotBeWrittenToStubs(flags)) {
             continue
         }
 
-        PropertyClsStubBuilder(parentStub, outerContext, protoContainer, propertyProto).build()
+        wrapIntoCompanionBlockOnDemand(flags, Flags.IS_STATIC_PROPERTY) {
+            PropertyClsStubBuilder(it, outerContext, protoContainer, propertyProto).build()
+        }
     }
 
     for (functionProto in functionProtos) {
         ProgressManager.checkCanceled()
 
-        if (mustNotBeWrittenToStubs(functionProto.flags)) {
+        val flags = functionProto.flags
+        if (mustNotBeWrittenToStubs(flags)) {
             continue
         }
 
-        FunctionClsStubBuilder(parentStub, outerContext, protoContainer, functionProto).build()
+        wrapIntoCompanionBlockOnDemand(flags, Flags.IS_STATIC_FUNCTION) {
+            FunctionClsStubBuilder(it, outerContext, protoContainer, functionProto).build()
+        }
     }
+}
+
+@OptIn(KtExperimentalApi::class)
+private fun buildCompanionBlockWithBody(parentStub: StubElement<out PsiElement>): StubElement<out PsiElement> {
+    val companionBlockStub = KotlinPlaceHolderStubImpl<KtCompanionBlock>(
+        parentStub,
+        KtStubElementTypes.COMPANION_BLOCK,
+    )
+
+    // Parser treats companion keyword as a modifier, so we need to create a modifier list stub for it
+    createModifierListStub(companionBlockStub, listOf(KtTokens.COMPANION_KEYWORD), ProtoBuf.ReturnValueStatus.UNSPECIFIED)
+
+    return KotlinPlaceHolderStubImpl<KtClassBody>(companionBlockStub, KtStubElementTypes.CLASS_BODY)
 }
 
 fun createTypeAliasesStubs(
