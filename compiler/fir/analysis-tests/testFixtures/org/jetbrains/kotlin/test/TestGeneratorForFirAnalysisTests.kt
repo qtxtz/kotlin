@@ -145,10 +145,9 @@ fun main(args: Array<String>) {
             }
         }
 
-        testGroup(testRoot, "compiler/fir/analysis-tests/testData/resolve/contextSensitiveResolutionUsingExpectedType") {
+        testGroup(testRoot, "compiler/testData/diagnostics/tests/contextSensitiveResolutionUsingExpectedType") {
             testClass<AbstractPhasedJvmDiagnosticPsiWithContextSensitiveEnabledTest> {
                 model("ideHint")
-                model("ideHintForTypes")
             }
         }
 
