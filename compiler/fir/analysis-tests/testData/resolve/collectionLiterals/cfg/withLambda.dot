@@ -115,7 +115,7 @@ digraph withLambda_kt {
     24 -> {25};
     25 -> {26};
     26 -> {27};
-    26 -> {28} [color=green label="CapturedByValue"];
+    26 -> {28} [color=green style=dotted label="CapturedByValue"];
     27 -> {28 34 36};
     27 -> {28} [style=dashed];
     28 -> {29};
@@ -124,9 +124,10 @@ digraph withLambda_kt {
     30 -> {31} [style=dotted];
     31 -> {32} [style=dotted];
     32 -> {33} [style=dotted];
-    33 -> {28} [color=green style=dashed];
+    33 -> {36};
     34 -> {35};
     35 -> {37};
+    36 -> {27} [color=green style=dashed];
     36 -> {37} [label="Postponed"];
     37 -> {38};
     38 -> {39};

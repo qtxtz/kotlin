@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.fir.resolve.ResolutionMode.ArrayLiteralPosition
 import org.jetbrains.kotlin.fir.resolve.calls.*
 import org.jetbrains.kotlin.fir.resolve.calls.candidate.Candidate
 import org.jetbrains.kotlin.fir.resolve.calls.candidate.FirNamedReferenceWithCandidate
+import org.jetbrains.kotlin.fir.resolve.calls.candidate.processCollectionLiteralsTree
 import org.jetbrains.kotlin.fir.resolve.calls.stages.TypeArgumentMapping
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.resolve.inference.model.ConeArgumentConstraintPosition
@@ -117,6 +118,12 @@ class FirCallCompleter(
         val analyzer = createPostponedArgumentsAnalyzer(transformer.resolutionContext)
         if (call is FirFunctionCall) {
             replaceLambdaArgumentEffects(call)
+        }
+
+        processCollectionLiteralsTree(ConeAtomWithCandidate(call, candidate)) { atom ->
+            (atom.subAtom?.expression as? FirFunctionCall)?.let {
+                replaceLambdaArgumentEffects(it)
+            }
         }
 
         return when (completionMode) {

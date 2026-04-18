@@ -55,7 +55,7 @@ fun test() {
         var t: Int?
         t = 42
         val _: Z = [{ t = null }] // inline
-        <!SMARTCAST_IMPOSSIBLE!>t<!>.plus(42)
+        t<!UNSAFE_CALL!>.<!>plus(42)
     } else {
         var t: Int?
         t = 42
@@ -94,7 +94,7 @@ fun test2() {
     if (cond()) {
         var t: Int? = 42
         val resT: Z = [{ t = null }] // inline
-        bar(resT, t!!, <!SMARTCAST_IMPOSSIBLE!>t<!>)
+        bar(resT, t!!, t)
     } else {
         var t: Int? = 42
         val resT: Z = Z.of({ t = null })
@@ -157,7 +157,7 @@ fun test4() {
         var y: Int? = 42
         val resY: Z = [{ y = null }] // inline
         y = 42
-        foo(resY, <!SMARTCAST_IMPOSSIBLE!>y<!>)
+        foo(resY, y)
     } else {
         var y: Int? = 42
         val resY: Z = Z.of({ y = null })

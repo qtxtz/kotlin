@@ -162,7 +162,7 @@ digraph withLambdaWithOuterCall_kt {
     38 -> {39};
     39 -> {40};
     40 -> {41};
-    40 -> {42} [color=green label="CapturedByValue"];
+    40 -> {42} [color=green style=dotted label="CapturedByValue"];
     41 -> {42 48 50};
     41 -> {42} [style=dashed];
     42 -> {43};
@@ -171,9 +171,10 @@ digraph withLambdaWithOuterCall_kt {
     44 -> {45} [style=dotted];
     45 -> {46} [style=dotted];
     46 -> {47} [style=dotted];
-    47 -> {42} [color=green style=dashed];
+    47 -> {50};
     48 -> {49};
     49 -> {51};
+    50 -> {41} [color=green style=dashed];
     50 -> {51} [color=green];
     50 -> {54} [color=red label="Postponed"];
     51 -> {52};

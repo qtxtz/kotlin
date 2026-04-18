@@ -44,7 +44,7 @@ FILE: [ResolvedTo(IMPORTS)] collectionLiteralWithLambda.kt
     public final [ResolvedTo(BODY_RESOLVE)] fun main(): R|kotlin/Unit| {
         [ResolvedTo(BODY_RESOLVE)] lvar a: R|kotlin/Any?|
         R|<local>/a| = Int(42)
-        R|/takeC<Inapplicable(UNSTABLE_SMARTCAST): /takeC>#|(Q|Callbacks.Companion|.R|/Callbacks.Companion.of|([ResolvedTo(BODY_RESOLVE)] takeC@fun <anonymous>(): R|kotlin/Unit| <inline=Inline>  {
+        R|/takeC<Inapplicable(UNSTABLE_SMARTCAST): /takeC>#|(Q|Callbacks.Companion|.R|/Callbacks.Companion.of|([ResolvedTo(BODY_RESOLVE)] takeC@fun <anonymous>(): R|kotlin/Unit| <inline=Inline, kind=UNKNOWN>  {
             R|<local>/a| = Null(null)
         }
         ), R|<local>/a|)

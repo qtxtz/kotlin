@@ -14,17 +14,17 @@ fun testOk() {
     var a: Any?
     takeZ([{ a = null; Z() }, { Z() }])
     a = 42
-    <!SMARTCAST_IMPOSSIBLE!>a<!>.plus(42)
+    a.plus(42)
 
     var b: Any?
     takeZ([ { [ { [ { b = null; [ { Z() } ] } ] } ] } ])
     b = 42
-    <!SMARTCAST_IMPOSSIBLE!>b<!>.plus(42)
+    b.plus(42)
 
     var c: Any?
     val z: Set<Z> = [[ { c = null; [ { Z() } ] } ]]
     c = 42
-    <!SMARTCAST_IMPOSSIBLE!>c<!>.plus(42)
+    c.plus(42)
 }
 
 fun testFail() {

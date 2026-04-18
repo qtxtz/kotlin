@@ -71,6 +71,10 @@ fun runCollectionLiteralResolution(
         }
     }
 
+    if (!outerCandidateContext.isDuringOverloadResolution) {
+        context.bodyResolveComponents.callCompleter.replaceLambdaArgumentEffects(resolvedCall)
+    }
+
     postprocessCollectionLiteralCall(resolvedCall, atom)
 }
 
@@ -87,6 +91,7 @@ private fun resolveCollectionLiteralToPreparedCall(
     call = context.bodyResolveComponents.callCompleter.completeCall(
         call,
         ResolutionMode.ContextDependent,
+        // we need to prevent lambda analysis during overload resolution of outer call
         skipEvenPartialCompletion = true,
     )
 
