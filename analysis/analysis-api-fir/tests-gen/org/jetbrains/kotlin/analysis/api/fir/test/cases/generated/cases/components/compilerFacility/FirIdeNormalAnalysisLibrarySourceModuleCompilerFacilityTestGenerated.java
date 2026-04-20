@@ -137,6 +137,12 @@ public class FirIdeNormalAnalysisLibrarySourceModuleCompilerFacilityTestGenerate
   }
 
   @Test
+  @TestMetadata("inlineFunctionWithAnonymousObjectFromLibrary.kt")
+  public void testInlineFunctionWithAnonymousObjectFromLibrary() {
+    run("inlineFunctionWithAnonymousObjectFromLibrary.kt");
+  }
+
+  @Test
   @TestMetadata("inlineFunctionsInSameFile.kt")
   public void testInlineFunctionsInSameFile() {
     run("inlineFunctionsInSameFile.kt");
