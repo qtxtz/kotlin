@@ -1,21 +1,13 @@
-CODE_COMPILATION_EXCEPTION:
-Exception while generating code for public final fun test (): kotlin.Unit declared in test.MainKt:
-FUN name:test visibility:public modality:FINAL returnType:kotlin.Unit
-  BLOCK_BODY
-    CALL 'public final fun greet (message: kotlin.Function1<kotlin.String, kotlin.String>): kotlin.Unit [inline] declared in com.example.library.LibraryKt' type=kotlin.Unit origin=null
-      ARG message: RICH_FUNCTION_REFERENCE type=kotlin.Function1<kotlin.String, kotlin.String> origin=INLINE_LAMBDA reflectionTarget='null'
-        overriddenFunctionSymbol: public abstract fun invoke (p1: P1 of kotlin.Function1): R of kotlin.Function1 [operator] declared in kotlin.Function1
-        invoke: FUN INLINE_LAMBDA name:test$lambda$0 visibility:private modality:FINAL returnType:kotlin.String
-          VALUE_PARAMETER kind:Regular name:it index:0 type:kotlin.String
-          BLOCK_BODY
-            VAR name:$i$a$-greet-MainKt$test$1 type:kotlin.Int [val]
-              CONST Int type=kotlin.Int value=0
-            RETURN type=kotlin.Nothing from='private final fun test$lambda$0 (it: kotlin.String): kotlin.String declared in test.MainKt.test'
-              CALL 'public final fun toString (): kotlin.String declared in java.lang.StringBuilder' type=kotlin.String origin=null
-                ARG <this>: CALL 'public final fun append (value: kotlin.Char): java.lang.StringBuilder declared in java.lang.StringBuilder' type=java.lang.StringBuilder origin=null
-                  ARG <this>: CALL 'public final fun append (value: kotlin.String?): java.lang.StringBuilder declared in java.lang.StringBuilder' type=java.lang.StringBuilder origin=null
-                    ARG <this>: CALL 'public final fun append (value: kotlin.String?): java.lang.StringBuilder declared in java.lang.StringBuilder' type=java.lang.StringBuilder origin=null
-                      ARG <this>: CONSTRUCTOR_CALL 'public constructor <init> () declared in java.lang.StringBuilder' type=java.lang.StringBuilder origin=null
-                      ARG value: CONST String type=kotlin.String value="Hello, "
-                    ARG value: GET_VAR 'it: kotlin.String declared in test.MainKt.test.test$lambda$0' type=kotlin.String origin=null
-                  ARG value: CONST Char type=kotlin.Char value='!'
+public final class test/MainKt$test$$inlined$greet$1 {
+    // source: 'library.kt'
+    enclosing method test/MainKt.test()V
+    private final field text: java.lang.String
+    inner (anonymous) class test/MainKt$test$$inlined$greet$1
+    public method <init>(p0: java.lang.String): void
+    public method getText(): java.lang.String
+}
+
+public final class test/MainKt {
+    // source: 'main.kt'
+    public final static method test(): void
+}

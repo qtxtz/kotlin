@@ -1,4 +1,3 @@
-// CODE_COMPILATION_EXCEPTION
 // DUMP_IR
 
 // MODULE: library
