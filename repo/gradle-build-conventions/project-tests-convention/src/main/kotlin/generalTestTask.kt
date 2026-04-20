@@ -51,32 +51,6 @@ private fun Test.muteWithDatabase() {
     systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
 }
 
-/*
- * Workaround for TW-92736
- * TC parallelTests.excludesFile may contain invalid entries leading to skipping large groups of tests.
- */
-private fun Test.cleanupInvalidExcludePatternsForTCParallelTests(excludesFilePath: String) {
-    val candidateTestClassNames = mutableSetOf<String>()
-    candidateClassFiles.visit {
-        if (!isDirectory && name.endsWith(".class")) {
-            candidateTestClassNames.add(path.substringBefore(".class").replace('/', '.'))
-        }
-    }
-
-    val parallelTestsExcludes = File(excludesFilePath).readLines().filter { !it.startsWith("#") }.toSet()
-    val excludePatterns = filter.excludePatterns
-
-    parallelTestsExcludes.forEach {
-        if (!candidateTestClassNames.contains(it)) {
-            logger.warn("WARNING: parallelTests excludesFile contains class name missing in test classes: $it")
-            logger.warn("Removing '$it.*' from `excludePatterns`")
-            excludePatterns.remove("$it.*")
-        }
-    }
-
-    filter.setExcludePatterns(*excludePatterns.toTypedArray())
-}
-
 abstract class GeneralTestArgumentProvider @Inject constructor() : CommandLineArgumentProvider {
     @get:Inject
     protected abstract val providers: ProviderFactory
@@ -274,12 +248,6 @@ internal fun Project.createGeneralTestTask(
         jvmArgumentProviders.add(testArgumentProvider)
 
         systemProperty("idea.ignore.disabled.plugins", "true")
-
-        doFirst {
-            if (testArgumentProvider.excludesFile.isPresent) {
-                cleanupInvalidExcludePatternsForTCParallelTests(testArgumentProvider.excludesFile.get().path) // Workaround for TW-92736
-            }
-        }
 
         val fs = project.serviceOf<FileSystemOperations>()
         doLast {
