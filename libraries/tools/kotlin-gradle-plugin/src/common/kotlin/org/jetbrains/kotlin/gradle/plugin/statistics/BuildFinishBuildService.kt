@@ -96,9 +96,7 @@ internal abstract class BuildFinishBuildService : BuildService<BuildFinishBuildS
             try {
                 val metricContainer = MetricsContainer.createMetricsContainerForProfileFile()
 
-                fusReportDirectory.listFiles()
-                    ?.sortedBy { it.lastModified() }
-                    ?.filter { it.name.startsWith(buildUid) && (it.name.endsWith("plugin-profile") || it.name.endsWith("kotlin-profile")) }
+                fusReportDirectory.findFusFilesByBuildId(buildUid)
                     ?.forEach {
                         metricContainer.addMetricFromFusKotlinProfileFile(it)
                     }
@@ -122,6 +120,10 @@ internal abstract class BuildFinishBuildService : BuildService<BuildFinishBuildS
             log.debug("Single fus file was created for build $buildUid ")
             return emptyList()
         }
+
+        internal fun File.findFusFilesByBuildId(buildUid: String): List<File>? = listFiles()
+            ?.sortedWith(compareBy({ it.lastModified() }, { it.name }))
+            ?.filter { it.name.startsWith(buildUid) && (it.name.endsWith("plugin-profile") || it.name.endsWith("kotlin-profile")) }
     }
 
     override fun onFinish(p0: FinishEvent?) {
