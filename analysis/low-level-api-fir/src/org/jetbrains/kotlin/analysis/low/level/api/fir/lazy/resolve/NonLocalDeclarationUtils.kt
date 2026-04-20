@@ -84,7 +84,7 @@ internal fun elementCanBeLazilyResolved(element: KtElement?): Boolean = when (el
 private fun KtModifierList.isNonLocalDanglingModifierList(): Boolean {
     val parentToCheck = when (val parent = parent) {
         is KtFile -> parent
-        is KtClassBody -> (parent.parent as? KtClassOrObject).takeUnless { it is KtEnumEntry }
+        is KtClassBody -> parent.containingClassOrObject?.takeUnless { it is KtEnumEntry }
         else -> null
     }
 
