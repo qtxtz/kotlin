@@ -4,6 +4,7 @@
 // FILE: test.kt
 
 import lombok.extern.java.Log
+import lombok.AccessLevel
 
 @Log
 class LogExample {
@@ -57,6 +58,15 @@ enum class LogOnEnum {
     }
 }
 
+// Generate `myLog` despite the confusing extension and contextual properties that actually don't conflict with the property being generated.
+@Log(access = AccessLevel.PUBLIC)
+class LogWhenNonConflictingExtensionAndContextualProperty {
+    val LogWhenNonConflictingExtensionAndContextualProperty.myLog: Int get() = 1
+
+    context(p: LogWhenNonConflictingExtensionAndContextualProperty)
+    val myLog: LogWhenNonConflictingExtensionAndContextualProperty get() = p
+}
+
 fun box(): String {
     LogExample().test()
     Derived().test()
@@ -64,6 +74,7 @@ fun box(): String {
     LogOnInnerClass<String>().Inner().test()
     LogOnObject.test()
     LogOnEnum.ExampleEntry.test()
+    LogWhenNonConflictingExtensionAndContextualProperty().myLog.info("Check LogWhenNonConflictingExtensionAndContextualProperty")
     return "OK"
 }
 

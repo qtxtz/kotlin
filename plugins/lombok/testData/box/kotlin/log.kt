@@ -105,6 +105,31 @@ enum class LogOnEnum {
     }
 }
 
+@Log
+class LogWhenNonConflictingExtensionProperty {
+    companion object {
+        val Int.log: Int get() = this + 1
+
+        fun test() {
+            log.addHandler(logHandler)
+            log.info("Check LogWhenNonConflictingExtensionProperty")
+        }
+    }
+}
+
+@Log
+class LogWhenNonConflictingContextualProperty {
+    companion object {
+        context(x: Int)
+        val log: Int get() = x + 1
+
+        fun test() {
+            log.addHandler(logHandler)
+            log.info("Check LogWhenNonConflictingContextualProperty")
+        }
+    }
+}
+
 fun box(): String {
     LogExample.log.addHandler(logHandler)
     LogExample.log.info("Call from public log")
@@ -117,6 +142,8 @@ fun box(): String {
     LogOnInnerClass<String>().Inner().test()
     LogOnObject.test()
     LogOnEnum.ExampleEntry.test()
+    LogWhenNonConflictingExtensionProperty.test()
+    LogWhenNonConflictingContextualProperty.test()
 
     val expected = listOf(
         "INFO: Call from public log",
@@ -128,6 +155,8 @@ fun box(): String {
         "INFO: Check @Log on inner class",
         "INFO: Check @Log on object",
         "INFO: Check @Log on enum",
+        "INFO: Check LogWhenNonConflictingExtensionProperty",
+        "INFO: Check LogWhenNonConflictingContextualProperty",
     )
     if (logMessages != expected) return "FAIL: expected $expected but got $logMessages"
     return "OK"
