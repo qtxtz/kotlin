@@ -135,7 +135,7 @@ class NodeJsPlatform {
 
 project.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin) {
     def spec = project.extensions.getByType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec)
-    def nodeJsVersion = "18.19.1"
+    def nodeJsVersion = "24.15.0"
     spec.version = nodeJsVersion
 
     def nodeJsPlatform = new NodeJsPlatform()
