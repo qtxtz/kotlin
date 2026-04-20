@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.psi.psiUtil.containingClassOrObject
 import org.jetbrains.kotlin.resolve.DataClassResolver
 import org.jetbrains.kotlin.utils.SmartList
 import org.jetbrains.kotlin.utils.addIfNotNull
-import org.jetbrains.kotlin.utils.checkWithAttachment
 
 @OptIn(IntellijInternalApi::class)
 object LightClassUtil {
@@ -204,12 +203,7 @@ object LightClassUtil {
             // top-level declaration
             return parent.findFacadeClass()
         } else if (parent is KtClassBody) {
-            checkWithAttachment(parent.parent is KtClassOrObject, {
-                "Bad parent: ${parent.parent?.javaClass}"
-            }) {
-                it.withPsiAttachment("parent", parent)
-            }
-            return (parent.parent as KtClassOrObject).toLightClass()
+            return parent.containingClassOrObject?.toLightClass()
         }
 
         return null
