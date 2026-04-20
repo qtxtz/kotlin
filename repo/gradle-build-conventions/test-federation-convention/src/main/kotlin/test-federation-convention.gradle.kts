@@ -42,7 +42,7 @@ if (project.testFederationEnabled.orNull == true) {
             logger.quiet("Domain Test Mode: '${testFederationMode.get()}'")
 
             systemProperty(TEST_FEDERATION_MODE_KEY, testFederationMode.get().name)
-            environment(TEST_FEDERATION_MODE_ENV, testFederationMode.get().name)
+            environment(TEST_FEDERATION_MODE_ENV_KEY, testFederationMode.get().name)
 
             systemProperty(TEST_FEDERATION_AFFECTED_DOMAINS_KEY, formattedAffectedDomains.get())
             environment(TEST_FEDERATION_AFFECTED_DOMAINS_ENV_KEY, formattedAffectedDomains.get())

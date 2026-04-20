@@ -102,7 +102,7 @@ private fun runTestBuild(mode: TestFederationMode, vararg affected: Domain): Tes
 
     if (affected.isNotEmpty()) {
         builder.environment()[TEST_FEDERATION_AFFECTED_DOMAINS_ENV_KEY] = affected.joinToString(";") { it.name }
-    } else builder.environment().remove(TEST_FEDERATION_AFFECTED_DOMAINS_ENV_KEY)
+    } else builder.environment()[TEST_FEDERATION_AFFECTED_DOMAINS_ENV_KEY] = "<none>"
 
     val process = builder.start()
 
