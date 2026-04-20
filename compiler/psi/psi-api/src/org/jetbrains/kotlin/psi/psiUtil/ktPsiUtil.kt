@@ -550,6 +550,15 @@ val KtDeclaration.isFromCompanionBlock: Boolean
     get() = (parent as? KtClassBody)?.parent is KtCompanionBlock
 
 /**
+ * Whether the callable is a [companion extension](https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0449-companions-block-extension.md#companion-extensions),
+ * comes from a [companion block](https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0449-companions-block-extension.md#companion-blocks),
+ * or is a [KtEnumEntry].
+ */
+@KtExperimentalApi
+val KtDeclarationWithReturnType.isStatic: Boolean
+    get() = this is KtEnumEntry || hasModifier(KtTokens.COMPANION_KEYWORD) || isFromCompanionBlock
+
+/**
  * The containing script for top-level declarations.
  *
  * @see containingClassOrObject

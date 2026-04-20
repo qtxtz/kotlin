@@ -100,7 +100,7 @@ KaKotlinPropertySymbol:
   isFromPrimaryConstructor: false
   isLateInit: false
   isOverride: false
-  isStatic: false
+  isStatic: true
   isVal: true
   location: TOP_LEVEL
   modality: FINAL

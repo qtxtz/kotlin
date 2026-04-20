@@ -15,7 +15,7 @@ KaNamedFunctionSymbol:
   isInline: false
   isOperator: false
   isOverride: false
-  isStatic: false
+  isStatic: true
   isSuspend: false
   isTailRec: false
   location: TOP_LEVEL

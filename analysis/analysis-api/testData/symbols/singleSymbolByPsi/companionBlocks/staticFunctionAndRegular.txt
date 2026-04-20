@@ -15,7 +15,7 @@ KaNamedFunctionSymbol:
   isInline: false
   isOperator: false
   isOverride: false
-  isStatic: false
+  isStatic: true
   isSuspend: false
   isTailRec: false
   location: CLASS
@@ -36,4 +36,4 @@ KaNamedFunctionSymbol:
   getContainingModule: KaSourceModule "Sources of main"
   deprecationStatus: null
   returnValueStatus: Unspecified
-  importableFqName: null
+  importableFqName: Foo.function
