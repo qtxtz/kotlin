@@ -130,6 +130,7 @@ KtThisExpression(197,201): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -156,6 +157,7 @@ KtNameReferenceExpression(197,201): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -242,6 +244,7 @@ KtThisExpression(272,276): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -268,6 +271,7 @@ KtNameReferenceExpression(272,276): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL

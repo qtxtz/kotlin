@@ -125,6 +125,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -222,6 +223,7 @@ KaSyntheticJavaPropertySymbol:
     isInline: false
     isNotDefault: true
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: JAVA_SYNTHETIC_PROPERTY

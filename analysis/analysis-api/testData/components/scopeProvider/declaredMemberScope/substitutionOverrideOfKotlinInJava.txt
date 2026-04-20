@@ -66,6 +66,7 @@ KaSyntheticJavaPropertySymbol:
     isInline: false
     isNotDefault: true
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: JAVA_SYNTHETIC_PROPERTY
@@ -134,6 +135,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: false
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: JAVA_SOURCE
@@ -159,6 +161,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

@@ -18,6 +18,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE_MEMBER_GENERATED

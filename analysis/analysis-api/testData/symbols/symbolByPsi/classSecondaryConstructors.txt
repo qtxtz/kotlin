@@ -10,6 +10,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: true
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: SOURCE
@@ -39,6 +40,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: false
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: SOURCE
@@ -64,6 +66,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -101,6 +104,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: false
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: SOURCE
@@ -126,6 +130,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -158,6 +163,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

@@ -10,6 +10,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: false
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: SOURCE
@@ -35,6 +36,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: true
       location: LOCAL

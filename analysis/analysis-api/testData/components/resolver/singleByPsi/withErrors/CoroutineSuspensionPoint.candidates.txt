@@ -13,6 +13,7 @@ KtNameReferenceExpression(183,194): 'suspendHere'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

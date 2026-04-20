@@ -111,6 +111,7 @@ callables: 5
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -162,6 +163,7 @@ callables: 5
       isExpect: false
       isExtension: false
       isExternal: false
+      isStatic: false
       isVal: true
       location: LOCAL
       modality: FINAL
@@ -197,6 +199,7 @@ callables: 5
       isExtension: false
       isExternal: false
       isNotDefault: false
+      isStatic: false
       isVal: true
       location: PROPERTY
       modality: FINAL
@@ -226,6 +229,7 @@ callables: 5
       isInline: false
       isNotDefault: false
       isOverride: false
+      isStatic: false
       location: PROPERTY
       modality: FINAL
       origin: SOURCE
@@ -279,6 +283,7 @@ callables: 5
       isExtension: false
       isExternal: false
       isNotDefault: false
+      isStatic: false
       isVal: false
       location: PROPERTY
       modality: FINAL
@@ -308,6 +313,7 @@ callables: 5
       isInline: false
       isNotDefault: false
       isOverride: false
+      isStatic: false
       location: PROPERTY
       modality: FINAL
       origin: SOURCE
@@ -355,6 +361,7 @@ callables: 5
       isInline: false
       isNotDefault: false
       isOverride: false
+      isStatic: false
       location: PROPERTY
       modality: FINAL
       origin: SOURCE
@@ -373,6 +380,7 @@ callables: 5
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -406,6 +414,7 @@ callables: 5
           isExternal: false
           isImplicitLambdaParameter: false
           isNoinline: false
+          isStatic: false
           isVal: true
           isVararg: false
           location: LOCAL
@@ -438,6 +447,7 @@ callables: 5
       isExtension: false
       isExternal: false
       isNotDefault: false
+      isStatic: false
       isVal: true
       location: PROPERTY
       modality: FINAL
@@ -467,6 +477,7 @@ callables: 5
       isInline: false
       isNotDefault: true
       isOverride: false
+      isStatic: false
       location: PROPERTY
       modality: FINAL
       origin: SOURCE
@@ -479,6 +490,7 @@ callables: 5
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -525,6 +537,7 @@ callables: 5
       isExpect: false
       isExtension: false
       isExternal: false
+      isStatic: false
       isVal: true
       location: LOCAL
       modality: FINAL

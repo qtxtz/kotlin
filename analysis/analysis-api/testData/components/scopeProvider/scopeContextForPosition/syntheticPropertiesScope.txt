@@ -97,6 +97,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -194,6 +195,7 @@ scopes:
           isInline: false
           isNotDefault: true
           isOverride: false
+          isStatic: false
           location: PROPERTY
           modality: OPEN
           origin: JAVA_SYNTHETIC_PROPERTY
@@ -242,6 +244,7 @@ scopes:
         isExtension: false
         isExternal: false
         isPrimary: true
+        isStatic: false
         location: CLASS
         modality: FINAL
         origin: JAVA_SOURCE
@@ -353,6 +356,7 @@ scopes:
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

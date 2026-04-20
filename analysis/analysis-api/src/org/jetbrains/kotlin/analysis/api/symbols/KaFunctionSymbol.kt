@@ -57,6 +57,9 @@ public abstract class KaAnonymousFunctionSymbol : KaFunctionSymbol(), KaContextP
     final override val hasStableParameterNames: Boolean get() = withValidityAssertion { true }
     final override val modality: KaSymbolModality get() = withValidityAssertion { KaSymbolModality.FINAL }
 
+    @KaExperimentalApi
+    final override val isStatic: Boolean get() = withValidityAssertion { false }
+
     abstract override fun createPointer(): KaSymbolPointer<KaAnonymousFunctionSymbol>
 }
 
@@ -88,6 +91,9 @@ public abstract class KaSamConstructorSymbol : KaFunctionSymbol(), KaNamedSymbol
     final override val location: KaSymbolLocation get() = withValidityAssertion { KaSymbolLocation.TOP_LEVEL }
     final override val receiverParameter: KaReceiverParameterSymbol? get() = withValidityAssertion { null }
     final override val isExternal: Boolean get() = withValidityAssertion { false }
+
+    @KaExperimentalApi
+    final override val isStatic: Boolean get() = withValidityAssertion { false }
 
     abstract override fun createPointer(): KaSymbolPointer<KaSamConstructorSymbol>
 }
@@ -124,10 +130,7 @@ public abstract class KaNamedFunctionSymbol : KaFunctionSymbol(), KaNamedSymbol,
      */
     public abstract val isInfix: Boolean
 
-    /**
-     * Whether the function is static. While Kotlin functions cannot be static, the function symbol may represent e.g. a static Java method.
-     */
-    public abstract val isStatic: Boolean
+    public abstract override val isStatic: Boolean
 
     /**
      * Whether the function is a [tail-recursive function](https://kotlinlang.org/docs/functions.html#tail-recursive-functions).
@@ -173,6 +176,9 @@ public abstract class KaConstructorSymbol : KaFunctionSymbol(), KaTypeParameterO
     final override val location: KaSymbolLocation get() = withValidityAssertion { KaSymbolLocation.CLASS }
     final override val isExtension: Boolean get() = withValidityAssertion { false }
     final override val receiverParameter: KaReceiverParameterSymbol? get() = withValidityAssertion { null }
+
+    @KaExperimentalApi
+    final override val isStatic: Boolean get() = withValidityAssertion { false }
 
     @KaExperimentalApi
     final override val contextReceivers: List<KaContextReceiver> get() = withValidityAssertion { emptyList() }

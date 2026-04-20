@@ -44,6 +44,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -96,6 +97,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: PLUGIN

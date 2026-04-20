@@ -8,6 +8,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -131,6 +132,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: true
     location: PROPERTY
     modality: FINAL
@@ -165,6 +167,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: true
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE

@@ -10,6 +10,7 @@ KtLabelReferenceExpression(47,51): '@foo'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL

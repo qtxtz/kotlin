@@ -13,6 +13,7 @@ KtCallableReferenceExpression(230,238): 'Bar::foo'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

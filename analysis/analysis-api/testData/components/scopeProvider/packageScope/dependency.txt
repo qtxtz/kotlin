@@ -151,6 +151,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -216,6 +217,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -281,6 +283,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -466,6 +469,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -531,6 +535,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -596,6 +601,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -781,6 +787,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -846,6 +853,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -911,6 +919,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL

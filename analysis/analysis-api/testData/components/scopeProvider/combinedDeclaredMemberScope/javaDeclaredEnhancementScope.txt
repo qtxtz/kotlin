@@ -114,6 +114,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: true
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: JAVA_SOURCE

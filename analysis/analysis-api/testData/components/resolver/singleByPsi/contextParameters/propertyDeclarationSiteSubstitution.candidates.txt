@@ -12,6 +12,7 @@ KtNameReferenceExpression(193,196): 'foo'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -35,6 +36,7 @@ KtNameReferenceExpression(193,196): 'foo'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL

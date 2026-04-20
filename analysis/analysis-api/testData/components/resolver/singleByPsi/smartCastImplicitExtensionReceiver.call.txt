@@ -15,6 +15,7 @@ KtCallExpression(51,56): 'foo()'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL

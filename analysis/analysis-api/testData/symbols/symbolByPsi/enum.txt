@@ -8,6 +8,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL
@@ -81,6 +82,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: false
     location: PROPERTY
     modality: FINAL
@@ -119,6 +121,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -175,6 +178,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -193,6 +197,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -231,6 +236,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -374,6 +380,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: false
     location: PROPERTY
     modality: FINAL
@@ -412,6 +419,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -468,6 +476,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -486,6 +495,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -524,6 +534,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -579,6 +590,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: false
     location: PROPERTY
     modality: FINAL
@@ -617,6 +629,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -673,6 +686,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -691,6 +705,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -729,6 +744,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -814,6 +830,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL
@@ -975,6 +992,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: false
     location: PROPERTY
     modality: FINAL
@@ -1013,6 +1031,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -1069,6 +1088,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -1087,6 +1107,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -1125,6 +1146,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -1180,6 +1202,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: false
     location: PROPERTY
     modality: FINAL
@@ -1218,6 +1241,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -1274,6 +1298,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -1292,6 +1317,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -1330,6 +1356,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -1385,6 +1412,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: false
     location: PROPERTY
     modality: FINAL
@@ -1423,6 +1451,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -1479,6 +1508,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -1497,6 +1527,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -1535,6 +1566,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -1809,6 +1841,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: true
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: SOURCE
@@ -1836,6 +1869,7 @@ KaConstructorSymbol:
           isExtension: false
           isExternal: false
           isNotDefault: false
+          isStatic: false
           isVal: true
           location: PROPERTY
           modality: FINAL
@@ -1874,6 +1908,7 @@ KaConstructorSymbol:
           isInline: false
           isNotDefault: false
           isOverride: false
+          isStatic: false
           location: PROPERTY
           modality: FINAL
           origin: SOURCE
@@ -1941,6 +1976,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -1973,6 +2009,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -2008,6 +2045,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL
@@ -2035,6 +2073,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL

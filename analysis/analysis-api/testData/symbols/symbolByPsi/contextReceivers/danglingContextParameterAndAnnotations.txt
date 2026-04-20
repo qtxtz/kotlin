@@ -10,6 +10,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: true
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: SOURCE
@@ -37,6 +38,7 @@ KaConstructorSymbol:
           isExtension: false
           isExternal: false
           isNotDefault: false
+          isStatic: false
           isVal: true
           location: PROPERTY
           modality: FINAL
@@ -75,6 +77,7 @@ KaConstructorSymbol:
           isInline: false
           isNotDefault: false
           isOverride: false
+          isStatic: false
           location: PROPERTY
           modality: FINAL
           origin: SOURCE
@@ -142,6 +145,7 @@ KaConstructorSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -214,6 +218,7 @@ KaContextParameterSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -242,6 +247,7 @@ KaContextParameterSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -310,6 +316,7 @@ KaContextParameterSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -338,6 +345,7 @@ KaContextParameterSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -446,6 +454,7 @@ KaContextParameterSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -474,6 +483,7 @@ KaContextParameterSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL

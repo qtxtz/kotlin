@@ -67,6 +67,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: true
       location: LOCAL

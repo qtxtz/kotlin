@@ -11,6 +11,7 @@ Resolved constructor:
     isExtension: false
     isExternal: false
     isPrimary: false
+    isStatic: false
     location: CLASS
     modality: FINAL
     origin: TYPEALIASED_CONSTRUCTOR
@@ -69,6 +70,7 @@ Resolved constructor:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -116,6 +118,7 @@ Original constructor if type aliased:
     isExtension: false
     isExternal: false
     isPrimary: true
+    isStatic: false
     location: CLASS
     modality: FINAL
     origin: SOURCE
@@ -164,6 +167,7 @@ Original constructor if type aliased:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL

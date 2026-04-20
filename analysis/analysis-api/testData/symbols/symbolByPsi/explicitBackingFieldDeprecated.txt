@@ -13,6 +13,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: true
+    isStatic: false
     isVal: true
     location: PROPERTY
     modality: FINAL
@@ -51,6 +52,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE

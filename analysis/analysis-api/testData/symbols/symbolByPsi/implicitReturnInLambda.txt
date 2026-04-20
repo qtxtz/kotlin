@@ -8,6 +8,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -36,6 +37,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -60,6 +62,7 @@ KaAnonymousFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -95,6 +98,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -131,6 +135,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -159,6 +164,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -183,6 +189,7 @@ KaAnonymousFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -218,6 +225,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -254,6 +262,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: false
+  isStatic: false
   isVal: true
   location: LOCAL
   modality: FINAL
@@ -282,6 +291,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -306,6 +316,7 @@ KaAnonymousFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: true
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -417,6 +428,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

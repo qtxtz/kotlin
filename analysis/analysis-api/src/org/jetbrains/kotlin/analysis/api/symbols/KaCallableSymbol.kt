@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -50,6 +50,15 @@ public sealed class KaCallableSymbol : KaDeclarationSymbol, KaContextReceiversOw
      * Whether the callable is an [extension function or property](https://kotlinlang.org/docs/extensions.html).
      */
     public abstract val isExtension: Boolean
+
+    /**
+     * Whether the callable is statically resolved.
+     *
+     * - For Kotlin: whether the callable is a [companion extension](https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0449-companions-block-extension.md#companion-extensions), comes from a [companion block](https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0449-companions-block-extension.md#companion-blocks), or is a [KaEnumEntrySymbol].
+     * - For Java: whether it matches the JVM's definition of `static` ([fields](https://docs.oracle.com/javase/specs/jls/se23/html/jls-8.html#jls-8.3.1.1) and [methods](https://docs.oracle.com/javase/specs/jls/se23/html/jls-8.html#jls-8.4.3.2)).
+     */
+    @KaExperimentalApi
+    public abstract val isStatic: Boolean
 
     abstract override fun createPointer(): KaSymbolPointer<KaCallableSymbol>
 }

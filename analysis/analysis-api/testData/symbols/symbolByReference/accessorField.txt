@@ -13,6 +13,7 @@ KaBackingFieldSymbol:
   isExtension: false
   isExternal: false
   isNotDefault: false
+  isStatic: false
   isVal: false
   location: PROPERTY
   modality: FINAL

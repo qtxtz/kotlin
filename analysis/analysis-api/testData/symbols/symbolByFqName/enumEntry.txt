@@ -8,6 +8,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL

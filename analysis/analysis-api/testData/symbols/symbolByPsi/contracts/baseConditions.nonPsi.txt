@@ -9,6 +9,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: true
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -21,6 +22,7 @@ KaAnonymousFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -80,6 +82,7 @@ KaNamedFunctionSymbol:
                   isExternal: false
                   isImplicitLambdaParameter: false
                   isNoinline: false
+                  isStatic: false
                   isVal: true
                   isVararg: false
                   location: LOCAL
@@ -138,6 +141,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -176,6 +180,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: true
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -188,6 +193,7 @@ KaAnonymousFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -247,6 +253,7 @@ KaNamedFunctionSymbol:
                   isExternal: false
                   isImplicitLambdaParameter: false
                   isNoinline: false
+                  isStatic: false
                   isVal: true
                   isVararg: false
                   location: LOCAL
@@ -305,6 +312,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -343,6 +351,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: true
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -355,6 +364,7 @@ KaAnonymousFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -414,6 +424,7 @@ KaNamedFunctionSymbol:
                   isExternal: false
                   isImplicitLambdaParameter: false
                   isNoinline: false
+                  isStatic: false
                   isVal: true
                   isVararg: false
                   location: LOCAL
@@ -477,6 +488,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -515,6 +527,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: true
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -527,6 +540,7 @@ KaAnonymousFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -586,6 +600,7 @@ KaNamedFunctionSymbol:
                   isExternal: false
                   isImplicitLambdaParameter: false
                   isNoinline: false
+                  isStatic: false
                   isVal: true
                   isVararg: false
                   location: LOCAL
@@ -649,6 +664,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

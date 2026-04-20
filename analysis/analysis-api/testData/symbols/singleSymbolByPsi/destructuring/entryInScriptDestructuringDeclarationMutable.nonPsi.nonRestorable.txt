@@ -18,6 +18,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -70,6 +71,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -88,6 +90,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -126,6 +129,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -174,6 +178,7 @@ KaPropertyGetterSymbol:
   isInline: false
   isNotDefault: false
   isOverride: false
+  isStatic: false
   location: PROPERTY
   modality: FINAL
   origin: SOURCE
@@ -203,6 +208,7 @@ KaPropertySetterSymbol:
   isInline: false
   isNotDefault: false
   isOverride: false
+  isStatic: false
   location: PROPERTY
   modality: FINAL
   origin: SOURCE
@@ -221,6 +227,7 @@ KaPropertySetterSymbol:
     isExternal: false
     isImplicitLambdaParameter: false
     isNoinline: false
+    isStatic: false
     isVal: true
     isVararg: false
     location: LOCAL
@@ -259,6 +266,7 @@ KaPropertySetterSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -299,6 +307,7 @@ KaValueParameterSymbol:
   isExternal: false
   isImplicitLambdaParameter: false
   isNoinline: false
+  isStatic: false
   isVal: true
   isVararg: false
   location: LOCAL

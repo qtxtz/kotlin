@@ -17,6 +17,7 @@ KaSyntheticJavaPropertySymbol:
     isInline: false
     isNotDefault: true
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: JAVA_SYNTHETIC_PROPERTY

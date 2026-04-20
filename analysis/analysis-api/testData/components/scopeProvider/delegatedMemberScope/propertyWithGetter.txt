@@ -18,6 +18,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: true
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: DELEGATED

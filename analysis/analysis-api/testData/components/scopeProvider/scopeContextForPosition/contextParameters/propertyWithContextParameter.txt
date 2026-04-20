@@ -134,6 +134,7 @@ scopes:
           isExtension: false
           isExternal: false
           isNotDefault: false
+          isStatic: false
           isVal: true
           location: PROPERTY
           modality: FINAL
@@ -158,6 +159,7 @@ scopes:
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -191,6 +193,7 @@ scopes:
           isInline: false
           isNotDefault: true
           isOverride: false
+          isStatic: false
           location: PROPERTY
           modality: FINAL
           origin: SOURCE
@@ -203,6 +206,7 @@ scopes:
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -249,6 +253,7 @@ scopes:
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -310,4 +315,3 @@ scopes:
     constructors: 0
 
   DefaultStarImportingScope, index = 6
-

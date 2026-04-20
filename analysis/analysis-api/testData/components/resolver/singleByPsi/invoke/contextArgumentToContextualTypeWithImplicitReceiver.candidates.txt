@@ -21,6 +21,7 @@ KtCallExpression(78,85): 'block()'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

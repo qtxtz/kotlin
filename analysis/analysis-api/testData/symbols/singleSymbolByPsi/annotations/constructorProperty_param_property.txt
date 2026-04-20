@@ -34,6 +34,7 @@ KaValueParameterSymbol:
       isExtension: false
       isExternal: false
       isNotDefault: false
+      isStatic: false
       isVal: false
       location: PROPERTY
       modality: FINAL
@@ -72,6 +73,7 @@ KaValueParameterSymbol:
       isInline: false
       isNotDefault: false
       isOverride: false
+      isStatic: false
       location: PROPERTY
       modality: FINAL
       origin: SOURCE
@@ -128,6 +130,7 @@ KaValueParameterSymbol:
       isInline: false
       isNotDefault: false
       isOverride: false
+      isStatic: false
       location: PROPERTY
       modality: FINAL
       origin: SOURCE
@@ -146,6 +149,7 @@ KaValueParameterSymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -184,6 +188,7 @@ KaValueParameterSymbol:
           isExternal: false
           isImplicitLambdaParameter: false
           isNoinline: false
+          isStatic: false
           isVal: true
           isVararg: false
           location: LOCAL
@@ -235,6 +240,7 @@ KaValueParameterSymbol:
   isExternal: false
   isImplicitLambdaParameter: false
   isNoinline: false
+  isStatic: false
   isVal: true
   isVararg: false
   location: LOCAL

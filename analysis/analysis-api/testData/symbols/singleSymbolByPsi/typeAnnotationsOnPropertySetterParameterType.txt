@@ -11,6 +11,7 @@ KaPropertySetterSymbol:
   isInline: false
   isNotDefault: true
   isOverride: false
+  isStatic: false
   location: PROPERTY
   modality: FINAL
   origin: SOURCE
@@ -29,6 +30,7 @@ KaPropertySetterSymbol:
     isExternal: false
     isImplicitLambdaParameter: false
     isNoinline: false
+    isStatic: false
     isVal: true
     isVararg: false
     location: LOCAL
@@ -74,6 +76,7 @@ KaPropertySetterSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

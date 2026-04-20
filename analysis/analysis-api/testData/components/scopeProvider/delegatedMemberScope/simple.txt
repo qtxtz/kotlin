@@ -18,6 +18,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: DELEGATED
@@ -30,6 +31,7 @@ KaKotlinPropertySymbol:
       isExpect: false
       isExtension: false
       isExternal: false
+      isStatic: false
       isVal: true
       location: LOCAL
       modality: FINAL
@@ -90,6 +92,7 @@ KaKotlinPropertySymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -124,6 +127,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: ABSTRACT
     origin: DELEGATED
@@ -142,6 +146,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -168,6 +173,7 @@ KaKotlinPropertySymbol:
       isExpect: false
       isExtension: false
       isExternal: false
+      isStatic: false
       isVal: true
       location: LOCAL
       modality: FINAL
@@ -205,6 +211,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -312,6 +319,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: DELEGATED
@@ -404,6 +412,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -460,6 +469,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: DELEGATED
@@ -516,6 +526,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: ABSTRACT
     origin: DELEGATED
@@ -534,6 +545,7 @@ KaKotlinPropertySymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -572,6 +584,7 @@ KaKotlinPropertySymbol:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -635,6 +648,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: true
+    isStatic: false
     location: PROPERTY
     modality: OPEN
     origin: DELEGATED
@@ -647,6 +661,7 @@ KaKotlinPropertySymbol:
       isExpect: false
       isExtension: false
       isExternal: false
+      isStatic: false
       isVal: true
       location: LOCAL
       modality: FINAL
@@ -707,6 +722,7 @@ KaKotlinPropertySymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL

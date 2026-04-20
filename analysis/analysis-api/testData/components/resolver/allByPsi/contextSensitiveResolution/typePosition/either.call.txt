@@ -315,6 +315,7 @@ KtNameReferenceExpression(346,351): 'value'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL

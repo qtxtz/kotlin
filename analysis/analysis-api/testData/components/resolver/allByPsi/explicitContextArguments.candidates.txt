@@ -1530,6 +1530,7 @@ KtCallExpression(691,736): 'unnamed/*explicit regular*/(regular = "str2")'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1553,6 +1554,7 @@ KtCallExpression(691,736): 'unnamed/*explicit regular*/(regular = "str2")'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1675,6 +1677,7 @@ KtNameReferenceExpression(691,698): 'unnamed'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1698,6 +1701,7 @@ KtNameReferenceExpression(691,698): 'unnamed'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1838,6 +1842,7 @@ KtCallExpression(745,788): 'named/*explicit regular*/(regular = "str2")'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1861,6 +1866,7 @@ KtCallExpression(745,788): 'named/*explicit regular*/(regular = "str2")'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1983,6 +1989,7 @@ KtNameReferenceExpression(745,750): 'named'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -2006,6 +2013,7 @@ KtNameReferenceExpression(745,750): 'named'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -2154,6 +2162,7 @@ KtCallExpression(800,864): 'unnamed/*all explicit*/(explicit = Explicit(), regul
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -2296,6 +2305,7 @@ KtNameReferenceExpression(800,807): 'unnamed'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -2504,6 +2514,7 @@ KtCallExpression(869,931): 'named/*all explicit*/(explicit = Explicit(), regular
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -2646,6 +2657,7 @@ KtNameReferenceExpression(869,874): 'named'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL

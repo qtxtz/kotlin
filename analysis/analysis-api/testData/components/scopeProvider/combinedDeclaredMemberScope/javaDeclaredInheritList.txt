@@ -44,6 +44,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -119,6 +120,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -162,6 +164,7 @@ KaConstructorSymbol:
   isExtension: false
   isExternal: false
   isPrimary: false
+  isStatic: false
   location: CLASS
   modality: FINAL
   origin: JAVA_SOURCE

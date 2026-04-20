@@ -8,6 +8,7 @@ KaLocalVariableSymbol:
   isExtension: false
   isExternal: false
   isLateInit: true
+  isStatic: false
   isVal: false
   location: LOCAL
   modality: FINAL

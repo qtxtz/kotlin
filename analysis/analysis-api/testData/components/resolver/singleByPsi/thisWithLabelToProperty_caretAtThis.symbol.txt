@@ -10,6 +10,7 @@ KtNameReferenceExpression(64,68): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL

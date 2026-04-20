@@ -13,6 +13,7 @@ KtCallableReferenceExpression(102,107): '::add'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

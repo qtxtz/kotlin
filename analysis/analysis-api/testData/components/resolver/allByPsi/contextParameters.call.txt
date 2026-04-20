@@ -1026,6 +1026,7 @@ KtCallExpression(488,499): 'funMember()'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1050,6 +1051,7 @@ KtCallExpression(488,499): 'funMember()'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -1097,6 +1099,7 @@ KtNameReferenceExpression(488,497): 'funMember'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1121,6 +1124,7 @@ KtNameReferenceExpression(488,497): 'funMember'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -1170,6 +1174,7 @@ KtNameReferenceExpression(512,526): 'propertyMember'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -1194,6 +1199,7 @@ KtNameReferenceExpression(512,526): 'propertyMember'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -1423,6 +1429,7 @@ KtCallExpression(611,629): 'funMember(a = A())'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -1483,6 +1490,7 @@ KtNameReferenceExpression(611,620): 'funMember'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

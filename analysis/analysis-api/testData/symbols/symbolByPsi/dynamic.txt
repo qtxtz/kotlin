@@ -10,6 +10,7 @@ KaKotlinPropertySymbol:
     isExtension: false
     isExternal: false
     isNotDefault: false
+    isStatic: false
     isVal: true
     location: PROPERTY
     modality: FINAL
@@ -47,6 +48,7 @@ KaKotlinPropertySymbol:
     isInline: false
     isNotDefault: false
     isOverride: false
+    isStatic: false
     location: PROPERTY
     modality: FINAL
     origin: SOURCE
@@ -115,6 +117,7 @@ KaAnonymousFunctionSymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   location: LOCAL
   modality: FINAL
   origin: SOURCE
@@ -175,6 +178,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

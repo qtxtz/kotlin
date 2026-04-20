@@ -121,6 +121,7 @@ scopes:
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -168,6 +169,7 @@ scopes:
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -216,6 +218,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -243,6 +246,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL

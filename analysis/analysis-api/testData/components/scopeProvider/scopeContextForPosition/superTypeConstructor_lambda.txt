@@ -98,6 +98,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -189,6 +190,7 @@ scopes:
         isExtension: false
         isExternal: false
         isPrimary: true
+        isStatic: false
         location: CLASS
         modality: FINAL
         origin: SOURCE_MEMBER_GENERATED

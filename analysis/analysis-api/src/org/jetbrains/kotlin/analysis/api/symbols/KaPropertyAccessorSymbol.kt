@@ -20,6 +20,9 @@ public sealed class KaPropertyAccessorSymbol : KaFunctionSymbol() {
 
     override val isExpect: Boolean get() = withValidityAssertion { false }
 
+    @KaExperimentalApi
+    final override val isStatic: Boolean get() = withValidityAssertion { false }
+
     /**
      * Property accessors cannot have the `actual` modifier in valid code. This modifier is not propagated from containing declarations (the
      * associated property) as for `expect` modifiers.

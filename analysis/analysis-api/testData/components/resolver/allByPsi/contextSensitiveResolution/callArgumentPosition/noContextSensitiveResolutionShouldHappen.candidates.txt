@@ -496,6 +496,7 @@ KtCallExpression(350,356): 'foo(X)'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -571,6 +572,7 @@ KtNameReferenceExpression(350,353): 'foo'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -651,6 +653,7 @@ KtNameReferenceExpression(354,355): 'X'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

@@ -109,6 +109,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -200,6 +201,7 @@ scopes:
         isExtension: false
         isExternal: false
         isPrimary: true
+        isStatic: false
         location: CLASS
         modality: FINAL
         origin: SOURCE_MEMBER_GENERATED
@@ -225,6 +227,7 @@ scopes:
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -251,6 +254,7 @@ scopes:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -278,6 +282,7 @@ scopes:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -464,6 +469,7 @@ scopes:
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -511,6 +517,7 @@ scopes:
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL
@@ -559,6 +566,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -586,6 +594,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL

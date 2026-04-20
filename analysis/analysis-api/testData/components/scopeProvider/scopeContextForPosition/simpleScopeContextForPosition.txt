@@ -116,6 +116,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -207,6 +208,7 @@ scopes:
         isExtension: false
         isExternal: false
         isPrimary: true
+        isStatic: false
         location: CLASS
         modality: FINAL
         origin: SOURCE_MEMBER_GENERATED
@@ -313,6 +315,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -404,6 +407,7 @@ scopes:
         isExtension: false
         isExternal: false
         isPrimary: true
+        isStatic: false
         location: CLASS
         modality: FINAL
         origin: SOURCE_MEMBER_GENERATED
@@ -436,6 +440,7 @@ scopes:
         isExtension: false
         isExternal: false
         isLateInit: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -468,6 +473,7 @@ scopes:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -496,6 +502,7 @@ scopes:
         isExtension: false
         isExternal: false
         isLateInit: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -560,6 +567,7 @@ scopes:
         isExternal: false
         isImplicitLambdaParameter: false
         isNoinline: false
+        isStatic: false
         isVal: true
         isVararg: false
         location: LOCAL
@@ -711,6 +719,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -771,6 +780,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -862,6 +872,7 @@ scopes:
         isExtension: false
         isExternal: false
         isPrimary: true
+        isStatic: false
         location: CLASS
         modality: FINAL
         origin: SOURCE_MEMBER_GENERATED
@@ -1122,6 +1133,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -1191,6 +1203,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL
@@ -1260,6 +1273,7 @@ scopes:
             isExternal: false
             isImplicitLambdaParameter: false
             isNoinline: false
+            isStatic: false
             isVal: true
             isVararg: false
             location: LOCAL

@@ -27,6 +27,7 @@ KaNamedFunctionSymbol:
               isExternal: false
               isImplicitLambdaParameter: false
               isNoinline: false
+              isStatic: false
               isVal: true
               isVararg: false
               location: LOCAL
@@ -71,6 +72,7 @@ KaNamedFunctionSymbol:
               isExternal: false
               isImplicitLambdaParameter: false
               isNoinline: false
+              isStatic: false
               isVal: true
               isVararg: false
               location: LOCAL
@@ -122,6 +124,7 @@ KaNamedFunctionSymbol:
     isExpect: false
     isExtension: false
     isExternal: false
+    isStatic: false
     isVal: true
     location: LOCAL
     modality: FINAL
@@ -195,6 +198,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

@@ -13,6 +13,7 @@ KaValueParameterSymbol:
   isExternal: false
   isImplicitLambdaParameter: false
   isNoinline: false
+  isStatic: false
   isVal: true
   isVararg: false
   location: LOCAL

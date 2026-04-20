@@ -52,6 +52,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL
@@ -79,6 +80,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL
@@ -186,6 +188,7 @@ KaNamedFunctionSymbol:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL
@@ -227,6 +230,7 @@ KaEnumEntrySymbol:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: true
   isVal: true
   location: CLASS
   modality: FINAL

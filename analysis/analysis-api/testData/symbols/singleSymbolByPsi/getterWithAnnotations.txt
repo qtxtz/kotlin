@@ -16,6 +16,7 @@ KaPropertyGetterSymbol:
   isInline: false
   isNotDefault: true
   isOverride: false
+  isStatic: false
   location: PROPERTY
   modality: FINAL
   origin: SOURCE

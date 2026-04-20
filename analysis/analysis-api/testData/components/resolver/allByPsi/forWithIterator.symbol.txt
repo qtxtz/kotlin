@@ -121,6 +121,7 @@ KtThisExpression(147,160): 'this@iterator'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -147,6 +148,7 @@ KtNameReferenceExpression(147,151): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -176,6 +178,7 @@ KtLabelReferenceExpression(151,160): '@iterator'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -241,6 +244,7 @@ KtThisExpression(207,220): 'this@iterator'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -267,6 +271,7 @@ KtNameReferenceExpression(207,211): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -296,6 +301,7 @@ KtLabelReferenceExpression(211,220): '@iterator'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL

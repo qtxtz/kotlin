@@ -9,6 +9,7 @@ CONSTRUCTOR:
   isExpect: false
   isExtension: false
   isExternal: false
+  isStatic: false
   location: TOP_LEVEL
   modality: FINAL
   name: Predicate
@@ -117,6 +118,7 @@ CONSTRUCTOR:
       isExternal: false
       isImplicitLambdaParameter: false
       isNoinline: false
+      isStatic: false
       isVal: true
       isVararg: false
       location: LOCAL

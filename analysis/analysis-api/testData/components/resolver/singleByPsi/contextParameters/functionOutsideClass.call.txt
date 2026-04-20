@@ -13,6 +13,7 @@ KtCallExpression(205,216): 'funMember()'
             isExpect: false
             isExtension: false
             isExternal: false
+            isStatic: false
             isVal: true
             location: LOCAL
             modality: FINAL
@@ -37,6 +38,7 @@ KtCallExpression(205,216): 'funMember()'
           isExpect: false
           isExtension: false
           isExternal: false
+          isStatic: false
           isVal: true
           location: LOCAL
           modality: FINAL

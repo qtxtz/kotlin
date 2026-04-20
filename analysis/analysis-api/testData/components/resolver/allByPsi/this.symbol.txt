@@ -550,6 +550,7 @@ KtThisExpression(651,655): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -576,6 +577,7 @@ KtNameReferenceExpression(651,655): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -623,6 +625,7 @@ KtThisExpression(682,691): 'this@anon'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -649,6 +652,7 @@ KtNameReferenceExpression(682,686): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -678,6 +682,7 @@ KtLabelReferenceExpression(686,691): '@anon'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -896,6 +901,7 @@ KtThisExpression(917,921): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -922,6 +928,7 @@ KtNameReferenceExpression(917,921): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -969,6 +976,7 @@ KtThisExpression(948,959): 'this@myWith'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -995,6 +1003,7 @@ KtNameReferenceExpression(948,952): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -1024,6 +1033,7 @@ KtLabelReferenceExpression(952,959): '@myWith'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -1230,6 +1240,7 @@ KtThisExpression(1160,1170): 'this@label'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -1256,6 +1267,7 @@ KtNameReferenceExpression(1160,1164): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -1285,6 +1297,7 @@ KtLabelReferenceExpression(1164,1170): '@label'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -1413,6 +1426,7 @@ KtThisExpression(1277,1281): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
@@ -1438,6 +1452,7 @@ KtNameReferenceExpression(1277,1281): 'this'
         isExpect: false
         isExtension: false
         isExternal: false
+        isStatic: false
         isVal: true
         location: LOCAL
         modality: FINAL
