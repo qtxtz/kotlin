@@ -1,3 +1,5 @@
+import TestCompilePaths.KOTLIN_STDLIB_SOURCES_ROOT_PATH
+
 /*
  * Copyright 2000-2018 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
@@ -25,19 +27,26 @@ dependencies {
     testFixturesApi(commonDependency("org.jetbrains.kotlin:kotlin-reflect")) { isTransitive = false }
 
     testFixturesCompileOnly(intellijCore())
-    testRuntimeOnly(intellijCore())
+    testImplementation(intellijCore())
 }
 
 optInToK1Deprecation()
 
 sourceSets {
     "main" { none() }
+    "test" { projectDefault() }
     "testFixtures" { projectDefault() }
 }
 
 projectTests {
     testTask(parallel = true, maxHeapSizeMb = 3072, jUnitMode = JUnitMode.JUnit4) {
         dependsOn(":dist")
+        addClasspathProperty(
+            layout.files(
+                rootDir.resolve("libraries/stdlib/src"), rootDir.resolve("libraries/stdlib/jvm")
+            ),
+            KOTLIN_STDLIB_SOURCES_ROOT_PATH
+        )
     }
 
     testGenerator("org.jetbrains.kotlin.fir.TestGeneratorForLegacyFirTestsKt", generateTestsInBuildDirectory = true)
@@ -53,6 +62,7 @@ projectTests {
     testData(project(":compiler").isolated, "testData/loadJava/compiledJava")
     testData(project(":compiler:fir:analysis-tests").isolated, "testData/enhancement")
     testData(project(":compiler:fir:analysis-tests").isolated, "testData/lightClasses")
+    testData(project(":compiler:fir:analysis-tests").isolated, "testData/builtIns")
 }
 
 testsJar()

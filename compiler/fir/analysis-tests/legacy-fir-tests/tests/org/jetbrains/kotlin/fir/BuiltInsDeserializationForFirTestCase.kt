@@ -10,13 +10,14 @@ import org.jetbrains.kotlin.ObsoleteTestInfrastructure
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.cli.jvm.compiler.toVfsBasedProjectEnvironment
 import org.jetbrains.kotlin.cli.jvm.compiler.toAbstractProjectFileSearchScope
+import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime
 import org.jetbrains.kotlin.serialization.builtins.BuiltinsTestUtils
 import org.jetbrains.kotlin.test.ConfigurationKind
 import org.jetbrains.kotlin.test.TestJdkKind
 
 class BuiltInsDeserializationForFirTestCase : AbstractFirLoadBinariesTest() {
     override fun createEnvironment(): KotlinCoreEnvironment {
-        return createEnvironmentWithJdk(ConfigurationKind.ALL, TestJdkKind.FULL_JDK)
+        return createEnvironmentWithJdk(ConfigurationKind.JDK_ONLY, TestJdkKind.FULL_JDK)
     }
 
     @OptIn(ObsoleteTestInfrastructure::class)
@@ -27,7 +28,9 @@ class BuiltInsDeserializationForFirTestCase : AbstractFirLoadBinariesTest() {
             GlobalSearchScope.allScope(project).toAbstractProjectFileSearchScope()
         )
         for (packageFqName in BuiltinsTestUtils.BUILTIN_PACKAGE_NAMES) {
-            val path = "compiler/fir/analysis-tests/testData/builtIns/" + packageFqName.asString().replace('.', '-') + ".txt"
+            val path = ForTestCompileRuntime.transformTestDataPath("compiler/fir/analysis-tests/testData/builtIns").resolve(
+                packageFqName.asString().replace('.', '-') + ".txt"
+            )
             checkPackageContent(session, packageFqName, moduleDescriptor, path)
         }
     }
