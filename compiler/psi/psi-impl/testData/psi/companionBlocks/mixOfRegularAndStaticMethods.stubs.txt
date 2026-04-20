@@ -8,7 +8,7 @@ FILE[kind=File[packageFqName=<root>]]
       COMPANION_BLOCK
         MODIFIER_LIST[companion]
         CLASS_BODY
-          PROPERTY[fqName=null, hasBackingField=null, hasDelegate=false, hasDelegateExpression=false, hasInitializer=true, hasReturnTypeRef=true, isExtension=false, isTopLevel=false, isVar=false, name=static1]
+          PROPERTY[fqName=C.static1, hasBackingField=null, hasDelegate=false, hasDelegateExpression=false, hasInitializer=true, hasReturnTypeRef=true, isExtension=false, isTopLevel=false, isVar=false, name=static1]
             TYPE_REFERENCE
               USER_TYPE
                 REFERENCE_EXPRESSION[referencedName=Int]
@@ -21,11 +21,11 @@ FILE[kind=File[packageFqName=<root>]]
       COMPANION_BLOCK
         MODIFIER_LIST[companion]
         CLASS_BODY
-          PROPERTY[fqName=null, hasBackingField=null, hasDelegate=false, hasDelegateExpression=false, hasInitializer=true, hasReturnTypeRef=true, isExtension=false, isTopLevel=false, isVar=false, name=static2]
+          PROPERTY[fqName=C.static2, hasBackingField=null, hasDelegate=false, hasDelegateExpression=false, hasInitializer=true, hasReturnTypeRef=true, isExtension=false, isTopLevel=false, isVar=false, name=static2]
             TYPE_REFERENCE
               USER_TYPE
                 REFERENCE_EXPRESSION[referencedName=Long]
-          FUN[fqName=null, hasBody=true, hasNoExpressionBody=true, hasTypeParameterListBeforeFunctionName=false, isExtension=false, isTopLevel=false, mayHaveContract=false, name=static3]
+          FUN[fqName=C.static3, hasBody=true, hasNoExpressionBody=true, hasTypeParameterListBeforeFunctionName=false, isExtension=false, isTopLevel=false, mayHaveContract=false, name=static3]
             VALUE_PARAMETER_LIST
       FUN[fqName=C.regular4, hasBody=true, hasNoExpressionBody=true, hasTypeParameterListBeforeFunctionName=false, isExtension=false, isTopLevel=false, mayHaveContract=false, name=regular4]
         VALUE_PARAMETER_LIST
