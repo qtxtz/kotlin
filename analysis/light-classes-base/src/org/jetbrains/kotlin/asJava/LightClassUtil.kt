@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -156,18 +156,29 @@ object LightClassUtil {
         declaration: KtDeclaration,
         name: String? = null,
         nameFilter: (KtLightMethod) -> Boolean = { name == null || name == it.name }
-    ): Sequence<KtLightMethod> =
-        getWrappingClasses(declaration).flatMap { it.methods.asSequence() }
+    ): Sequence<KtLightMethod> {
+        // `originalElement` is called to unwrap a potential library source declaration into a decompiled one
+        // since light classes directly support only them. This helps to avoid unnecessary checks for `navigationElement`
+        // on each candidate since the mapping between the library source and the decompiled is a heavy operation.
+        // `KotlinAnalysisApiBasedDeclarationNavigationPolicyImpl` is responsible for this mapping on the IntelliJ Kotlin plugin.
+        val adjustedDeclaration = declaration.originalElement as? KtDeclaration ?: return emptySequence()
+        return getWrappingClasses(adjustedDeclaration)
+            .flatMap { it.methods.asSequence() }
             .filterIsInstance<KtLightMethod>()
             .filter(nameFilter)
-            .filter { it -> it.kotlinOrigin === declaration || it.navigationElement === declaration || declaration.isConstrictorOf(it) }
+            .filter { lightMethod ->
+                val kotlinOrigin = lightMethod.kotlinOrigin ?: return@filter false
+                when {
+                    kotlinOrigin === adjustedDeclaration -> true
 
-    private fun KtDeclaration.isConstrictorOf(lightMethod: KtLightMethod): Boolean {
-        if (this is KtPrimaryConstructor && lightMethod.isConstructor) {
-            val containingClass = containingClass()
-            return lightMethod.kotlinOrigin === containingClass || lightMethod.navigationElement === containingClass
-        }
-        return false
+                    // no-arg constructors have the containing class as their origin
+                    adjustedDeclaration is KtPrimaryConstructor && lightMethod.isConstructor -> {
+                        kotlinOrigin === adjustedDeclaration.containingClass()
+                    }
+
+                    else -> false
+                }
+            }
     }
 
     private fun getWrappingClass(declaration: KtDeclaration): PsiClass? {
