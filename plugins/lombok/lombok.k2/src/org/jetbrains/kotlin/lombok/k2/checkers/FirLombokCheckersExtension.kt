@@ -7,11 +7,16 @@ package org.jetbrains.kotlin.lombok.k2.checkers
 
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.DeclarationCheckers
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirBasicDeclarationChecker
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.FirRegularClassChecker
 import org.jetbrains.kotlin.fir.analysis.extensions.FirAdditionalCheckersExtension
 
 class FirLombokCheckersExtension(session: FirSession) : FirAdditionalCheckersExtension(session) {
     override val declarationCheckers: DeclarationCheckers = object : DeclarationCheckers() {
+        override val basicDeclarationCheckers: Set<FirBasicDeclarationChecker> = setOf(
+            FirLombokLogWrongAnnotationTargetChecker
+        )
+
         override val regularClassCheckers: Set<FirRegularClassChecker> = setOf(
             FirLombokLogUsageChecker,
             FirLombokConflictingLogFieldChecker,

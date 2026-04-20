@@ -49,6 +49,41 @@ class LogOnCompanion {
     }
 }
 
+class LogOnNestedClass {
+    @Log
+    class Nested {
+        fun test() {
+            log.info("Check @Log on nested class")
+        }
+    }
+}
+
+class LogOnInnerClass<T> {
+    @Log
+    inner class Inner {
+        fun test() {
+            // Companion object are prohibited inside inner classes (`NESTED_CLASS_NOT_ALLOWED`), but it somehow works
+            log.info("Check @Log on inner class")
+        }
+    }
+}
+
+@Log
+object LogOnObject {
+    fun test() {
+        log.info("Check @Log on object")
+    }
+}
+
+@Log
+enum class LogOnEnum {
+    ExampleEntry;
+
+    fun test() {
+        log.info("Check @Log on enum")
+    }
+}
+
 fun box(): String {
     LogExample.log.info("Call from public log")
     LogExample().test()
@@ -56,5 +91,9 @@ fun box(): String {
     if (LogExampleWithExistingCompanionAndLogField().test() != "No log") return "FAIL"
     LogExampleWithTopic().test()
     LogOnCompanion.test()
+    LogOnNestedClass.Nested().test()
+    LogOnInnerClass<String>().Inner().test()
+    LogOnObject.test()
+    LogOnEnum.ExampleEntry.test()
     return "OK"
 }

@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.descriptors.EffectiveVisibility
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
+import org.jetbrains.kotlin.descriptors.isObject
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.FirCache
 import org.jetbrains.kotlin.fir.caches.firCachesFactory
@@ -17,6 +18,7 @@ import org.jetbrains.kotlin.fir.declarations.builder.buildProperty
 import org.jetbrains.kotlin.fir.declarations.impl.FirDefaultPropertyGetter
 import org.jetbrains.kotlin.fir.declarations.impl.FirResolvedDeclarationStatusImpl
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
+import org.jetbrains.kotlin.fir.declarations.utils.isLocal
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.buildResolvedArgumentList
 import org.jetbrains.kotlin.fir.expressions.buildUnaryArgumentList
@@ -89,21 +91,27 @@ class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
     }
 
     private fun initializeCompanionObjectIfNeeded(owner: FirClassSymbol<*>, context: NestedClassGenerationContext): FirRegularClassSymbol? {
-        // Don't generate the companion if the `owner` isn't marked with `@Log` annotation
-        // or if config specifies the logger mustn't be static
-        if (session.lombokService.getLog(owner)?.fieldIsStatic != true) {
+        // Ignore local classes and anonymous objects to prevent potential exceptions
+        if (owner.isLocal) {
             return null
         }
 
-        // Check for already existing companion objects
-        if (owner.isCompanion) {
+        // Check for already existing companion or normal objects
+        if (owner.classKind.isObject) {
             return null
         }
+
         var companionAlreadyExists = false
         context.declaredScope?.processAllClassifiers {
             companionAlreadyExists = companionAlreadyExists || (it as? FirClassLikeSymbol)?.isCompanion == true
         }
         if (companionAlreadyExists) {
+            return null
+        }
+
+        // Don't generate the companion if the `owner` isn't marked with `@Log` annotation
+        // or if config specifies the logger mustn't be static
+        if (session.lombokService.getLog(owner)?.fieldIsStatic != true) {
             return null
         }
 
@@ -132,6 +140,11 @@ class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
     }
 
     private fun initializeLogPropertyIfNeeded(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): FirPropertySymbol? {
+        // Ignore local classes and anonymous objects to prevent potential exceptions
+        if (classSymbol.isLocal) {
+            return null
+        }
+
         val log = if (classSymbol.isCompanion) {
             val logOnCompanion = session.lombokService.getLog(classSymbol)
             if (logOnCompanion != null) {
@@ -141,7 +154,7 @@ class LoggerGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
                 session.lombokService.getLog(outerClass)?.takeIf { it.fieldIsStatic } ?: return null
             }
         } else {
-            session.lombokService.getLog(classSymbol)?.takeIf { !it.fieldIsStatic } ?: return null
+            session.lombokService.getLog(classSymbol)?.takeIf { classSymbol.classKind.isObject || !it.fieldIsStatic } ?: return null
         }
 
         val logPropertyName = Name.identifier(log.fieldName)

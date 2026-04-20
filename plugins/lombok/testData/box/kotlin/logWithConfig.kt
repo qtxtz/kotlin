@@ -23,9 +23,47 @@ class Derived : Base() {
     }
 }
 
+class LogOnNestedClass {
+    @Log
+    class Nested {
+        fun test() {
+            myLog.info("Check @Log on nested class")
+        }
+    }
+}
+
+class LogOnInnerClass<T> {
+    @Log
+    inner class Inner {
+        fun test() {
+            myLog.info("Check @Log on inner class")
+        }
+    }
+}
+
+@Log
+object LogOnObject {
+    fun test() {
+        myLog.info("Check @Log on object")
+    }
+}
+
+@Log
+enum class LogOnEnum {
+    ExampleEntry;
+
+    fun test() {
+        myLog.info("Check @Log on enum")
+    }
+}
+
 fun box(): String {
     LogExample().test()
     Derived().test()
+    LogOnNestedClass.Nested().test()
+    LogOnInnerClass<String>().Inner().test()
+    LogOnObject.test()
+    LogOnEnum.ExampleEntry.test()
     return "OK"
 }
 

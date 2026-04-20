@@ -100,6 +100,103 @@ FILE: log.kt
         }
 
     }
+    public final class LogOnNestedClass : R|kotlin/Any| {
+        public constructor(): R|LogOnNestedClass| {
+            super<R|kotlin/Any|>()
+        }
+
+        @R|lombok/extern/java/Log|() public final class Nested : R|kotlin/Any| {
+            public constructor(): R|LogOnNestedClass.Nested| {
+                super<R|kotlin/Any|>()
+            }
+
+            public final fun test(): R|kotlin/Unit| {
+                this@R|/LogOnNestedClass.Nested.Companion|.R|/LogOnNestedClass.Nested.Companion.log|.R|java/util/logging/Logger.info|(String(Check @Log on nested class))
+            }
+
+            public final companion object Companion : R|kotlin/Any| {
+                @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnNestedClass.Nested.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
+                    public get(): R|java/util/logging/Logger|
+
+                private constructor(): R|LogOnNestedClass.Nested.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }
+    public final class LogOnInnerClass<T> : R|kotlin/Any| {
+        public constructor<T>(): R|LogOnInnerClass<T>| {
+            super<R|kotlin/Any|>()
+        }
+
+        @R|lombok/extern/java/Log|() public final inner class Inner<Outer(T)> : R|kotlin/Any| {
+            public LogOnInnerClass<T>.constructor(): R|LogOnInnerClass.Inner<T>| {
+                super<R|kotlin/Any|>()
+            }
+
+            public final fun test(): R|kotlin/Unit| {
+                this@R|/LogOnInnerClass.Inner.Companion|.R|/LogOnInnerClass.Inner.Companion.log|.R|java/util/logging/Logger.info|(String(Check @Log on inner class))
+            }
+
+            public final companion object Companion : R|kotlin/Any| {
+                @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnInnerClass.Inner.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
+                    public get(): R|java/util/logging/Logger|
+
+                private constructor(): R|LogOnInnerClass.Inner.Companion| {
+                    super<R|kotlin/Any|>()
+                }
+
+            }
+
+        }
+
+    }
+    @R|lombok/extern/java/Log|() public final object LogOnObject : R|kotlin/Any| {
+        private constructor(): R|LogOnObject| {
+            super<R|kotlin/Any|>()
+        }
+
+        public final fun test(): R|kotlin/Unit| {
+            this@R|/LogOnObject|.R|/LogOnObject.log|.R|java/util/logging/Logger.info|(String(Check @Log on object))
+        }
+
+        @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnObject|).R|kotlin/reflect/KClass.qualifiedName|)
+            public get(): R|java/util/logging/Logger|
+
+    }
+    @R|lombok/extern/java/Log|() public final enum class LogOnEnum : R|kotlin/Enum<LogOnEnum>| {
+        private constructor(): R|LogOnEnum| {
+            super<R|kotlin/Enum<LogOnEnum>|>()
+        }
+
+        public final static enum entry ExampleEntry: R|LogOnEnum|
+        public final fun test(): R|kotlin/Unit| {
+            this@R|/LogOnEnum.Companion|.R|/LogOnEnum.Companion.log|.R|java/util/logging/Logger.info|(String(Check @Log on enum))
+        }
+
+        public final static fun values(): R|kotlin/Array<LogOnEnum>| {
+        }
+
+        public final static fun valueOf(value: R|kotlin/String|): R|LogOnEnum| {
+        }
+
+        public final static val entries: R|kotlin/enums/EnumEntries<LogOnEnum>|
+            public static get(): R|kotlin/enums/EnumEntries<LogOnEnum>|
+
+        public final companion object Companion : R|kotlin/Any| {
+            @R|kotlin/jvm/JvmStatic|() private final val log: R|java/util/logging/Logger| = Q|java/util/logging/Logger|.R|java/util/logging/Logger.getLogger*s|(<getClass>(Q|LogOnEnum.Companion|).R|kotlin/reflect/KClass.qualifiedName|)
+                public get(): R|java/util/logging/Logger|
+
+            private constructor(): R|LogOnEnum.Companion| {
+                super<R|kotlin/Any|>()
+            }
+
+        }
+
+    }
     public final fun box(): R|kotlin/String| {
         Q|LogExample|.R|/LogExample.Companion.log|.R|java/util/logging/Logger.info|(String(Call from public log))
         R|/LogExample.LogExample|().R|/LogExample.test|()
@@ -112,5 +209,9 @@ FILE: log.kt
 
         R|/LogExampleWithTopic.LogExampleWithTopic|().R|/LogExampleWithTopic.test|()
         Q|LogOnCompanion|.R|/LogOnCompanion.Companion.test|()
+        Q|LogOnNestedClass|.R|/LogOnNestedClass.Nested.Nested|().R|/LogOnNestedClass.Nested.test|()
+        R|/LogOnInnerClass.LogOnInnerClass|<R|kotlin/String|>().R|SubstitutionOverride</LogOnInnerClass.Inner.Inner>|().R|SubstitutionOverride</LogOnInnerClass.Inner.test: R|kotlin/Unit|>|()
+        Q|LogOnObject|.R|/LogOnObject.test|()
+        Q|LogOnEnum|.R|/LogOnEnum.ExampleEntry|.R|/LogOnEnum.test|()
         ^box String(OK)
     }

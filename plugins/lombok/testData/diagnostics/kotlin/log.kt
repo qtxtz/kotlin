@@ -1,6 +1,8 @@
 // FULL_JDK
 // WITH_STDLIB
 
+<!WRONG_ANNOTATION_TARGET!>@file:Log<!> // Prohibited
+
 import lombok.extern.java.Log
 import lombok.AccessLevel
 
@@ -29,16 +31,19 @@ class LogExamplePrivate : LogExamplePrivateBase() {
     }
 }
 
+<!WRONG_ANNOTATION_TARGET!>@Log<!> // Prohibited, `'@lombok.extern.java.Log' is legal only on classes and enums` in Java
+interface Interface
+
 <!WRONG_ANNOTATION_TARGET!>@Log<!> // Prohibited
 fun func() {}
 
 <!WRONG_ANNOTATION_TARGET!>@Log<!> // Prohibited
 typealias TA = String
 
-val logOnAnonymousObject = @Log object {} // Prohibited, because it's not possible to create companion inside anonymous object
+val logOnAnonymousObject = <!WRONG_ANNOTATION_TARGET!>@Log<!> object {} // Prohibited, because companion objects are disallowed inside anonymous objects, `Annotations are not allowed here` in Java
 
 fun check() {
-    @Log
+    <!WRONG_ANNOTATION_TARGET!>@Log<!> // Prohibited, because companion objects are disallowed inside local classes
     class LocalClass
 
     LogExamplePublic.log.info("Test LogExamplePublic") // OK
