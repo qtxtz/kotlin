@@ -799,6 +799,7 @@ sealed class CFGNodeWithRevisableFunctionCall(
     override val fir: FirCall
         get() = _fir
 
+    @CfgInternals
     fun setResolvedFunctionCall(updatedFir: FirFunctionCall) {
         require(_fir !is FirFunctionCall) {
             "Resolved function call is already set."

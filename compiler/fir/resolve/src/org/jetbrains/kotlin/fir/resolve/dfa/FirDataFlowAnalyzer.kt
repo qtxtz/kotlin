@@ -1093,6 +1093,7 @@ abstract class FirDataFlowAnalyzer(
         }
     }
 
+    @CfgInternals
     fun updateCollectionLiteralNodes(
         collectionLiteral: FirCollectionLiteral,
         updatedFir: FirFunctionCall,

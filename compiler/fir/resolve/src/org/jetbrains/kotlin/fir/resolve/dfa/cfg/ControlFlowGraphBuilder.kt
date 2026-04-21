@@ -1442,6 +1442,7 @@ class ControlFlowGraphBuilder private constructor(
         return node
     }
 
+    @CfgInternals
     fun updateCollectionLiteralNodes(
         collectionLiteral: FirCollectionLiteral,
         updatedFir: FirFunctionCall,
@@ -1707,6 +1708,7 @@ class ControlFlowGraphBuilder private constructor(
         }
     }
 
+    @CfgInternals
     fun registerCollectionLiteralNode(node: CFGNodeWithRevisableFunctionCall) {
         when (val fir = node.fir) {
             is FirCollectionLiteral -> {

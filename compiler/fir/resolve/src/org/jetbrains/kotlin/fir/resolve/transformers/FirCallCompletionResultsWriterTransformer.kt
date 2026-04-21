@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.fir.resolve.calls.*
 import org.jetbrains.kotlin.fir.resolve.calls.candidate.*
 import org.jetbrains.kotlin.fir.resolve.calls.stages.TypeArgumentMapping
 import org.jetbrains.kotlin.fir.resolve.dfa.FirDataFlowAnalyzer
+import org.jetbrains.kotlin.fir.resolve.dfa.cfg.CfgInternals
 import org.jetbrains.kotlin.fir.resolve.dfa.cfg.FirAnonymousFunctionReturnExpressionInfo
 import org.jetbrains.kotlin.fir.resolve.diagnostics.*
 import org.jetbrains.kotlin.fir.resolve.inference.FirTypeVariablesAfterPCLATransformer
@@ -431,6 +432,7 @@ class FirCallCompletionResultsWriterTransformer(
         return collectionLiteral
     }
 
+    @OptIn(CfgInternals::class)
     private fun handleArgumentReplacementInCfg(original: FirExpression, replacement: FirExpression) {
         if (original !is FirCollectionLiteral) return
         check(replacement is FirFunctionCall) {
