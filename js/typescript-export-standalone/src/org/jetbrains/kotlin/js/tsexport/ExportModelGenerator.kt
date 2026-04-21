@@ -577,6 +577,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
         val members = mutableListOf<ExportedDeclaration>()
         val nestedClasses = mutableListOf<ExportedClass>()
         val isImplicitlyExportedClass = klass.isJsImplicitExport()
+        val isCompanionObject = klass.classKind == KaClassKind.COMPANION_OBJECT
 
         val memberScope = klass.combinedDeclaredMemberScope
 
@@ -591,8 +592,8 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
             }
             for (member in memberScope.callables) {
                 if (!shouldDeclarationBeExportedImplicitlyOrExplicitly(member)) continue
-                if (member.isJsStatic()) {
-                    // @JsStatic members are exported below
+                if (isCompanionObject && member.isJsStatic()) {
+                    // @JsStatic companion members are exported below
                     continue
                 }
                 when (member) {

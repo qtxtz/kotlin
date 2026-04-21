@@ -5392,8 +5392,8 @@ sealed interface KaFirDiagnostic<PSI : PsiElement> : KaDiagnosticWithPsi<PSI> {
         val operation: String
     }
 
-    interface JsStaticNotInClassCompanion : KaFirDiagnostic<PsiElement> {
-        override val diagnosticClass get() = JsStaticNotInClassCompanion::class
+    interface JsStaticNotInObject : KaFirDiagnostic<PsiElement> {
+        override val diagnosticClass get() = JsStaticNotInObject::class
     }
 
     interface JsStaticOnNonPublicMember : KaFirDiagnostic<PsiElement> {

@@ -528,12 +528,6 @@ private fun KaDiagnosticConverterBuilder.addConversions5() {
             token,
         )
     }
-    add(FirJsErrors.JS_STATIC_NOT_IN_CLASS_COMPANION) { firDiagnostic ->
-        JsStaticNotInClassCompanionImpl(
-            firDiagnostic as KtPsiDiagnostic,
-            token,
-        )
-    }
 }
 
 private fun KaDiagnosticConverterBuilder.addConversions6() {
@@ -969,6 +963,12 @@ private fun KaDiagnosticConverterBuilder.addConversions16() {
     }
     add(FirJvmErrors.SYNCHRONIZED_IN_ANNOTATION.errorFactory) { firDiagnostic ->
         SynchronizedInAnnotationErrorImpl(
+            firDiagnostic as KtPsiDiagnostic,
+            token,
+        )
+    }
+    add(FirJsErrors.JS_STATIC_NOT_IN_OBJECT) { firDiagnostic ->
+        JsStaticNotInObjectImpl(
             firDiagnostic as KtPsiDiagnostic,
             token,
         )

@@ -6484,10 +6484,10 @@ internal class WrongOperationWithDynamicImpl(
     token: KaLifetimeToken,
 ) : KaAbstractFirDiagnostic<KtElement>(firDiagnostic, token), KaFirDiagnostic.WrongOperationWithDynamic
 
-internal class JsStaticNotInClassCompanionImpl(
+internal class JsStaticNotInObjectImpl(
     firDiagnostic: KtPsiDiagnostic,
     token: KaLifetimeToken,
-) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.JsStaticNotInClassCompanion
+) : KaAbstractFirDiagnostic<PsiElement>(firDiagnostic, token), KaFirDiagnostic.JsStaticNotInObject
 
 internal class JsStaticOnNonPublicMemberImpl(
     firDiagnostic: KtPsiDiagnostic,

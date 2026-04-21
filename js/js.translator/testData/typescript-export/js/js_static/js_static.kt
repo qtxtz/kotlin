@@ -1,9 +1,11 @@
 // CHECK_TYPESCRIPT_DECLARATIONS
-// RUN_PLAIN_BOX_FUNCTION
 // SKIP_NODE_JS
-// INFER_MAIN_MODULE
-// MODULE: JS_TESTS
-// FILE: regular-classes.kt
+// MODULE: lib
+// MODULE_KIND: ES
+// ES_MODULES
+// SPLIT_PER_MODULE
+// TSC_MODULE: ESNext
+// FILE: js_static.kt
 
 package foo
 
@@ -61,4 +63,29 @@ class WithoutIgnoredCompanion {
 
         suspend fun companionSuspend(): String = "SUSPEND"
     }
+}
+
+@JsExport
+object ObjectWithJsStatic {
+    @JsStatic
+    @JsName("bar")
+    fun pep(): String = hidden()
+
+    fun hidden(): String = "BARRRR"
+
+    @JsStatic
+    val foo = "FOOOO"
+
+    @JsStatic
+    val baz get() = delegated
+
+    val delegated = "BAZZZZ"
+
+    @JsStatic
+    var mutable = "INITIAL"
+
+    @JsStatic
+    suspend fun staticSuspend(): String = "STATIC SUSPEND"
+
+    suspend fun companionSuspend(): String = "SUSPEND"
 }
