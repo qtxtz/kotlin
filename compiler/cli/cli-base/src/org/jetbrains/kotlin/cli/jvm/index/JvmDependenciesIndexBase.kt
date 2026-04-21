@@ -23,11 +23,8 @@ import kotlin.concurrent.withLock
  *
  * The main idea of this class is for each package to store all roots that contain the package to avoid excessive file system traversal.
  */
-abstract class JvmDependenciesIndexBase(_roots: List<JavaRoot>) : JvmDependenciesIndex {
+abstract class JvmDependenciesIndexBase(protected val roots: List<JavaRoot>) : JvmDependenciesIndex {
     protected val lock = ReentrantLock()
-
-    //these fields are computed based on _roots passed to constructor which are filled in later
-    protected val roots: List<JavaRoot> by lazy { _roots.toList() }
 
     private val maxIndex: Int
         get() = roots.size
