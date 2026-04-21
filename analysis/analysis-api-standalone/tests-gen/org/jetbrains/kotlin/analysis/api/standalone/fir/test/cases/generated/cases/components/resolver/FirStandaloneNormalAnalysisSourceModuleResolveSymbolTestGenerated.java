@@ -5396,6 +5396,18 @@ public class FirStandaloneNormalAnalysisSourceModuleResolveSymbolTestGenerated e
     }
 
     @Test
+    @TestMetadata("dollarClassName.kt")
+    public void testDollarClassName() {
+      run("dollarClassName.kt");
+    }
+
+    @Test
+    @TestMetadata("dollarClassNameNested.kt")
+    public void testDollarClassNameNested() {
+      run("dollarClassNameNested.kt");
+    }
+
+    @Test
     @TestMetadata("memberFunctionCall.kt")
     public void testMemberFunctionCall() {
       run("memberFunctionCall.kt");
