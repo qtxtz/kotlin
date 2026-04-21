@@ -68,7 +68,7 @@ class DomainsDumpTest {
     )
 
     private fun Path.toNode(ignoreTracker: GitIgnoreTracker): Node {
-        val repositoryPath = RepositoryPath(repositoryRoot.relativize(this))
+        val repositoryPath = RepositoryPath(repositoryRoot, repositoryRoot.relativize(this))
         val domain = repositoryPath.domain
         val children = if (isDirectory()) {
             listDirectoryEntries()
