@@ -186,7 +186,7 @@ fun TestConfigurationBuilder.configureCommonDiagnosticTestPaths() {
         "compiler/testData/diagnostics/testsWithStdLib/*" or
                 "compiler/fir/analysis-tests/testData/resolveWithStdlib/*" or
                 "compiler/testData/diagnostics/tests/unsignedTypes/*" or
-                "compiler/fir/analysis-tests/testData/resolve/collectionLiterals/stdlibTypes/*"
+                "compiler/testData/diagnostics/tests/collectionLiterals/stdlibTypes/*"
     ) {
         defaultDirectives {
             +WITH_STDLIB
