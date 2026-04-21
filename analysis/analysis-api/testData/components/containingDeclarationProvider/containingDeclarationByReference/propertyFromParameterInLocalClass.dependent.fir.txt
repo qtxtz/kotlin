@@ -1,4 +1,0 @@
-age
-Unnamed
-SomeClass
-/test

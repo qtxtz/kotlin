@@ -317,7 +317,8 @@ internal class KaFirSymbolRelationProvider(
     private fun getContainingPsiForFakeSource(source: KtSourceElement): KtDeclaration? {
         return when (source.kind) {
             KtFakeSourceElementKind.ImplicitConstructor -> source.psi as KtDeclaration
-            KtFakeSourceElementKind.PropertyFromParameter -> source.psi?.parentOfType<KtPrimaryConstructor>()!!
+            // A property synthesized from a constructor parameter is still a class member, not a constructor member.
+            KtFakeSourceElementKind.PropertyFromParameter -> source.psi?.parentOfType<KtClassOrObject>()!!
             KtFakeSourceElementKind.EnumInitializer -> source.psi as KtEnumEntry
             KtFakeSourceElementKind.EnumGeneratedDeclaration -> source.psi as KtDeclaration
             KtFakeSourceElementKind.ScriptParameter -> source.psi as KtScript
