@@ -153,9 +153,11 @@ abstract class JvmDependenciesIndexBase(protected val roots: List<JavaRoot>) : J
     ): VirtualFile? {
         if (rootIndex >= maxIndex) {
             for (i in (fillCachesAfter + 1) until cachesPath.size) {
-                // we all know roots that contain this package by now
-                cachesPath[i].rootIndices.add(maxIndex)
-                cachesPath[i].rootIndices.trimToSize()
+                // We know all roots that contain this package by now.
+                cachesPath[i].rootIndices.apply {
+                    add(maxIndex)
+                    trimToSize()
+                }
             }
             return null
         }
