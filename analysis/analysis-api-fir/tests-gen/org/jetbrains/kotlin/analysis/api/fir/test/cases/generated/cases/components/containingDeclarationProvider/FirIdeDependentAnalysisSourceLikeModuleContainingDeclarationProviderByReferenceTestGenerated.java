@@ -113,6 +113,18 @@ public class FirIdeDependentAnalysisSourceLikeModuleContainingDeclarationProvide
   }
 
   @Test
+  @TestMetadata("propertyFromParameterInClass.kt")
+  public void testPropertyFromParameterInClass() {
+    run("propertyFromParameterInClass.kt");
+  }
+
+  @Test
+  @TestMetadata("propertyFromParameterInLocalClass.kt")
+  public void testPropertyFromParameterInLocalClass() {
+    run("propertyFromParameterInLocalClass.kt");
+  }
+
+  @Test
   @TestMetadata("simple.kt")
   public void testSimple() {
     run("simple.kt");
