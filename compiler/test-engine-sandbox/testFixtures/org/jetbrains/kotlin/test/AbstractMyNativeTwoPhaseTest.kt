@@ -35,8 +35,10 @@ import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.OPT_IN
 import org.jetbrains.kotlin.test.directives.model.DirectivesContainer
 import org.jetbrains.kotlin.test.frontend.fir.FirMetaInfoDiffSuppressor
 import org.jetbrains.kotlin.test.frontend.fir.handlers.FirDiagnosticsHandler
+import org.jetbrains.kotlin.test.impl.testConfiguration
 import org.jetbrains.kotlin.test.model.ArtifactKinds
 import org.jetbrains.kotlin.test.model.GroupingTestIsolator
+import org.jetbrains.kotlin.test.model.SimpleTestFailureSuppressor
 import org.jetbrains.kotlin.test.services.BatchingPackageInserter
 import org.jetbrains.kotlin.test.services.CompilationStage
 import org.jetbrains.kotlin.test.services.TestModuleStructure
@@ -97,7 +99,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                 ::NativeFirstStageEnvironmentConfigurator,
             )
 
-            useGroupingTestIsolators(::NativeGroupingTestIsolator)
+            useGroupingTestIsolators(::NativeGroupingTestIsolator, ::MutedTestsIsolator)
 
             // Because of package escaping various dumps for grouping mode would be different from
             // the regular one, so we don't want all the frontend handlers to be set up, only some specific ones.
@@ -147,7 +149,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
     }
 }
 
-class NativeGroupingTestIsolator(testServices: TestServices) : GroupingTestIsolator(testServices) {
+class NativeGroupingTestIsolator(testServices: TestServices) : GroupingTestIsolator(testServices, affectsFileGenerators = true) {
     override val directiveContainers: List<DirectivesContainer>
         get() = listOf(TestDirectives)
 
@@ -164,5 +166,12 @@ class NativeGroupingTestIsolator(testServices: TestServices) : GroupingTestIsola
 
     private fun TestModuleStructure.sourceContains(regex: Regex): Boolean {
         return sourceContainsCache.getOrPut(this to regex) { modules.any { it.files.any { it.originalContent.contains(regex) } } }
+    }
+}
+
+class MutedTestsIsolator(testServices: TestServices) : GroupingTestIsolator(testServices, affectsFileGenerators = false) {
+    override fun shouldIsolateTestInGroupingConfiguration(moduleStructure: TestModuleStructure): Boolean {
+        @OptIn(TestInfrastructureInternals::class)
+        return testServices.testConfiguration.failureSuppressors.filterIsInstance<SimpleTestFailureSuppressor>().any { it.testIsMuted() }
     }
 }
