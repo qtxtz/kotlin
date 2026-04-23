@@ -7800,6 +7800,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("companionBlockOf.kt")
+    public void testCompanionBlockOf() {
+      run("companionBlockOf.kt");
+    }
+
+    @Test
     @TestMetadata("genericCollection.kt")
     public void testGenericCollection() {
       run("genericCollection.kt");
@@ -7959,6 +7965,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("basicBlockAndExtension.kt")
+    public void testBasicBlockAndExtension() {
+      run("basicBlockAndExtension.kt");
+    }
+
+    @Test
     @TestMetadata("callableReferences.kt")
     public void testCallableReferences() {
       run("callableReferences.kt");
@@ -7989,9 +8001,39 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("inheritance.kt")
+    public void testInheritance() {
+      run("inheritance.kt");
+    }
+
+    @Test
+    @TestMetadata("inline.kt")
+    public void testInline() {
+      run("inline.kt");
+    }
+
+    @Test
     @TestMetadata("lateinit.kt")
     public void testLateinit() {
       run("lateinit.kt");
+    }
+
+    @Test
+    @TestMetadata("multipleBlocks.kt")
+    public void testMultipleBlocks() {
+      run("multipleBlocks.kt");
+    }
+
+    @Test
+    @TestMetadata("suspend.kt")
+    public void testSuspend() {
+      run("suspend.kt");
+    }
+
+    @Test
+    @TestMetadata("typeAlias.kt")
+    public void testTypeAlias() {
+      run("typeAlias.kt");
     }
   }
 
@@ -8913,6 +8955,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("genericPropertyWithContextParameters.kt")
+    public void testGenericPropertyWithContextParameters() {
+      run("genericPropertyWithContextParameters.kt");
+    }
+
+    @Test
     @TestMetadata("ImplicitReceiverWithTheSameContextAndExtension.kt")
     public void testImplicitReceiverWithTheSameContextAndExtension() {
       run("ImplicitReceiverWithTheSameContextAndExtension.kt");
@@ -9015,6 +9063,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
+    @TestMetadata("kt52967.kt")
+    public void testKt52967() {
+      run("kt52967.kt");
+    }
+
+    @Test
     @TestMetadata("kt53551.kt")
     public void testKt53551() {
       run("kt53551.kt");
@@ -9030,6 +9084,24 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("kt63430.kt")
     public void testKt63430() {
       run("kt63430.kt");
+    }
+
+    @Test
+    @TestMetadata("kt65953.kt")
+    public void testKt65953() {
+      run("kt65953.kt");
+    }
+
+    @Test
+    @TestMetadata("kt66368.kt")
+    public void testKt66368() {
+      run("kt66368.kt");
+    }
+
+    @Test
+    @TestMetadata("kt74998.kt")
+    public void testKt74998() {
+      run("kt74998.kt");
     }
 
     @Test
@@ -14342,6 +14414,18 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       }
 
       @Test
+      @TestMetadata("kt85203.kt")
+      public void testKt85203() {
+        run("kt85203.kt");
+      }
+
+      @Test
+      @TestMetadata("kt85203_2.kt")
+      public void testKt85203_2() {
+        run("kt85203_2.kt");
+      }
+
+      @Test
       @TestMetadata("lvtWithInlineOnly.kt")
       public void testLvtWithInlineOnly() {
         run("lvtWithInlineOnly.kt");
@@ -14606,12 +14690,6 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       @TestMetadata("copyInObjectNestedDataClass.kt")
       public void testCopyInObjectNestedDataClass() {
         run("copyInObjectNestedDataClass.kt");
-      }
-
-      @Test
-      @TestMetadata("kt12708.kt")
-      public void testKt12708() {
-        run("kt12708.kt");
       }
 
       @Test
@@ -15111,18 +15189,6 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     @TestMetadata("suspendLambdaInTailrecDefault.kt")
     public void testSuspendLambdaInTailrecDefault() {
       run("suspendLambdaInTailrecDefault.kt");
-    }
-
-    @Test
-    @TestMetadata("useNextParamInLambda.kt")
-    public void testUseNextParamInLambda() {
-      run("useNextParamInLambda.kt");
-    }
-
-    @Test
-    @TestMetadata("useNextParamInLambdaTailrec.kt")
-    public void testUseNextParamInLambdaTailrec() {
-      run("useNextParamInLambdaTailrec.kt");
     }
 
     @Test
@@ -17290,6 +17356,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
         @TestMetadata("whenWithIs.kt")
         public void testWhenWithIs() {
           run("whenWithIs.kt");
+        }
+
+        @Test
+        @TestMetadata("whenWithLambda.kt")
+        public void testWhenWithLambda() {
+          run("whenWithLambda.kt");
         }
 
         @Test
@@ -26334,12 +26406,6 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
     }
 
     @Test
-    @TestMetadata("resultGeneric2.kt")
-    public void testResultGeneric2() {
-      run("resultGeneric2.kt");
-    }
-
-    @Test
     @TestMetadata("resultInlining.kt")
     public void testResultInlining() {
       run("resultInlining.kt");
@@ -33380,6 +33446,12 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       }
 
       @Test
+      @TestMetadata("expectStatic.kt")
+      public void testExpectStatic() {
+        run("expectStatic.kt");
+      }
+
+      @Test
       @TestMetadata("expectValInInlineClass.kt")
       public void testExpectValInInlineClass() {
         run("expectValInInlineClass.kt");
@@ -37838,27 +37910,6 @@ public class MyNativeTwoPhaseTestGenerated extends AbstractMyNativeTwoPhaseTest 
       @TestMetadata("simpleVar.kt")
       public void testSimpleVar() {
         run("simpleVar.kt");
-      }
-
-      @Nested
-      @TestMetadata("compiler/testData/codegen/box/properties/lateinit/isInitializedAndDeinitialize")
-      @TestDataPath("$PROJECT_ROOT")
-      @UseDummyTestCaseGroupProvider()
-      public class IsInitializedAndDeinitialize {
-        private void run(String fileName) {
-          initTestRunnerAndCreateModuleStructure("compiler/testData/codegen/box/properties/lateinit/isInitializedAndDeinitialize/" + fileName);
-        }
-
-        @Test
-        public void testAllFilesPresentInIsInitializedAndDeinitialize() {
-          KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/codegen/box/properties/lateinit/isInitializedAndDeinitialize"), Pattern.compile("^(.+)\\.kt$"), null, true);
-        }
-
-        @Test
-        @TestMetadata("isInitializedMultiFile.kt")
-        public void testIsInitializedMultiFile() {
-          run("isInitializedMultiFile.kt");
-        }
       }
 
       @Nested
