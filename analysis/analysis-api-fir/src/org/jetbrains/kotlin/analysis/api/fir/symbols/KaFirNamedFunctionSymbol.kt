@@ -43,9 +43,9 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtExperimentalApi
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.psiUtil.isActualDeclaration
+import org.jetbrains.kotlin.psi.psiUtil.isCompanion
 import org.jetbrains.kotlin.psi.psiUtil.isExpectDeclaration
 import org.jetbrains.kotlin.psi.psiUtil.isExtensionDeclaration
-import org.jetbrains.kotlin.psi.psiUtil.isStatic
 
 internal class KaFirNamedFunctionSymbol private constructor(
     override val backingPsi: KtNamedFunction?,
@@ -159,7 +159,17 @@ internal class KaFirNamedFunctionSymbol private constructor(
     @OptIn(KtExperimentalApi::class)
     override val isStatic: Boolean
         get() = withValidityAssertion {
-            backingPsi?.isStatic ?: firSymbol.isStatic
+            // Kotlin doesn't have static functions
+            if (backingPsi != null || origin == KaSymbolOrigin.SOURCE)
+                false
+            else
+                firSymbol.isStatic
+        }
+
+    @OptIn(KtExperimentalApi::class)
+    override val isCompanion: Boolean
+        get() = withValidityAssertion {
+            backingPsi?.isCompanion ?: firSymbol.isStatic
         }
 
     override val isTailRec: Boolean
