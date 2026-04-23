@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.create
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.getOrCreateTestRunProvider
 import org.jetbrains.kotlin.konan.test.blackbox.support.TestDirectives.FILECHECK_STAGE
 import org.jetbrains.kotlin.konan.test.blackbox.support.TestKind
-import org.jetbrains.kotlin.konan.test.blackbox.support.parseTestKind
+import org.jetbrains.kotlin.konan.test.blackbox.support.testKind
 import org.jetbrains.kotlin.konan.test.blackbox.testRunSettings
 import org.jetbrains.kotlin.konan.test.configuration.commonConfigurationForNativeCodegenTest
 import org.jetbrains.kotlin.konan.test.configuration.setupStepsForNativeFirstStageUpToSerialization
@@ -147,7 +147,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
 class NativeGroupingTestIsolator(testServices: TestServices) : GroupingTestIsolator(testServices) {
     override fun shouldIsolateTestInGroupingConfiguration(moduleStructure: TestModuleStructure): Boolean {
         // KT-84713: Migrate here full grouping logic from TestRunProvider.withTestExecutable(): respect ignores, difference of compiler args, etc.
-        return (parseTestKind(moduleStructure.modules.firstOrNull()?.directives) ?: testServices.testRunSettings.get<TestKind>()) != TestKind.REGULAR
+        return testServices.testRunSettings.testKind(moduleStructure.modules.firstOrNull()?.directives) != TestKind.REGULAR
                 || moduleStructure.allDirectives[FILECHECK_STAGE].isNotEmpty()
                 || moduleStructure.sourceContains(packageKotlinInternalRegex)
     }
