@@ -5,11 +5,16 @@
 
 package org.jetbrains.kotlin.test
 
+import org.jetbrains.kotlin.builtins.StandardNames.KOTLIN_INTERNAL_FQ_NAME
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.konan.test.KlibSerializerNativeCliFacade
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.computeBlackBoxTestInstances
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.createTestRunSettings
 import org.jetbrains.kotlin.konan.test.blackbox.support.NativeTestSupport.getOrCreateTestRunProvider
+import org.jetbrains.kotlin.konan.test.blackbox.support.TestDirectives.FILECHECK_STAGE
+import org.jetbrains.kotlin.konan.test.blackbox.support.TestKind
+import org.jetbrains.kotlin.konan.test.blackbox.support.parseTestKind
+import org.jetbrains.kotlin.konan.test.blackbox.testRunSettings
 import org.jetbrains.kotlin.konan.test.configuration.commonConfigurationForNativeCodegenTest
 import org.jetbrains.kotlin.konan.test.configuration.setupStepsForNativeFirstStageUpToSerialization
 import org.jetbrains.kotlin.konan.test.handlers.NativeBoxRunnerGroupingPhase
@@ -28,8 +33,11 @@ import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives.OPT_IN
 import org.jetbrains.kotlin.test.frontend.fir.FirMetaInfoDiffSuppressor
 import org.jetbrains.kotlin.test.frontend.fir.handlers.FirDiagnosticsHandler
 import org.jetbrains.kotlin.test.model.ArtifactKinds
+import org.jetbrains.kotlin.test.model.GroupingTestIsolator
 import org.jetbrains.kotlin.test.services.BatchingPackageInserter
 import org.jetbrains.kotlin.test.services.CompilationStage
+import org.jetbrains.kotlin.test.services.TestModuleStructure
+import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.NativeFirstStageEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.NativeSecondStageEnvironmentConfigurator
@@ -86,6 +94,8 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                 ::NativeFirstStageEnvironmentConfigurator,
             )
 
+            useGroupingTestIsolators(::NativeGroupingTestIsolator)
+
             // Because of package escaping various dumps for grouping mode would be different from
             // the regular one, so we don't want all the frontend handlers to be set up, only some specific ones.
             setupStepsForNativeFirstStageUpToSerialization(
@@ -131,5 +141,21 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
                 useHandlers(::NativeBoxRunnerGroupingPhase)
             }
         }
+    }
+}
+
+class NativeGroupingTestIsolator(testServices: TestServices) : GroupingTestIsolator(testServices) {
+    override fun shouldIsolateTestInGroupingConfiguration(moduleStructure: TestModuleStructure): Boolean {
+        // KT-84713: Migrate here full grouping logic from TestRunProvider.withTestExecutable(): respect ignores, difference of compiler args, etc.
+        return (parseTestKind(moduleStructure.modules.firstOrNull()?.directives) ?: testServices.testRunSettings.get<TestKind>()) != TestKind.REGULAR
+                || moduleStructure.allDirectives[FILECHECK_STAGE].isNotEmpty()
+                || moduleStructure.sourceContains(packageKotlinInternalRegex)
+    }
+
+    private val packageKotlinInternalRegex = Regex("package\\s$KOTLIN_INTERNAL_FQ_NAME")
+    private val sourceContainsCache = HashMap<Pair<TestModuleStructure, Regex>, Boolean>()
+
+    private fun TestModuleStructure.sourceContains(regex: Regex): Boolean {
+        return sourceContainsCache.getOrPut(this to regex) { modules.any { it.files.any { it.originalContent.contains(regex) } } }
     }
 }
