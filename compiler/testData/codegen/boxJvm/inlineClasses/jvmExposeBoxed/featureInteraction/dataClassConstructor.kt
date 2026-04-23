@@ -8,7 +8,7 @@
 value class StringWrapper constructor(val s: String)
 
 @JvmInline
-value class StringWrapperNullable constructor(val s: String)
+value class StringWrapperNullable constructor(val s: String?)
 
 data class Test(val s: StringWrapper) {
     fun ok(): String = s!!.s!!
