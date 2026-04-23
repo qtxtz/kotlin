@@ -148,12 +148,12 @@ sealed class TestConfigurationImplBase<Step : TestStep<*, *>>(
 
     // ---------------------------------- utils ----------------------------------
 
-    private fun ServicesAndDirectivesContainer.registerDirectivesAndServices() {
+    protected fun ServicesAndDirectivesContainer.registerDirectivesAndServices() {
         allDirectives += directiveContainers
         testServices.register(additionalServices, skipAlreadyRegistered = true)
     }
 
-    private fun List<ServicesAndDirectivesContainer>.registerDirectivesAndServices() {
+    protected fun List<ServicesAndDirectivesContainer>.registerDirectivesAndServices() {
         this.forEach { it.registerDirectivesAndServices() }
     }
 }
@@ -188,7 +188,9 @@ class NonGroupingPhaseTestConfigurationImpl(
     failureSuppressors, compilerConfigurationProvider, runtimeClasspathProviders, metaInfoHandlerEnabled, directives,
     defaultRegisteredDirectives, additionalServices
 ), NonGroupingPhaseTestConfiguration {
-    override val groupingTestIsolators: List<GroupingTestIsolator> = groupingTestIsolators.map { it.invoke(testServices) }
+    override val groupingTestIsolators: List<GroupingTestIsolator> = groupingTestIsolators.map { it.invoke(testServices) }.also {
+        it.registerDirectivesAndServices()
+    }
 }
 
 @OptIn(TestInfrastructureInternals::class)

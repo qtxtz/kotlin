@@ -9,6 +9,6 @@ import org.jetbrains.kotlin.test.services.TestModuleStructure
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.moduleStructure
 
-abstract class GroupingTestIsolator(val testServices: TestServices) {
+abstract class GroupingTestIsolator(val testServices: TestServices) : ServicesAndDirectivesContainer {
     abstract fun shouldIsolateTestInGroupingConfiguration(moduleStructure: TestModuleStructure = testServices.moduleStructure): Boolean
 }
