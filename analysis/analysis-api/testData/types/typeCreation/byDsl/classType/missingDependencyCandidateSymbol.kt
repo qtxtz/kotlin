@@ -1,4 +1,3 @@
-// IGNORE_FIR
 // MODULE: base
 // FILE: Foo.kt
 package base
