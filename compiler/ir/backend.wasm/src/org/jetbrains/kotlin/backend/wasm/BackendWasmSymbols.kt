@@ -183,6 +183,8 @@ class BackendWasmSymbols(
 
     val wasmTypeId = CallableIds.wasmTypeId.functionSymbol()
     val wasmGetTypeRtti = CallableIds.wasmGetTypeRtti.functionSymbol()
+    val likely = CallableIds.likely.functionSymbol()
+    val unlikely = CallableIds.unlikely.functionSymbol()
     val wasmGetRttiSupportedInterfaces = CallableIds.wasmGetRttiSupportedInterfaces.functionSymbol()
     val wasmGetRttiIntField = CallableIds.wasmGetRttiIntField.functionSymbol()
     val wasmGetRttiLongField = CallableIds.wasmGetRttiLongField.functionSymbol()
@@ -444,6 +446,8 @@ private object CallableIds {
     val getWasmAbiVersion = "getWasmAbiVersion".wasmCallableId
     val wasmTypeId = "wasmTypeId".wasmCallableId
     val wasmGetTypeRtti = "wasmGetTypeRtti".wasmCallableId
+    val likely = "likely".wasmCallableId
+    val unlikely = "unlikely".wasmCallableId
     val wasmGetRttiSupportedInterfaces = "wasmGetRttiSupportedInterfaces".wasmCallableId
     val wasmGetRttiIntField = "wasmGetRttiIntField".wasmCallableId
     val wasmGetRttiLongField = "wasmGetRttiLongField".wasmCallableId

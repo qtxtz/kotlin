@@ -135,3 +135,9 @@ internal fun consumeDoubleIntoVoid(a: Double): Void =
 @UsedFromCompilerGeneratedCode
 internal fun getWasmAbiVersion(): Int =
     implementedAsIntrinsic
+
+// Internal interface for producing Wasm branch hint annotations
+@UsedFromCompilerGeneratedCode
+internal fun likely(cond: Boolean): Boolean = cond
+@UsedFromCompilerGeneratedCode
+internal fun unlikely(cond: Boolean): Boolean = cond
