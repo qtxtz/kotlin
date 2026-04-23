@@ -34,8 +34,8 @@ FILE fqName:<root> fileName:/genericPropertyWithContextParameters.kt
         TYPE_PARAMETER name:X index:0 variance: superTypes:[kotlin.Any?] reified:false
         TYPE_PARAMETER name:Y index:1 variance: superTypes:[kotlin.Any?] reified:false
         VALUE_PARAMETER kind:DispatchReceiver name:<this> index:0 type:<root>.C<Z of <root>.C>
-        VALUE_PARAMETER kind:Context name:x index:1 type:X of <root>.C.<get-ctx>
-        VALUE_PARAMETER kind:Context name:y index:2 type:Y of <root>.C.<get-ctx>
+        VALUE_PARAMETER kind:Context name:x index:1 type:X of <root>.C.<set-ctx>
+        VALUE_PARAMETER kind:Context name:y index:2 type:Y of <root>.C.<set-ctx>
         VALUE_PARAMETER kind:Regular name:value index:3 type:X of <root>.C.<set-ctx>
         correspondingProperty: PROPERTY name:ctx visibility:public modality:FINAL [var]
         BLOCK_BODY
