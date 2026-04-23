@@ -153,6 +153,11 @@ sealed class TestRunner<Step : TestStep<*, *>, Configuration : TestConfiguration
                 .sorted()
                 .map { it.cause }
         }
+
+        operator fun plusAssign(other: FailuresInterceptor) {
+            @OptIn(PrivateForInline::class)
+            _allFailedExceptions += other.allFailedExceptions
+        }
     }
 }
 

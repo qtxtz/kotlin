@@ -191,7 +191,11 @@ class CompilerTestGroupingTestEngine : TestEngine {
 
         val batchFutures = batches.map { batch ->
             launch {
-                runGroupingPhaseOnBatch(context, classDescriptor, batch, index = groupCounter.getAndIncrement())
+                if (batch.size == 1) {
+                    runGroupingPhaseOnSingleSizedBatch(batch.single())
+                } else {
+                    runGroupingPhaseOnBatch(context, classDescriptor, batch, index = groupCounter.getAndIncrement())
+                }
             }
         }
 
@@ -212,6 +216,7 @@ class CompilerTestGroupingTestEngine : TestEngine {
         batch: List<TestMethodInfo>,
         index: Int,
     ) {
+        require(batch.size > 1) { "Batch expected to have at least 2 methods, got ${batch.size}" }
         val testDescriptor = GroupingPhaseTestDescriptor(
             uniqueId = batch.first().descriptor.uniqueId.removeLastSegment().append("dynamic-test", "batch$index"),
             displayName = "Grouped batch #$index"
@@ -252,6 +257,33 @@ class CompilerTestGroupingTestEngine : TestEngine {
             val collector = if (it.failed) it.nonGroupingPhaseThrowableCollector else throwableCollector
             it.reportFinished(collector)
         }
+    }
+
+    private fun runGroupingPhaseOnSingleSizedBatch(testInfo: TestMethodInfo) {
+        val throwableCollector = testInfo.nonGroupingPhaseThrowableCollector
+        val testInstance = testInfo.testInstance
+        throwableCollector.execute {
+            val groupingRunner = testInstance.groupingPhaseRunner
+            val nonGroupingRunner = testInstance.nonGroupingRunner
+            val nonGroupingPhaseOutput = NonGroupingPhaseOutput(
+                testServices = testInstance.nonGroupingRunner.testServices,
+                catchingExecutor = { wrapper, block ->
+                    nonGroupingRunner.failuresInterceptor.withAssertionCatching(wrapper, block)
+                }
+            )
+            groupingRunner.run(listOf(nonGroupingPhaseOutput))
+
+            /*
+             * Exceptions from facades were reported to the failures interceptor of the grouping runner.
+             * However, failure suppressors should be run from non-grouping runner, as they need access to
+             * the real module structure of the specific test to be able to extract directives from there.
+             */
+            nonGroupingRunner.failuresInterceptor += groupingRunner.failuresInterceptor
+            nonGroupingRunner.failuresInterceptor.reportFailures(checkForUnmuting = true)
+        }
+
+        testInfo.finalizeNonGroupingPhase()
+        testInfo.reportFinished(throwableCollector)
     }
 
     override fun discover(discoveryRequest: EngineDiscoveryRequest, uniqueId: UniqueId): TestDescriptor {
