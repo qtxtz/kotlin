@@ -66,7 +66,6 @@ object MockLibraryUtil {
         extraClasspath: List<String> = emptyList(),
         extraModulepath: List<String> = emptyList(),
         useJava11: Boolean = false,
-        assertions: Assertions
     ): File {
         return compileLibraryToJar(
             sourcesPath,
@@ -98,7 +97,6 @@ object MockLibraryUtil {
             extraClasspath,
             extraModulepath,
             useJava11,
-            assertions
         )
     }
 
