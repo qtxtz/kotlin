@@ -9,8 +9,8 @@ import com.intellij.util.containers.orNull
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import org.jetbrains.kotlin.test.impl.shouldIsolateTestInGroupingConfiguration
-import org.jetbrains.kotlin.utils.addToStdlib.applyIf
+import org.jetbrains.kotlin.test.model.GroupingTestIsolator.BatchToken
+import org.jetbrains.kotlin.test.services.moduleStructure
 import org.jetbrains.kotlin.utils.addToStdlib.runIf
 import org.jetbrains.kotlin.utils.addToStdlib.shouldNotBeCalled
 import org.junit.jupiter.engine.config.CachingJupiterConfiguration
@@ -203,11 +203,24 @@ class CompilerTestGroupingTestEngine : TestEngine {
     }
 
     private fun groupTestsInBatches(infos: List<TestMethodInfo>): List<List<TestMethodInfo>> {
-        val (isolated, regulars) = infos.partition { info ->
-            info.testInstance.nonGroupingRunner.testConfiguration.shouldIsolateTestInGroupingConfiguration(fileGenerationPhase = false)
+        val groupedByTokens = infos.groupBy { info ->
+            val testConfiguration = info.testInstance.nonGroupingRunner.testConfiguration
+            testConfiguration.groupingTestIsolators.mapNotNull {
+                it.computeBatchToken(testConfiguration.testServices.moduleStructure).takeIf { token -> token != BatchToken.Regular }
+            }
         }
 
-        return isolated.map { listOf(it) }.applyIf(regulars.isNotEmpty()) { plusElement(regulars) }
+        return buildList {
+            for ((tokens, batch) in groupedByTokens) {
+                if (BatchToken.Isolated in tokens) {
+                    for (info in batch) {
+                        add(listOf(info))
+                    }
+                } else {
+                    add(batch)
+                }
+            }
+        }
     }
 
     private fun runGroupingPhaseOnBatch(

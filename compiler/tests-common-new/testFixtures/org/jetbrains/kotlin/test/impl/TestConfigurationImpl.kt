@@ -234,16 +234,11 @@ fun TestServices.shouldIsolateTestInGroupingConfiguration(testModuleStructure: T
     val groupingTestIsolators = (testConfiguration as NonGroupingPhaseTestConfiguration).groupingTestIsolators
         .applyIf(fileGenerationPhase) { filter { it.affectsFileGenerators } }
     return groupingTestIsolators.any {
-        it.shouldIsolateTestInGroupingConfiguration(testModuleStructure)
+        it.computeBatchToken(testModuleStructure) == GroupingTestIsolator.BatchToken.Isolated
     }
 }
 
 @OptIn(TestInfrastructureInternals::class)
 fun TestServices.shouldIsolateTestInGroupingConfiguration(fileGenerationPhase: Boolean): Boolean {
-    return (testConfiguration as NonGroupingPhaseTestConfiguration).shouldIsolateTestInGroupingConfiguration(fileGenerationPhase)
-}
-
-
-fun NonGroupingPhaseTestConfiguration.shouldIsolateTestInGroupingConfiguration(fileGenerationPhase: Boolean): Boolean {
-    return testServices.shouldIsolateTestInGroupingConfiguration(testServices.moduleStructure, fileGenerationPhase)
+    return shouldIsolateTestInGroupingConfiguration(moduleStructure, fileGenerationPhase)
 }
