@@ -33,6 +33,9 @@ class ConstraintIncorporator(
     @OptIn(AllowedToUsedOnlyInK1::class)
     val inferenceLogger = inferenceLoggerParameter.takeIf { it !is InferenceLogger.Dummy }
 
+    private val enhancementOfSecondIncorporationKindEnabled =
+        languageVersionSettings.supportsFeature(LanguageFeature.EnhancementsOfSecondIncorporationKind25)
+
     interface Context : TypeSystemInferenceExtensionContext {
         val allTypeVariablesWithConstraints: Collection<VariableWithConstraints>
         val notFixedTypeVariables: Map<TypeConstructorMarker, VariableWithConstraints>
@@ -197,17 +200,15 @@ class ConstraintIncorporator(
         otherConstraint: Constraint,
     ) {
         if (causeOfIncorporationVariable in otherConstraint.derivedFrom ||
+            enhancementOfSecondIncorporationKindEnabled &&
             // Soon the constraint will be used to fix the variable as EQUALITY constraints are the most prioritized (with a few exceptions),
             // so we can wait with the constraint incorporation to avoid constraint explosion, as described in KT-66469
+            // TODO: consider applying it also for LOWER/UPPER and simplifying further conditions (KT-85879)
             causeOfIncorporationConstraint.kind == ConstraintKind.EQUALITY &&
             // We don't want to block variable fixation at all
             !isCausedByFixation &&
-            // To be used in variable fixation, the constraint must have a proper type
-            causeOfIncorporationConstraint.type.isProperTypeForFixation(c.notFixedTypeVariables.keys) { t ->
-                !t.contains { c.notFixedTypeVariables.containsKey(it.typeConstructor()) }
-            } &&
-            // Also, we shouldn't have dependencies on other type variable, otherwise immediate fixation may be not possible
-            !causeOfIncorporationConstraint.type.contains { it.isTypeVariableType() }
+            // It should be possible to use this constraint for variable fixation
+            causeOfIncorporationConstraint.type.mayBeUsedForFixation()
         ) {
             return
         }
@@ -242,6 +243,15 @@ class ConstraintIncorporator(
                 isSubtype = true
             )
         }
+    }
+
+    context(c: Context)
+    private fun KotlinTypeMarker.mayBeUsedForFixation(): Boolean {
+        // To be used in variable fixation, the constraint must have a proper type
+        // Also, we shouldn't have dependencies on other type variable, otherwise immediate fixation may be not possible
+        return isProperTypeForFixation(c.notFixedTypeVariables.keys) { t ->
+            !t.contains { c.notFixedTypeVariables.containsKey(it.typeConstructor()) }
+        } && !contains { it.isTypeVariableType() }
     }
 
     /**
