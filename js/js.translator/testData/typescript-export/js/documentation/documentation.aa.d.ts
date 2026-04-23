@@ -257,7 +257,13 @@ declare namespace JS_TESTS {
          * Both accessors are exposed as plain JS functions.
          */
         getDefaultAccessor(): string;
+        /**
+         * An overridden property whose getter and setter have custom JS names.
+         */
         overridableSetter(value: string): void;
+        /**
+         * An overridden property whose getter and setter have custom JS names.
+         */
         overridableGetter(): string;
         readonly __doNotUseOrImplementIt: WithOverridableProperty["__doNotUseOrImplementIt"];
     }

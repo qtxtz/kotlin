@@ -164,9 +164,6 @@ internal fun shouldDeclarationBeExported(declaration: KaDeclarationSymbol): Bool
     return declaration.containingFile?.isJsExport() ?: false
 }
 
-internal fun KaAnnotated.getJsName(): String? =
-    getSingleAnnotationArgumentString(JsStandardClassIds.Annotations.JsName)
-
 internal val TypeScriptExportConfig.generateNamespacesForPackages: Boolean
     get() = artifactConfiguration.moduleKind != ModuleKind.ES
 

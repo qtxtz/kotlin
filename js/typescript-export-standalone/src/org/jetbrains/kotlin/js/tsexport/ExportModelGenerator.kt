@@ -260,7 +260,7 @@ internal class ExportModelGenerator(private val config: TypeScriptExportConfig) 
 
         if (visibility == ExportedVisibility.PRIVATE || (constructedClass.isInner && !isFactoryPropertyForInnerClass)) return null
 
-        val jsName = constructor.getJsName() ?: return null
+        val jsName = constructor.getJsNameForOverriddenDeclaration() ?: return null
         return ExportedFunction(
             name = ExportedMemberName.Identifier(jsName),
             returnType = returnType(),
