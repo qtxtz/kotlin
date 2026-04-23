@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.konan.test.services.CInteropTestSkipper
 import org.jetbrains.kotlin.konan.test.services.DisabledNativeTestSkipper
 import org.jetbrains.kotlin.konan.test.services.FileCheckTestSkipper
 import org.jetbrains.kotlin.konan.test.services.sourceProviders.NativeLauncherAdditionalSourceProvider
+import org.jetbrains.kotlin.konan.test.suppressors.NativeTestsSuppressor
 import org.jetbrains.kotlin.test.backend.handlers.NoFirCompilationErrorsHandler
 import org.jetbrains.kotlin.test.backend.handlers.NoIrCompilationErrorsHandler
 import org.jetbrains.kotlin.test.builders.*
@@ -78,8 +79,7 @@ abstract class AbstractMyNativeTwoPhaseTest : AbstractTwoStageKotlinCompilerTest
             useMetaTestConfigurators(::DisabledNativeTestSkipper, ::CInteropTestSkipper, ::FileCheckTestSkipper)
             useFailureSuppressors(
                 ::FirMetaInfoDiffSuppressor,
-                // TODO(KT-84712): Currently the native-specific test suppressor doesn't work correctly in grouping setup
-//                ::NativeTestsSuppressor,
+                ::NativeTestsSuppressor,
             )
 
             // TODO(KT-84712): should be moved into `AbstractTwoStageKotlinCompilerTest`
