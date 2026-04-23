@@ -376,6 +376,8 @@ abstract class AbstractKotlinWasmGradlePluginIT : KGPBaseTest() {
                 assertTasksExecuted(":compileProductionExecutableKotlinWasmWasiOptimize")
 
                 assertTasksAreNotInTaskGraph(":kotlinWasmToolingSetup")
+
+                assertNoBuildWarnings()
             }
         }
     }
@@ -473,6 +475,13 @@ abstract class AbstractKotlinWasmGradlePluginIT : KGPBaseTest() {
             build("assemble") {
                 assertTasksExecuted(":compileProductionExecutableKotlinWasmJs")
                 assertTasksExecuted(":compileProductionExecutableKotlinWasmJsOptimize")
+
+                // we have such warning in Gradle 7, no warnings in later Gradle versions
+                assertNoBuildWarnings(
+                    setOf(
+                        "This annotation should be used with the compiler argument '-opt-in=kotlin.RequiresOptIn'"
+                    )
+                )
 
                 val original =
                     projectPath.resolve("build/compileSync/wasmJs/main/productionExecutable/kotlin/redefined-wasm-module-name.wasm")
