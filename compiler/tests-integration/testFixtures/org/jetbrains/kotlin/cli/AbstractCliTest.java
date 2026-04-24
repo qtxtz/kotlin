@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.cli.js.K2JSCompiler;
 import org.jetbrains.kotlin.cli.js.KotlinWasmCompiler;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 import org.jetbrains.kotlin.cli.metadata.KotlinMetadataCompiler;
+import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime;
 import org.jetbrains.kotlin.test.*;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.util.PerformanceManager;
@@ -302,6 +303,7 @@ public abstract class AbstractCliTest extends TestCaseWithTmpdir {
         return str
                 .replace("$TEMP_DIR$", tempDir)
                 .replace(TESTDATA_DIR, testDataDir.getAbsolutePath())
+                .replace("$STDLIB_COMMON_PATH$", ForTestCompileRuntime.stdlibCommonForTests().getAbsolutePath())
                 .replace(
                         "$FOREIGN_ANNOTATIONS_DIR$",
                         new File(ThirdPartyAnnotationPathsKt.FOREIGN_ANNOTATIONS_SOURCES_PATH).getPath()
