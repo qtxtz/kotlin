@@ -14,6 +14,8 @@ import org.jetbrains.kotlin.types.AbstractTypeApproximator
 import org.jetbrains.kotlin.types.TypeApproximatorCachesPerConfiguration
 import org.jetbrains.kotlin.types.TypeApproximatorConfiguration
 import org.jetbrains.kotlin.types.model.*
+import org.jetbrains.kotlin.types.model.contains
+import org.jetbrains.kotlin.types.model.typeConstructor
 import org.jetbrains.kotlin.utils.SmartSet
 import java.util.*
 
@@ -208,7 +210,9 @@ class ConstraintIncorporator(
             // We don't want to block variable fixation at all
             !isCausedByFixation &&
             // It should be possible to use this constraint for variable fixation
-            causeOfIncorporationConstraint.type.mayBeUsedForFixation()
+            causeOfIncorporationConstraint.type.isProperTypeForFixation(c.notFixedTypeVariables.keys) { t ->
+                !t.contains { c.notFixedTypeVariables.containsKey(it.typeConstructor()) }
+            }
         ) {
             return
         }
@@ -243,15 +247,6 @@ class ConstraintIncorporator(
                 isSubtype = true
             )
         }
-    }
-
-    context(c: Context)
-    private fun KotlinTypeMarker.mayBeUsedForFixation(): Boolean {
-        // To be used in variable fixation, the constraint must have a proper type
-        // Also, we shouldn't have dependencies on other type variable, otherwise immediate fixation may be not possible
-        return isProperTypeForFixation(c.notFixedTypeVariables.keys) { t ->
-            !t.contains { c.notFixedTypeVariables.containsKey(it.typeConstructor()) }
-        } && !contains { it.isTypeVariableType() }
     }
 
     /**
