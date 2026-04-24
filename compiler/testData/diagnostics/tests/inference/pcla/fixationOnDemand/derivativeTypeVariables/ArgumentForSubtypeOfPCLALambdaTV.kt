@@ -1,5 +1,4 @@
 // RUN_PIPELINE_TILL: FRONTEND
-// LATEST_LV_DIFFERENCE
 fun test() {
     // ISSUE: KT-71662
     val resultA = pcla { otvOwner ->

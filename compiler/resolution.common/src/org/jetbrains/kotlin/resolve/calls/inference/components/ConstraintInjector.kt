@@ -203,8 +203,10 @@ class ConstraintInjector(
                 constraintIncorporator.incorporate(
                     typeVariable,
                     constraintToIncorporate,
-
-                    isCausedByFixation = constraint.position.initialConstraint.position is FixVariableConstraintPosition<*>
+                    isCausedByFixation = constraint.position.initialConstraint.position.let {
+                        it is FixVariableConstraintPosition<*> || it is SemiFixVariableConstraintPosition ||
+                                it is ProvideDelegateFixationPosition
+                    }
                 )
             }
         }
