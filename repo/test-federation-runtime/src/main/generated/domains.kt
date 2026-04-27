@@ -12,6 +12,7 @@ enum class Domain {
     SwiftExport,
     CompilerPlugins,
     Gradle,
+    Maven,
     Unknown,
 
 }

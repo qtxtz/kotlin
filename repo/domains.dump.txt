@@ -123,6 +123,18 @@ Gradle:
  - libraries/tools/kotlin-gradle-plugins-bom
  - libraries/tools/kotlin-gradle-statistics
 
+Maven:
+ - libraries/tools/kotlin-maven-allopen
+ - libraries/tools/kotlin-maven-dataframe
+ - libraries/tools/kotlin-maven-lombok
+ - libraries/tools/kotlin-maven-noarg
+ - libraries/tools/kotlin-maven-plugin
+ - libraries/tools/kotlin-maven-plugin-test
+ - libraries/tools/kotlin-maven-power-assert
+ - libraries/tools/kotlin-maven-sam-with-receiver
+ - libraries/tools/kotlin-maven-serialization
+ - libraries/tools/maven-archetypes
+
 Unknown:
  - .ai
  - .claude
@@ -189,15 +201,6 @@ Unknown:
  - libraries/tools/kotlin-lombok
  - libraries/tools/kotlin-main-kts
  - libraries/tools/kotlin-main-kts-test
- - libraries/tools/kotlin-maven-allopen
- - libraries/tools/kotlin-maven-dataframe
- - libraries/tools/kotlin-maven-lombok
- - libraries/tools/kotlin-maven-noarg
- - libraries/tools/kotlin-maven-plugin
- - libraries/tools/kotlin-maven-plugin-test
- - libraries/tools/kotlin-maven-power-assert
- - libraries/tools/kotlin-maven-sam-with-receiver
- - libraries/tools/kotlin-maven-serialization
  - libraries/tools/kotlin-noarg
  - libraries/tools/kotlin-osgi-bundle
  - libraries/tools/kotlin-power-assert
@@ -212,7 +215,6 @@ Unknown:
  - libraries/tools/kotlin-tooling-core
  - libraries/tools/kotlin-tooling-metadata
  - libraries/tools/kotlinp
- - libraries/tools/maven-archetypes
  - libraries/tools/mutability-annotations-compat
  - libraries/tools/required-reason-finder
  - libraries/tools/script-runtime

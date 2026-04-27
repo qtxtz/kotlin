@@ -57,6 +57,11 @@ Gradle:
   include:
     - "libraries/tools/*gradle*/**"
 
+Maven:
+  home: "libraries/tools/kotlin-maven-plugin"
+  include:
+    - "libraries/tools/*maven*/**"
+
 Unknown:
   home: "."
   include:
