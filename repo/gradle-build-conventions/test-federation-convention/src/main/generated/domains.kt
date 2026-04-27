@@ -12,6 +12,7 @@ enum class Domain {
     CompilerPlugins,
     Gradle,
     Maven,
+    IntelliJ,
     Unknown,
     ;
 
@@ -90,6 +91,14 @@ internal object MavenDomainInfo : DomainInfo {
     override val fullyAffectedBy: List<DomainInfo> by lazy { listOf() }
 }
 
+internal object IntelliJDomainInfo : DomainInfo {
+    override val home = "idea"
+    override val domain = Domain.IntelliJ
+    override val include: List<String> = listOf()
+    override val exclude: List<String> = listOf()
+    override val fullyAffectedBy: List<DomainInfo> by lazy { listOf(CompilerDomainInfo, AnalysisApiDomainInfo) }
+}
+
 internal object UnknownDomainInfo : DomainInfo {
     override val home = "."
     override val domain = Domain.Unknown
@@ -110,6 +119,7 @@ internal val allDomainInfos: List<DomainInfo> by lazy {
         CompilerPluginsDomainInfo,
         GradleDomainInfo,
         MavenDomainInfo,
+        IntelliJDomainInfo,
         UnknownDomainInfo,
     )
 }

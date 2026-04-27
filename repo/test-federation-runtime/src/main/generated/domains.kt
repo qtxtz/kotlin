@@ -13,6 +13,7 @@ enum class Domain {
     CompilerPlugins,
     Gradle,
     Maven,
+    IntelliJ,
     Unknown,
 
 }
