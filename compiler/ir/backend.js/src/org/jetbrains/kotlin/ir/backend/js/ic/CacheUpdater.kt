@@ -22,7 +22,6 @@ import org.jetbrains.kotlin.js.config.includes
 import org.jetbrains.kotlin.js.config.wasmCompilation
 import org.jetbrains.kotlin.library.KotlinLibrary
 import org.jetbrains.kotlin.library.loader.KlibPlatformChecker
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.utils.memoryOptimizedFilter
 import org.jetbrains.kotlin.utils.memoryOptimizedMap
 import org.jetbrains.kotlin.utils.newHashMapWithExpectedSize
@@ -842,8 +841,6 @@ fun rebuildCacheForDirtyFiles(
     configuration: CompilerConfiguration,
     orderedLibraries: List<KotlinLibrary>,
     dirtyFiles: Collection<String>?,
-    exportedDeclarations: Set<FqName>,
-    mainArguments: List<String>?,
 ): Pair<IrModuleFragment, List<Pair<IrFile, IrICProgramFragments>>> {
     val irInterner = IrInterningService()
     val emptyMetadata = object : KotlinSourceFileExports() {

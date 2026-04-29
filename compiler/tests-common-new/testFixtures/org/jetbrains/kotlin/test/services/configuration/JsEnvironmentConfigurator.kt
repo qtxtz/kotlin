@@ -109,13 +109,6 @@ abstract class JsEnvironmentConfigurator(testServices: TestServices) : Environme
             return result
         }
 
-        fun getMainCallParametersForModule(module: TestModule): List<String>? {
-            return when {
-                JsEnvironmentConfigurationDirectives.CALL_MAIN in module.directives -> listOf()
-                else -> null
-            }
-        }
-
         fun TestModule.hasFilesToRecompile(): Boolean {
             return files.any { JsEnvironmentConfigurationDirectives.RECOMPILE in it.directives }
         }
